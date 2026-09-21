@@ -105,7 +105,6 @@ object AppPreferences {
     fun saveUpdatePopupDismissTime() {
         val currentTime = System.currentTimeMillis()
         prefs.edit().putLong(LAST_UPDATE_POPUP_DISMISS_TIME, currentTime).apply()
-        println("💾 Saved update popup dismiss time: $currentTime")
     }
 
     // ✅ Get the last time user dismissed the popup
@@ -126,14 +125,13 @@ object AppPreferences {
         val timeSinceDismiss = currentTime - lastDismissTime
 
         val shouldShow = timeSinceDismiss >= fiveDaysInMillis
-        println("⏰ Time since dismiss: ${timeSinceDismiss / (24 * 60 * 60 * 1000)}d | Should show: $shouldShow")
         return shouldShow
     }
 
     // ✅ Clear the saved time (after user updates)
     fun clearUpdatePopupDismissTime() {
         prefs.edit().remove(LAST_UPDATE_POPUP_DISMISS_TIME).apply()
-        println("🗑️ Cleared update popup dismiss time")
+
     }
 
 

@@ -48,9 +48,6 @@ import com.toletspot.houseforrent.Start_Up.Onboarding
 import com.toletspot.houseforrent.Start_Up.Start_Up_ViewModel
 import com.toletspot.houseforrent.Start_Up.UserInterests
 import com.toletspot.houseforrent.Start_Up.User_Credentials
-import com.toletspot.houseforrent.WebView.AboutUsScreen
-import com.toletspot.houseforrent.WebView.FeedBackScreen
-import com.toletspot.houseforrent.WebView.TermsAndPrivacyScreen
 import com.toletspot.houseforrent.constants
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -308,30 +305,6 @@ fun NavGraphBuilder.User_Credential_Graph(
 
             val index = backStackEntry.arguments?.getInt("startIndex") ?: 0
             ReelsView_Search_Flow(navController, startIndex = index , commonVM)
-        }
-        composable(
-            route = UserCredentialsScreenFlow.TermsAndPrivacyScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            TermsAndPrivacyScreen(navController)
-        }
-        composable(
-            route = UserCredentialsScreenFlow.FeedBackScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            FeedBackScreen(navController)
-        }
-        composable(
-            route = UserCredentialsScreenFlow.AboutUsScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            AboutUsScreen(navController)
         }
         composable(UserCredentialsScreenFlow.Search_Main_Screen.route) {
             val commonVM: Common_H_ViewModel = viewModel()
@@ -611,30 +584,6 @@ fun NavGraphBuilder.Videos_Graph(navController: NavHostController,
             viewModel.toggleshowTABars(false)
             Post_Property_Forms(navController , viewModel)
         }
-        composable(
-            route = VideosScreenFlow.TermsAndPrivacyScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            TermsAndPrivacyScreen(navController)
-        }
-        composable(
-            route = VideosScreenFlow.FeedBackScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            FeedBackScreen(navController)
-        }
-        composable(
-            route = VideosScreenFlow.AboutUsScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            AboutUsScreen(navController)
-        }
         composable(VideosScreenFlow.Search_Main_Screen.route) {
             val commonVM: Common_H_ViewModel = viewModel()
             commonVM.toggleshowTABars(false)
@@ -903,28 +852,6 @@ fun NavGraphBuilder.Profile_Graph(navController: NavHostController,
 
             val index = backStackEntry.arguments?.getInt("startIndex") ?: 0
             ReelsView_Search_Flow(navController, startIndex = index , viewModel)
-        }
-
-        composable(
-            route = ProfileScreenFlow.TermsAndPrivacyScreen.route,
-        ) {
-            viewModel.toggleshowBABars(false)
-            viewModel.toggleshowTABars(false)
-            TermsAndPrivacyScreen(navController)
-        }
-        composable(
-            route = ProfileScreenFlow.FeedBackScreen.route,
-        ) {
-            viewModel.toggleshowBABars(false)
-            viewModel.toggleshowTABars(false)
-            FeedBackScreen(navController)
-        }
-        composable(
-            route = ProfileScreenFlow.AboutUsScreen.route,
-        ) {
-            viewModel.toggleshowBABars(false)
-            viewModel.toggleshowTABars(false)
-            AboutUsScreen(navController)
         }
 
         composable(
@@ -1207,30 +1134,6 @@ fun NavGraphBuilder.SearchGraph(navController: NavHostController,
             commonVM.toggleshowTABars(false)
             Post_Property_Forms(navController , commonVM)
         }
-        composable(
-            route = SearchScreenFlow.TermsAndPrivacyScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            TermsAndPrivacyScreen(navController)
-        }
-        composable(
-            route = SearchScreenFlow.FeedBackScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            FeedBackScreen(navController)
-        }
-        composable(
-            route = SearchScreenFlow.AboutUsScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            AboutUsScreen(navController)
-        }
         composable(SearchScreenFlow.PP_Fourth_Form.route) {
             var apiError = remember {  mutableStateOf(false) }
             PP_Fourth_Form(apiError)
@@ -1440,30 +1343,6 @@ fun NavGraphBuilder.PostPropertyGraph(navController: NavHostController,
             val commonVM: Common_H_ViewModel = viewModel()
             commonVM.toggleshowBABars(false)
             Sold_Outs(rememberNotchHeightDp() ,  navController)
-        }
-        composable(
-            route = PostPropertyFlow.TermsAndPrivacyScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            TermsAndPrivacyScreen(navController)
-        }
-        composable(
-            route = PostPropertyFlow.FeedBackScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            FeedBackScreen(navController)
-        }
-        composable(
-            route = PostPropertyFlow.AboutUsScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            AboutUsScreen(navController)
         }
         composable(PostPropertyFlow.Search_Main_Screen.route) {
             val commonVM: Common_H_ViewModel = viewModel()
@@ -1790,30 +1669,6 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
             commonVM.toggleshowBABars(false)
             commonVM.toggleshowTABars(false)
             Post_Property_Forms(navController, commonVM)
-        }
-        composable(
-            route = EnquiriesFlow.TermsAndPrivacyScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            TermsAndPrivacyScreen(navController)
-        }
-        composable(
-            route = EnquiriesFlow.FeedBackScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            FeedBackScreen(navController)
-        }
-        composable(
-            route = EnquiriesFlow.AboutUsScreen.route,
-        ) {
-            val commonVM: Common_H_ViewModel = viewModel()
-            commonVM.toggleshowBABars(false)
-            commonVM.toggleshowTABars(false)
-            AboutUsScreen(navController)
         }
         composable(EnquiriesFlow.Search_Main_Screen.route) {
             val commonVM: Common_H_ViewModel = viewModel()

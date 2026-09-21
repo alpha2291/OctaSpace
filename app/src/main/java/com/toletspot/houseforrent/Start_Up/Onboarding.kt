@@ -54,6 +54,10 @@ import com.toletspot.houseforrent.AppPreferences
 import com.toletspot.houseforrent.Navigation.UserCredentialsScreenFlow
 import com.toletspot.houseforrent.R
 import com.toletspot.houseforrent.constants
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.toletspot.houseforrent.noRippleClickable
 import com.toletspot.houseforrent.ui.theme.newPurpleGradient
 import com.toletspot.houseforrent.ui.theme.newPurpleGradientBorder
@@ -76,17 +80,17 @@ fun Onboarding(navController: NavHostController) {
 
     val pages = listOf(
         OnboardingData(
-            image = R.drawable.onboardone,
+            image = R.raw.buyhome,
             text = "Where comfort lives",
             text2 = "Find spaces that suit your lifestyle, making the process simple, smooth, and enjoyable."
         ),
         OnboardingData(
-            image = R.drawable.onboardtwo,
+            image = R.raw.searchland,
             text = "Talk to owners",
             text2 = "Chat with owners or brokers to discuss property details and availability"
         ),
         OnboardingData(
-            image = R.drawable.onboardthree,
+            image = R.raw.buildings,
             text = "Smart choices. Better living",
             text2 = "Save spaces you love, request property photos, and choose the perfect space."
         )
@@ -167,17 +171,17 @@ fun OnboardingImagePage(
     data: OnboardingData,
     allowPagerScroll: MutableState<Boolean>
 ) {
-    println("ttttt--111---${data}")
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(data.image))
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
 
-        Image(
-            painter = painterResource(data.image),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.fillMaxSize()
+        LottieAnimation(
+            composition = composition,
+            modifier = Modifier.fillMaxSize(),
+            iterations = LottieConstants.IterateForever
         )
     }
 }

@@ -19,7 +19,6 @@ import com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs.SoldOuts.Sold_O
 import com.toletspot.houseforrent.Home_Screen.PostProperty_Module.RentoDataclass.RentoMediaDC.Image
 import com.toletspot.houseforrent.Home_Screen.PostProperty_Module.RentoDataclass.RentoMediaDC.Video
 import com.toletspot.houseforrent.R
-import com.toletspot.houseforrent.UI_DataClass.FAQ_Details_DC
 import com.toletspot.houseforrent.UI_DataClass.Flw_UnFlw_Content_DC
 import com.toletspot.houseforrent.UI_DataClass.NotInterested_Options_DC
 import com.toletspot.houseforrent.UI_DataClass.Notication_Subs_DC
@@ -27,7 +26,6 @@ import com.toletspot.houseforrent.UI_DataClass.Profile_FF_DC
 import com.toletspot.houseforrent.UI_DataClass.Profile_Handle_Back
 import com.toletspot.houseforrent.UI_DataClass.Profile_List_Back_Handler
 import com.toletspot.houseforrent.UI_DataClass.Profile_Report_Options_DC
-import com.toletspot.houseforrent.UI_DataClass.Rate_Us_DC
 import com.toletspot.houseforrent.UI_DataClass.Settings_DC
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -135,13 +133,6 @@ class Profile_ViewModel: ViewModel() {
         // Reset notification subscriptions
         _notification_Subs.value = _notification_Subs.value.map { it.copy(isSelected = false) }
         api_NS_Ids_StringList.value = Pair(false, emptyList())
-
-        // Reset FAQ
-        _faq_Details.value = _faq_Details.value.map { it.copy(isSelected = false) }
-
-        // Reset rate us
-        _rate_Us.value = _rate_Us.value.map { it.copy(isSelected = false) }
-        _rate_us_reason.value = ""
 
         // Clear edit profile data
         _edit_profile_onTap.value = false
@@ -1524,41 +1515,6 @@ class Profile_ViewModel: ViewModel() {
                 icon = R.drawable.shareapprento,
                 title = "Share the App"
             ),
-            Settings_DC(
-                id = 6,
-                icon = R.drawable.rateusrento,
-                title = "Rate us"
-            ),
-            Settings_DC(
-                id = 7,
-                icon = R.drawable.faqrento,
-                title = "FAQ"
-            ),
-            Settings_DC(
-                id = 8,
-                icon = R.drawable.side_bar_icons__4_,
-                title = "Feedback"
-            ),
-            Settings_DC(
-                id = 9,
-                icon = R.drawable.aboutusrento,
-                title = "About us"
-            ),
-            Settings_DC(
-                id = 10,
-                icon = R.drawable.termsandconditionrento,
-                title = "Terms of Use"
-            ),
-            Settings_DC(
-                id = 11,
-                icon = R.drawable.privacypolicyrento,
-                title = "Privacy Policy"
-            ),
-            Settings_DC(
-                id = 12,
-                icon = R.drawable.disclaimerrento,
-                title = "Disclaimer"
-            ),
         )
     )
 
@@ -1590,7 +1546,6 @@ class Profile_ViewModel: ViewModel() {
         listOf(
             "Edit Profile",
             "Contact",
-            "Share Profile",
             "Notification",
             "My Blocklist",
             "Delete Account",
@@ -1699,123 +1654,6 @@ class Profile_ViewModel: ViewModel() {
         }
     }
 
-
-
-    private var _faq_Details = MutableStateFlow(
-        listOf(
-            FAQ_Details_DC(
-                id = 0,
-                title = "How can I change my mobile number?",
-                desc = "For security reasons, if you've lost your number, please contact our support team for assistance at support@landsales.com for help with updating it securely.",
-                isSelected = false
-            ),
-            FAQ_Details_DC(
-                id = 1,
-                title = "Is my contact information visible to buyers/sellers?",
-                "For security reasons, if you've lost your number, please contact our support team for assistance at support@landsales.com for help with updating it securely.",
-                isSelected = false
-            ),
-            FAQ_Details_DC(
-                id = 2,
-                title = "How do I contact customer support?",
-                "For security reasons, if you've lost your number, please contact our support team for assistance at support@landsales.com for help with updating it securely.",
-                isSelected = false
-            ),
-            FAQ_Details_DC(
-                id = 3,
-                title = "How do I report a problem with the app?",
-                "For security reasons, if you've lost your number, please contact our support team for assistance at support@landsales.com for help with updating it securely.",
-                isSelected = false
-            ),
-            FAQ_Details_DC(
-                id = 4,
-                title = "Will I be notified when someone is interested in my land?",
-                "For security reasons, if you've lost your number, please contact our support team for assistance at support@landsales.com for help with updating it securely.",
-                isSelected = false
-            ),
-
-        )
-    )
-    var faq_Details : StateFlow<List<FAQ_Details_DC>> = _faq_Details.asStateFlow()
-
-    fun enable_faq(id: Int) {
-        _faq_Details.update { currentList ->
-            currentList.map {
-                if (it.id == id) it.copy(isSelected = !it.isSelected)
-                else it.copy(isSelected = false) // Collapse all others
-            }
-        }
-    }
-
-
-
-    private var _rate_Us = MutableStateFlow(
-        listOf(
-            Rate_Us_DC(
-                id = 0,
-                image = R.drawable.rento1star,
-                desc = "Oh no! what didn’t work",
-                isSelected = true
-            ),
-            Rate_Us_DC(
-                id = 1,
-                image = R.drawable.rento2star,
-                desc = "Not the best? Share why",
-                isSelected = true
-            ),
-            Rate_Us_DC(
-                id = 2,
-                image = R.drawable.rento3star,
-                desc = "Almost there!k",
-                isSelected = true
-            ),
-            Rate_Us_DC(
-                id = 3,
-                image = R.drawable.rento4star,
-                desc = "We’re close to a 5!",
-                isSelected = true
-            ),
-            Rate_Us_DC(
-                id = 4,
-                image = R.drawable.rento5star,
-                desc = "So glad you loved it!",
-                isSelected = true
-            ),
-        )
-    )
-
-
-    var rate_Us_content : StateFlow<List<Rate_Us_DC>> = _rate_Us.asStateFlow()
-
-
-    fun update_Star_Selection(id: Int) {
-        _rate_Us.update { list ->
-            list.map {
-                if (it.id <= id) {
-                    it.copy(isSelected = true)
-                } else {
-                    it.copy(isSelected = false)
-                }
-            }
-        }
-    }
-
-    fun selectAllStars(value: Boolean = true) {
-        _rate_Us.update { list ->
-            list.map { it.copy(isSelected = value) }
-        }
-    }
-
-
-
-
-
-    private var _rate_us_reason = MutableStateFlow("")
-    var rate_us_Reason : StateFlow<String> = _rate_us_reason.asStateFlow()
-
-    fun update_rate_us_Reason(content : String){
-        _rate_us_reason.update { content }
-    }
 
 
     // edit profile on tap var

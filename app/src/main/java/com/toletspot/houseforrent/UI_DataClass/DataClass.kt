@@ -253,24 +253,6 @@ data class Notication_Subs_DC(
 )
 
 
-data class FAQ_Details_DC(
-    var id : Int,
-    var title : String,
-    var desc : String,
-    var isSelected: Boolean
-)
-
-
-
-data class Rate_Us_DC(
-    var id : Int,
-    var image: Int,
-    var desc : String,
-    var isSelected : Boolean,
-    var selected_Image : Int = R.drawable.rentogoldstar,
-    var unselected_Image : Int = R.drawable.rentograystar
-)
-
 //8.8
 data class Search_Popular_Cities_DC(
     var id : Int,

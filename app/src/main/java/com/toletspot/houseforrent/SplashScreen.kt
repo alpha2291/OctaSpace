@@ -50,7 +50,7 @@ fun SplashScreen(navHostController: NavHostController, extras: Bundle?)
         verticalArrangement = Arrangement.Center )
     {
         Image(
-            painter = painterResource(id = R.drawable.nature5),
+            painter = painterResource(id = R.mipmap.ic_launcher_foreground),
             contentDescription = "",
             modifier = Modifier
                 .size(250.dp)

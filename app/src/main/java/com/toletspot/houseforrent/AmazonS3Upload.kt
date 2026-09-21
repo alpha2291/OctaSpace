@@ -22,269 +22,6 @@ import com.amazonaws.event.ProgressListener
 import com.amazonaws.event.ProgressEvent
 
 
-/*class S3Uploader(
-    accessKey: String,
-    secretKey: String,
-    private val bucketName: String,
-    region: Regions
-) {
-
-    private val s3Client: AmazonS3Client = AmazonS3Client(
-        BasicAWSCredentials(accessKey, secretKey)
-    ).apply {
-        setRegion(Region.getRegion(region))
-    }
-
-    data class UploadResult(
-        val uri: Uri,
-        val url: String?,
-        val success: Boolean,
-        val error: String? = null
-    )
-
-    suspend fun uploadFiles(
-        context: Context,
-        uris: List<Uri>,
-        folder: String,
-        onProgress: (uri: Uri, progress: Int) -> Unit
-    ): List<UploadResult> = coroutineScope {
-
-        uris.map { uri ->
-            async(Dispatchers.IO) {
-                uploadSingleFile(context, uri, folder, onProgress)
-            }
-        }.awaitAll()
-    }
-
-    private suspend fun uploadSingleFile(
-        context: Context,
-        uri: Uri,
-        folder: String,
-        onProgress: (uri: Uri, progress: Int) -> Unit
-    ): UploadResult {
-
-        // If already a URL -> just return
-        if (uri.scheme?.startsWith("http") == true) {
-            return UploadResult(uri, uri.toString(), true)
-        }
-
-        val ext = getFileExtension(context, uri) ?: return UploadResult(uri, null, false, "No extension")
-
-        val tempFile = File.createTempFile("upload_", ".$ext", context.cacheDir)
-        context.contentResolver.openInputStream(uri)?.use { input ->
-            FileOutputStream(tempFile).use { output ->
-                val buffer = ByteArray(4096)
-                var totalBytes = 0L
-                val size = input.available().toLong()
-
-                var read: Int
-                while (input.read(buffer).also { read = it } != -1) {
-                    output.write(buffer, 0, read)
-                    totalBytes += read
-                    val progress = ((totalBytes * 100) / size).toInt()
-                    onProgress(uri, progress)
-                }
-            }
-        }
-
-        val key = "$folder/${System.currentTimeMillis()}.$ext"
-
-        val metadata = ObjectMetadata().apply {
-            contentType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext)
-        }
-
-        return try {
-            s3Client.putObject(
-                PutObjectRequest(bucketName, key, tempFile)
-                    .withGeneralProgressListener {
-                        val pct = ((it.bytesTransferred * 100) / it.bytesTransferred).toInt()
-                        onProgress(uri, pct)
-                    }
-            )
-
-            val url = "https://$bucketName.s3.amazonaws.com/$key"
-            tempFile.delete() // auto clean
-            UploadResult(uri, url, true)
-
-        } catch (e: Exception) {
-            tempFile.delete()
-            UploadResult(uri, null, false, e.message)
-        }
-    }
-
-    private fun getFileExtension(context: Context, uri: Uri): String? {
-        val resolver = context.contentResolver
-        return if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
-            resolver.getType(uri)?.let { MimeTypeMap.getSingleton().getExtensionFromMimeType(it) }
-        } else {
-            MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-        }
-    }
-}
-
-val uploader = S3Uploader(
-    accessKey = constants.ACCESS_ID,
-    secretKey = constants.SECRET_KEY,
-    bucketName = constants.BUCKET_NAME,
-    region = Regions.AP_SOUTH_1
-)*/
-
-//lifecycleScope.launch {
-//    val results = uploader.uploadFiles(
-//        context = mainActivity,
-//        uris = selectedUris,
-//        folder = "user_uploads",
-//        onProgress = { uri, progress ->
-//            println("Progress for $uri -> $progress%")
-//        }
-//    )
-//
-//    results.forEach {
-//        if (it.success) println("Uploaded: ${it.url}")
-//        else println("Error: ${it.error}")
-//    }
-//
-//    val uploadedUrls = results.mapNotNull { it.url }
-//    println("FINAL URL LIST: $uploadedUrls")
-//
-//    // Do something after all complete:
-//    // example: call API, navigate UI, update ViewModel, etc.
-//}
-
-
-/*class S3Uploader(
-    accessKey: String,
-    secretKey: String,
-    private val bucketName: String,
-    private val cloudFrontUrl: String,
-    region: Regions
-) {
-
-    private val s3Client = AmazonS3Client(
-        BasicAWSCredentials(accessKey, secretKey)
-    ).apply {
-        setRegion(Region.getRegion(region))
-    }
-
-    enum class UploadType { PROFILE, POST_VIDEO, POST_IMAGE }
-
-    data class UploadResult(
-        val uri: Uri,
-        val url: String?,
-        val success: Boolean,
-        val error: String? = null
-    )
-
-    // ---------------------- SINGLE FILE HANDLER ----------------------
-    private suspend fun uploadSingle(
-        context: Context,
-        uri: Uri,
-        userId: String,
-        type: UploadType,
-        onProgress: (uri: Uri, progress: Int) -> Unit
-    ): UploadResult {
-
-        // If URL already, just return it
-        if (uri.scheme?.startsWith("http") == true) {
-            return UploadResult(uri, uri.toString(), true)
-        }
-
-        val ext = getFileExtension(context, uri)
-            ?: return UploadResult(uri, null, false, "Invalid file extension")
-
-        val timestamp = System.currentTimeMillis()
-
-        val folder = when (type) {
-            UploadType.PROFILE     -> "$userId/profileImage"
-            UploadType.POST_VIDEO  -> "$userId/post/postVideos"
-            UploadType.POST_IMAGE  -> "$userId/post/postImages"
-        }
-
-        val key = "$folder/$timestamp.$ext"
-
-        // Create temp file
-        val tempFile = File.createTempFile("upload_", ".$ext", context.cacheDir)
-
-        context.contentResolver.openInputStream(uri)?.use { input ->
-            FileOutputStream(tempFile).use { output ->
-                val buffer = ByteArray(4096)
-                var totalBytes = 0L
-                val size = input.available().toLong()
-
-                var read: Int
-                while (input.read(buffer).also { read = it } != -1) {
-                    output.write(buffer, 0, read)
-                    totalBytes += read
-
-                    val progress = ((totalBytes * 100) / size).toInt()
-                    onProgress(uri, progress)
-                }
-            }
-        }
-
-        return try {
-            s3Client.putObject(PutObjectRequest(bucketName, key, tempFile))
-            tempFile.delete()
-
-            UploadResult(uri, "${constants.CLOUD_FRONT_URL}/$key", true)
-
-        } catch (e: Exception) {
-            tempFile.delete()
-            UploadResult(uri, null, false, e.message)
-        }
-    }
-
-    // ---------------------- MULTIPLE PARALLEL UPLOAD ----------------------
-    suspend fun uploadFiles(
-        context: Context,
-        uris: List<Uri>,
-        userId: String,
-        type: UploadType,
-        onProgress: (uri: Uri, progress: Int) -> Unit
-    ): List<UploadResult> = coroutineScope {
-        uris.map { uri ->
-            async<UploadResult>(Dispatchers.IO) {
-                uploadSingle(context, uri, userId, type, onProgress)
-            }
-        }.awaitAll()
-    }
-
-    // ---------------------- EXTENSION HELPERS ----------------------
-    private fun getFileExtension(context: Context, uri: Uri): String? {
-        val resolver = context.contentResolver
-        return if (uri.scheme == ContentResolver.SCHEME_CONTENT) {
-            resolver.getType(uri)?.let { MimeTypeMap.getSingleton().getExtensionFromMimeType(it) }
-        } else {
-            MimeTypeMap.getFileExtensionFromUrl(uri.toString())
-        }
-    }
-}
-
-
-val uploader = S3Uploader(
-    accessKey = constants.ACCESS_ID,
-    secretKey = constants.SECRET_KEY,
-    bucketName = constants.BUCKET_NAME,
-    cloudFrontUrl = constants.CLOUD_FRONT_URL,
-    region = Regions.AP_SOUTH_1
-)*/
-
-
-
-//lifecycleScope.launch {
-//    val results = uploader.uploadFiles(
-//        context = this@MainActivity,
-//        uris = selectedUris,
-//        userId = AppPreferences.getUserId() ?: "",
-//        type = S3Uploader.UploadType.POST_IMAGE,
-//        onProgress = { uri, progress ->
-//            println("Progress for $uri : $progress%")
-//        }
-//    )
-//
-//    val urls = results.mapNotNull { it.url }
-//    println("UPLOAD COMPLETED: $urls")
-//}
 
 
 
@@ -315,7 +52,6 @@ class S3Uploader(
         onProgress: (uri: Uri, progress: Int) -> Unit
     ): List<UploadResult> = coroutineScope {
 
-        println("MEDIAITEMSS ONCLICK CHECK 888 URI S3  -- ${uris}")
 
 
         uris.map { uri ->
@@ -331,7 +67,7 @@ class S3Uploader(
         uri: Uri,
         onProgress: (Int) -> Unit
     ): UploadResult = withContext(Dispatchers.IO) {
-        println("MEDIAITEMSS ONCLICK CHECK 9999  -- ${uri}")
+
 
 
         // Skip upload if already URL
@@ -388,13 +124,13 @@ class S3Uploader(
         profile : String,
         onProgress: (Int) -> Unit
     ): UploadResult = withContext(Dispatchers.IO) {
-        println("MEDIAITEMSS ONCLICK CHECK 9999  -- ${uri}")
+
 
         // Skip upload if already URL but detect proper media type
         if (uri.toString().startsWith("https") || uri.toString().startsWith("http")) {
             val url = uri.toString()
             val type = detectMediaTypeFromUrl(url)
-            println("✅ Already uploaded: $url (type: $type)")
+
             return@withContext UploadResult(uri, url, type)
         }
 

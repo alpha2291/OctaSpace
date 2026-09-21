@@ -101,7 +101,6 @@ data class ImageAPIUpload(
 class API_ViewModel : ViewModel()
 {
 
-    var FeedbackScreen = true
 
     private val apiService = API_Service.create()
 

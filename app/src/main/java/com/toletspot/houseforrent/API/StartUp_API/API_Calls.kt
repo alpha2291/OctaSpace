@@ -20,7 +20,6 @@ fun register_API_Call (
 ) {
 
 
-    println("IS THERE USER ID -- ${AppPreferences.getUserId()}")
 
    // if (isConnected.value) {
         constants.API_Vm.user_Register(
@@ -367,23 +366,21 @@ fun update_User_Profile_API_Call() {
                 AppPreferences.save_ProfileBio(constants.Profile_ViewModel.change_Bio_Content.value)
 
 
-                println("ADCJBDCDACADC${constants.Profile_ViewModel.change_Bio_Content.value} -${ constants.Profile_ViewModel.get_new_Bio_Content()}-- ${ PROFILE_IMAGE_URL.value} -- ${constants.Profile_ViewModel.get_New_Realname()}")
+
 
 //                when {
                     if(PROFILE_IMAGE_URL.value.isNotEmpty()) {
                         constants.Profile_ViewModel.updateOwnProfile(profileImage = PROFILE_IMAGE_URL.value)
-                        println("DATA CONFIRMATION profile iamge-- ${constants.Profile_ViewModel.get_Content_own_Profile()}")
+
                     }
                     if(constants.Profile_ViewModel.get_New_Realname().isNotEmpty())  {
                         constants.Profile_ViewModel.updateOwnProfile(name = constants.Profile_ViewModel.get_New_Realname())
-                        println("DATA CONFIRMATION name -- ${constants.Profile_ViewModel.get_Content_own_Profile()}")
+
 
                     }
                     if(constants.Profile_ViewModel.change_Bio_Content.value.isNotEmpty() ) {
-                        println("DATA CONFIRMATION bio-222- ${constants.Profile_ViewModel.change_Bio_Content.value}")
 
                         constants.Profile_ViewModel.updateOwnProfile(bio = constants.Profile_ViewModel.change_Bio_Content.value)
-                        println("DATA CONFIRMATION bio-- ${constants.Profile_ViewModel.get_Content_own_Profile()}")
 
                     }
 
@@ -498,7 +495,6 @@ fun get_Land_Categories_PF2_API_Call(resultCallback: (Int) -> Unit){
     ){
             apiResultHandling ->
 
-        println("LAND CATEGORY TYPE --- ${constants.PostProperty_ViewModel.selected_Land_Type_PF2.value}")
 
         when(apiResultHandling){
             is API_Result_Handling.Loading -> {
@@ -748,86 +744,6 @@ fun post_Form5Rento_APICALL(resultCallback: (Int) -> Unit){
 
 fun put_post_Form4_API_CALL(resultCallback: (Int) -> Unit) {
     val selectedForm = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
-
-    println("STEP 4 FORM VALUE PASSING  preferred_tenants-- ${ selectedForm.property_preferred_tenants}")
-    println("STEP 4 FORM VALUE PASSING -- ${ selectedForm.property_preferred_tenants}")
-
-    println("========== STEP 4 API SEND DATA ==========")
-    println("user_id = ${AppPreferences.getUserId()}")
-    println("user_post_id = ${AppPreferences.get_Post_Id()}")
-    println("property_name = ${selectedForm.property_Name}")
-    println("property_area = ${selectedForm.property_Name}")
-    println("property_area_unit = ${selectedForm.property_area_unit}")
-    println("carpet_area = ${selectedForm.property_Carpet_Area}")
-    println("carpet_area_unit = ${selectedForm.carpet_area_unit}")
-    println("built_up_area = ${selectedForm.property_Builtup_Area}")
-    println("built_up_area_unit = ${selectedForm.built_up_area_unit}")
-    println("super_built_up_area = ${selectedForm.property_Super_Builtup_Area}")
-    println("super_built_up_area_unit = ${selectedForm.super_built_up_area_unit}")
-    println("area_length = ${selectedForm.property_Area_Dimension_Length}")
-    println("area_length_unit = ${selectedForm.property_Area_Dimension_Length_Unit}")
-    println("area_width = ${selectedForm.property_Area_Dimension_Width}")
-    println("area_width_unit = ${selectedForm.property_Area_Dimension_Width_Unit}")
-    println("property_facing = ${selectedForm.property_Facing}")
-    println("total_floor = ${selectedForm.property_Floor_Det_Total}")
-    println("rent_floor_no = ${selectedForm.property_Floor_Det_Which}")
-    println("preferred_tenants = ${selectedForm.property_preferred_tenants}")
-    println("availability_from = ${selectedForm.property_availability_from}")
-    println("agreement_type = ${selectedForm.property_agreement_type}")
-    println("food_preferences = ${selectedForm.property_food_preferences}")
-    println("pets_allowed = ${selectedForm.property_pets_allowed}")
-    println("furnishing_status = ${selectedForm.property_Furnished}")
-    println("boundary_wall = ${selectedForm.property_Boundary_Wall}")
-    println("parking_available = ${selectedForm.property_Parking}")
-    println("amenities = ${selectedForm.property_Amenities}")
-    println("property_highlights = ${selectedForm.property_Highlights}")
-    println("bhk_type = ${selectedForm.property_Floor_Plan_Bhk}")
-    println("no_of_bedrooms = ${selectedForm.property_No_of_Beds}")
-    println("no_of_Bathrooms = ${selectedForm.property_No_of_Baths}")
-    println("no_of_Balconies = ${selectedForm.property_No_of_Balconies}")
-    println("no_of_open_sides = ${selectedForm.property_No_Of_OpenSides}")
-    println("other_rooms = ${selectedForm.property_Other_Rooms}")
-    println("facade_width = ${selectedForm.property_Facade_Width}")
-    println("facade_width_unit = ${selectedForm.facade_width_unit}")
-    println("facade_height = ${selectedForm.property_Facade_Height}")
-    println("facade_height_unit = ${selectedForm.facade_height_unit}")
-    println("property_condition = ${selectedForm.property_condition}")
-    println("no_of_cabins = ${selectedForm.property_No_Of_Cabins}")
-    println("no_of_meeting_rooms = ${selectedForm.property_No_Of_Meeting_Rooms}")
-    println("min_of_seats = ${selectedForm.property_Min_No_Of_Seats}")
-    println("max_of_seats = ${selectedForm.property_Max_No_Of_Seats}")
-    println("conference_room = ${selectedForm.property_Conference_Room}")
-    println("no_of_Staircases = ${selectedForm.property_No_Of_Stairs}")
-    println("reception_area = ${selectedForm.property_Reception}")
-    println("pantry = ${selectedForm.property_Pantry}")
-    println("pantry_size = ${selectedForm.property_Pantry_Size}")
-    println("pantry_size_unit = ${selectedForm.pantry_size_unit}")
-    println("central_ac = ${selectedForm.property_Central_AC}")
-    println("oxygen_duct = ${selectedForm.property_Oxygen_Duct}")
-    println("ups = ${selectedForm.property_UPS}")
-    println("fire_safety_measures = ${selectedForm.property_Fire_Safety}")
-    println("lifts = ${selectedForm.property_Lifts}")
-    println("noc_certified = ${selectedForm.property_NOC_Certified}")
-    println("occupancy_certificate = ${selectedForm.property_Occupancy}")
-    println("washroom_details = ${selectedForm.property_WashRoom}")
-    println("does_local_authority = ${selectedForm.property_Authority_Approved}")
-    println("suitable_business_type = ${selectedForm.property_Suitable_Business_Type}")
-    println("rent = ${selectedForm.rent}")
-    println("rent_negotiable = ${selectedForm.rent_negotiable}")
-    println("deposit_amount_month_of_rents = ${selectedForm.deposit_amount_month_of_rents}")
-    println("deposit_amount_month_of_rents_type = ${selectedForm.deposit_amount_month_of_rents_type}")
-    println("total_deposit = ${selectedForm.total_deposit}")
-    println("duration_of_agreement = ${selectedForm.duration_of_agreement}")
-    println("duration_of_agreement_type = ${selectedForm.duration_of_agreement_type}")
-    println("lock_in_period = ${selectedForm.lock_in_period}")
-    println("lock_in_period_type = ${selectedForm.lock_in_period_type}")
-    println("notice_period = ${selectedForm.notice_period}")
-    println("lease_duration_in_years = ${selectedForm.lease_duration_in_years}")
-    println("lease_amount = ${selectedForm.lease_amount}")
-    println("lease_negotiable = ${selectedForm.lease_negotiable}")
-    println("draft = ${selectedForm.draft}")
-    println("=====================================================")
-
 
     constants.API_Vm.put_post_Form4(
         user_id = AppPreferences.getUserId(),

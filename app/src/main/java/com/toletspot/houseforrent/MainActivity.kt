@@ -183,9 +183,6 @@ import com.toletspot.houseforrent.Notifications.In_App_Notification
 import com.toletspot.houseforrent.Start_Up.Onboarding
 import com.toletspot.houseforrent.Start_Up.UserInterests
 import com.toletspot.houseforrent.Start_Up.User_Credentials
-import com.toletspot.houseforrent.WebView.AboutUsScreen
-import com.toletspot.houseforrent.WebView.FeedBackScreen
-import com.toletspot.houseforrent.WebView.TermsAndPrivacyScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -218,18 +215,12 @@ class MainActivity : ComponentActivity() {
 
         external fun getLiveUrl() : String
         external fun getDemoUrl() : String
-        external fun getPrivacyUrl() : String
-        external fun getTermsUrl() : String
-        external fun getAboutUsUrl() : String
-        external fun getFeedbackUrl() : String
         external fun getprofileReportUrl() : String
         external fun getPostReportUrl() : String
         external fun getSecretKey() : String
         external fun getAccessId() : String
         external fun getBucketName() : String
         external fun getBaseimageUrl() : String
-        external fun getFAQUrl() : String
-        external fun getdiscalimerUrl() : String
 
     }
 
@@ -813,28 +804,6 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
 
                     val index = backStackEntry.arguments?.getInt("startIndex") ?: 0
                     ReelsView_Search_Flow(navController, startIndex = index , viewModel)
-                }
-
-                composable(
-                    route = ProfileScreenFlow.TermsAndPrivacyScreen.route,
-                ) {
-                    viewModel.toggleshowBABars(false)
-                    viewModel.toggleshowTABars(false)
-                    TermsAndPrivacyScreen(navController)
-                }
-                composable(
-                    route = ProfileScreenFlow.FeedBackScreen.route,
-                ) {
-                    viewModel.toggleshowBABars(false)
-                    viewModel.toggleshowTABars(false)
-                    FeedBackScreen(navController)
-                }
-                composable(
-                    route = ProfileScreenFlow.AboutUsScreen.route,
-                ) {
-                    viewModel.toggleshowBABars(false)
-                    viewModel.toggleshowTABars(false)
-                    AboutUsScreen(navController)
                 }
 
                 composable(

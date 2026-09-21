@@ -171,7 +171,6 @@ fun rememberNetworkStatus1(): State<NetworkStatus> {
         monitor.register()
         onDispose { monitor.unregister() }
     }
-    println("STATE OF CONNECTIVITY  $state")
     return state
 }
 

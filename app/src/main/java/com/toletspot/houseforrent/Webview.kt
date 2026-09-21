@@ -132,7 +132,6 @@ fun HelpAndSupportWebview(navHostController: NavHostController) {
         if (HelpAndSupportWebView != null && HelpAndSupportWebView?.canGoBack() == true) {
             HelpAndSupportWebView?.goBack()
         } else {
-//            println("ELSEeeeee---$HelpAndSupportWebView")
 //            if(Utils.suspend_Logout_Flag.value == 5)
 //            {
 //                localClear()
@@ -213,7 +212,6 @@ fun WebViewScreen(url: String) {
                         super.onReceivedError(view, request, error)
                         errorMessage = "Page Load Error: ${error?.description}"
                         urlFailed.value = true
-                        println("Error111--${errorMessage}")
                     }
 
                     override fun onReceivedSslError(
@@ -221,7 +219,6 @@ fun WebViewScreen(url: String) {
                         handler: android.webkit.SslErrorHandler?,
                         error: android.net.http.SslError?
                     ) {
-                        println("SSlError")
                         super.onReceivedSslError(view, handler, error)
                         errorMessage = "SSL Error: ${error?.primaryError}"
                         urlFailed.value = true

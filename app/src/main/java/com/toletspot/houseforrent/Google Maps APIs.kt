@@ -397,13 +397,6 @@ fun PincodePlaceSearchOLD(
                     .background(newBlue),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(R.drawable.map),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxSize()
-                )
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(.95f)
@@ -889,13 +882,6 @@ fun  PincodePlaceSearch(
                 contentAlignment = Alignment.Center
             )
             {
-                Image(
-                    painter = painterResource(R.drawable.map),
-                    contentDescription = "",
-                    contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxSize()
-                )
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(.95f)
@@ -1630,7 +1616,6 @@ fun MapSearchScreen(
 
                                     // if (country.isNotEmpty() && state.isNotEmpty() && city.isNotEmpty() && selectedLocality.isNotEmpty()) {
                                     // Create your data object
-                                    println("DATA ADDED -- ")
                                     val components = getAddressComponents(context, pinnedLocation!!)
 
                                     if (!components.pincode.isNullOrEmpty()) {
@@ -1644,7 +1629,6 @@ fun MapSearchScreen(
                                             )
                                         )
 
-                                        println("DATA ADDED -44- ${constants.PostProperty_ViewModel.pp_3_API_Data.value}")
                                         //  }
                                         constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
                                             pinnedLocation!!
@@ -1736,7 +1720,6 @@ fun getAddressComponents(context: Context, latLng: LatLng): AddressComponents {
     }
 
 
-    println("WFWFWF ${addr.countryName} *** ${addr.adminArea} ** ${addr.locality} ** ${addr.subLocality ?: addr.featureName}  *** ${addr.postalCode}")
     constants.PostProperty_ViewModel.set_country3(addr.countryName)
     constants.PostProperty_ViewModel.set_state3(addr.adminArea)
     constants.PostProperty_ViewModel.set_city3(addr.locality)
@@ -1783,7 +1766,6 @@ fun PincodePlaceSearch2222222(
     }
 
     LaunchedEffect(Unit, show_Map_view.value) {
-        println("HELLO -- ${data_Copy_Map.value} --- neww${constants.PostProperty_ViewModel.get_pp3_Data()}")
 
         country = data_Copy_Map.value?.country ?: ""
         state = data_Copy_Map.value?.state ?: ""
@@ -2094,7 +2076,6 @@ fun PincodePlaceSearch2222222(
 
         // Custom dropdown below Locality
         if (localities.isNotEmpty() && selectedLocality.isEmpty()) {
-            println("LOCATILIES FETCHED -- ${localities}")
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -2124,13 +2105,7 @@ fun PincodePlaceSearch2222222(
                 .fillMaxWidth()
                 .background(newBlue)
             , contentAlignment = Alignment.Center
-            //.paint(painter = painterResource(R.drawable.map), contentScale = ContentScale.FillWidth)
         ){
-            Image(painter = painterResource(R.drawable.map),""
-                , contentScale = ContentScale.FillWidth
-                , modifier = Modifier.fillMaxSize()
-            )
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth(.95f)

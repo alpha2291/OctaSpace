@@ -2344,14 +2344,23 @@ fun LottiAnimation(isWhichAnimation : Int){
         , contentAlignment = Alignment.Center
     )
     {
-            LottieAnimation(
-                composition = composition,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                , reverseOnRepeat = true,
-                iterations = LottieConstants.IterateForever
-            )
+            if (isWhichAnimation == 2) {
+                CircularProgressIndicator(
+                    color = newBlue,
+                    trackColor = newGray,
+                    strokeWidth = 5.dp,
+                    modifier = Modifier.size(56.dp)
+                )
+            } else {
+                LottieAnimation(
+                    composition = composition,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                    , reverseOnRepeat = true,
+                    iterations = LottieConstants.IterateForever
+                )
+            }
 
             if (isWhichAnimation != 2) {
                 Box(

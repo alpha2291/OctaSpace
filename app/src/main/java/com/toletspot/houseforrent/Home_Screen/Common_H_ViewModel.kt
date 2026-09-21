@@ -21,10 +21,8 @@ import kotlinx.coroutines.flow.update
 class Common_H_ViewModel : ViewModel(){
 
     fun clearAllData_CVM() {
-        // Reset notification and webview states
+        // Reset notification state
         notification_PostId = ""
-        webView_Type = 0
-
         // Reset bottom bar items to default unselected state
         BB_Items.clear()
         BB_Items.addAll(
@@ -103,8 +101,6 @@ class Common_H_ViewModel : ViewModel(){
         println("🧹 Common_H_ViewModel cleared successfully")
     }
     var notification_PostId by mutableStateOf("")
-    var webView_Type by mutableStateOf(0)
-
 
     var BB_Items = mutableStateListOf(
         Bottom_Bar_Items(

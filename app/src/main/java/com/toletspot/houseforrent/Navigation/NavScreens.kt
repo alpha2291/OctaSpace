@@ -72,9 +72,6 @@ sealed class ProfileScreenFlow(val route: String , val title: String) {
     object Profile_FF_Structure_Followings : ProfileScreenFlow("Profile_FF_Structure_Followings", "Profile_FF_Structure_Followings" )
     object Sold_Outs : ProfileScreenFlow("Sold_Outs", "Sold_Outs" )
     object UserCredentials : ProfileScreenFlow("user_Credentials", "User Credentials")
-    object TermsAndPrivacyScreen : ProfileScreenFlow("TermsAndPrivacyScreen", "TermsAndPrivacyScreen")
-    object AboutUsScreen : ProfileScreenFlow("AboutUsScreen", "AboutUsScreen")
-    object FeedBackScreen : ProfileScreenFlow("FeedBackScreen", "FeedBackScreen")
 
 
 }
@@ -180,10 +177,6 @@ sealed class UserCredentialsScreenFlow(val route: String, val title: String) {
     object Search_Filter_Sort : UserCredentialsScreenFlow("Search_Filter_Sort", "Search_Filter_Sort")
 
     object In_App_Notification : UserCredentialsScreenFlow("In_App_Notification", "In_App_Notification")
-
-    object TermsAndPrivacyScreen : UserCredentialsScreenFlow("TermsAndPrivacyScreen", "TermsAndPrivacyScreen")
-    object AboutUsScreen : UserCredentialsScreenFlow("AboutUsScreen", "AboutUsScreen")
-    object FeedBackScreen : UserCredentialsScreenFlow("FeedBackScreen", "FeedBackScreen")
     object Justify_Post : UserCredentialsScreenFlow("Justify_Post" , "Justify_Post")
 }
 
@@ -221,10 +214,6 @@ sealed class VideosScreenFlow(val route: String) {
     object Search_Filter_Sort : VideosScreenFlow("Search_Filter_Sort")
 
     object In_App_Notification : VideosScreenFlow("In_App_Notification")
-
-    object TermsAndPrivacyScreen : VideosScreenFlow("TermsAndPrivacyScreen")
-    object AboutUsScreen : VideosScreenFlow("AboutUsScreen")
-    object FeedBackScreen : VideosScreenFlow("FeedBackScreen")
 }
 
 // ----------------------------
@@ -260,10 +249,6 @@ sealed class ProfileScreenFlow(val route: String, val title: String) {
     object Search_Filter_Sort : ProfileScreenFlow("Search_Filter_Sort", "Search_Filter_Sort")
 
     object In_App_Notification : ProfileScreenFlow("In_App_Notification", "In_App_Notification")
-
-    object TermsAndPrivacyScreen : ProfileScreenFlow("TermsAndPrivacyScreen", "TermsAndPrivacyScreen")
-    object AboutUsScreen : ProfileScreenFlow("AboutUsScreen", "AboutUsScreen")
-    object FeedBackScreen : ProfileScreenFlow("FeedBackScreen", "FeedBackScreen")
     object Justify_Post : ProfileScreenFlow("Justify_Post" , "Justify_Post")
 
     object PreviewScreen : PostPropertyFlow( "PreviewScreen")
@@ -304,10 +289,6 @@ sealed class SearchScreenFlow(val route: String) {
     object Search_Filter_Sort : SearchScreenFlow("Search_Filter_Sort")
 
     object In_App_Notification : SearchScreenFlow("In_App_Notification")
-
-    object TermsAndPrivacyScreen : SearchScreenFlow("TermsAndPrivacyScreen")
-    object AboutUsScreen : SearchScreenFlow("AboutUsScreen")
-    object FeedBackScreen : SearchScreenFlow("FeedBackScreen")
     object Justify_Post : SearchScreenFlow("Justify_Post")
 
 
@@ -346,10 +327,6 @@ sealed class PostPropertyFlow(val route: String) {
     object Search_Filter_Sort : PostPropertyFlow("Search_Filter_Sort")
 
     object In_App_Notification : PostPropertyFlow("In_App_Notification")
-
-    object TermsAndPrivacyScreen : PostPropertyFlow("TermsAndPrivacyScreen")
-    object AboutUsScreen : PostPropertyFlow("AboutUsScreen")
-    object FeedBackScreen : PostPropertyFlow("FeedBackScreen")
     object Justify_Post : PostPropertyFlow( "Justify_Post")
     object PreviewScreen : PostPropertyFlow( "PreviewScreen")
 
@@ -388,10 +365,6 @@ sealed class EnquiriesFlow(val route: String) {
     object Search_Filter_Sort : EnquiriesFlow("Search_Filter_Sort")
 
     object In_App_Notification : EnquiriesFlow("In_App_Notification")
-
-    object TermsAndPrivacyScreen : EnquiriesFlow("TermsAndPrivacyScreen")
-    object AboutUsScreen : EnquiriesFlow("AboutUsScreen")
-    object FeedBackScreen : EnquiriesFlow("FeedBackScreen")
     object Justify_Post : EnquiriesFlow( "Justify_Post")
 
     object Msg_UserList : EnquiriesFlow( "Msg_UserList")
