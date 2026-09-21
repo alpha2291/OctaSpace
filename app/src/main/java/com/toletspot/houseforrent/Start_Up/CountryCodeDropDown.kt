@@ -38,7 +38,6 @@ data class Country(
     val limit : Int = 10
 )
 
-// 2️⃣ Helper function to load from assets
 fun loadCountries(context: Context): List<Country> {
     return try {
         val inputStream = context.assets.open("countrycode.json")
@@ -50,9 +49,6 @@ fun loadCountries(context: Context): List<Country> {
     }
 }
 
-
-
-// 3️⃣ Bottom sheet composable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryPickerBottomSheet(
@@ -111,19 +107,11 @@ fun CountryPickerBottomSheet(
                         , horizontalArrangement = Arrangement.SpaceBetween
                     ) {
 
-//                        Box(
-//                            modifier = Modifier
-//                                .size(25.dp)
-//                                .clip(CircleShape)
-//                                .background(Color.LightGray)
-//                        ) {
                             Text(
                                 text = country.emoji,
                                 fontSize = 24.sp
                             )
-//                        }
-//                        Spacer(Modifier.width(12.dp))
-//                        Column {
+
                             Text(
                                 text = country.name,
                                 fontSize = 16.sp,
@@ -135,9 +123,9 @@ fun CountryPickerBottomSheet(
                                 fontSize = 14.sp,
                                 color = Color.Gray
                             )
-//                        }
+
                     }
-                   // Divider(color = Color(0xFFE0E0E0))
+
                 }
             }
         }

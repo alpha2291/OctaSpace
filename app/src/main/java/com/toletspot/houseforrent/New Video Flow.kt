@@ -57,450 +57,9 @@ import kotlinx.coroutines.withContext
 import android.graphics.Canvas
 import java.io.File
 
-/*suspend fun exportSlideshowToVideo(
-    context: Context,
-    composeView: ComposeView,
-    outputFile: File,
-    width: Int,
-    height: Int,
-    fps: Int = 30,
-    durationSec: Int = 10
-) = withContext(Dispatchers.IO) {
-    val format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height).apply {
-        setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
-        setInteger(MediaFormat.KEY_BIT_RATE, 5_000_000)
-        setInteger(MediaFormat.KEY_FRAME_RATE, fps)
-        setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
-    }
-
-    val codec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
-    codec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-
-    val inputSurface = codec.createInputSurface()
-    val muxer = MediaMuxer(outputFile.absolutePath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
-
-    codec.start()
-
-    val bufferInfo = MediaCodec.BufferInfo()
-    var trackIndex = -1
-    var presentationTimeUs = 0L
-    val frameTimeUs = 1_000_000L / fps
-
-    val surface = codec.createInputSurface()
-
-
-    repeat(durationSec * fps) { frame ->
-        // Render Compose frame to Bitmap on Main thread
-        val bitmap = withContext(Dispatchers.Main) {
-            composeView.drawToBitmap(Bitmap.Config.ARGB_8888)
-        }
-
-        // Lock canvas, draw, unlock
-        val canvas: Canvas = surface.lockCanvas(null)
-        canvas.drawBitmap(bitmap, null, Rect(0, 0, width, height), null)
-        surface.unlockCanvasAndPost(canvas)
-
-        presentationTimeUs = frame * frameTimeUs
-
-        // Drain encoder
-        var outputBufferIndex = codec.dequeueOutputBuffer(bufferInfo, 0)
-        while (outputBufferIndex >= 0) {
-            val encodedData = codec.getOutputBuffer(outputBufferIndex) ?: break
-
-            if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0) {
-                bufferInfo.size = 0
-            }
-
-            if (bufferInfo.size > 0) {
-                encodedData.position(bufferInfo.offset)
-                encodedData.limit(bufferInfo.offset + bufferInfo.size)
-
-                if (trackIndex == -1) {
-                    trackIndex = muxer.addTrack(codec.outputFormat)
-                    muxer.start()
-                }
-
-                bufferInfo.presentationTimeUs = presentationTimeUs
-                muxer.writeSampleData(trackIndex, encodedData, bufferInfo)
-            }
-
-            codec.releaseOutputBuffer(outputBufferIndex, false)
-            outputBufferIndex = codec.dequeueOutputBuffer(bufferInfo, 0)
-        }
-    }
-
-    codec.signalEndOfInputStream()
-
-    // Finish writing
-    codec.stop()
-    codec.release()
-    muxer.stop()
-    muxer.release()
-}*/
-
 import android.os.Environment
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.coroutines.*
-
-/*// 🔹 Export Function
-suspend fun exportSlideshowToVideo(
-    context: Context,
-    composeView: ComposeView,
-    outputFile: File,
-    width: Int,
-    height: Int,
-    fps: Int = 30,
-    durationSec: Int = 10
-) = withContext(Dispatchers.IO) {
-
-    val format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height).apply {
-        setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
-        setInteger(MediaFormat.KEY_BIT_RATE, 5_000_000)
-        setInteger(MediaFormat.KEY_FRAME_RATE, fps)
-        setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
-    }
-
-    val codec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
-    codec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-
-    val surface = codec.createInputSurface()
-    val muxer = MediaMuxer(outputFile.absolutePath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
-
-    codec.start()
-
-    val bufferInfo = MediaCodec.BufferInfo()
-    var trackIndex = -1
-    var presentationTimeUs = 0L
-    val frameTimeUs = 1_000_000L / fps
-
-    repeat(durationSec * fps) { frame ->
-        // 🔹 Capture frame from Compose
-        val bitmap = withContext(Dispatchers.Main) {
-            composeView.drawToBitmap(Bitmap.Config.ARGB_8888)
-        }
-
-        // ⚠️ Normally, inputSurface is for GPU/EGL rendering.
-        // For demo simplicity, we use lockCanvas (works on some devices but EGL path is safer).
-        val canvas: Canvas = surface.lockCanvas(null)
-        canvas.drawBitmap(bitmap, null, Rect(0, 0, width, height), null)
-        surface.unlockCanvasAndPost(canvas)
-
-        presentationTimeUs = frame * frameTimeUs
-
-        // 🔹 Drain encoder
-        var outputBufferIndex = codec.dequeueOutputBuffer(bufferInfo, 0)
-        while (outputBufferIndex >= 0) {
-            val encodedData = codec.getOutputBuffer(outputBufferIndex) ?: break
-
-            if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG != 0) {
-                bufferInfo.size = 0
-            }
-
-            if (bufferInfo.size > 0) {
-                encodedData.position(bufferInfo.offset)
-                encodedData.limit(bufferInfo.offset + bufferInfo.size)
-
-                if (trackIndex == -1) {
-                    trackIndex = muxer.addTrack(codec.outputFormat)
-                    muxer.start()
-                }
-
-                bufferInfo.presentationTimeUs = presentationTimeUs
-                muxer.writeSampleData(trackIndex, encodedData, bufferInfo)
-            }
-
-            codec.releaseOutputBuffer(outputBufferIndex, false)
-            outputBufferIndex = codec.dequeueOutputBuffer(bufferInfo, 0)
-        }
-    }
-
-    codec.signalEndOfInputStream()
-    codec.stop()
-    codec.release()
-    muxer.stop()
-    muxer.release()
-}
-
-
-
-
-enum class AnimationType {
-    FADE,
-    SLIDE_LEFT, SLIDE_RIGHT, SLIDE_UP, SLIDE_DOWN,
-    SCALE, ZOOM,
-    ROTATE_X, ROTATE_Y, ROTATE_Z,
-    FLIP_X, FLIP_Y,
-    BOUNCE, SPIN,
-    MIXED
-}
-
-@Composable
-fun New_Video_Flow() {
-    val imagesList = remember {
-        listOf(
-            R.drawable.nature1,
-            R.drawable.nature2,
-            R.drawable.nature3,
-            R.drawable.nature4,
-            R.drawable.nature5
-        )
-    }
-
-    val context = LocalContext.current
-    var exporting by remember { mutableStateOf(false) }
-    var exportDone by remember { mutableStateOf<File?>(null) }
-
-
-    var currentIndex by remember { mutableStateOf(0) }
-    var animationType by remember { mutableStateOf(AnimationType.FADE) }
-    var isPlaying by remember { mutableStateOf(true) }
-
-    // Animatables
-    val alpha = remember { Animatable(1f) }
-    val offsetX = remember { Animatable(0f) }
-    val offsetY = remember { Animatable(0f) }
-    val scale = remember { Animatable(1f) }
-    val rotationX = remember { Animatable(0f) }
-    val rotationY = remember { Animatable(0f) }
-    val rotationZ = remember { Animatable(0f) }
-
-    // Reset all properties to defaults
-    suspend fun resetImageState() {
-        alpha.snapTo(1f)
-        offsetX.snapTo(0f)
-        offsetY.snapTo(0f)
-        scale.snapTo(1f)
-        rotationX.snapTo(0f)
-        rotationY.snapTo(0f)
-        rotationZ.snapTo(0f)
-    }
-
-    // Animation loop
-    LaunchedEffect(animationType, isPlaying) {
-        // Reset position when switching animation
-        resetImageState()
-
-        while (isPlaying) {
-            delay(3000)
-
-            val effect = if (animationType == AnimationType.MIXED) {
-                AnimationType.values().random().takeIf { it != AnimationType.MIXED } ?: AnimationType.FADE
-            } else animationType
-
-            when (effect) {
-                AnimationType.FADE -> {
-                    alpha.animateTo(0f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    alpha.animateTo(1f, tween(500))
-                }
-
-                AnimationType.SLIDE_LEFT -> {
-                    offsetX.animateTo(-1000f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    offsetX.snapTo(1000f)
-                    offsetX.animateTo(0f, tween(500))
-                }
-
-                AnimationType.SLIDE_RIGHT -> {
-                    offsetX.animateTo(1000f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    offsetX.snapTo(-1000f)
-                    offsetX.animateTo(0f, tween(500))
-                }
-
-                AnimationType.SLIDE_UP -> {
-                    offsetY.animateTo(-1000f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    offsetY.snapTo(1000f)
-                    offsetY.animateTo(0f, tween(500))
-                }
-
-                AnimationType.SLIDE_DOWN -> {
-                    offsetY.animateTo(1000f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    offsetY.snapTo(-1000f)
-                    offsetY.animateTo(0f, tween(500))
-                }
-
-                AnimationType.SCALE -> {
-                    scale.animateTo(0.7f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    scale.animateTo(1f, tween(500))
-                }
-
-                AnimationType.ZOOM -> {
-                    scale.animateTo(1.5f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    scale.snapTo(0.8f)
-                    scale.animateTo(1f, tween(500))
-                }
-
-                AnimationType.ROTATE_X -> {
-                    rotationX.animateTo(180f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    rotationX.snapTo(-180f)
-                    rotationX.animateTo(0f, tween(500))
-                }
-
-                AnimationType.ROTATE_Y -> {
-                    rotationY.animateTo(180f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    rotationY.snapTo(-180f)
-                    rotationY.animateTo(0f, tween(500))
-                }
-
-                AnimationType.ROTATE_Z -> {
-                    rotationZ.animateTo(rotationZ.value + 360f, tween(800))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                }
-
-                AnimationType.FLIP_X -> {
-                    rotationX.animateTo(90f, tween(300))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    rotationX.animateTo(0f, tween(300))
-                }
-
-                AnimationType.FLIP_Y -> {
-                    rotationY.animateTo(90f, tween(300))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    rotationY.animateTo(0f, tween(300))
-                }
-
-                AnimationType.BOUNCE -> {
-                    scale.animateTo(1.3f, spring(dampingRatio = Spring.DampingRatioLowBouncy))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    scale.animateTo(1f, spring(dampingRatio = Spring.DampingRatioMediumBouncy))
-                }
-
-                AnimationType.SPIN -> {
-                    rotationZ.animateTo(rotationZ.value + 720f, tween(1000))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                }
-
-                AnimationType.MIXED -> Unit
-            }
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(newBlack),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        // Image container with play/pause button overlay
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(400.dp)
-                .background(newBlack),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(id = imagesList[currentIndex]),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(alpha.value)
-                    .offset { IntOffset(offsetX.value.toInt(), offsetY.value.toInt()) }
-                    .graphicsLayer(
-                        scaleX = scale.value,
-                        scaleY = scale.value,
-                        rotationX = rotationX.value,
-                        rotationY = rotationY.value,
-                        rotationZ = rotationZ.value
-                    ),
-                contentScale = ContentScale.FillBounds
-            )
-
-            // Play/Pause overlay button
-            IconButton(
-                onClick = { isPlaying = !isPlaying },
-                modifier = Modifier
-                    .size(60.dp)
-                    .background(Color.Black.copy(alpha = 0.5f), shape = CircleShape)
-            )
-            {
-                Icon(
-                    painter = painterResource(if (isPlaying) R.drawable.close else R.drawable.play_arrow),
-                    // imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    contentDescription = "Play/Pause",
-                    tint = Color.White,
-                    modifier = Modifier.size(36.dp)
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(newWhite.copy(.2f))
-                    .align(Alignment.BottomCenter)
-                    .padding(vertical = 24.dp)
-                , contentAlignment = Alignment.Center
-            ) {
-                Text("Places , Can overlay Text", fontWeight = FontWeight.Bold , color = newBlue, fontSize = 20.sp)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Scrollable animation selection
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(AnimationType.values()) { type ->
-                Button(
-                    onClick = {
-                        animationType = type
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (animationType == type) Color.Gray else Color.DarkGray
-                    )
-                ) {
-                    Text(type.name, fontSize = 12.sp)
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // 🔹 Export Button
-        Button(
-            onClick = {
-                val downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                val file = File(downloads, "slideshow_export.mp4")
-
-                val composeView = ComposeView(context).apply {
-                    setContent {
-                        // Reuse same slideshow UI for rendering frames
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Black)
-                        ) {
-                            Text("Export Rendering", color = Color.White)
-                        }
-                    }
-                }
-
-                exporting = true
-                CoroutineScope(Dispatchers.Main).launch {
-                    exportSlideshowToVideo(context, composeView, file, 720, 1280, fps = 30, durationSec = 10)
-                    exporting = false
-                    exportDone = file
-                }
-            },
-            enabled = !exporting
-        ) {
-            Text(if (exporting) "Exporting..." else "Export Video")
-        }
-
-        exportDone?.let { file ->
-            Spacer(modifier = Modifier.height(8.dp))
-            Text("Exported to: ${file.absolutePath}", color = Color.Green)
-        }
-    }
-}*/
-
 
 import android.view.View
 import androidx.compose.foundation.pager.VerticalPager
@@ -520,7 +79,6 @@ import coil.compose.AsyncImage
 import com.toletspot.houseforrent.Custom_Assets.ClickHelper
 import com.toletspot.houseforrent.Home_Screen.PostProperty_Module.RentoDataclass.RentoMediaDC.Image
 
-// 🔹 Export Function with measure/layout fix
 suspend fun exportSlideshowToVideo(
     context: Context,
     composeView: ComposeView,
@@ -550,7 +108,6 @@ suspend fun exportSlideshowToVideo(
     var presentationTimeUs = 0L
     val frameTimeUs = 1_000_000L / fps
 
-    // 🔹 Force layout once before capture
     withContext(Dispatchers.Main) {
         val widthSpec = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY)
         val heightSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY)
@@ -559,19 +116,17 @@ suspend fun exportSlideshowToVideo(
     }
 
     repeat(durationSec * fps) { frame ->
-        // 🔹 Capture bitmap from Compose
+
         val bitmap = withContext(Dispatchers.Main) {
             composeView.drawToBitmap(Bitmap.Config.ARGB_8888)
         }
 
-        // Draw into encoder surface
         val canvas: Canvas = surface.lockCanvas(null)
         canvas.drawBitmap(bitmap, null, Rect(0, 0, width, height), null)
         surface.unlockCanvasAndPost(canvas)
 
         presentationTimeUs = frame * frameTimeUs
 
-        // 🔹 Drain encoder
         var outputBufferIndex = codec.dequeueOutputBuffer(bufferInfo, 0)
         while (outputBufferIndex >= 0) {
             val encodedData = codec.getOutputBuffer(outputBufferIndex) ?: break
@@ -604,11 +159,6 @@ suspend fun exportSlideshowToVideo(
     muxer.stop()
     muxer.release()
 }
-
-// -------------------------
-// 🔹 Your Slideshow UI
-// -------------------------
-
 
 enum class AnimationType {
     FADE, SLIDE_LEFT, SLIDE_RIGHT, SLIDE_UP, SLIDE_DOWN,
@@ -674,7 +224,7 @@ fun SlideshowContent(
     onPlayPauseToggle: () -> Unit,
     imagesList: List<Int>
 ) {
-    // 🔹 Animation states
+
     var currentIndex by remember { mutableStateOf(0) }
     val alpha = remember { Animatable(1f) }
     val offsetX = remember { Animatable(0f) }
@@ -694,7 +244,6 @@ fun SlideshowContent(
         rotationZ.snapTo(0f)
     }
 
-    // 🔹 Animation loop
     LaunchedEffect(animationType, isPlaying) {
         resetImageState()
         while (isPlaying) {
@@ -789,7 +338,7 @@ fun SlideshowContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        // 🔹 Only slideshow
+
         SlideshowRenderer(
             imagesList = imagesList,
             currentIndex = currentIndex,
@@ -804,7 +353,6 @@ fun SlideshowContent(
 
         Spacer(Modifier.height(16.dp))
 
-        // 🔹 Controls (NOT exported)
         IconButton(
             onClick = onPlayPauseToggle,
             modifier = Modifier
@@ -854,7 +402,7 @@ fun New_Video_Flow() {
     )
 
     Column(Modifier.fillMaxSize()) {
-        // Wrap slideshow in AndroidView to get ComposeView reference
+
         AndroidView(factory = { ctx ->
             ComposeView(ctx).also { cv ->
                 activeComposeView = cv
@@ -879,26 +427,12 @@ fun New_Video_Flow() {
                 exporting = true
                 CoroutineScope(Dispatchers.Main).launch {
                     activeComposeView?.let { cv ->
-                        // 🔹 Export only the slideshow renderer (no buttons)
-//                        cv.setContent {
-//                            SlideshowRenderer(
-//                                imagesList = imagesList,
-//                                currentIndex = 0, // start index
-//                                alpha = 1f,
-//                                offsetX = 0f,
-//                                offsetY = 0f,
-//                                scale = 1f,
-//                                rotationX = 0f,
-//                                rotationY = 0f,
-//                                rotationZ = 0f
-//                            )
-//                        }
 
                         cv.setContent {
                             SlideshowContent(
                                 animationType = animationType,
                                 onAnimationTypeChange = {},
-                                isPlaying = true, // force playing
+                                isPlaying = true,
                                 onPlayPauseToggle = {},
                                 imagesList = imagesList
                             )
@@ -920,11 +454,6 @@ fun New_Video_Flow() {
     }
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
 @Composable
 fun SingleVideoPlayer(
     videoUri: String,
@@ -933,12 +462,10 @@ fun SingleVideoPlayer(
 {
     val context = LocalContext.current
 
-    // Keep single ExoPlayer instance
     val player = remember {
         ExoPlayer.Builder(context).build()
     }
 
-    // Update source when videoUri changes
     LaunchedEffect(videoUri) {
         player.setMediaItem(MediaItem.fromUri(videoUri))
         player.prepare()
@@ -948,7 +475,6 @@ fun SingleVideoPlayer(
     val isBuffering = remember { mutableStateOf(true) }
     val isPlaying = remember { mutableStateOf(false) }
 
-    // Listen for state changes
     DisposableEffect(player) {
         val listener = object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -967,16 +493,13 @@ fun SingleVideoPlayer(
 
         onDispose {
             player.removeListener(listener)
-            // keep global instance -> don’t release
-            // for per-screen lifecycle, uncomment:
-            // player.release()
+
         }
     }
 
     var currentPosition by remember { mutableStateOf(0L) }
     var totalDuration by remember { mutableStateOf(0L) }
 
-    // Update progress
     LaunchedEffect(player) {
         while (true) {
             currentPosition = player.currentPosition
@@ -992,7 +515,6 @@ fun SingleVideoPlayer(
         return "%02d:%02d".format(minutes, seconds)
     }
 
-    // UI
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -1010,7 +532,6 @@ fun SingleVideoPlayer(
                 }
         )
 
-        // Play icon overlay
         if (!isPlaying.value) {
             Box(
                 modifier = Modifier
@@ -1027,7 +548,6 @@ fun SingleVideoPlayer(
             }
         }
 
-        // Buffering overlay
         if (isBuffering.value) {
             Box(
                 modifier = Modifier
@@ -1039,7 +559,6 @@ fun SingleVideoPlayer(
             }
         }
 
-        // Bottom time bar
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -1075,95 +594,17 @@ fun SingleVideoPlayer(
 }
 
 enum class SlideshowAnimation {
-    FADE,          // Crossfade
-    SPIN,          // Rotate 360° Z
-    ZOOM_IN,       // Grows into view
-    ZOOM_OUT,      // Shrinks into place
-    FLIP_X,        // Horizontal flip
-    FLIP_Y,        // Vertical flip
-    SCALE_FADE,    // Zoom + Fade combo
-    ROTATE_X,      // 3D tilt on X-axis
-    ROTATE_Y,      // 3D tilt on Y-axis
-    PULSE          // Grows & shrinks smoothly
+    FADE,
+    SPIN,
+    ZOOM_IN,
+    ZOOM_OUT,
+    FLIP_X,
+    FLIP_Y,
+    SCALE_FADE,
+    ROTATE_X,
+    ROTATE_Y,
+    PULSE
 }
-
-
-/*@Composable
-fun SingleSlideshow2(
-    imagesList: List<String>,
-    isPlaying: Boolean,
-    modifier: Modifier = Modifier,
-    animationType: SlideshowAnimation = SlideshowAnimation.FADE, // Default Fade
-    intervalMillis: Long = 2000 // Time per slide
-) {
-    var currentIndex by remember { mutableStateOf(0) }
-
-    val alpha = remember { Animatable(1f) }
-    val rotationZ = remember { Animatable(0f) }
-
-    suspend fun resetState() {
-        alpha.snapTo(1f)
-        rotationZ.snapTo(0f)
-    }
-
-    LaunchedEffect(animationType, isPlaying) {
-        resetState()
-        while (isPlaying) {
-            delay(intervalMillis)
-
-            when (animationType) {
-                SlideshowAnimation.FADE -> {
-                    alpha.animateTo(0f, tween(500))
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                    alpha.animateTo(1f, tween(500))
-                }
-
-                SlideshowAnimation.SPIN -> {
-                    rotationZ.animateTo(
-                        rotationZ.value + 360f,
-                        animationSpec = tween(1000, easing = LinearEasing)
-                    )
-                    currentIndex = (currentIndex + 1) % imagesList.size
-                }
-            }
-        }
-    }
-
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(400.dp)
-            .background(Color.Black),
-        contentAlignment = Alignment.Center
-    ) {
-
-
-
-        println("CONTENT TYPE -- ${imagesList[currentIndex]}")
-        AsyncImage(
-            model = imagesList[currentIndex],
-                    contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize()
-                .graphicsLayer(
-                    alpha = alpha.value,
-                    rotationZ = rotationZ.value
-                ),
-            contentScale = ContentScale.Crop
-        )
-//        Image(
-//            painter = painterResource(id = imagesList[currentIndex]),
-//            contentDescription = null,
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .graphicsLayer(
-//                    alpha = alpha.value,
-//                    rotationZ = rotationZ.value
-//                ),
-//            contentScale = ContentScale.Crop
-//        )
-    }
-}*/
 
 @Composable
 fun SingleSlideshow(
@@ -1189,7 +630,6 @@ fun SingleSlideshow(
         scale.snapTo(1f)
     }
 
-    // Animation loop
     LaunchedEffect(animationType, isPlaying) {
         resetState()
         while (isPlaying) {
@@ -1246,7 +686,6 @@ fun SingleSlideshow(
         }
     }
 
-    // UI
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -1256,7 +695,7 @@ fun SingleSlideshow(
                 ClickHelper.getInstance().clickOnce {
                     isPlaying = !isPlaying
                 }
-                       }, // toggle play/pause on tap
+                       },
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
@@ -1275,7 +714,6 @@ fun SingleSlideshow(
             contentScale = ContentScale.Crop
         )
 
-        // Play icon overlay when paused
         if (!isPlaying) {
             Box(
                 modifier = Modifier
@@ -1295,18 +733,12 @@ fun SingleSlideshow(
     }
 }
 
-
-
-
-
-
-// 🔹 Your Data Class
 data class NewVideoFlowDC(
     var id: Int = 0,
     var videoUrl: String = "",
-    var content_type: Int = 0, // 0 = Video, 1 = Slideshow
+    var content_type: Int = 0,
     var imagesList: List<Image> = emptyList(),
-    var animationType: SlideshowAnimation = SlideshowAnimation.FADE // default
+    var animationType: SlideshowAnimation = SlideshowAnimation.FADE
 )
 
 val newImageUrls = listOf(
@@ -1319,20 +751,16 @@ fun getRandomImages(): List<String> {
     return newImageUrls.shuffled().take(count)
 }
 
-// 🔹 Dummy Data
-// 🔹 Main Pager
-
 @Composable
 fun VerticalFlowPager(items: List<NewVideoFlowDC>) {
     val pagerState = rememberPagerState(pageCount = ({items.size}))
 
     VerticalPager(
-        //count = items.size,
+
         state = pagerState,
         modifier = Modifier.fillMaxSize()
     ) { page ->
         val item = items[page]
-        println("CONTENT TYPE -- ${item.content_type}")
         Box(modifier = Modifier
             .fillMaxSize()
             , contentAlignment = Alignment.Center
@@ -1350,8 +778,8 @@ fun VerticalFlowPager(items: List<NewVideoFlowDC>) {
 
                     SingleSlideshow(
                         imagesList = item.imagesList,
-                       // isPlaying = true,
-                        animationType = animationType, // Or SPIN
+
+                        animationType = animationType,
                         modifier = Modifier.fillMaxWidth().height(400.dp)
                     )
                 }
@@ -1360,15 +788,7 @@ fun VerticalFlowPager(items: List<NewVideoFlowDC>) {
     }
 }
 
-// 🔹 Usage
 @Composable
 fun DemoScreen() {
-   // VerticalVideoFlowPager(items = dummyItems)
+
 }
-
-
-
-
-
-
-

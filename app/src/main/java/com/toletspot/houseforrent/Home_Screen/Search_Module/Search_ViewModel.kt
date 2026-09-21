@@ -26,40 +26,33 @@ import kotlin.collections.map
 class Search_ViewModel : ViewModel() {
 
     fun clearAllData_SVM() {
-        // Reset popular cities to default (all unselected)
+
         _search_Popular_Cities.value = _search_Popular_Cities.value.map {
             it.copy(isSelected = false)
         }
 
-        // Reset search results visibility
         _show_Search_Results.value = false
         _search_Results_Dropdown.value = false
 
-        // Clear search results content
         _search_Results.value = emptyList()
         _profile_Search_Results.value = emptyList()
 
-        // Reset search result selection
         _selected_SearchResult_Reela_Flow.value = 0
 
-        // Clear search variables
         search_State.value = 1
         search_Area.value = ""
         search_Profile_Name.value = ""
         search_Land_Type.value = 1
         selectedOption_SEARCHTYPE = "Residential"
 
-        // Clear sort/filter data
         _search_Sort_Filter_Fields_Data.value = null
         _selected_Sort_Filter_Fields.value = Sort_Filter_Field_DC()
 
-        // Reset range values to defaults
         minRangeRefs.value = 2000
         maxRangeRefs.value = 10000000
         minPropertAreaRefs.value = "1"
         maxPropertAreaRefs.value = "1000"
 
-        // Reset search main options to default
         _search_M_Options.value = listOf(
             Search_Main_Options(id = 0, title = "Sort By", onSelected = true),
             Search_Main_Options(id = 1, title = "Property Type"),
@@ -69,11 +62,11 @@ class Search_ViewModel : ViewModel() {
             Search_Main_Options(id = 5, title = "Floor Plan"),
             Search_Main_Options(id = 6, title = "Availability Status"),
             Search_Main_Options(id = 7, title = "Furnishing Status"),
-            //Search_Main_Options(id = 8, title = "Ownership"),
+
             Search_Main_Options(id = 9, title = "Parking"),
             Search_Main_Options(id = 10, title = "Open Sides"),
             Search_Main_Options(id = 11, title = "Floor Preferences"),
-            //Search_Main_Options(id = 12, title = "Business Type"),
+
             Search_Main_Options(id = 13, title = "Approved Authority"),
             Search_Main_Options(id = 14, title = "Property Facing"),
             Search_Main_Options(id = 15, title = "Amenities"),
@@ -89,31 +82,22 @@ class Search_ViewModel : ViewModel() {
             Search_Main_Options(id = 25, title = "Agreement"),
         )
 
-        // Reset selected indices
         _selectedIndex.value = 0
         _selectedIndex_Id.value = 0
 
-        // Clear popular cities and sellers
         _popular_Cities.value = emptyList()
         _popular_Sellers.value = emptyList()
 
-        // Reset filter/sort applied state
         _is_Search_FS_Applied.value = false
 
-        // Reset search trigger
         trigger_Search_Again.value = 0
 
-        // Reset comment post ID
         get_Post_Id_Search_Cmt_Clicked.value = 0
 
-        // Reset search results count
         total_SearchResults_Counts.value = 0
 
-        println("🧹 Search_ViewModel cleared successfully")
     }
 
-
-    /// popular cities list
     private var _search_Popular_Cities =  MutableStateFlow(
         listOf(
             Search_Popular_Cities_DC(
@@ -156,19 +140,6 @@ class Search_ViewModel : ViewModel() {
 
     var search_Popular_Cities : StateFlow<List<Search_Popular_Cities_DC>> = _search_Popular_Cities.asStateFlow()
 
-//    fun select_Popular_Cities(id: Int) {
-//        _search_Popular_Cities.update { currentList ->
-//            currentList.map { city ->
-//                if (city.id == id) {
-//                    city.copy(isSelected = !city.isSelected) // toggle selection
-//                }else{
-//                    city
-//                }
-//
-//            }
-//        }
-//    }
-
     fun select_Popular_Cities(selectedId: Int) {
         _search_Popular_Cities.update { currentList ->
             currentList.map { city ->
@@ -176,9 +147,6 @@ class Search_ViewModel : ViewModel() {
             }
         }
     }
-
-
-    /// search result enable click [ search intiate click button ]  var
 
     private var _show_Search_Results = MutableStateFlow<Boolean>(false)
     var show_Search_Results : StateFlow<Boolean> = _show_Search_Results.asStateFlow()
@@ -191,7 +159,6 @@ class Search_ViewModel : ViewModel() {
         _show_Search_Results.value = false
     }
 
-
     private var _search_Results_Dropdown = MutableStateFlow<Boolean>(false)
     var search_Results_Dropdown : StateFlow<Boolean> = _search_Results_Dropdown.asStateFlow()
 
@@ -202,8 +169,6 @@ class Search_ViewModel : ViewModel() {
     fun dismiss_Search_Results_Dropdown(){
         _show_Search_Results.value = false
     }
-
-    // search result var
 
     private var _search_Result_Content = MutableStateFlow(
         listOf(
@@ -386,7 +351,7 @@ class Search_ViewModel : ViewModel() {
         _search_Result_Content.update { currentList ->
             currentList.map { item ->
                 if (item.id == id) {
-                    item.copy(isLiked = !item.isLiked) // toggle selection
+                    item.copy(isLiked = !item.isLiked)
                 }else{
                     item
                 }
@@ -399,7 +364,7 @@ class Search_ViewModel : ViewModel() {
         _search_Result_Content.update { currentList ->
             currentList.map { item ->
                 if (item.id == id) {
-                    item.copy(isSaved = !item.isSaved) // toggle selection
+                    item.copy(isSaved = !item.isSaved)
                 }else{
                     item
                 }
@@ -408,18 +373,12 @@ class Search_ViewModel : ViewModel() {
         }
     }
 
-    /// selected search result flow video index var
-
     private var _selected_SearchResult_Reela_Flow = MutableStateFlow<Int>(0)
     var selected_RS_Reels_Flow : StateFlow<Int> = _selected_SearchResult_Reela_Flow.asStateFlow()
-
 
     fun select_RS_Reels_Flow(index :Int){
         _selected_SearchResult_Reela_Flow.update { index }
     }
-
-
-    /// Search_Results _API
 
     private val _search_Results = MutableStateFlow<List<Get_Reels_Data>>(emptyList())
     val search_Results: StateFlow<List<Get_Reels_Data>> = _search_Results.asStateFlow()
@@ -428,10 +387,10 @@ class Search_ViewModel : ViewModel() {
 
     fun setSearchResultContent(newReels: List<Get_Reels_Data>) {
         newReels.forEachIndexed { i, item ->
-            //println("Index=$i, ID=${item.land_type_id}, Name=${item.name}, Selected=${item.is_Selected}")
+
         }
         _search_Results.value = newReels
-        //` updateSelectedIds()
+
     }
 
     fun clear_Search_Results(){
@@ -454,8 +413,6 @@ class Search_ViewModel : ViewModel() {
         }
     }
 
-
-    // Add these properties to Search_ViewModel
     private val _backupFilterState = MutableStateFlow<Sort_Filter_Field_DC?>(null)
 
     fun backupCurrentFilterState() {
@@ -472,12 +429,11 @@ class Search_ViewModel : ViewModel() {
         _backupFilterState.value = null
     }
 
-
     fun toggleLike_Reels_Search(reelId: Int) {
         _search_Results.update { currentList ->
             currentList.map { reel ->
                 if (reel.user_post_id == reelId) {
-                    // toggle between 1 and 0
+
                     val newLikeStatus = if (reel.is_liked == 1) 0 else 1
                     reel.copy(is_liked = newLikeStatus)
                 } else reel
@@ -489,7 +445,7 @@ class Search_ViewModel : ViewModel() {
         _search_Results.update { currentList ->
             currentList.map { reel ->
                 if (reel.user_post_id == reelId) {
-                    // toggle between 1 and 0
+
                     val newLikeStatus = if (reel.is_saved == 1) 0 else 1
                     reel.copy(is_saved = newLikeStatus)
                 } else reel
@@ -503,17 +459,14 @@ class Search_ViewModel : ViewModel() {
                 if (reel.user_post_id == reelId) {
                     reel.copy(
                         total_likes = reel.total_likes + 1,
-                        //is_liked = 1 // optional: mark it as liked
+
                     )
                 } else reel
             }
         }
     }
 
-
-
     fun increaseCommentCount_Reels_Search(reelId: Int) {
-        println("DATA UPDATEDDDDDDD -- ${_search_Results.value}")
         _search_Results.update { list ->
             list.map { reel ->
                 if (reel.user_post_id == reelId) {
@@ -524,7 +477,6 @@ class Search_ViewModel : ViewModel() {
     }
 
     fun decreaseCommentCount_Reels_Search(reelId: Int) {
-        println("DATA UPDATEDDDDDDD -- ${_search_Results.value}")
         _search_Results.update { list ->
             list.map { reel ->
                 if (reel.user_post_id == reelId) {
@@ -535,7 +487,6 @@ class Search_ViewModel : ViewModel() {
     }
 
     fun decreaseCommentCount_Reels_Search_More(reelId: Int , count : Int) {
-        println("DATA UPDATEDDDDDDD -- ${_search_Results.value}")
         _search_Results.update { list ->
             list.map { reel ->
                 if (reel.user_post_id == reelId) {
@@ -545,145 +496,71 @@ class Search_ViewModel : ViewModel() {
         }
     }
 
-
     fun decreaseLikeCount_Reels_Search(reelId: Int) {
         _search_Results.update { currentList ->
             currentList.map { reel ->
                 if (reel.user_post_id == reelId) {
                     reel.copy(
                         total_likes = reel.total_likes - 1,
-                        //is_liked = 1 // optional: mark it as liked
+
                     )
                 } else reel
             }
         }
     }
-
-
 
     var get_Post_Id_Search_Cmt_Clicked = mutableStateOf(0)
 
-
     val total_SearchResults_Counts = mutableStateOf(0)
-
- /*   fun toggleLike_SearchResults(reelId: Int) {
-        _search_Results.update { currentList ->
-            currentList.map { reel ->
-                if (reel.user_post_id == reelId) {
-                    // toggle between 1 and 0
-                    val newLikeStatus = if (reel.is_liked == 1) 0 else 1
-                    reel.copy(is_liked = newLikeStatus)
-                } else reel
-            }
-        }
-    }
-
-    fun toggleSave_SearchResults(reelId: Int) {
-        _search_Results.update { currentList ->
-            currentList.map { reel ->
-                if (reel.user_post_id == reelId) {
-                    // toggle between 1 and 0
-                    val newLikeStatus = if (reel.is_saved == 1) 0 else 1
-                    reel.copy(is_saved = newLikeStatus)
-                } else reel
-            }
-        }
-    }
-
-    fun increaseLikeCount_SearchResults(reelId: Int) {
-        _search_Results.update { currentList ->
-            currentList.map { reel ->
-                if (reel.user_post_id == reelId) {
-                    reel.copy(
-                        total_likes = reel.total_likes + 1,
-                        //is_liked = 1 // optional: mark it as liked
-                    )
-                } else reel
-            }
-        }
-    }
-
-    fun decreaseLikeCount_SearchResults(reelId: Int) {
-        _search_Results.update { currentList ->
-            currentList.map { reel ->
-                if (reel.user_post_id == reelId) {
-                    reel.copy(
-                        total_likes = reel.total_likes - 1,
-                        //is_liked = 1 // optional: mark it as liked
-                    )
-                } else reel
-            }
-        }
-    }*/
-
-
-    /// Search_Results _API
 
     private val _profile_Search_Results = MutableStateFlow<List<Put_Profile_search_Data>>(emptyList())
     val profile_Search_Results: StateFlow<List<Put_Profile_search_Data>> = _profile_Search_Results.asStateFlow()
 
-
     fun setProfileSearchResultContent(newReels: List<Put_Profile_search_Data>) {
         newReels.forEachIndexed { i, item ->
-            //println("Index=$i, ID=${item.land_type_id}, Name=${item.name}, Selected=${item.is_Selected}")
+
         }
         _profile_Search_Results.value = newReels
-        //` updateSelectedIds()
+
     }
 
     fun updateFollowState(userId: Int, newState: Int) {
         val currentList = profile_Search_Results.value.toMutableList()
-        println("Current list =---- ${currentList}")
         val index = currentList.indexOfFirst { it.user_id == userId }
-        println("Current list index =---- ${index}")
         if (index != -1) {
             val updatedItem = currentList[index].copy(
                 im_followed = newState
             )
             currentList[index] = updatedItem
-            println("Current list =---- ${updatedItem}")
-            _profile_Search_Results.value = currentList  // 🔥 triggers recomposition
+            _profile_Search_Results.value = currentList
         }
     }
 
-
     fun updateBlockState(userId: Int){
         val currentList = profile_Search_Results.value.toMutableList()
-        println("Current list BLOCK =---- ${currentList}")
         val index = currentList.indexOfFirst { it.user_id == userId }
-        println("Current list index BLOCK =---- ${index}")
         if (index != -1) {
             val updatedItem = currentList[index].copy(
                 isBlocked = 0
             )
             currentList[index] = updatedItem
-            println("Current list BLOCK =---- ${updatedItem}")
-            _profile_Search_Results.value = currentList  // 🔥 triggers recomposition
+            _profile_Search_Results.value = currentList
         }
     }
-
-
 
     fun clear_profile_SearchData(){
         _profile_Search_Results.value = emptyList()
     }
-
-
-    ///// search variab;es
 
     var search_State =  mutableStateOf(1)
     var search_Area =  mutableStateOf("")
 
     var search_Profile_Name =  mutableStateOf("")
 
-
-
     var search_Land_Type = mutableStateOf(1)
 
-    //// searcgh sort filter fields data var
     private var _search_Sort_Filter_Fields_Data = MutableStateFlow<Search_Filter_Sort_Fields_Data?> (null)
     var search_Sort_Filter_Fields_Data : StateFlow<Search_Filter_Sort_Fields_Data?> = _search_Sort_Filter_Fields_Data.asStateFlow()
-
 
     fun add_sort_filter_data(data : Search_Filter_Sort_Fields_Data){
         _search_Sort_Filter_Fields_Data.update { data }
@@ -704,23 +581,19 @@ class Search_ViewModel : ViewModel() {
             when (option.id) {
                 0 -> option.copy(onSelected = data.sort_by.isNotEmpty())
                 1 -> option.copy(onSelected = data.property_type.isNotEmpty())
-                2 -> option.copy(onSelected = true) // data.property_area?.isNotBlank()
-                3 -> option.copy(onSelected = true) // data.budget?.isNotBlank() ==
+                2 -> option.copy(onSelected = true)
+                3 -> option.copy(onSelected = true)
                 4 -> option.copy(onSelected = true)
-                    //option.copy(onSelected = data.posted_by.map { it.posted_by.isNotEmpty() }.isNotEmpty())
+
                 5 -> option.copy(onSelected = data.floor_plan.isNotEmpty())
-//                6 -> option.copy(onSelected = data.availability_status.isNotEmpty())
+
                 7 -> option.copy(onSelected = data.furnishing_status.isNotEmpty())
-//                8 -> option.copy(onSelected = data.ownership.isNotEmpty())
+
                 9 -> option.copy(onSelected = data.parking_available.isNotEmpty())
                 10 -> option.copy(onSelected = data.open_sides.isNotEmpty())
                 11 -> option.copy(onSelected = data.floor_preferences.isNotEmpty())
-//                12 -> {
-//                    println("Business Type isEmpty: ${data.business_type.isEmpty()}, list: ${data.business_type}")
-//                    option.copy(onSelected = data.business_type.isNotEmpty())
-//                }
+
                 13 -> {
-                    println("Authority Approved isEmpty: ${data.approved.isEmpty()}, list: ${data.approved}")
                     option.copy(onSelected = data.approved.isNotEmpty())
                 }
                 14 -> option.copy(onSelected = data.property_facing.isNotEmpty())
@@ -745,16 +618,11 @@ class Search_ViewModel : ViewModel() {
         val options = activate_Search_Options()
         val selected = options.filter { it.onSelected == true }
         _search_M_Options.value = selected
-        println("ACTIVATE FIELDS --- $selected")
     }
 
     fun update_Search_Main_Options(updatedList: List<Search_Main_Options>) {
         _search_M_Options.value = updatedList
     }
-
-
-
-
 
     private val _search_M_Options = MutableStateFlow(
         listOf(
@@ -766,11 +634,11 @@ class Search_ViewModel : ViewModel() {
             Search_Main_Options(id = 5, title = "Floor Plan"),
             Search_Main_Options(id = 6, title = "Availability Status"),
             Search_Main_Options(id = 7, title = "Furnishing Status"),
-//            Search_Main_Options(id = 8, title = "Ownership"),
+
             Search_Main_Options(id = 9, title = "Parking"),
             Search_Main_Options(id = 10, title = "Open Sides"),
             Search_Main_Options(id = 11, title = "Floor Preferences"),
-//            Search_Main_Options(id = 12, title = "Business Type"),
+
             Search_Main_Options(id = 13, title = "Approved Authority"),
             Search_Main_Options(id = 14, title = "Property Facing"),
             Search_Main_Options(id = 15, title = "Amenities"),
@@ -790,11 +658,10 @@ class Search_ViewModel : ViewModel() {
 
     val search_Main_options_List: StateFlow<List<Search_Main_Options>> = _search_M_Options.asStateFlow()
 
-
     fun add_SearchSort_Main_Option(data:List<Search_Main_Options> ){
         _search_M_Options.update { data }
     }
-    // Optionally store selected index
+
     private val _selectedIndex = MutableStateFlow<Int>(0)
     val selectedIndex: StateFlow<Int> = _selectedIndex.asStateFlow()
 
@@ -802,20 +669,15 @@ class Search_ViewModel : ViewModel() {
         _selectedIndex.update { index }
     }
 
-    // Optionally store selected id
     private val _selectedIndex_Id = MutableStateFlow<Int>(0)
     val selectedIndex_Id: StateFlow<Int> = _selectedIndex_Id.asStateFlow()
-
 
     fun set_selected_SortOption_Index_Id(index: Int){
         _selectedIndex_Id.update { index }
     }
 
-
     var trigger_Search_Again = mutableStateOf(0)
 
-
-    // popular citioes
     private var _popular_Cities = MutableStateFlow<List<Popular_Cities_Search_Data?>> (emptyList())
     var popular_Cities : StateFlow<List<Popular_Cities_Search_Data?>> = _popular_Cities.asStateFlow()
 
@@ -824,9 +686,6 @@ class Search_ViewModel : ViewModel() {
         _popular_Cities.update { List }
     }
 
-
-    // popular sellers
-
     private var _popular_Sellers = MutableStateFlow<List<Popular_Sellers_Search_Data?>> (emptyList())
     var popular_Sellers : StateFlow<List<Popular_Sellers_Search_Data?>> = _popular_Sellers.asStateFlow()
 
@@ -834,10 +693,6 @@ class Search_ViewModel : ViewModel() {
     {
         _popular_Sellers.update { List }
     }
-
-
-
-
 
     private var _is_Search_FS_Applied = MutableStateFlow<Boolean>(false)
     var is_Search_FS_Applied : StateFlow<Boolean> = _is_Search_FS_Applied.asStateFlow()
@@ -853,14 +708,11 @@ class Search_ViewModel : ViewModel() {
     private var _selected_Sort_Filter_Fields = MutableStateFlow(Sort_Filter_Field_DC())
     var selected_Sort_Filter_Fields : StateFlow<Sort_Filter_Field_DC?> = _selected_Sort_Filter_Fields.asStateFlow()
 
-
     var minRangeRefs = mutableStateOf(2000L)
     var maxRangeRefs = mutableStateOf(10_000_000L)
 
-
     var minPropertAreaRefs = mutableStateOf("1")
     var maxPropertAreaRefs = mutableStateOf("1000")
-
 
     fun update_Search_SF(update: (Sort_Filter_Field_DC) -> Sort_Filter_Field_DC) {
         _selected_Sort_Filter_Fields.update { current -> update(current) }
@@ -875,7 +727,6 @@ class Search_ViewModel : ViewModel() {
 
     }
 
-    // Toggle Int value in list
     fun toggle_Int_Field(fieldName: String, value: Int) {
         _selected_Sort_Filter_Fields.update { current ->
             val currentList = when (fieldName) {
@@ -904,12 +755,11 @@ class Search_ViewModel : ViewModel() {
         }
     }
 
-    // Toggle String value in list
     fun toggle_String_Field(fieldName: String, value: String) {
         _selected_Sort_Filter_Fields.update { current ->
             val currentList = when (fieldName) {
                 "ownership" -> current.ownership
-                //"availability_status" -> current.availability_status
+
                 "floor_plan" -> current.floor_plan
                 "furnishing_status" -> current.furnishing_status
                 "parking_available" -> current.parking_available
@@ -920,15 +770,13 @@ class Search_ViewModel : ViewModel() {
                 "business_type" -> current.business_type
                 "approved" -> current.approved
 
-
                 "rent_type" -> current.rent_type
-                //"posted_date" -> current.posted_date
-                //"available_from" -> current.available_from
+
                 "available_for" -> current.available_for
                 "bedrooms" -> current.bedrooms
                 "food_preference" -> current.food_preference
                 "pets_allowed" -> current.pets_allowed
-                //"with_photos" -> current.with_photos
+
                 "agreement_type" -> current.agreement_type
                 else -> emptyList()
             }
@@ -941,7 +789,7 @@ class Search_ViewModel : ViewModel() {
 
             when (fieldName) {
                 "ownership" -> current.copy(ownership = updatedList)
-//                "availability_status" -> current.copy(availability_status = updatedList)
+
                 "floor_plan" -> current.copy(floor_plan = updatedList)
                 "furnishing_status" -> current.copy(furnishing_status = updatedList)
                 "parking_available" -> current.copy(parking_available = updatedList)
@@ -953,22 +801,18 @@ class Search_ViewModel : ViewModel() {
                 "approved" -> current.copy(approved = updatedList)
 
                 "rent_type" -> current.copy(rent_type = updatedList)
-               // "posted_date" -> current.copy(posted_date = updatedList)
-                //"available_from" -> current.copy(available_from = updatedList)
+
                 "available_for" -> current.copy(available_for = updatedList)
                 "bedrooms" -> current.copy(bedrooms = updatedList)
                 "food_preference" -> current.copy(food_preference = updatedList)
                 "pets_allowed" -> current.copy(pets_allowed = updatedList)
-                //"with_photos" -> current.copy(with_photos = updatedList)
+
                 "agreement_type" -> current.copy(agreement_type = updatedList)
                 else -> current
             }
         }
     }
 
-
-
-    // Expose as StateFlow that updates automatically
     val selected_Categories_Count: StateFlow<Int> = _selected_Sort_Filter_Fields.map { it ->
         var count = 0
 
@@ -983,7 +827,7 @@ class Search_ViewModel : ViewModel() {
         if (it.posted_by.isNotEmpty()) count++
         if (it.floor_preferences.isNotEmpty()) count++
         if (it.ownership.isNotEmpty()) count++
-//        if (it.availability_status.isNotEmpty()) count++
+
         if (it.floor_plan.isNotEmpty()) count++
         if (it.furnishing_status.isNotEmpty()) count++
         if (it.parking_available.isNotEmpty()) count++
@@ -993,7 +837,6 @@ class Search_ViewModel : ViewModel() {
         if (it.property_highlights.isNotEmpty()) count++
         if (it.business_type.isNotEmpty()) count++
         if (it.approved.isNotEmpty()) count++
-
 
         if (it.rent_type.isNotEmpty()) count++
         if (it.posted_date.isNotEmpty()) count++
@@ -1011,15 +854,7 @@ class Search_ViewModel : ViewModel() {
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = 0
     )
-    // Check if Int value is selected
-//    fun is_String_Selected(fieldName: String, value: Int) {
-//        val current = _selected_Sort_Filter_Fields.value
-//        return when (fieldName) {
-//            "floor_preferences" -> current.floor_preferences.contains(value)
-//            else -> false
-//        }
-//    }
-    // Check if Int value is selected
+
     fun is_String_Selected(fieldName: String, value: String): Boolean {
         val current = _selected_Sort_Filter_Fields.value
         return when (fieldName) {
@@ -1038,13 +873,10 @@ class Search_ViewModel : ViewModel() {
         }
     }
 
-
-    // Get count of selected filter categories (not individual items, but categories with at least one selection)
     fun get_Selected_Categories_Count(): Int {
         val current = _selected_Sort_Filter_Fields.value
         var count = 0
 
-        // Check single-value fields
         if (current.short_by != null && current.short_by != 0) count++
         if (!current.recently_posted_date.isNullOrEmpty()) count++
         if (current.land_type_id != null && current.land_type_id != 0) count++
@@ -1055,14 +887,12 @@ class Search_ViewModel : ViewModel() {
         if (!current.budget_to.isNullOrEmpty()) count++
         if (!current.search_Text.isNullOrEmpty()) count++
 
-        // Check List<Int> fields
         if (current.land_categorie_id.isNotEmpty()) count++
         if (current.posted_by.isNotEmpty()) count++
         if (current.floor_preferences.isNotEmpty()) count++
 
-        // Check List<String> fields
         if (current.ownership.isNotEmpty()) count++
-//        if (current.availability_status.isNotEmpty()) count++
+
         if (current.floor_plan.isNotEmpty()) count++
         if (current.furnishing_status.isNotEmpty()) count++
         if (current.parking_available.isNotEmpty()) count++
@@ -1075,8 +905,6 @@ class Search_ViewModel : ViewModel() {
 
         return count
     }
-
-
 
     fun updateMinInViewModel(value: Long) {
         update_Search_SF {
@@ -1091,7 +919,5 @@ class Search_ViewModel : ViewModel() {
         }
         maxRangeRefs.value = value
     }
-
-
 
 }

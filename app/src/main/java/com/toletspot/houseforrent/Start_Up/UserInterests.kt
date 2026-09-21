@@ -103,19 +103,14 @@ import com.toletspot.houseforrent.ui.theme.newLightPurpleGradient
 import com.toletspot.houseforrent.ui.theme.newPurpleGradientBorder
 import com.toletspot.houseforrent.ui.theme.newWhite
 
-
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun UserInterests(navController: NavHostController, placesClient: PlacesClient) {
-
 
     val network = rememberNetworkStatus()
 
     val notchPadding = rememberNotchHeightDp()
     val context = LocalContext.current
-
-
 
     val locationDenied = constants.Start_Up_ViewModel.locationDenied.collectAsState()
 
@@ -125,20 +120,15 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
         }
     }
 
-    println("ONCOMPLETE __ ${AppPreferences.get_Interest_Completed()} -- ${AppPreferences.get_Location_Received()}")
-
     val categories = constants.Start_Up_ViewModel.user_Interests.collectAsState()
     val isLoading = constants.API_Vm.isLoading
     val errorMessage = constants.API_Vm.errorMessage
     val currentPage = constants.API_Vm.currentPage
     val totalPages = constants.API_Vm.totalPages
 
-
     val location_Api_Loading = constants.Common_H_ViewModel.status.collectAsState()
 
-
     val selected_Ids =  constants.Start_Up_ViewModel.selectedCategoryIds.collectAsState()
-
 
     val listState = rememberLazyListState()
 
@@ -166,8 +156,6 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
         R.drawable.farmhouse,
         R.drawable.agricultureland,
 
-        //// duplicate
-
         R.drawable.flat,
         R.drawable.housevilla,
         R.drawable.builderfloor,
@@ -188,26 +176,19 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
 
     )
 
-
-    //LaunchedEffect (Unit){
         CheckLocationPermissionOnResume(context, location_Settings)
 
-  //  }
-
-//    if (categories.value.isEmpty()) {
         if (network.value == NetworkStatus.Online) {
-            // Load first page when screen launches
+
             LaunchedEffect(Unit) {
                 constants.API_Vm.loadCategories(1)
-                println("COMING HERE 1")
             }
 
-            // Detect when near end of list
             LaunchedEffect(listState, currentPage, isLoading, totalPages) {
                 snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                     .collect { lastVisibleItemIndex ->
                         val totalItems = listState.layoutInfo.totalItemsCount
-                        val loadMoreThreshold = 2// 👈 trigger when 4 items from the end
+                        val loadMoreThreshold = 2
 
                         if (
                             lastVisibleItemIndex != null &&
@@ -216,25 +197,18 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                             !isLoading &&
                             currentPage < totalPages
                         ) {
-                            println("CURRENT PAGE - ${currentPage}")
                             constants.API_Vm.loadCategories(currentPage + 1)
                         }
                     }
             }
 
-
         } else {
             GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
         }
-//    }
 
     var gridtype = if (forTab())3 else 2
 
-
-    /// rental
-
     var rentoShowMap = remember { mutableStateOf(0) }
-
 
     Box {
         Column(
@@ -257,22 +231,22 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
             )
             { denied ->
                 if (denied) {
-                    // Show Interest Selection UI
+
                     LazyColumn(
                         state = listState,
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxSize()
                             .padding(horizontal = 16.dp , vertical = 16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp) // spacing between items
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     )
                     {
                         item {
                             Column(
                                 modifier = Modifier
-                                // .background(Color.Cyan)
+
                             ) {
-                                // Header
+
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -280,19 +254,8 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                     contentAlignment = Alignment.Center
                                 )
                                 {
-//                                Backer(
-//                                    modifier = Modifier
-//                                        .align(Alignment.TopStart)
-//                                        .background(Color.Cyan)
-//                                    , onBackClick = {
-//                                        constants.Start_Up_ViewModel.updateLoginState(0)
-//                                        navController.navigate(UserCredentialsScreenFlow.UserCredentials.route)
-//                                    }
-//                                )
 
-//                                LocationText(context, modifier = Modifier.align(Alignment.TopEnd))
                                 }
-
 
                                 Text(
                                     text = "Tell us what kind of rental \n you’re looking for?",
@@ -303,7 +266,7 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier
                                         .padding(vertical = 8.dp)
-                                        .align(Alignment.CenterHorizontally) // Align title to the start
+                                        .align(Alignment.CenterHorizontally)
                                 )
 
                                 Text(
@@ -312,27 +275,24 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                     fontSize = constants.textUnit(16),
                                     fontFamily = constants.fontFamily(1),
                                     textAlign = TextAlign.Center,
-                                   // lineHeight = 36.sp,
+
                                     modifier = Modifier
                                         .padding(vertical = 8.dp)
-                                        .align(Alignment.CenterHorizontally) // Align title to the start
+                                        .align(Alignment.CenterHorizontally)
                                 )
                             }
                         }
 
-                        println("INterests Data -- ${isLoading} --- ${currentPage} -- ${categories.value.isEmpty()}")
                         when {
 
                             network.value == NetworkStatus.Offline && categories.value.isEmpty() -> {
-                                /// constants.activity.getString(R.string.no_Internet) 
-                                println("INterests Data - 33333- ${isLoading} --- ${currentPage} -- ${categories.value.isEmpty()}")
 
                                 GlobalSnackbar.show("It Seems your are offline !!.Refresh again")
                                 item {
                                     Column(
                                         modifier = Modifier
                                             .height(600.dp)
-                                           // .fillMaxSize()
+
                                         , verticalArrangement = Arrangement.Center
                                         , horizontalAlignment = Alignment.CenterHorizontally
                                     ){
@@ -349,15 +309,13 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                 }
                             }
 
-
                             isLoading && currentPage == 1 && categories.value.isEmpty() ->{
-                                println("INterests Data 1111-- ${isLoading} --- ${currentPage} -- ${categories.value.isEmpty()}")
 
                                 item {
                                     Box(
                                         modifier = Modifier  .height(600.dp)
                                             .fillMaxWidth()
-                                            //.fillMaxSize()
+
                                         ,contentAlignment = Alignment.Center
                                     ) {
                                         LottiAnimation(2)
@@ -365,19 +323,14 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                 }
                             }
 
-
-
-
                             !isLoading && categories.value.isEmpty() -> {
-                                // no data found
-                                println("INterests Data -222- ${isLoading} --- ${currentPage} -- ${categories.value.isEmpty()}")
 
                                 item {
                                    Column(
                                        modifier = Modifier
                                            .height(600.dp)
                                            .fillMaxWidth()
-                                           //.fillMaxSize()
+
                                        , verticalArrangement = Arrangement.Center
                                        , horizontalAlignment = Alignment.CenterHorizontally
                                    ){
@@ -394,9 +347,7 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                 }
                             }
 
-
                             categories.value.isNotEmpty() -> {
-                                println("INterests Data 4444-- ${isLoading} --- ${currentPage} -- ${categories.value.isEmpty()}")
 
                                 customGridItems(
                                     count = categories.value.size,
@@ -464,7 +415,7 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
 
                                             Text(
                                                 text = categories.value[index].name,
-                                                color =  Color.Black, // if (categories.value[index].is_Selected) Color.White else
+                                                color =  Color.Black,
                                                 fontSize = constants.textUnit(14),
                                                 fontFamily = constants.fontFamily(0),
                                                 lineHeight = constants.textUnit(16),
@@ -474,92 +425,10 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                         }
                                     }
 
-                                    /*Box(
-                                        modifier = Modifier
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .padding(bottom = 10.dp)
-                                            // .aspectRatio(1f)
-                                            .border(1.dp, color = newGray, RoundedCornerShape(4.dp))
-                                    )
-                                    {
-                                        Column(
-                                            modifier = Modifier
-                                                .height(200.dp)
-                                                .fillMaxWidth()
-                                                .clickable(enabled = if (location_Api_Loading.value) false else true) {
-                                                    ClickHelper.getInstance().clickOnce {
-                                                        // constants.Start_Up_ViewModel.updateSelectedIds()
-                                                        // constants.Start_Up_ViewModel.toggle_User_Selections(index)
-                                                        //if (network.value == NetworkStatus.Online) {
-                                                        constants.Start_Up_ViewModel.toggleInterestSelection(
-                                                            categories.value[index].land_categorie_id
-                                                        )
-                                                        //  } else {
-                                                        //GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
-                                                        //  }
-
-                                                    }
-                                                }
-                                                .background(
-                                                    if (categories.value[index].is_Selected) newBlue else newWhite,
-                                                    RoundedCornerShape(4.dp)
-                                                ),
-                                            verticalArrangement = Arrangement.SpaceEvenly,
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        )
-                                        {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-//                                            .height(130.dp)
-                                                    .fillMaxHeight(.8f)
-                                                    .padding(start = 12.dp, end = 12.dp, top = 8.dp)
-                                                    .clip(RoundedCornerShape(10.dp))
-                                                    .background(Color.LightGray)
-                                            ){
-                                                SubcomposeAsyncImage(
-                                                    model = categories.value[index]?.image ?: "",
-                                                    modifier = Modifier
-                                                        .fillMaxSize()
-                                                    , contentDescription = ""
-                                                    , contentScale = ContentScale.FillBounds
-                                                )
-                                                {
-                                                    val state = painter.state
-                                                    if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .fillMaxSize()
-                                                                .background(newLightBlue)
-                                                            //.padding(8.dp)
-                                                            , contentAlignment = Alignment.Center
-                                                        ) {
-                                                            Image(painterResource(R.drawable.emptypostsrento) , "")
-                                                        }
-                                                    } else {
-                                                        SubcomposeAsyncImageContent()
-                                                    }
-                                                }
-                                            }
-
-                                            Text(
-                                                text = categories.value[index].name,
-                                                color = if (categories.value[index].is_Selected) Color.White else Color.Black,
-                                                fontSize = constants.textUnit(13),
-                                                fontFamily = constants.fontFamily(2),
-                                                lineHeight = constants.textUnit(16),
-                                                modifier = Modifier
-                                                    .padding(horizontal = 12.dp)
-                                                    .align(Alignment.Start) // Align title to the start
-                                            )
-
-                                        }
-                                    }*/
                                 }
                             }
 
                             isLoading && currentPage != 1 && categories.value.isNotEmpty() ->{
-                                println("INterests Data 1111-- ${isLoading} --- ${currentPage} -- ${categories.value.isEmpty()}")
 
                                 item {
                                     Box(
@@ -571,8 +440,6 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                 }
                             }
 
-
-
                         }
 
                     }
@@ -581,12 +448,10 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                 else {
 
                     rentoShowMap.value = 1
-                    // Show Manual Location Entry UI
-                   // Location_Manual(modifier = Modifier.fillMaxSize(), context, navController , placesClient)
+
                 }
             }
 
-            // Bottom Button
             Static_Bottom(
                 modifier = Modifier
                     .weight(1f)
@@ -601,7 +466,6 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                     label = "UserInterestsSwitcher"
                 ) { denied ->
                     if (denied) {
-
 
                             LocationButton(
                                 context,
@@ -645,10 +509,10 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                                 resultCallback = { result ->
                                                     when (result) {
                                                         0 -> {
-                                                            //sucess
+
                                                             AppPreferences.save_Location_Received(1)
                                                             toast("LOCATION STORED SUCCESSFULLY")
-// Example: after completing onboarding or login
+
                                                             navController.navigate(
                                                                 UserCredentialsScreenFlow.Common_Screen.route
                                                             ) {
@@ -659,12 +523,12 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                                         }
 
                                                         1 -> {
-                                                            //fail
+
                                                             toast("Something went wrong while storing location")
                                                         }
 
                                                         2 -> {
-                                                            //loading
+
                                                             constants.Common_H_ViewModel.changeStatus(
                                                                 true
                                                             )
@@ -694,8 +558,6 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
         }
 
     }
-
-
 
     if (location_Settings.value){
         Common_Popup(
@@ -734,7 +596,6 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                             .background(Color(0xffB8B8B8))
                             .noRippleClickable{
                                 ClickHelper.getInstance().clickOnce {
-                                    println("sdcjhchjdchjbdwc")
                                     location_Settings.value = false
                                 }
                             }
@@ -754,7 +615,7 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
                                         Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                                             data =
                                                 Uri.fromParts("package", context.packageName, null)
-                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // ← this flag is IMPORTANT
+                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         }
                                     context.startActivity(intent)
 
@@ -775,7 +636,6 @@ fun UserInterests(navController: NavHostController, placesClient: PlacesClient) 
 
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Location_Manual(
@@ -785,9 +645,7 @@ fun Location_Manual(
     placesClient: PlacesClient,
 ) {
 
-
     var network = rememberNetworkStatus()
-
 
     LaunchedEffect(Unit)
     {
@@ -796,7 +654,6 @@ fun Location_Manual(
         constants.Start_Up_ViewModel.set_State(AppPreferences.get_State())
         constants.Start_Up_ViewModel.set_City(AppPreferences.get_User_Location())
     }
-
 
     val notchPadding = rememberNotchHeightDp()
 
@@ -808,20 +665,15 @@ fun Location_Manual(
 
     val locationDenied = constants.Start_Up_ViewModel.locationDenied.collectAsState()
 
-
     var city = constants.Start_Up_ViewModel.city.collectAsState()
     var state = constants.Start_Up_ViewModel.state.collectAsState()
     var country = constants.Start_Up_ViewModel.country.collectAsState()
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-
-    // ✅ Get states from ViewModel
     val location_Settings = constants.Start_Up_ViewModel.showLocationSettings.collectAsState()
     val showGpsDialog = constants.Start_Up_ViewModel.showGpsDialog.collectAsState()
 
-
     val no_Click_SaveLocation = remember { mutableStateOf(false) }
-
 
     Column(
         modifier = modifier
@@ -864,8 +716,7 @@ fun Location_Manual(
 
                 Column(
                     modifier = Modifier
-                    // .fillMaxHeight()
-                    //.weight(7.5f)
+
                 )
                 {
                     Row(
@@ -1031,8 +882,6 @@ fun Location_Manual(
                     }
                 }
 
-
-
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
@@ -1042,7 +891,6 @@ fun Location_Manual(
                     lineHeight = 36.sp,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-
 
                 Row(
                     modifier = Modifier
@@ -1059,9 +907,7 @@ fun Location_Manual(
                     TextField(
                         value = country.value,
                         onValueChange = {
-//                    if (it.length <= 6) {
-//                        constants.Start_Up_ViewModel.set_Pincode(it)
-//                    }
+
                         },
                         placeholder = {
                             Text("Country", color = newGray, fontSize = constants.textUnit(14))
@@ -1113,9 +959,7 @@ fun Location_Manual(
                     TextField(
                         value = state.value,
                         onValueChange = {
-//                    if (it.length <= 6) {
-//                        constants.Start_Up_ViewModel.set_Pincode(it)
-//                    }
+
                         }, readOnly = true,
                         placeholder = {
                             Text("State", color = newGray, fontSize = constants.textUnit(14))
@@ -1142,7 +986,6 @@ fun Location_Manual(
                     )
                 }
 
-
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
@@ -1168,9 +1011,7 @@ fun Location_Manual(
                     TextField(
                         value = city.value,
                         onValueChange = {
-//                    if (it.length <= 6) {
-//                        constants.Start_Up_ViewModel.set_Pincode(it)
-//                    }
+
                         }, readOnly = true,
                         placeholder = {
                             Text("City", color = newGray, fontSize = constants.textUnit(14))
@@ -1218,7 +1059,6 @@ fun Location_Manual(
         }
 
     }
-
 
     if (location_Settings.value) {
         Common_Popup(
@@ -1349,11 +1189,7 @@ fun Location_Manual(
         }
     }
 
-
 }
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1483,7 +1319,6 @@ fun SearchableCountryDropdown(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchableStateDropdown(
@@ -1611,8 +1446,6 @@ fun SearchableStateDropdown(
         }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1742,7 +1575,3 @@ fun SearchableCityDropdown(
         }
     }
 }
-
-
-
-

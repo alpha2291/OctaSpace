@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Home_Screen.PostProperty_Module.RentoDataclass.RentoPriceForm
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

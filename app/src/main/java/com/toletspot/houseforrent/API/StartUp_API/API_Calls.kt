@@ -12,16 +12,10 @@ import com.toletspot.houseforrent.constants
 import com.toletspot.houseforrent.constants.Companion.PROFILE_IMAGE_URL
 import com.toletspot.houseforrent.deviceToken
 
-
-/// register api call
-
 fun register_API_Call (
     resultCallback: (Int) -> Unit
 ) {
 
-
-
-   // if (isConnected.value) {
         constants.API_Vm.user_Register(
             name = constants.Start_Up_ViewModel.userName,
             phone_num = constants.Start_Up_ViewModel.phoneNumber,
@@ -33,26 +27,26 @@ fun register_API_Call (
         { apiResultHandling ->
             when (apiResultHandling) {
                 is API_Result_Handling.Loading -> {
-                    //state = true
+
                     resultCallback(2)
                     constants.Common_H_ViewModel.changeStatus(true)
                 }
 
                 is API_Result_Handling.NoData -> {
-                    //state = false
+
                     constants.Common_H_ViewModel.changeStatus(false)
                     toast("Something went wrong , No Records found")
                 }
 
                 is API_Result_Handling.Error -> {
-                    //state = false
+
                     resultCallback(1)
                     constants.Common_H_ViewModel.changeStatus(false)
                     toast(apiResultHandling.message)
                 }
 
                 is API_Result_Handling.Success -> {
-                    //state = false
+
                     resultCallback(0)
                     constants.Common_H_ViewModel.changeStatus(false)
                     toast(constants.Start_Up_ViewModel.get_OTP_Response())
@@ -64,15 +58,10 @@ fun register_API_Call (
                 }
             }
         }
-   // }
+
 }
 
-
-/// login api call
-
 fun login_API_Call ()  {
-
-   // if (isConnected.value) {
 
         constants.API_Vm.user_Login(
             phone_num = constants.Start_Up_ViewModel.phoneNumber,
@@ -84,43 +73,38 @@ fun login_API_Call ()  {
         { apiResultHandling ->
             when (apiResultHandling) {
                 is API_Result_Handling.Loading -> {
-                    //state = true
+
                     constants.Common_H_ViewModel.changeStatus(true)
                 }
 
                 is API_Result_Handling.NoData -> {
-                    //state = false
+
                     constants.Common_H_ViewModel.changeStatus(false)
                     toast("Something went wrong , No Records found")
                 }
 
                 is API_Result_Handling.Error -> {
-                    //state = false
+
                     constants.Common_H_ViewModel.changeStatus(false)
                     toast(apiResultHandling.message)
                 }
 
                 is API_Result_Handling.Success -> {
-                    //state = false
+
                     constants.Common_H_ViewModel.changeStatus(false)
                     toast(constants.Start_Up_ViewModel.get_OTP_Response())
                     constants.Start_Up_ViewModel.updateLoginState(2)
                 }
 
                 is API_Result_Handling.Deactivated -> {
-                    //resultCallback(5)
+
                 }
             }
         }
-   // }
+
 }
 
-
-/// verify api call
-
 fun  verify_Otp_API_Call (navController: NavHostController)  {
-
-   // if (isConnected.value) {
 
         constants.API_Vm.verify_OTP(
             user_id = AppPreferences.getUserId(),
@@ -137,28 +121,28 @@ fun  verify_Otp_API_Call (navController: NavHostController)  {
         { apiResultHandling ->
             when (apiResultHandling) {
                 is API_Result_Handling.Loading -> {
-                    //state = true
+
                     constants.Common_H_ViewModel.change_Verify_Status(true)
                 }
 
                 is API_Result_Handling.NoData -> {
-                    //state = false
+
                     constants.Common_H_ViewModel.change_Verify_Status(false)
                     toast("Something went wrong , No Records found")
                 }
 
                 is API_Result_Handling.Error -> {
-                    //state = false
+
                     constants.Common_H_ViewModel.change_Verify_Status(false)
                     toast(apiResultHandling.message)
                 }
 
                 is API_Result_Handling.Success -> {
-                    //state = false
+
                     constants.Common_H_ViewModel.change_Verify_Status(false)
                     toast("Success , verified")
                     if (AppPreferences.get_Interest_Completed() == 0 || AppPreferences.get_Location_Received() == 0){
-                       // UserCredentialsScreenFlow.UserInterests.route
+
                         navController.navigate(UserCredentialsScreenFlow.UserInterests.route)
                     }
                     else {
@@ -169,15 +153,12 @@ fun  verify_Otp_API_Call (navController: NavHostController)  {
                 }
 
                 is API_Result_Handling.Deactivated -> {
-                    //resultCallback(5)
+
                 }
             }
         }
-    //}
+
 }
-
-
-/// add user interests api call
 
 fun Put_User_Interests_API_Call(resultCallback: (Int) -> Unit) {
    if (isConnected.value) {
@@ -217,8 +198,6 @@ fun Put_User_Interests_API_Call(resultCallback: (Int) -> Unit) {
    }
 }
 
-/// add user interests partocular api call
-
 fun get_User_Interest_Particular_API_Call(resultCallback: (Int) -> Unit) {
    if (isConnected.value) {
         constants.API_Vm.get_User_Interest_Particular(
@@ -256,9 +235,6 @@ fun get_User_Interest_Particular_API_Call(resultCallback: (Int) -> Unit) {
    }
 }
 
-
-//// add user location
-
 fun put_User_Location_API_Call(resultCallback: (Int) -> Unit){
     if (isConnected.value) {
         constants.API_Vm.put_User_Location(
@@ -295,9 +271,6 @@ fun put_User_Location_API_Call(resultCallback: (Int) -> Unit){
     }
 }
 
-
-/// get user profile api call
-
 fun Get_User_Profile_API_Call(resultCallback: (Int) -> Unit){
 
         constants.API_Vm.get_User_Profile(
@@ -314,12 +287,12 @@ fun Get_User_Profile_API_Call(resultCallback: (Int) -> Unit){
                     resultCallback(3)
                 }
                 is API_Result_Handling.Error -> {
-                   // apiOnce.value = true
+
                     resultCallback(2)
                 }
 
                 is API_Result_Handling.Success -> {
-                   // apiOnce.value = true
+
                     resultCallback(1)
                 }
 
@@ -330,11 +303,7 @@ fun Get_User_Profile_API_Call(resultCallback: (Int) -> Unit){
         }
 }
 
-/// update user profile
 fun update_User_Profile_API_Call() {
-
-
-
 
     constants.API_Vm.update_User_Profile(
         user_id = AppPreferences.getUserId(),
@@ -345,14 +314,14 @@ fun update_User_Profile_API_Call() {
         apiResultHandling ->
         when(apiResultHandling){
             is API_Result_Handling.Error -> {
-               //errror
+
                 constants.Profile_ViewModel.change_Update_profile(false)
             }
             is API_Result_Handling.NoData -> {
-                // no data
+
             }
             is API_Result_Handling.Loading -> {
-               //loading
+
                 constants.Profile_ViewModel.change_Update_profile(true)
             }
             is API_Result_Handling.Success -> {
@@ -361,21 +330,16 @@ fun update_User_Profile_API_Call() {
                 constants.Profile_ViewModel.set_From_Profile_Pic_Update(false)
 
                 AppPreferences.save_ProfileImage(PROFILE_IMAGE_URL.value.ifEmpty { AppPreferences.get_ProfileImage() })
-                //AppPreferences.save_User_Name(constants.Profile_ViewModel.get_new_username())
+
                 AppPreferences.save_Real_Name(constants.Profile_ViewModel.get_New_Realname())
                 AppPreferences.save_ProfileBio(constants.Profile_ViewModel.change_Bio_Content.value)
 
-
-
-
-//                when {
                     if(PROFILE_IMAGE_URL.value.isNotEmpty()) {
                         constants.Profile_ViewModel.updateOwnProfile(profileImage = PROFILE_IMAGE_URL.value)
 
                     }
                     if(constants.Profile_ViewModel.get_New_Realname().isNotEmpty())  {
                         constants.Profile_ViewModel.updateOwnProfile(name = constants.Profile_ViewModel.get_New_Realname())
-
 
                     }
                     if(constants.Profile_ViewModel.change_Bio_Content.value.isNotEmpty() ) {
@@ -384,26 +348,16 @@ fun update_User_Profile_API_Call() {
 
                     }
 
-//                }
-
                 toast("Profile Updated Successfully")
 
-
-                println("API STORING PROFILE IMAGE -- ${AppPreferences.get_ProfileImage()} -- ${AppPreferences.get_Real_Name()}")
-
-                //success
             }
 
             is API_Result_Handling.Deactivated -> {
-                //resultCallback(5)
+
             }
         }
     }
 }
-
-
-
-/// follow / unfollow / delete
 
 fun follow_Unfollow_Delete_API_Call(resultCallback: (Int) -> Unit){
     constants.API_Vm.follow_Unfollow(
@@ -416,22 +370,18 @@ fun follow_Unfollow_Delete_API_Call(resultCallback: (Int) -> Unit){
         when(apiResultHandling){
             is API_Result_Handling.Error -> {
                 resultCallback(1)
-                //errror
-                //constants.Profile_ViewModel.change_Update_profile(false)
+
             }
             is API_Result_Handling.NoData -> {
-                // no data
+
             }
             is API_Result_Handling.Loading -> {
                 resultCallback(2)
-                //loading
-               // constants.Profile_ViewModel.change_Update_profile(true)
+
             }
             is API_Result_Handling.Success -> {
                 resultCallback(0)
-               // constants.Profile_ViewModel.enable_Edit_Profile()
-               // constants.Profile_ViewModel.change_Update_profile(false)
-                //success
+
             }
 
             is API_Result_Handling.Deactivated -> {
@@ -440,12 +390,6 @@ fun follow_Unfollow_Delete_API_Call(resultCallback: (Int) -> Unit){
         }
     }
 }
-
-
-
-
-
-/// post form 1
 
 fun post_Form_1_API_Call(resultCallback: (Int) -> Unit){
     constants.API_Vm.put_Post_Form1(
@@ -458,22 +402,22 @@ fun post_Form_1_API_Call(resultCallback: (Int) -> Unit){
 
         when(apiResultHandling){
             is API_Result_Handling.Loading -> {
-                // loading
+
                 constants.PostProperty_ViewModel.change_Status_PFs(true)
             }
             is API_Result_Handling.Error -> {
-                // fail
+
                 resultCallback(0)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
                 toast("OOPs! Something went wrong , Try again later")
             }
             is API_Result_Handling.Success -> {
-                // success
+
                 resultCallback(1)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.NoData -> {
-                // no data
+
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
 
@@ -483,11 +427,6 @@ fun post_Form_1_API_Call(resultCallback: (Int) -> Unit){
         }
     }
 }
-
-
-// get land categories post form 2
-
-
 
 fun get_Land_Categories_PF2_API_Call(resultCallback: (Int) -> Unit){
     constants.API_Vm.get_Post_Form2_Land_Types(
@@ -495,25 +434,24 @@ fun get_Land_Categories_PF2_API_Call(resultCallback: (Int) -> Unit){
     ){
             apiResultHandling ->
 
-
         when(apiResultHandling){
             is API_Result_Handling.Loading -> {
-                // loading
+
                 constants.PostProperty_ViewModel.change_Status_Land_Types(true)
             }
             is API_Result_Handling.Error -> {
-                // fail
+
                 resultCallback(0)
                 constants.PostProperty_ViewModel.change_Status_Land_Types(false)
                 toast("OOPs! Something went wrong , Try again later")
             }
             is API_Result_Handling.Success -> {
-                // success
+
                 resultCallback(1)
                 constants.PostProperty_ViewModel.change_Status_Land_Types(false)
             }
             is API_Result_Handling.NoData -> {
-                // no data
+
                 constants.PostProperty_ViewModel.change_Status_Land_Types(false)
             }
 
@@ -523,9 +461,6 @@ fun get_Land_Categories_PF2_API_Call(resultCallback: (Int) -> Unit){
         }
     }
 }
-
-
-//  post form 2
 
 fun post_Form_2_API_Call(resultCallback: (Int) -> Unit){
     constants.API_Vm.put_Post_Form2(
@@ -538,22 +473,22 @@ fun post_Form_2_API_Call(resultCallback: (Int) -> Unit){
 
         when(apiResultHandling){
             is API_Result_Handling.Loading -> {
-                // loading
+
                 constants.PostProperty_ViewModel.change_Status_PFs(true)
             }
             is API_Result_Handling.Error -> {
-                // fail
+
                 resultCallback(0)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
                 toast("OOPs! Something went wrong , Try again later")
             }
             is API_Result_Handling.Success -> {
-                // success
+
                 resultCallback(1)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.NoData -> {
-                // no data
+
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
 
@@ -563,9 +498,6 @@ fun post_Form_2_API_Call(resultCallback: (Int) -> Unit){
         }
     }
 }
-
-
-// post form 3
 
 fun post_Form_3_API_Call(resultCallback: (Int) -> Unit){
     constants.API_Vm.put_Post_Form3(
@@ -585,22 +517,22 @@ fun post_Form_3_API_Call(resultCallback: (Int) -> Unit){
 
         when(apiResultHandling){
             is API_Result_Handling.Loading -> {
-                // loading
+
                 constants.PostProperty_ViewModel.change_Status_PFs(true)
             }
             is API_Result_Handling.Error -> {
-                // fail
+
                 resultCallback(0)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
                 toast("OOPs! Something went wrong , Try again later")
             }
             is API_Result_Handling.Success -> {
-                // success
+
                 resultCallback(1)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.NoData -> {
-                // no data
+
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
 
@@ -610,9 +542,6 @@ fun post_Form_3_API_Call(resultCallback: (Int) -> Unit){
         }
     }
 }
-
-
-// post form 4 get fields residential
 
 fun get_Post_Property_Form4_Fields_API(resultCallback: (Int) -> Unit){
     constants.API_Vm.get_post_Form4_Residential(
@@ -622,23 +551,22 @@ fun get_Post_Property_Form4_Fields_API(resultCallback: (Int) -> Unit){
 
         when(apiResultHandling){
             is API_Result_Handling.Loading -> {
-                // loading
+
                 resultCallback(2)
-               // constants.PostProperty_ViewModel.change_Status_PFs(true)
+
             }
             is API_Result_Handling.Error -> {
-                // fail
+
                 resultCallback(0)
-                ///constants.PostProperty_ViewModel.change_Status_PFs(false)
+
             }
             is API_Result_Handling.Success -> {
-                // success
+
                 resultCallback(1)
-               // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
             }
             is API_Result_Handling.NoData -> {
-                // no data
-               // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
             }
             is API_Result_Handling.Deactivated -> {
                 resultCallback(5)
@@ -646,8 +574,6 @@ fun get_Post_Property_Form4_Fields_API(resultCallback: (Int) -> Unit){
         }
     }
 }
-
-// post form 5
 
 fun post_Form_5_API_Call(resultCallback: (Int) -> Unit){
     constants.API_Vm.put_Post_Form5(
@@ -661,22 +587,22 @@ fun post_Form_5_API_Call(resultCallback: (Int) -> Unit){
 
         when(apiResultHandling){
             is API_Result_Handling.Loading -> {
-                // loading
+
                 constants.PostProperty_ViewModel.change_Status_PFs(true)
             }
             is API_Result_Handling.Error -> {
-                // fail
+
                 resultCallback(0)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
                 toast("OOPs! Something went wrong , Try again later")
             }
             is API_Result_Handling.Success -> {
-                // success
+
                 resultCallback(1)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.NoData -> {
-                // no data
+
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.Deactivated -> {
@@ -685,7 +611,6 @@ fun post_Form_5_API_Call(resultCallback: (Int) -> Unit){
         }
     }
 }
-// post form 5
 
 fun post_Form5Rento_APICALL(resultCallback: (Int) -> Unit){
 
@@ -705,7 +630,7 @@ fun post_Form5Rento_APICALL(resultCallback: (Int) -> Unit){
         lock_in_period = selectedForm.lock_in_period ,
         lock_in_period_type = selectedForm.lock_in_period_type ,
         notice_period = selectedForm.notice_period ,
-       // notice_period_type = selectedForm.notice_period_type,
+
         lease_duration_in_years = selectedForm.lease_duration_in_years ,
         lease_duration_in_years_type = selectedForm.lease_duration_in_years_type,
         lease_amount = selectedForm.lease_amount ,
@@ -716,22 +641,22 @@ fun post_Form5Rento_APICALL(resultCallback: (Int) -> Unit){
 
         when(apiResultHandling){
             is API_Result_Handling.Loading -> {
-                // loading
+
                 constants.PostProperty_ViewModel.change_Status_PFs(true)
             }
             is API_Result_Handling.Error -> {
-                // fail
+
                 resultCallback(0)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
                 toast("OOPs! Something went wrong , Try again later")
             }
             is API_Result_Handling.Success -> {
-                // success
+
                 resultCallback(1)
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.NoData -> {
-                // no data
+
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.Deactivated -> {
@@ -740,7 +665,6 @@ fun post_Form5Rento_APICALL(resultCallback: (Int) -> Unit){
         }
     }
 }
-
 
 fun put_post_Form4_API_CALL(resultCallback: (Int) -> Unit) {
     val selectedForm = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
@@ -773,25 +697,22 @@ fun put_post_Form4_API_CALL(resultCallback: (Int) -> Unit) {
         food_preferences = selectedForm.property_food_preferences,
         pets_allowed = selectedForm.property_pets_allowed,
 
-
-
         furnishing_status = selectedForm.property_Furnished,
         boundary_wall = selectedForm.property_Boundary_Wall,
         parking_available = selectedForm.property_Parking,
         amenities = selectedForm.property_Amenities.joinToString(","),
         property_highlights = selectedForm.property_Highlights.joinToString(","),
-        bhk_type = selectedForm.property_Floor_Plan_Bhk, // You don’t have BHK type in Form3 DC, leave empty or add mapping if available
+        bhk_type = selectedForm.property_Floor_Plan_Bhk,
         no_of_bedrooms = selectedForm.property_No_of_Beds,
         no_of_Bathrooms = selectedForm.property_No_of_Baths,
         no_of_Balconies = selectedForm.property_No_of_Balconies,
         no_of_open_sides = selectedForm.property_No_Of_OpenSides,
         other_rooms = selectedForm.property_Other_Rooms.joinToString(","),
 
-        facade_width = selectedForm.property_Facade_Width, // Not in Form4
+        facade_width = selectedForm.property_Facade_Width,
         facade_width_unit = selectedForm.facade_width_unit,
         facade_height = selectedForm.property_Facade_Height,
         facade_height_unit = selectedForm.facade_height_unit,
-
 
         property_condition = selectedForm.property_condition,
 
@@ -807,7 +728,6 @@ fun put_post_Form4_API_CALL(resultCallback: (Int) -> Unit) {
         pantry_size = selectedForm.property_Pantry_Size,
         pantry_size_unit = selectedForm.pantry_size_unit,
 
-
         central_ac = selectedForm.property_Central_AC,
         oxygen_duct = selectedForm.property_Oxygen_Duct,
         ups = selectedForm.property_UPS,
@@ -817,7 +737,7 @@ fun put_post_Form4_API_CALL(resultCallback: (Int) -> Unit) {
         occupancy_certificate = selectedForm.property_Occupancy,
         washroom_details = selectedForm.property_WashRoom.joinToString(","),
         does_local_authority = selectedForm.property_Authority_Approved,
-        suitable_business_type = selectedForm.property_Suitable_Business_Type.joinToString(","), // Not in Form3 DC, set empty or extend DC
+        suitable_business_type = selectedForm.property_Suitable_Business_Type.joinToString(","),
         draft = selectedForm.draft,
 
     ) { apiResultHandling ->
@@ -844,14 +764,12 @@ fun put_post_Form4_API_CALL(resultCallback: (Int) -> Unit) {
     }
 }
 
-
-
 fun get_Form_Preview_API_CALL(resultCallback: (Int) -> Unit){
     constants.API_Vm.put_Post_Form7(
         user_id = AppPreferences.getUserId(),
-            //AppPreferences.getUserId(),
+
         user_post_id = AppPreferences.get_Post_Id()
-            //AppPreferences.get_Post_Id(),
+
     )
     {
             result_Handling ->
@@ -876,14 +794,13 @@ fun get_Form_Preview_API_CALL(resultCallback: (Int) -> Unit){
     }
 
 }
-
 
 fun get_Form_Publish_API_CALL(resultCallback: (Int) -> Unit){
     constants.API_Vm.put_Post_Form_Publish(
         user_id = AppPreferences.getUserId(),
-            //AppPreferences.getUserId(),
+
         user_post_id = AppPreferences.get_Post_Id()
-            //AppPreferences.get_Post_Id(),
+
     )
     {
             result_Handling ->
@@ -908,253 +825,6 @@ fun get_Form_Publish_API_CALL(resultCallback: (Int) -> Unit){
     }
 
 }
-
-/*
-
-fun put_Draft_New_Flow_API_CALL(resultCallback: (Int) -> Unit) {
-    val selectedForm = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
-
-    val videoUrl = URL_COMPLETED.find { it.first == 1 }?.second ?: ""
-    val imageUrls = URL_COMPLETED.filter { it.first == 0 }.map { it.second }.distinct()
-
-
-    var type =  if (videoUrl.isEmpty()) 2 else 1
-
-    println("LOCATIN ON PAASIN GTO API -- ${constants.PostProperty_ViewModel.get_pp3_Data()} -1234${imageUrls}-- ${URL_COMPLETED}")
-    fun checkPrint(label: String, value: Any?) {
-        if (value == null) {
-            println("$label = null")
-        } else if (value is String && value.isEmpty()) {
-            println("$label = empty")
-        } else {
-            println("$label = $value")
-        }
-    }
-
-// Example usage for your fields
-    checkPrint("user_id", AppPreferences.getUserId())
-    checkPrint("user_post_id", AppPreferences.get_Post_Id())
-
-    checkPrint("area_length", selectedForm.property_Area_Dimension_Length)
-    checkPrint("area_length_unit", selectedForm.property_Area_Dimension_Length_Unit)
-    checkPrint("area_width", selectedForm.property_Area_Dimension_Width)
-    checkPrint("area_width_unit", selectedForm.property_Area_Dimension_Width_Unit)
-
-    checkPrint("facade_width", selectedForm.property_Facade_Width)
-    checkPrint("facade_width_unit", selectedForm.facade_width_unit)
-    checkPrint("facade_height", selectedForm.property_Facade_Height)
-    checkPrint("facade_height_unit", selectedForm.facade_height_unit)
-
-    checkPrint("property_facing", selectedForm.property_Facing)
-    checkPrint("total_floor", selectedForm.property_Floor_Det_Total)
-    checkPrint("property_floor_no", selectedForm.property_Floor_Det_Which)
-    checkPrint("property_preferred_tenants", selectedForm.property_preferred_tenants)
-    checkPrint("property_food_preferences", selectedForm.property_food_preferences)
-    checkPrint("property_availability_from", selectedForm.property_availability_from)
-    checkPrint("furnishing_status", selectedForm.property_Furnished)
-    checkPrint("boundary_wall", selectedForm.property_Boundary_Wall)
-    checkPrint("parking_available", selectedForm.property_Parking)
-    checkPrint("amenities", selectedForm.property_Amenities.joinToString(","))
-    checkPrint("property_highlights", selectedForm.property_Highlights.joinToString(","))
-    checkPrint("bhk_type", selectedForm.property_Floor_Plan_Bhk)
-
-    checkPrint("no_of_bedrooms", selectedForm.property_No_of_Beds)
-    checkPrint("no_of_bathrooms", selectedForm.property_No_of_Baths)
-    checkPrint("no_of_balconies", selectedForm.property_No_of_Balconies)
-    checkPrint("no_of_open_sides", selectedForm.property_No_Of_OpenSides)
-    checkPrint("other_rooms", selectedForm.property_Other_Rooms.joinToString(","))
-    checkPrint("no_of_cabins", selectedForm.property_No_Of_Cabins)
-    checkPrint("no_of_meeting_rooms", selectedForm.property_No_Of_Meeting_Rooms)
-    checkPrint("min_of_seats", selectedForm.property_Min_No_Of_Seats)
-    checkPrint("max_of_seats", selectedForm.property_Max_No_Of_Seats)
-    checkPrint("conference_room", selectedForm.property_Conference_Room)
-    checkPrint("no_of_staircases", selectedForm.property_No_Of_Stairs)
-
-    checkPrint("reception_area", selectedForm.property_Reception)
-    checkPrint("pantry", selectedForm.property_Pantry)
-    checkPrint("pantry_size", selectedForm.property_Pantry_Size)
-    checkPrint("pantry_size_unit", selectedForm.pantry_size_unit)
-    checkPrint("central_ac", selectedForm.property_Central_AC)
-    checkPrint("oxygen_duct", selectedForm.property_Oxygen_Duct)
-    checkPrint("ups", selectedForm.property_UPS)
-    checkPrint("fire_safety_measures", selectedForm.property_Fire_Safety.joinToString(","))
-    checkPrint("lifts", selectedForm.property_Lifts)
-
-//    checkPrint("is_it_pre_leased_pre_rented", selectedForm.property_Leased_Rented)
-    checkPrint("noc_certified", selectedForm.property_NOC_Certified)
-    checkPrint("occupancy_certificate", selectedForm.property_Occupancy)
-//    checkPrint("office_previously_used_for", selectedForm.property_Previously_Used_For)
-    checkPrint("washroom_details", selectedForm.property_WashRoom.joinToString(","))
-    checkPrint("which_local_authority", selectedForm.property_Authority_Approved)
-    checkPrint("does_local_authority", selectedForm.property_Authority_Approved)
-    checkPrint("suitable_business_type", selectedForm.property_Suitable_Business_Type.joinToString(","))
-    checkPrint("draft", selectedForm.draft)
-
-    checkPrint("preview_model", constants.PostProperty_ViewModel.save_Changes_Draft.value)
-    checkPrint("price", constants.PostProperty_ViewModel.get_budget_Price_PF5())
-    checkPrint("price_negotiable", constants.PostProperty_ViewModel.get_price_negotiation())
-    checkPrint("post_type", type)
-    checkPrint("video_url", videoUrl)
-    checkPrint("image_urls", imageUrls.joinToString(","))
-
-    checkPrint("country", constants.PostProperty_ViewModel.get_pp3_Data()?.country)
-    checkPrint("state", constants.PostProperty_ViewModel.get_pp3_Data()?.state)
-    checkPrint("city", constants.PostProperty_ViewModel.get_pp3_Data()?.city)
-    checkPrint("pincode", constants.PostProperty_ViewModel.get_pp3_Data()?.pincode)
-    checkPrint("locality", constants.PostProperty_ViewModel.get_pp3_Data()?.locality)
-    checkPrint("latitude", constants.PostProperty_ViewModel.pinned_Lat_Long.value?.latitude)
-    checkPrint("longitude", constants.PostProperty_ViewModel.pinned_Lat_Long.value?.longitude)
-
-    checkPrint("property_name", selectedForm.property_Name)
-    checkPrint("property_area", selectedForm.property_Land_Area)
-    checkPrint("property_area_unit", selectedForm.property_area_unit)
-    checkPrint("carpet_area", selectedForm.property_Carpet_Area)
-    checkPrint("carpet_area_unit", selectedForm.carpet_area_unit)
-    checkPrint("built_up_area", selectedForm.property_Builtup_Area)
-    checkPrint("built_up_area_unit", selectedForm.built_up_area_unit)
-    checkPrint("super_built_up_area", selectedForm.property_Super_Builtup_Area)
-    checkPrint("super_built_up_area_unit", selectedForm.super_built_up_area_unit)
-
-    checkPrint("land_type_id", constants.PostProperty_ViewModel.selected_Land_Type_PF2.value)
-    checkPrint("land_categorie_id", constants.PostProperty_ViewModel.selected_Land_Cat_Id.value)
-    checkPrint("user_type", constants.PostProperty_ViewModel.selected_User_Type_1PF.value)
-
-    constants.API_Vm.draftNewFlow(
-        user_id = AppPreferences.getUserId(),
-        user_post_id = AppPreferences.get_Post_Id(),
-        user_type = constants.PostProperty_ViewModel.selected_User_Type_1PF.value.toString(),
-        land_type_id = constants.PostProperty_ViewModel.selected_Land_Type_PF2.value,
-        land_categorie_id = constants.PostProperty_ViewModel.selected_Land_Cat_Id.value,
-        country = constants.PostProperty_ViewModel.get_pp3_Data()?.country ?: "",
-        state = constants.PostProperty_ViewModel.get_pp3_Data()?.state ?: "",
-        city = constants.PostProperty_ViewModel.get_pp3_Data()?.city ?: "",
-        locality = constants.PostProperty_ViewModel.get_pp3_Data()?.locality ?: "",
-        pincode = constants.PostProperty_ViewModel.get_pp3_Data()?.pincode ?: "",
-        latitude = constants.PostProperty_ViewModel.pinned_Lat_Long.value?.latitude.toString(),
-        longitude = constants.PostProperty_ViewModel.pinned_Lat_Long.value?.longitude.toString(),
-        property_name = selectedForm.property_Name,
-
-        bhk_type = selectedForm.property_Floor_Plan_Bhk,
-        property_area = selectedForm.property_Land_Area,
-        property_area_unit = selectedForm.property_area_unit,
-        carpet_area = selectedForm.property_Carpet_Area,
-        carpet_area_unit = selectedForm.carpet_area_unit,
-        built_up_area = selectedForm.property_Builtup_Area,
-        built_up_area_unit = selectedForm.built_up_area_unit,
-        super_built_up_area = selectedForm.property_Super_Builtup_Area,
-        super_built_up_area_unit = selectedForm.super_built_up_area_unit,
-
-        area_length = selectedForm.property_Area_Dimension_Length,
-        area_length_unit = selectedForm.property_Area_Dimension_Length_Unit,
-        area_width = selectedForm.property_Area_Dimension_Width,
-        area_width_unit = selectedForm.property_Area_Dimension_Width_Unit,
-
-        property_facing = selectedForm.property_Facing,
-        total_floor = selectedForm.property_Floor_Det_Total,
-        rent_floor_no = selectedForm.property_Floor_Det_Which,
-
-        preferred_tenants = selectedForm.property_preferred_tenants.joinToString(","),
-        availability_from = selectedForm.property_availability_from,
-        agreement_type = selectedForm.property_agreement_type,
-        food_preferences = selectedForm.property_food_preferences,
-        pets_allowed = selectedForm.property_pets_allowed,
-        property_condition = selectedForm.property_condition,
-        furnishing_status = selectedForm.property_Furnished,
-        boundary_wall = selectedForm.property_Boundary_Wall,
-        parking_available = selectedForm.property_Parking,
-        amenities = selectedForm.property_Amenities.joinToString { "," },
-        property_highlights = selectedForm.property_Highlights.joinToString { "," },
-
-        facade_width = selectedForm.property_Facade_Width,
-        facade_width_unit = selectedForm.facade_width_unit,
-        facade_height = selectedForm.property_Facade_Height,
-        facade_height_unit = selectedForm.facade_height_unit,
-
-        no_of_Bathrooms = selectedForm.property_No_of_Baths,
-        no_of_Balconies = selectedForm.property_No_of_Balconies,
-        no_of_open_sides = selectedForm.property_No_Of_OpenSides,
-        other_rooms = selectedForm.property_Other_Rooms.joinToString(","),
-        no_of_bedrooms = selectedForm.property_No_of_Beds,
-        no_of_cabins = selectedForm.property_No_Of_Cabins,
-        no_of_meeting_rooms = selectedForm.property_No_Of_Meeting_Rooms,
-        min_of_seats = selectedForm.property_Min_No_Of_Seats,
-        max_of_seats = selectedForm.property_Max_No_Of_Seats,
-        conference_room = selectedForm.property_Conference_Room,
-        no_of_Staircases = selectedForm.property_No_Of_Stairs,
-        reception_area = selectedForm.property_Reception,
-        pantry = selectedForm.property_Pantry,
-        pantry_size = selectedForm.property_Pantry_Size,
-        pantry_size_unit = selectedForm.pantry_size_unit,
-        central_ac = selectedForm.property_Central_AC,
-        oxygen_duct = selectedForm.property_Oxygen_Duct,
-        ups = selectedForm.property_UPS,
-        fire_safety_measures = selectedForm.property_Fire_Safety.joinToString(","),
-        lifts = selectedForm.property_Lifts,
-        noc_certified = selectedForm.property_NOC_Certified,
-        occupancy_certificate = selectedForm.property_Occupancy,
-        washroom_details = selectedForm.property_WashRoom.joinToString(","),
-        does_local_authority = selectedForm.property_Authority_Approved,
-        suitable_business_type = selectedForm.property_Suitable_Business_Type.joinToString(","),
-
-        property_for_rent_or_lease = selectedForm.property_for_rent_or_lease,
-        rent = constants.PostProperty_ViewModel.get_budget_Price_PF5(),
-        rent_negotiable = constants.PostProperty_ViewModel.get_price_negotiation(),
-        deposit_amount_month_of_rents = selectedForm.deposit_amount_month_of_rents,
-//        deposit_amount_months_or_amount = selectedForm.property_Deposit_Amount,
-        duration_of_agreement = selectedForm.duration_of_agreement_type,
-        notice_period = selectedForm.notice_period,
-        lock_in_period = selectedForm.lock_in_period,
-        lease_duration_in_years = selectedForm.lease_duration_in_years,
-        lease_amount = selectedForm.lease_amount,
-        lease_negotiable = if(selectedForm.lease_negotiable)"1" else "0",
-
-        post_type = type.toString(),
-        video = videoUrl,                     // LIST instead of string
-        images = imageUrls,                     // LIST object type
-        thumbnail = ,
-        draft = selectedForm.draft.toString(),
-        preview_model = constants.PostProperty_ViewModel.save_Changes_Draft.value.toString(),
-        address = selectedForm,
-        is_this_property_for_rent_or_lease = selectedForm.property_for_rent_or_lease,
-        deposit_amount_month_of_rents_type = selectedForm.deposit_amount_month_of_rents_type,
-        total_deposit = selectedForm.total_deposit,
-        duration_of_agreement_type = selectedForm.duration_of_agreement_type,
-        lock_in_period_type = selectedForm.lock_in_period_type,
-    )
-    { result ->
-        when (result) {
-            is API_Result_Handling.Loading -> {
-                println("aesfdghjhgfcdxszxfcgm0987654324567890-333333")
-                resultCallback(3)
-                constants.PostProperty_ViewModel.change_Status_PFs(true)
-            }
-            is API_Result_Handling.Error -> {
-                println("aesfdghjhgfcdxszxfcgm0987654324567890-0000---${result.message}")
-                resultCallback(0)
-                constants.PostProperty_ViewModel.change_Status_PFs(false)
-            }
-            is API_Result_Handling.Success -> {
-                resultCallback(1)
-                println("aesfdghjhgfcdxszxfcgm0987654324567890-1111111111")
-                constants.PostProperty_ViewModel.change_Status_PFs(false)
-            }
-            is API_Result_Handling.NoData -> {
-                println("aesfdghjhgfcdxszxfcgm0987654324567890-")
-                constants.PostProperty_ViewModel.change_Status_PFs(false)
-            }
-            is API_Result_Handling.Deactivated -> {
-                resultCallback(5)
-            }
-        }
-    }
-
-
-
-
-}
-
-*/
-
 
 data class DraftNewFlowRequest(
     val user_id: Int,
@@ -1243,9 +913,3 @@ data class DraftNewFlowRequest(
     val land_categorie_id: Int?,
     val user_type: String?
 )
-
-
-
-
-
-

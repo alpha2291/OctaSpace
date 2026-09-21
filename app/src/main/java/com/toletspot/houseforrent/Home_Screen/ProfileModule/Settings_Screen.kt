@@ -165,8 +165,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 
-
-
 @Composable
 fun Settings_Main(navController: NavHostController ,onLogout: () -> Unit ) {
 
@@ -209,10 +207,9 @@ fun Settings_Main(navController: NavHostController ,onLogout: () -> Unit ) {
                     )
                     {
 
-                        // top bar
                         Row (
                             modifier = Modifier
-                                //.fillMaxWidth(.5f)
+
                                 .wrapContentHeight()
                             , horizontalArrangement = Arrangement.spacedBy(8.dp)
                         )
@@ -231,9 +228,6 @@ fun Settings_Main(navController: NavHostController ,onLogout: () -> Unit ) {
                                 fontFamily = constants.fontFamily(0)
                             )
                         }
-                        /// top bar end
-
-
 
                         Column {
                             LazyColumn(
@@ -250,10 +244,9 @@ fun Settings_Main(navController: NavHostController ,onLogout: () -> Unit ) {
                                                     constants.Profile_ViewModel.onSet_Settings_Click(
                                                         item.id
                                                     )
-                                                    println("ITEMIDDDD === ${item.id}")
                                                 }
                                             }
-                                        //.fillMaxWidth()
+
                                         ,
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -272,7 +265,6 @@ fun Settings_Main(navController: NavHostController ,onLogout: () -> Unit ) {
                                     }
                                 }
 
-
                             }
 
                             Box(
@@ -286,10 +278,9 @@ fun Settings_Main(navController: NavHostController ,onLogout: () -> Unit ) {
                                     text = "Version ${BuildConfig.VERSION_NAME}",
                                     color = Color.Black,
                                     fontSize = constants.textUnit(12),
-                                    //  lineHeight = 36.sp,
+
                                     modifier = Modifier.align(Alignment.BottomCenter)
-                                    //.padding(vertical = 8.dp)
-                                    // .align(Alignment.Start) // Align title to the start
+
                                 )
                             }
                         }
@@ -300,29 +291,28 @@ fun Settings_Main(navController: NavHostController ,onLogout: () -> Unit ) {
                     Account_Settings(notchPadding , navController ,onLogout = onLogout)
                 }
                 1 -> {
-                    //Draftsdrth
+
                    constants.API_Vm.isLoading_Profile_Drafts = true
                     constants.API_Vm.totalPages_Profile_Drafts = 1
                     Drafts(notchPadding ,navController)
                 }
                 2 -> {
-                    //SoldOuts
-                    // Sold_Outs(notchPadding , navController)
+
                     constants.API_Vm.isLoading_Profile_SoldOuts = true
                     constants.API_Vm.totalPages_Profile_SoldOuts = 1
                     navController.navigate(ProfileScreenFlow.Sold_Outs.route)
                 }
                 3 -> {
-                    //My Interests
+
                     My_Interest(notchPadding)
                 }
                 4 -> {
                     constants.API_Vm.totalPages_Profile_SavedP = 1
-                    //Saved Properties
+
                     Saved_Properties(notchPadding ,navController)
                 }
                 5 -> {
-                    //Share the App
+
                     constants.Profile_ViewModel.set_open_settings()
                     constants.Profile_ViewModel.onSet_Settings_Click(-1)
                     constants.DefaultShare("${constants.APP_URL}${BuildConfig.APPLICATION_ID}" ,3)
@@ -332,10 +322,8 @@ fun Settings_Main(navController: NavHostController ,onLogout: () -> Unit ) {
     }
 }
 
-
 @Composable
 fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,onLogout: () -> Unit ) {
-
 
     var network = rememberNetworkStatus()
 
@@ -347,23 +335,17 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
 
     val logout_PP_State = constants.Profile_ViewModel.logout_PP.collectAsState()
 
-    // for unblock
     val unblock_Loading = remember { mutableStateOf(false) }
     val unBlock_PUP = constants.Profile_ViewModel.UnBlock_User.collectAsState()
     var content_PP_Unblock = remember { mutableStateOf(Triple(0, "", "")) }
 
     var deactivated = remember { mutableStateOf(false) }
 
-
-
     val triggerEdited_Profile_details = remember { mutableStateOf(0) }
     val edit_profile_Listener = constants.Profile_ViewModel.edit_profile_onTap.collectAsState()
 
-
-
     DisposableEffect(Unit) {
         onDispose {
-            println("asdfghjkl098765432q1")
             constants.Profile_ViewModel.dismiss_Logout_PP()
         }
     }
@@ -430,13 +412,11 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                         triggerEdited_Profile_details.value = triggerEdited_Profile_details.value + 9876
                     }
                     Edit_Profile(notchPadding ,navController)
-//                    constants.Profile_ViewModel.enable_Edit_Profile()
+
                 }
                 "Contact" -> { AS_Contact() }
                 "Notification" -> { AS_Notification() }
                 "My Blocklist" -> {
-
-                    //constants.API_Vm.isLoading_BUL = true
 
                     constants.API_Vm.currentPage_BUL = 1
                    constants.API_Vm.totalPages_BUL = 1
@@ -490,15 +470,10 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
         }
     }
 
-
-
-
-    // unbloack popup
     Common_Popup(
         visible = unBlock_PUP.value,
         modifier = Modifier
             .background(Color(0xffF7F0DC)), content = {
-
 
             Column(
                 modifier = Modifier
@@ -516,25 +491,16 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
 
                 spacer(2)
 
-//                Text(
-//                    text = "Unblock ${content_PP_Unblock.value.second} ?",
-//                    color = newBlack,
-//                    fontSize = constants.textUnit(16),
-//                    fontFamily = constants.fontFamily(0)
-//                )
-                //constants.spacer(2)
-
                 Text(
                     text = "Are you sure you want to Unblock this profile?",
                     color = newBlack,
                     fontSize = constants.textUnit(18),
                     fontFamily = constants.fontFamily(1),
                     textAlign = TextAlign.Center
-//                   , lineHeight = 24.sp
+
                     , modifier = Modifier.padding(horizontal = if (forTab()) 46.dp else 36.dp)
                 )
 
-//                Spacer(modifier = Modifier.padding(2.dp))
                 spacer(4)
 
                 Row(
@@ -576,39 +542,35 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                                         if (ClickGuard.canClick()) {
 
                                             if (network.value == NetworkStatus.Online) {
-                                                println("SETTINGS UNBLOCK USEER --${AppPreferences.getUserId()} -OTHERID- ${content_PP_Unblock.value.first}")
                                                 constants.API_Vm.put_Block_User(
                                                     user_id = AppPreferences.getUserId(),
                                                     blocker_id = content_PP_Unblock.value.first,
-                                                    //profile_Content.value?.user_id ?: 0,
+
                                                     status = 2
-                                                    //if (profile_Content.value?.is_blocked == 0) "1" else "0"
+
                                                 )
                                                 { apiResultHandling ->
                                                     when (apiResultHandling) {
                                                         is API_Result_Handling.Deactivated -> {
-                                                            // resultCallback(5)
+
                                                         }
 
                                                         is API_Result_Handling.Error -> {
                                                             toast("Unable to Unblock ,try again later!")
                                                             unblock_Loading.value = false
-                                                            //errror
-                                                            //constants.Profile_ViewModel.change_Update_profile(false)
+
                                                         }
 
                                                         is API_Result_Handling.NoData -> {
-                                                            // no data
+
                                                         }
 
                                                         is API_Result_Handling.Loading -> {
                                                             unblock_Loading.value = true
-                                                            //loading
-                                                            // constants.Profile_ViewModel.change_Update_profile(true)
+
                                                         }
 
                                                         is API_Result_Handling.Success -> {
-
 
                                                             constants.Profile_ViewModel.remove_UnBlocked_User(
                                                                 content_PP_Unblock.value.first
@@ -647,17 +609,14 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                 spacer(2)
             }
         }, image =""
-            //content_PP_Unblock.value.third
+
     )
 
-    // logout popup
     Common_Popup(
         visible = logout_PP_State.value
         , modifier = Modifier
             .background(Color(0xffFCEDEC))
         , content = {
-
-            //val user_item = constants.Profile_ViewModel.selected_User_Profile.collectAsState()
 
             Column (
                 modifier = Modifier
@@ -674,16 +633,6 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                     modifier = Modifier.size(64.dp))
 
                 spacer(2)
-               // constants.spacer(2)
-
-//                Text(
-//                    text = "Are you sure you want to Logout ?",
-//                    color = newBlack,
-//                    fontSize = constants.textUnit(16),
-//                    fontFamily = constants.fontFamily(0)
-//                )
-
-               // constants.spacer(2)
 
                 Text(
                     text = "Are you sure you want to logout Account?",
@@ -691,7 +640,7 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                     fontSize = constants.textUnit(18),
                     fontFamily = constants.fontFamily(1)
                     , textAlign = TextAlign.Center
-//                   , lineHeight = 24.sp
+
                     , modifier = Modifier.padding(horizontal = if (forTab()) 46.dp else 36.dp)
                 )
 
@@ -759,7 +708,7 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                                                     }
 
                                                     is API_Result_Handling.Deactivated -> {
-                                                        //resultCallback(5)
+
                                                     }
 
                                                     is API_Result_Handling.Loading -> {
@@ -794,8 +743,6 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                                                         constants.Profile_ViewModel.clear_All_BF_Handler()
                                                         constants.Profile_ViewModel.clearAllFFData()
 
-
-                                                        //constants.Profile_ViewModel.dismiss_Logout_PP()
                                                         constants.Profile_ViewModel.onSet_Settings_Click(
                                                             -1
                                                         )
@@ -811,17 +758,10 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                                                         constants.Search_ViewModel.clearAllData_SVM()
                                                         constants.Enquiry_ViewModel.clearAllData_EVM()
 
-
                                                         onLogout()
 
                                                         constants.Profile_ViewModel.dismiss_Logout_PP()
 
-                                                        // Example logout from Common_Screen
-//                                    navController.navigate(UserCredentialsScreenFlow.UserCredentials.route) {
-//                                        popUpTo(navController.graph.startDestinationId) {
-//                                            inclusive = true
-//                                        }
-//                                    }
                                                     }
                                                 }
                                             }
@@ -829,7 +769,6 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                                         else {
                                             toast("Check your Internet Connection")
                                         }
-
 
                                     }
                                 }
@@ -855,12 +794,11 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
         , image = AppPreferences.get_ProfileImage()
     )
 
-    /// delete account
     Common_Popup(
         visible = deactivated.value,
         modifier = Modifier.background(Color(0xffFCEDEC)),
         image = "",
-            //AppPreferences.get_ProfileImage(),
+
         icon = 0,
         userName = AppPreferences.get_User_Name().ifEmpty { "Username" },
         content = {
@@ -869,7 +807,6 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                 , verticalArrangement = Arrangement.spacedBy(if (forTab()) 16.dp else 8.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
-
 
                 spacer(2)
                 Image(painter = painterResource(R.drawable.deletepopupicon), "",
@@ -908,7 +845,7 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                             .width(if (forTab()) 156.dp else 136.dp)
                             .noRippleClickable{
                                 deactivated.value = false
-                                //isChecked.value = false
+
                             }
                             .background(Color(0xffE8E8E8))
                             .padding(horizontal = 16.dp)
@@ -937,17 +874,15 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                                             { aPI_Result_Handling ->
                                                 when (aPI_Result_Handling) {
                                                     is API_Result_Handling.Error -> {
-                                                        println("failure")
                                                         toast("Something Went Wrong")
                                                     }
 
                                                     is API_Result_Handling.Deactivated -> {
-                                                        // resultCallback(5)
+
                                                     }
 
                                                     is API_Result_Handling.Loading -> {}
                                                     is API_Result_Handling.Success -> {
-                                                        println("Success")
 
                                                         constants.Profile_ViewModel.set_open_settings()
                                                         constants.Profile_ViewModel.onSet_Settings_Click(
@@ -971,8 +906,6 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                                                         constants.Start_Up_ViewModel.userName = ""
                                                         constants.Start_Up_ViewModel.otp = ""
 
-
-                                                        //constants.Profile_ViewModel.dismiss_Logout_PP()
                                                         constants.Profile_ViewModel.onSet_Settings_Click(
                                                             -1
                                                         )
@@ -1001,8 +934,6 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                                                         constants.Profile_ViewModel.clear_All_BF_Handler()
                                                         constants.Profile_ViewModel.clearAllFFData()
 
-
-                                                        //constants.Profile_ViewModel.dismiss_Logout_PP()
                                                         constants.Profile_ViewModel.onSet_Settings_Click(
                                                             -1
                                                         )
@@ -1018,9 +949,7 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                                                         constants.Search_ViewModel.clearAllData_SVM()
                                                         constants.Enquiry_ViewModel.clearAllData_EVM()
 
-
                                                         onLogout()
-
 
                                                         constants.Profile_ViewModel.dismiss_Logout_PP()
 
@@ -1052,16 +981,11 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
                     }
                 }
 
-
                 Spacer(modifier = Modifier.padding(8.dp))
                 spacer(2)
             }
         }
     )
-
-    ///edit profile view
-
-
 
     BackHandler {
         ClickHelper.getInstance().clickOnce {
@@ -1076,15 +1000,12 @@ fun Account_Settings(notchPadding: State<Dp>, navController: NavHostController ,
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AS_Contactold(){
 
     var isChecked by remember { mutableStateOf(false) }
     val isError = constants.Start_Up_ViewModel.error_OTP.collectAsState()
-
 
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
@@ -1097,15 +1018,13 @@ fun AS_Contactold(){
     LaunchedEffect(Unit) {
        constants.Start_Up_ViewModel.WaNumber =  AppPreferences.get_User_WaNumber()
         email.value = AppPreferences.get_Email()
-        println("CHEKINGG -- ${constants.Start_Up_ViewModel.WaNumber} --- ${AppPreferences.get_User_WaNumber()}")
     }
 
     Column (
         modifier = Modifier
             .fillMaxSize()
             .background(newWhite)
-            //.padding(top = notchPadding.value)
-            //.padding(horizontal = 16.dp)
+
             .padding(horizontal = 16.dp)
         , verticalArrangement = Arrangement.spacedBy(16.dp)
     )
@@ -1167,7 +1086,6 @@ fun AS_Contactold(){
             }
         }
 
-
         Text(
             "WhatsApp Number",
             fontSize = constants.textUnit(14),
@@ -1184,8 +1102,6 @@ fun AS_Contactold(){
                                   }
             , onClick = {
 
-                //if (AppPreferences.get_User_WaNumber().isEmpty()){
-
                 if (AppPreferences.get_User_WaNumber() == constants.Start_Up_ViewModel.WaNumber){
                     GlobalSnackbar.show("Change Number to verify and update")
                 }
@@ -1199,7 +1115,7 @@ fun AS_Contactold(){
                             apiResultHandling ->
                         when(apiResultHandling) {
                             is API_Result_Handling.Deactivated -> {
-                                //resultCallback(5)
+
                             }
                             is API_Result_Handling.Loading -> {}
                             is API_Result_Handling.Success -> {
@@ -1212,38 +1128,14 @@ fun AS_Contactold(){
                     }
                 }
 
-
-//                }
-//                else {
-//                    constants.API_Vm.put_Contact_Details(
-//                        user_id = AppPreferences.getUserId(),
-//                        whatsapp_num_cc = constants.Start_Up_ViewModel.countryCode,
-//                        whatsapp_num = constants.Start_Up_ViewModel.WaNumber,
-//                        email = "",
-//                    )
-//                    {
-//                            apiResultHandling ->
-//                        when(apiResultHandling) {
-//                            is API_Result_Handling.Loading -> {}
-//                            is API_Result_Handling.Success -> {
-//                                GlobalSnackbar.show("")
-//                            }
-//                            is API_Result_Handling.NoData -> {}
-//                            is API_Result_Handling.Error -> {}
-//                        }
-//                    }
-//                }
-
             }
         )
 
-
-        // same as mobile
         Row (
             modifier = Modifier
                 .fillMaxWidth()
             , verticalAlignment = Alignment.CenterVertically
-//            , horizontalArrangement = Arrangement.
+
         )
         {
             Checkbox(
@@ -1265,7 +1157,6 @@ fun AS_Contactold(){
             fontSize = constants.textUnit(14),
             fontFamily = constants.fontFamily(1)
         )
-
 
         Row (
             modifier = Modifier
@@ -1303,7 +1194,7 @@ fun AS_Contactold(){
                         fontSize = constants.textUnit(12),
                         fontFamily = constants.fontFamily(2)
                     )
-//                        .fillMaxWidth()
+
                 )
 
                 AsyncImage(
@@ -1313,7 +1204,6 @@ fun AS_Contactold(){
                         .size(16.dp)
                 )
             }
-
 
             VerticalDivider()
 
@@ -1335,18 +1225,18 @@ fun AS_Contactold(){
                             ) { apiResultHandling ->
                                 when (apiResultHandling) {
                                     is API_Result_Handling.Deactivated -> {
-                                        //resultCallback(5)
+
                                     }
                                     is API_Result_Handling.Loading -> {}
                                     is API_Result_Handling.Success -> {
-                                        //constants.Profile_ViewModel.set_verify_PP()
+
                                     }
 
                                     is API_Result_Handling.NoData -> {}
                                     is API_Result_Handling.Error -> {}
                                 }
                             }
-                            //constants.Profile_ViewModel.set_verify_PP()
+
                         }
                     }
                 , contentAlignment = Alignment.Center
@@ -1361,7 +1251,6 @@ fun AS_Contactold(){
             }
 
         }
-
 
         if (verify_status.value){
 
@@ -1407,30 +1296,17 @@ fun AS_Contactold(){
                         )
                     }
 
-
-
                     Text(
                         "Please enter the OTP sent to your entered mobile number to verify.",
                         fontSize = constants.textUnit(14),
                         fontFamily = constants.fontFamily(2)
                     )
 
-//                    OtpTextField(
-//                        otp = constants.Start_Up_ViewModel.otp,
-//                        onOtpChange = {
-//                            constants.Start_Up_ViewModel.otp = it
-//                        },
-//                        modifier = Modifier
-//                            .align(Alignment.CenterHorizontally),
-//                        isError = false
-//                    )
-
                     OTP_TF(
                         otp = constants.Start_Up_ViewModel.otp,
                         onOtpChange = {
                             constants.Start_Up_ViewModel.otp = it
-                            //  constants.Start_Up_ViewModel.put_OTP_Response(it)
-                            println("OTP GETTER - ${constants.Start_Up_ViewModel.get_OTP_Response()}")
+
                         },
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally),
@@ -1448,7 +1324,6 @@ fun AS_Contactold(){
                         , horizontalArrangement = Arrangement.spacedBy(8.dp)
                     )
                     {
-
 
                         SubcomposeAsyncImage(
                             model = R.drawable.otptimer,
@@ -1475,12 +1350,10 @@ fun AS_Contactold(){
 
                         Text(time.time.value , fontSize = constants.textUnit(14) , color = newBlue)
 
-
                     }
 
                     verifyOtp(
                         resendOTP = {
-                            println("TIMER RESEND")
                             time.restart()
                             if (isConnected.value) {
                                 constants.Start_Up_ViewModel.phoneNumber = constants.Start_Up_ViewModel.WaNumber
@@ -1488,8 +1361,7 @@ fun AS_Contactold(){
                                     resultCallback = { result ->
                                         when (result) {
                                             0 -> {
-                                                //isResend_Loading.value = false
-                                                println("TIMER RESEND")
+
                                                 constants.Start_Up_ViewModel.is_Error_OTP_Reset()
                                                 constants.Start_Up_ViewModel.otp = ""
                                                 time.restart()
@@ -1500,32 +1372,12 @@ fun AS_Contactold(){
                                             }
 
                                             2 -> {
-                                               // isResend_Loading.value = true
+
                                             }
                                         }
                                     }
                                 )
-                                /*register_API_Call(
-                                    resultCallback = { result ->
-                                        when (result) {
-                                            0 -> {
-                                                //isResend_Loading.value = false
-                                                println("TIMER RESEND")
-                                                constants.Start_Up_ViewModel.is_Error_OTP_Reset()
-                                                constants.Start_Up_ViewModel.otp = ""
-                                                time.restart()
-                                            }
 
-                                            1 -> {
-                                                toast("Resend OTP Failed to Initiate !")
-                                            }
-
-                                            2 -> {
-                                               // isResend_Loading.value = true
-                                            }
-                                        }
-                                    }
-                                )*/
                             }
                             else {
                                 toast("It Seems your are offline !!.Refresh again")
@@ -1559,11 +1411,11 @@ fun AS_Contactold(){
                                     ) { apiResultHandling ->
                                         when (apiResultHandling) {
                                             is API_Result_Handling.Deactivated -> {
-                                                //resultCallback(5)
+
                                             }
                                             is API_Result_Handling.Error -> {}
                                             is API_Result_Handling.Deactivated -> {
-                                                //resultCallback(5)
+
                                             }
                                             is API_Result_Handling.NoData -> {}
                                             is API_Result_Handling.Success -> {
@@ -1576,7 +1428,7 @@ fun AS_Contactold(){
                                                     when (apiResultHandling) {
                                                         is API_Result_Handling.Loading -> {}
                                                         is API_Result_Handling.Deactivated -> {
-                                                            //resultCallback(5)
+
                                                         }
                                                         is API_Result_Handling.Success -> {
                                                             AppPreferences.save_User_WaNumber(
@@ -1618,7 +1470,6 @@ fun AS_Contactold(){
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AS_Contact(){
@@ -1646,7 +1497,6 @@ fun AS_Contact(){
     LaunchedEffect(Unit) {
         constants.Start_Up_ViewModel.WaNumber =  AppPreferences.get_User_WaNumber()
         email.value = AppPreferences.get_Email_Address()
-        println("CHEKINGG -- ${constants.Start_Up_ViewModel.WaNumber} --- ${AppPreferences.get_User_WaNumber()}")
     }
 
     LaunchedEffect(constants.Start_Up_ViewModel.WaNumber) {
@@ -1656,13 +1506,11 @@ fun AS_Contact(){
             isChecked = true
     }
 
-
     Column (
         modifier = Modifier
             .fillMaxSize()
             .background(newWhite)
-            //.padding(top = notchPadding.value)
-            //.padding(horizontal = 16.dp)
+
             .padding(horizontal = 16.dp)
         , verticalArrangement = Arrangement.spacedBy(16.dp)
     )
@@ -1724,7 +1572,6 @@ fun AS_Contact(){
             }
         }
 
-
         Text(
             "WhatsApp Number",
             fontSize = constants.textUnit(14),
@@ -1738,7 +1585,6 @@ fun AS_Contact(){
             onCountryCodeChange = { constants.Start_Up_ViewModel.countryCode = it },
             onClick = {
                 focusManager.clearFocus()
-                //if (AppPreferences.get_User_WaNumber().isEmpty()){
 
                 constants.Start_Up_ViewModel.is_Error_OTP_Reset()
 
@@ -1759,7 +1605,7 @@ fun AS_Contact(){
                         { apiResultHandling ->
                             when (apiResultHandling) {
                                 is API_Result_Handling.Deactivated -> {
-                                    //resultCallback(5)
+
                                     is_Loading.value = false
                                 }
 
@@ -1787,21 +1633,12 @@ fun AS_Contact(){
             },
             viewModel = constants.Start_Up_ViewModel
         )
-//        PhoneNumberInput_Settings (
-//            phoneNumber = constants.Start_Up_ViewModel.WaNumber,
-//            onPhoneNumberChange = { constants.Start_Up_ViewModel.WaNumber = it },
-//            countryCode = constants.Start_Up_ViewModel.countryCode,
-//            onCountryCodeChange = { constants.Start_Up_ViewModel.countryCode = it },
-//
-//        )
 
-
-        // same as mobile
         Row (
             modifier = Modifier
                 .fillMaxWidth()
             , verticalAlignment = Alignment.CenterVertically
-//            , horizontalArrangement = Arrangement.
+
         )
         {
             Checkbox(
@@ -1827,7 +1664,6 @@ fun AS_Contact(){
             fontSize = constants.textUnit(14),
             fontFamily = constants.fontFamily(1)
         )
-
 
         Row (
             modifier = Modifier
@@ -1869,7 +1705,7 @@ fun AS_Contact(){
                         fontSize = constants.textUnit(12),
                         fontFamily = constants.fontFamily(2)
                     )
-//                        .fillMaxWidth()
+
                 )
 
                 AsyncImage(
@@ -1879,7 +1715,6 @@ fun AS_Contact(){
                         .size(16.dp)
                 )
             }
-
 
             VerticalDivider()
 
@@ -1912,7 +1747,7 @@ fun AS_Contact(){
                                     { apiResultHandling ->
                                         when (apiResultHandling) {
                                             is API_Result_Handling.Deactivated -> {
-                                                //resultCallback(5)
+
                                                 is_Loading.value = false
                                             }
 
@@ -1952,11 +1787,9 @@ fun AS_Contact(){
 
         }
 
-
         if (verify_status.value)
         {
             val time = rememberCountdownTimer(180)
-
 
             ModalBottomSheet(
                 onDismissRequest = {
@@ -1972,17 +1805,11 @@ fun AS_Contact(){
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()
                     , verticalArrangement = Arrangement.spacedBy(8.dp)
-//        , horizontalAlignment = Align
+
                 )
                 {
 
                     spacer(4)
-
-//                    Image(painter = painterResource(R.drawable.left_arrow) , ""
-//                        , modifier = Modifier.noRippleClickable {
-//                            index.value = 0
-//                        }
-//                    )
 
                     Image(painter = painterResource(R.drawable.verificationheader) , ""
                         , modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -2044,7 +1871,7 @@ fun AS_Contact(){
                                 .noRippleClickable {
                                     AppPreferences.save_User_Verify_Otp("")
                                     if (network.value == NetworkStatus.Online) {
-//                           register_API_Call(resultCallback = {})
+
                                         constants.Start_Up_ViewModel.phoneNumber = constants.Start_Up_ViewModel.WaNumber
                                         constants.API_Vm.user_Login(
                                             phone_num = constants.Start_Up_ViewModel.phoneNumber,
@@ -2056,32 +1883,26 @@ fun AS_Contact(){
                                         { apiResultHandling ->
                                             when (apiResultHandling) {
                                                 is API_Result_Handling.Loading -> {
-                                                    //state = true
-                                                    // resultCallback(2)
-                                                    // isResend_Loading.value = true
+
                                                 }
 
                                                 is API_Result_Handling.Deactivated -> {
-                                                    //resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.NoData -> {
-                                                    //state = false
+
                                                     constants.Common_H_ViewModel.changeStatus(false)
                                                     toast("Something went wrong , No Records found")
                                                 }
 
                                                 is API_Result_Handling.Error -> {
-                                                    //state = false
-                                                    //resultCallback(1)
+
                                                     toast("Resend OTP Failed to Initiate!")
                                                 }
 
                                                 is API_Result_Handling.Success -> {
-                                                    //state = false
-                                                    //  resultCallback(0)
-                                                    // isResend_Loading.value = false
-                                                    println("TIMER RESEND")
+
                                                     constants.Start_Up_ViewModel.is_Error_OTP_Reset()
                                                     emailOrNumber.value = 0
                                                     is_Error.value = false
@@ -2097,7 +1918,6 @@ fun AS_Contact(){
                                 }
                         )
                     }
-
 
                     spacer(4)
 
@@ -2124,12 +1944,12 @@ fun AS_Contact(){
                                         { apiResultHandling ->
                                             when (apiResultHandling) {
                                                 is API_Result_Handling.Deactivated -> {
-                                                    //resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.Error -> {}
                                                 is API_Result_Handling.Deactivated -> {
-                                                    //resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.NoData -> {}
@@ -2142,31 +1962,6 @@ fun AS_Contact(){
                                                     is_Error.value = false
                                                     GlobalSnackbar.show("Details Updated Successfullly")
 
-
-                                                    /// store value to datstore
-                                                    /*constants.API_Vm.put_Contact_Details(
-                                                    user_id = AppPreferences.getUserId(),
-                                                    whatsapp_num_cc = constants.Start_Up_ViewModel.countryCode,
-                                                    whatsapp_num = constants.Start_Up_ViewModel.WaNumber,
-                                                    email = email.value,
-                                                )
-                                                { apiResultHandling ->
-                                                    when (apiResultHandling) {
-                                                        is API_Result_Handling.Loading -> {}
-                                                        is API_Result_Handling.Deactivated -> {
-                                                            //resultCallback(5)
-                                                        }
-                                                        is API_Result_Handling.Success -> {
-                                                            AppPreferences.save_User_WaNumber(
-                                                                constants.Start_Up_ViewModel.WaNumber
-                                                            )
-                                                            constants.Profile_ViewModel.dismiss_verify_PP()
-                                                        }
-
-                                                        is API_Result_Handling.NoData -> {}
-                                                        is API_Result_Handling.Error -> {}
-                                                    }
-                                                }*/
                                                 }
 
                                                 is API_Result_Handling.Loading -> {}
@@ -2250,7 +2045,6 @@ fun PhoneNumberInput_Settings_WithBottomSheet(
     var isLimit by remember { mutableStateOf(10) }
     var showSheet by remember { mutableStateOf(false) }
 
-    // Update limit when country changes
     LaunchedEffect(selectedCountry.value) {
         isLimit = selectedCountry.value?.limit ?: 10
     }
@@ -2263,7 +2057,6 @@ fun PhoneNumberInput_Settings_WithBottomSheet(
             .border(1.dp, newGray, RoundedCornerShape(8.dp))
     ) {
 
-        /* Country Picker Button */
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -2276,14 +2069,6 @@ fun PhoneNumberInput_Settings_WithBottomSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
             ) {
-//                Text(
-//                    text = selectedCountry.value?.dial_code ?: countryCode,
-//                    fontSize = constants.textUnit(12),
-//                    fontFamily = constants.fontFamily(0),
-//                    color = newBlack
-//                )
-//
-//                Spacer(modifier = Modifier.width(4.dp))
 
                 Text(
                     text = selectedCountry.value?.emoji ?: "",
@@ -2305,7 +2090,6 @@ fun PhoneNumberInput_Settings_WithBottomSheet(
             color = newGray
         )
 
-        /* Phone Number Input */
         TextField(
             value = phoneNumber,
             onValueChange = {
@@ -2348,7 +2132,6 @@ fun PhoneNumberInput_Settings_WithBottomSheet(
 
         VerticalDivider()
 
-        /* Verify / Change Button */
         Box(
             modifier = Modifier
                 .fillMaxHeight()
@@ -2384,7 +2167,6 @@ fun PhoneNumberInput_Settings_WithBottomSheet(
         }
     }
 
-    /* Country Picker Bottom Sheet */
     CountryPickerBottomSheet(
         context = context,
         showSheet = showSheet,
@@ -2398,12 +2180,7 @@ fun PhoneNumberInput_Settings_WithBottomSheet(
     )
 }
 
-
-
-
 var notification = mutableStateOf(false)
-
-
 
 @Composable
 fun AS_Notification(){
@@ -2411,16 +2188,10 @@ fun AS_Notification(){
     var customNotificationAlert = remember { mutableStateOf(false) }
     var getState by remember { mutableStateOf(0) }
     var isChecked = remember { mutableStateOf(false) }
-    // val notification_Subs = constants.Profile_ViewModel.notification_Subs.collectAsState()
+
     val notification_Subs = constants.Profile_ViewModel.notification_Subs.collectAsState()
 
-
     var network = rememberNetworkStatus()
-
-
-
-
-// Replace your LaunchedEffect with this:
 
     LaunchedEffect(Unit) {
         constants.API_Vm.get_Notification_Settings(
@@ -2428,48 +2199,29 @@ fun AS_Notification(){
         ) { aPI_Result_Handling ->
             when(aPI_Result_Handling) {
                 is API_Result_Handling.Loading -> {
-                    println("ASD 000-- ")
                     getState = 0
                 }
                 is API_Result_Handling.Deactivated -> {
 
                 }
                 is API_Result_Handling.Error -> {
-                    println("ASD 222-- ")
                     getState = 2
                 }
                 is API_Result_Handling.NoData -> {
-                    println("ASD 3333-- ")
-                    //getState = 3
+
                 }
                 is API_Result_Handling.Success -> {
-                    println("ASD 111-- ")
                     isChecked.value = constants.Profile_ViewModel.api_NS_Ids_StringList.value.first
 
-                    // IMPORTANT: Clear existing selections first
-                    // This assumes you have a method to clear selections in your ViewModel
-                    // If not, you may need to add one
-
-                    // Set the selected items from API
                     constants.Profile_ViewModel.api_NS_Ids_StringList.value.second.forEach { s ->
                         constants.Profile_ViewModel.set_selected_Notification_Sub(s.toInt())
                     }
 
-                    println("ASD 111-- ${notification_Subs.value}")
-
-                    // Add a small delay to ensure state propagation
-                    // OR better: move getState update to after state collection
-                    ///delay(100)
                     getState = 1
                 }
             }
         }
     }
-
-// BETTER SOLUTION: Use derived state
-// Replace the notification_Subs collection with:
-
-
 
     Box{
 
@@ -2481,8 +2233,6 @@ fun AS_Notification(){
 
             if (network.value == NetworkStatus.Offline) {
 
-                /// constants.activity.getString(R.string.no_Internet)
-                //GlobalSnackbar.show("It Seems your are offline !!.Refresh again")
                 Column(
                     modifier = Modifier
                         .height(800.dp)
@@ -2519,7 +2269,7 @@ fun AS_Notification(){
                                 .weight(9f)
                                 .background(newWhite)
                                 .padding(horizontal = 16.dp)
-                            //.padding(horizontal = 16.dp),
+
                             ,verticalArrangement = Arrangement.spacedBy(16.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         )
@@ -2538,7 +2288,6 @@ fun AS_Notification(){
                                 )
                                 val context = LocalContext.current
 
-
                                 Switch(
                                     checked = notification.value,
                                     onCheckedChange = {
@@ -2549,7 +2298,6 @@ fun AS_Notification(){
                                         }else
                                         {
                                             notification.value = false
-
 
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
 
@@ -2567,9 +2315,6 @@ fun AS_Notification(){
 
                                                 {
 
-                                                    println("NOTI----1")
-
-
                                                     val showRationale =
 
                                                         ActivityCompat.shouldShowRequestPermissionRationale(
@@ -2580,15 +2325,10 @@ fun AS_Notification(){
 
                                                         )
 
-                                                    // customised Permission alert
-
                                                     if (showRationale) {
-                                                        println("NOTI----2")
                                                         customNotificationAlert.value = true
 
                                                     }
-
-                                                    // default alert
 
                                                     else
 
@@ -2605,14 +2345,11 @@ fun AS_Notification(){
                                                         )
 
                                                         {
-                                                            println("NOTI----3")
-
 
                                                         }
 
                                                         else {
 
-                                                            println("NOTI----4")
                                                             ActivityCompat.requestPermissions(
 
                                                                 constants.activity,
@@ -2641,14 +2378,9 @@ fun AS_Notification(){
 
                                                     {
 
-                                                        println("NOTI----5")
-
-
-
                                                     }
 
                                                     else {
-                                                        println("NOTI----6")
                                                         ActivityCompat.requestPermissions(
 
                                                             constants.activity,
@@ -2668,37 +2400,10 @@ fun AS_Notification(){
 
                                             {
 
-                                                println("NOTI----7")
-
-
                                                 notification.value = !notification.value
-
-                                                println("InsideNotification")
 
                                             }
                                         }
-
-
-//                                jklkl
-//
-//
-//                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                                    if(ContextCompat.checkSelfPermission(
-//                                            constants.activity,
-//                                            android.Manifest.permission.POST_NOTIFICATIONS
-//                                        ) == PackageManager.PERMISSION_GRANTED){
-//                                        constants.sharedHelper.getBoolean(constants.activity,constants.notificationEnabled)
-//                                    }else {
-//                                        false
-//                                    }
-//                                }else constants.sharedHelper.getBoolean(constants.activity,constants.notificationEnabled)
-//
-//
-
-
-
-
-
 
                                     },
                                     colors = SwitchDefaults.colors(
@@ -2766,12 +2471,6 @@ fun AS_Notification(){
                                                     .map { it.id }
                                                     .joinToString(",")
 
-                                                println(
-                                                    "SELECTEDIDD  IDD ${idss}-- ${
-                                                        notification_Subs.value.filter { it.isSelected }
-                                                            .joinToString()
-                                                    }"
-                                                )
 
                                                 constants.sharedHelper.putBoolean(
                                                     constants.activity,
@@ -2791,7 +2490,7 @@ fun AS_Notification(){
                                                         }
 
                                                         is API_Result_Handling.Deactivated -> {
-                                                            // resultCallback(5)
+
                                                         }
 
                                                         is API_Result_Handling.Error -> {
@@ -2806,14 +2505,12 @@ fun AS_Notification(){
 
                                                             GlobalSnackbar.show("Notification settings updated.")
 
-
                                                         }
                                                     }
                                                 }
                                             }else{
                                                 GlobalSnackbar.show(constants.activity.resources.getString(R.string.no_Internet))
                                             }
-
 
                                         }
                                         .background(newBlue), contentAlignment = Alignment.Center
@@ -2836,7 +2533,6 @@ fun AS_Notification(){
                 }
             }
 
-
         }
 
         if(customNotificationAlert.value){
@@ -2846,8 +2542,6 @@ fun AS_Notification(){
         }
     }
 
-
-
     BackHandler {
         ClickHelper.getInstance().clickOnce {
             constants.Profile_ViewModel.setSelected_AS_Settings("Account Settings")
@@ -2856,7 +2550,6 @@ fun AS_Notification(){
         }
     }
 }
-
 
 fun isPostNotificationpermissionEnabledHome(): Boolean{
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -2877,7 +2570,6 @@ fun isPostNotificationpermissionEnabledHome(): Boolean{
 @Composable
 fun PermissionDilaog(notificationValue: MutableState<Boolean>) {
 
-
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(7.dp)
@@ -2892,7 +2584,6 @@ fun PermissionDilaog(notificationValue: MutableState<Boolean>) {
         ), shape = RoundedCornerShape(6.dp), elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
         )) {
-
 
             Column(modifier = Modifier.fillMaxWidth()) {
                 Spacer(modifier = Modifier.padding(4.dp))
@@ -2951,14 +2642,11 @@ fun PermissionDilaog(notificationValue: MutableState<Boolean>) {
                         Text("Allow", color = Color.White, modifier = Modifier)
                     }
 
-
                 }
 
                 Spacer(modifier = Modifier.padding(7.dp))
 
             }
-
-
 
         }
 
@@ -2966,13 +2654,11 @@ fun PermissionDilaog(notificationValue: MutableState<Boolean>) {
 
 }
 
-
 @Composable
 fun AS_My_BlockList(
     content_PP_Unblock: MutableState<Triple<Int, String, String>>,
     navController: NavHostController
 ) {
-
 
     val network = rememberNetworkStatus()
 
@@ -2981,20 +2667,14 @@ fun AS_My_BlockList(
     val currentPage = constants.API_Vm.currentPage_BUL
     val totalPages = constants.API_Vm.totalPages_BUL
 
-
     val listState = rememberLazyListState()
 
     var retry by remember { mutableStateOf(0) }
 
-    println("LOADING -- ${isLoading} -- ${constants.API_Vm.isLoading_BUL} --- ${currentPage}")
-
-
-
     LaunchedEffect (Unit ,retry) {
-        println("PRINTLN 2 BUL =  ")
 
         constants.API_Vm.isLoading_BUL = true
-        // ✅ Only fetch if online
+
         constants.API_Vm.load_Blocked_Users_List(
             user_id = AppPreferences.getUserId(),
             page = 1
@@ -3002,13 +2682,11 @@ fun AS_My_BlockList(
 
     }
 
-
-    // Detect when near end of list
     LaunchedEffect(listState, currentPage, isLoading, totalPages) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { lastVisibleItemIndex ->
                 val totalItems = listState.layoutInfo.totalItemsCount
-                val loadMoreThreshold = 4// 👈 trigger when 4 items from the end
+                val loadMoreThreshold = 4
 
                 if (
                     lastVisibleItemIndex != null &&
@@ -3017,9 +2695,8 @@ fun AS_My_BlockList(
                     !isLoading &&
                     currentPage < totalPages
                 ) {
-                    println("CURRENT PAGE - ${currentPage}")
                     constants.API_Vm.isLoading_BUL = true
-                    //constants.API_Vm.loadCategories(currentPage + 1)
+
                     constants.API_Vm.load_Blocked_Users_List(
                         user_id = AppPreferences.getUserId(),
                         page = currentPage + 1
@@ -3029,10 +2706,7 @@ fun AS_My_BlockList(
             }
     }
 
-
     val blocked_Users_List = constants.Profile_ViewModel.get_Blocked_Users_List.collectAsStateWithLifecycle()
-
-
 
     Column (
         modifier = Modifier
@@ -3045,8 +2719,7 @@ fun AS_My_BlockList(
         when {
 
             network.value == NetworkStatus.Offline  -> {
-                /// constants.activity.getString(R.string.no_Internet)
-                //GlobalSnackbar.show("It Seems your are offline !!.Refresh again")
+
                 Column(
                     modifier = Modifier
                         .padding(top = 24.dp)
@@ -3073,11 +2746,10 @@ fun AS_My_BlockList(
                         .fillMaxWidth()
                     , contentAlignment = Alignment.Center
                 ){
-                    //CircularProgressIndicator()
+
                     LottiAnimation(2)
                 }
             }
-
 
             !errorMessage.isNullOrEmpty() -> {
                 Box(
@@ -3091,12 +2763,10 @@ fun AS_My_BlockList(
                 }
             }
 
-
             blocked_Users_List.value.isEmpty() && !isLoading -> {
                 Column(
                     modifier = Modifier
 
-                        //.background(Color.Red)
                         .fillMaxWidth()
                         .weight(9.5f)
                     , verticalArrangement = Arrangement.Center
@@ -3167,9 +2837,7 @@ fun AS_My_BlockList(
                                                         fontFamily = constants.fontFamily(1),
                                                         color = Color.Black
                                                     )
-//                                Image(painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                                    contentDescription = "",modifier = Modifier
-//                                        .matchParentSize())
+
                                                 }
                                             } else {
                                                 SubcomposeAsyncImageContent()
@@ -3205,7 +2873,6 @@ fun AS_My_BlockList(
                                                 ClickHelper.getInstance().clickOnce {
                                                     constants.API_Vm.isLoading_BUL = false
 
-//                                        content_PP_Unblock.copy(first =  , second = , third = )
                                                     constants.Profile_ViewModel.enable_Unblock_pp()
                                                     content_PP_Unblock.value = Triple(
                                                         item?.user_id ?: 0,
@@ -3213,25 +2880,12 @@ fun AS_My_BlockList(
                                                         item?.profile_image ?: ""
                                                     )
 
-
-
-                                                    // println("CONTENT POPUP __ ${content_PP_Unblock.first} === ${content_PP_Unblock.second} ==== ${content_PP_Unblock.third}")
-
-
                                                 }
                                             }
-//                                    .noRippleClickable{
-//
-//                                        //constants.Profile_ViewModel.setSelectedUser(item)
-//                                       // constants.Profile_ViewModel.set_enabler_Unblock_PP()
-//                                    }
+
                                         , horizontalArrangement = Arrangement.spacedBy(8.dp)
                                         , verticalAlignment = Alignment.CenterVertically
                                     ) {
-//                                        AsyncImage(
-//                                            model = R.drawable.blocked_profiles, "", modifier = Modifier
-//                                                .size(14.dp)
-//                                        )
 
                                         Text(
                                             "Unblock",
@@ -3258,7 +2912,6 @@ fun AS_My_BlockList(
                                         item?.username ?: "Username"
                                     )
 
-                                    //new flowwewwwwwww
                                     constants.Profile_ViewModel.add_BF_Handler(
                                         Profile_Handle_Back(
                                             current_UsedId = AppPreferences.getUserId(),
@@ -3270,8 +2923,6 @@ fun AS_My_BlockList(
                                     )
 
                                     constants.Profile_ViewModel.put_Other_User_Id(item?.user_id ?:0)
-                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
-
 
                                     constants.Profile_ViewModel.addProfile(item?.user_id ?: 0)
                                     constants.Profile_ViewModel.add_Selected_Profile_Id(id = item?.user_id ?:0)
@@ -3285,18 +2936,6 @@ fun AS_My_BlockList(
                         }
                     }
 
-//                    if (isLoading && currentPage >= 1) {
-//                        item {
-//                            Row (
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                , verticalAlignment = Alignment.CenterVertically
-//                                , horizontalArrangement = Arrangement.Center
-//                            ){
-//                                CircularProgressIndicator()
-//                            }
-//                        }
-//                    }
                 }
             }
 
@@ -3313,11 +2952,8 @@ fun AS_My_BlockList(
     }
 }
 
-
 @Composable
 fun AS_Delete_Account(onLogout: () -> Unit, deactivated: MutableState<Boolean>) {
-
-
 
     var report_Options = constants.Profile_ViewModel.profile_Report_Options.collectAsState()
 
@@ -3389,12 +3025,10 @@ fun AS_Delete_Account(onLogout: () -> Unit, deactivated: MutableState<Boolean>) 
                         spacer(2)
                     }
 
-
-
                     Column(
                         modifier = Modifier
                             .wrapContentSize()
-                        //.padding(horizontal = 16.dp)
+
                         , verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     )
@@ -3468,7 +3102,6 @@ fun AS_Delete_Account(onLogout: () -> Unit, deactivated: MutableState<Boolean>) 
                                     value = user_Manual_report_String.value,
                                     onValueChange = {
                                         user_Manual_report_String.value = it
-                                        //constants.Profile_ViewModel.user_Manual_report_String_delete.value = it
 
                                     },
                                     modifier = Modifier
@@ -3508,7 +3141,7 @@ fun AS_Delete_Account(onLogout: () -> Unit, deactivated: MutableState<Boolean>) 
                         Checkbox(
                             checked = isChecked.value, onCheckedChange = {
                                 isChecked.value = it
-                                //  deactivated = true
+
                             }, colors = CheckboxDefaults.colors(
                                 checkedColor = newBlue
                             )
@@ -3526,7 +3159,6 @@ fun AS_Delete_Account(onLogout: () -> Unit, deactivated: MutableState<Boolean>) 
                     spacer(2)
                 }
 
-
             }
 
         }
@@ -3534,18 +3166,13 @@ fun AS_Delete_Account(onLogout: () -> Unit, deactivated: MutableState<Boolean>) 
         Box(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
-              //  .align(Alignment.BottomCenter)
+
                 .fillMaxWidth()
                 .weight(.5f)
                 .clip(RoundedCornerShape(4.dp))
                 .background(
                     Brush.verticalGradient(newRedGradienBg)
-//                    if (constants.Profile_ViewModel.getSelectedProfileReportOptionDescription()
-//                            ?.isNotEmpty() == true && isChecked.value
-//                    )
-//                        Color(0xffE54C3C)
-//                    else
-//                        Color(0xffE54C3C).copy(.5f)
+
                 )
                 .noRippleClickable {
 
@@ -3567,7 +3194,6 @@ fun AS_Delete_Account(onLogout: () -> Unit, deactivated: MutableState<Boolean>) 
                         toast("Select the reason or enter the reson for deleting account")
                     }
 
-
                 }
             , contentAlignment = Alignment.Center
         ) {
@@ -3583,8 +3209,6 @@ fun AS_Delete_Account(onLogout: () -> Unit, deactivated: MutableState<Boolean>) 
         Spacer(modifier = Modifier.padding(16.dp))
     }
 
-
-
     BackHandler {
         ClickHelper.getInstance().clickOnce {
 
@@ -3599,7 +3223,6 @@ fun AS_Delete_Account(onLogout: () -> Unit, deactivated: MutableState<Boolean>) 
         }
     }
 }
-
 
 @Composable
 fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController) {
@@ -3617,25 +3240,21 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
     if (network.value == NetworkStatus.Online) {
         DisposableEffect(Unit , retry) {
 
-
             constants.API_Vm.load_Profile_Saved_Properties(
                 user_id = AppPreferences.getUserId(),
                 page = 1
             )
-
 
             onDispose {
 
             }
         }
 
-
-        // Detect when near end of list
         LaunchedEffect(listState, currentPage, isLoading, totalPages , retry) {
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                 .collect { lastVisibleItemIndex ->
                     val totalItems = listState.layoutInfo.totalItemsCount
-                    val loadMoreThreshold = 4// 👈 trigger when 4 items from the end
+                    val loadMoreThreshold = 4
 
                     if (
                         lastVisibleItemIndex != null &&
@@ -3644,8 +3263,7 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
                         !isLoading &&
                         currentPage < totalPages
                     ) {
-                        println("CURRENT PAGE - ${currentPage}")
-                        //constants.API_Vm.loadCategories(currentPage + 1)
+
                         constants.API_Vm.load_Profile_Saved_Properties(
                             user_id = AppPreferences.getUserId(),
                             page = currentPage + 1
@@ -3658,7 +3276,6 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
     else {
         GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
     }
-
 
     val saved_property = constants.Profile_ViewModel.profile_SavedP.collectAsState()
 
@@ -3677,19 +3294,16 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
                 .weight(.5f)
                 .padding(horizontal = 16.dp)
             , contentAlignment = Alignment.Center
-//            , verticalAlignment = Alignment.CenterVertically
-//            , horizontalArrangement = Arrangement.Start
+
         )
         {
-            // Header
+
             Backer(
                 modifier = Modifier.align(Alignment.CenterStart)
-                    //.align(Alignment.CenterHorizontally)
-                    //.background(Color.Cyan)
+
                 , onBackClick = {
                     constants.Profile_ViewModel.onSet_Settings_Click(-1)
-                    //navController.navigateUp()
-                    //navController.navigate(UserCredentialsScreenFlow.UserCredentials.route)
+
                 }
             )
 
@@ -3700,18 +3314,16 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
                 color = Color.Black,
                 fontSize = constants.textUnit(20),
                 fontFamily = constants.fontFamily(0),
-                //  lineHeight = 36.sp,
+
                 modifier = Modifier.align(Alignment.Center)
-                //.padding(vertical = 8.dp)
-                // .align(Alignment.Start) // Align title to the start
+
             )
         }
 
         when {
 
             network.value == NetworkStatus.Offline  -> {
-                /// constants.activity.getString(R.string.no_Internet)
-                //GlobalSnackbar.show("It Seems your are offline !!.Refresh again")
+
                     Column(
                         modifier = Modifier
                             .weight(9.5f)
@@ -3741,7 +3353,6 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
                 }
             }
 
-
             !errorMessage.isNullOrEmpty() -> {
                 Box(
                     modifier = Modifier
@@ -3754,11 +3365,10 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
                 }
             }
 
-
             saved_property.value.isEmpty() && !isLoading -> {
                 Column(
                     modifier = Modifier
-                        //.background(Color.Red)
+
                         .fillMaxWidth()
                         .weight(9.5f)
                     , verticalArrangement = Arrangement.Center
@@ -3776,18 +3386,16 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
                 }
             }
 
-
             saved_property.value.isNotEmpty() -> {
                 var gridtype = if (forTab()) 3 else 2
-                // Show Interest Selection UI
+
                 LazyColumn(
                     state = listState,
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(9.5f)
                         .padding(horizontal = 16.dp , vertical = 16.dp),
-                    // verticalArrangement = Arrangement
-                        //.spacedBy(16.dp) // spacing between items
+
                 )
                 {
                     customGridItems(
@@ -3802,7 +3410,7 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
                                 .padding(bottom = 16.dp)
                                 .height(172.dp)
                                 .clip(RoundedCornerShape(6.dp))
-//                                .aspectRatio(0.94f) // Keeps consistent card size (approx 162/172)
+
                                 .border(1.dp, color = newGray, RoundedCornerShape(6.dp))
                         )
                         {
@@ -3810,24 +3418,15 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .noRippleClickable{
-                                        //constants.Start_Up_ViewModel.toggleInterestSelection(index)
-//                                          val videoJson = Uri.encode(Json.encodeToString(soldOuts[index]))
-//                                          navController.navigate("${ProfileScreenFlow.SingleVideoPlayerEnquiry.route}/$videoJson")
 
-                                        // When clicking on an item
-                                        // constants.Profile_ViewModel.selectVideo(soldOuts[index].toPostUser())
-                                        //  constants.Profile_ViewModel.set_From_SoldOuts(true)
-                                        // navController.navigate(ProfileScreenFlow.SingleVideoPlayerEnquiry2.route)
                                         constants.Reels_ViewModel.clear_view_pro_Details()
                                         AppPreferences.save_Post_Id(saved_property.value[index].user_post_id)
                                         constants.Search_ViewModel.select_RS_Reels_Flow(index)
                                         constants.Reels_ViewModel.setReelsContent(
                                             saved_property.value
-                                            //.map { it.toReelsData() }  // map each element to Get_Reels_Data
+
                                         )
-//                                        constants.Reels_ViewModel.add_View_Property_Details(posts.value.toReelsData())
-//                                        val data = constants.Search_ViewModel.get_Search_Results()
-//                                        println("SIZE OF DATA MAPPED TO SEARCH REELS FLOW DATA HOLDER -- ${data.size}  *** ${data.map { it.video }}")
+
                                         if (constants.Reels_ViewModel.get_Reels_Data()) {
                                             constants.Profile_ViewModel.set_From_SoldOuts(true)
                                             navController.navigate(ProfileScreenFlow.ReelsView_Search_Flow.route + "/$index")
@@ -3856,7 +3455,7 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .background(newLightGray)
-                                            //.padding(8.dp)
+
                                             , contentAlignment = Alignment.Center
                                         ) {
                                             Image(
@@ -3877,7 +3476,6 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
 
         }
 
-
     }
 
     BackHandler {
@@ -3887,7 +3485,6 @@ fun Saved_Properties(notchPadding: State<Dp> , navController: NavHostController)
         }
     }
 }
-
 
 @Composable
 fun My_Interest(notchPadding: State<Dp>) {
@@ -3914,10 +3511,7 @@ fun My_Interest(notchPadding: State<Dp>) {
 
     var initialSelectedIds by remember { mutableStateOf<Set<Int>>(emptySet()) }
 
-    // Track if we've done initial load for this screen instance
     var hasLoadedOnce by remember { mutableStateOf(false) }
-
-
 
     var staticIconList = listOf(
         R.drawable.flat,
@@ -3937,8 +3531,6 @@ fun My_Interest(notchPadding: State<Dp>) {
         R.drawable.commercialother,
         R.drawable.farmhouse,
         R.drawable.agricultureland,
-
-        //// duplicate
 
         R.drawable.flat,
         R.drawable.housevilla,
@@ -3960,27 +3552,20 @@ fun My_Interest(notchPadding: State<Dp>) {
 
         )
 
-
     if (network.value == NetworkStatus.Online) {
-        // Load categories and user interests ONLY if not already loaded
+
         LaunchedEffect(Unit) {
             if (!hasLoadedOnce) {
-                println("Initial load starting...")
 
-                // Load categories first
                 constants.API_Vm.loadCategories(1)
 
-                // Get user's selected interests
                 get_User_Interest_Particular_API_Call { result ->
                     when (result) {
                         0 -> {
-                            println("User interests fetched successfully")
                         }
                         1 -> {
-                            println("API call failed")
                         }
                         2 -> {
-                            println("No data")
                         }
                     }
                 }
@@ -3989,10 +3574,8 @@ fun My_Interest(notchPadding: State<Dp>) {
             }
         }
 
-        // Handle retry separately
         LaunchedEffect(retry) {
             if (retry > 0) {
-                println("Retrying...")
                 constants.API_Vm.loadCategories(1)
 
                 get_User_Interest_Particular_API_Call { result ->
@@ -4005,7 +3588,6 @@ fun My_Interest(notchPadding: State<Dp>) {
             }
         }
 
-        // Restore interests when both categories and user data are ready
         LaunchedEffect(categories.value, user_Inters_Already.value) {
             if (
                 initialSelectedIds.isEmpty() &&
@@ -4028,8 +3610,6 @@ fun My_Interest(notchPadding: State<Dp>) {
             }
         }
 
-
-        // Detect when near end of list for pagination
         LaunchedEffect(listState, currentPage, isLoading, totalPages) {
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                 .collect { lastVisibleItemIndex ->
@@ -4042,7 +3622,6 @@ fun My_Interest(notchPadding: State<Dp>) {
                         !isLoading &&
                         currentPage < totalPages
                     ) {
-                        println("Loading page: ${currentPage + 1}")
                         constants.API_Vm.loadCategories(currentPage + 1)
                     }
                 }
@@ -4051,7 +3630,6 @@ fun My_Interest(notchPadding: State<Dp>) {
         GlobalSnackbar.show("It Seems you are offline !! Refresh again")
     }
 
-    // Calculate current selection count from actual state
     val currentSelectedIds = remember(categories.value) {
         categories.value
             .filter { it.is_Selected }
@@ -4059,14 +3637,10 @@ fun My_Interest(notchPadding: State<Dp>) {
             .toSet()
     }
 
-
-    // Determine if Save button should be enabled
     val hasChanges = remember(currentSelectedIds, initialSelectedIds) {
         currentSelectedIds.size >= 2 &&
                 currentSelectedIds != initialSelectedIds
     }
-
-
 
     Box {
         Column(
@@ -4086,10 +3660,7 @@ fun My_Interest(notchPadding: State<Dp>) {
                 , contentAlignment = Alignment.Center
             )
             {
-//                Box(
-//                    modifier = Modifier
-//                    ,contentAlignment = Alignment.CenterStart
-//                ) {
+
                     Backer(
                         modifier = Modifier.align(Alignment.CenterStart),
                         onBackClick = {
@@ -4097,9 +3668,6 @@ fun My_Interest(notchPadding: State<Dp>) {
                             constants.Profile_ViewModel.onSet_Settings_Click(-1)
                         }
                     )
-//                }
-
-//                Spacer(modifier = Modifier.padding(8.dp))
 
                 Text(
                     text = "My Interests",
@@ -4189,7 +3757,6 @@ fun My_Interest(notchPadding: State<Dp>) {
 
                                 spacer(4)
 
-
                                 CommonText("Tell us what kind of rental you’re looking for?",
                                     newBlack,
                                     18,
@@ -4197,7 +3764,6 @@ fun My_Interest(notchPadding: State<Dp>) {
                                 )
 
                                 spacer(4)
-
 
                                 CommonText("We’ll suggest rentals based on your preferences.",
                                     Color(0xff575757),
@@ -4273,7 +3839,7 @@ fun My_Interest(notchPadding: State<Dp>) {
 
                                     Text(
                                         text = categories.value[index].name,
-                                        color =  Color.Black, // if (categories.value[index].is_Selected) Color.White else
+                                        color =  Color.Black,
                                         fontSize = constants.textUnit(14),
                                         fontFamily = constants.fontFamily(0),
                                         lineHeight = constants.textUnit(16),
@@ -4284,7 +3850,6 @@ fun My_Interest(notchPadding: State<Dp>) {
                             }
 
                         }
-
 
                         if (isLoading && currentPage > 1) {
                             item {
@@ -4300,7 +3865,6 @@ fun My_Interest(notchPadding: State<Dp>) {
                 }
             }
 
-            // Bottom Button
             Static_Bottom(
                 modifier = Modifier.weight(1f)
             ) {
@@ -4315,7 +3879,7 @@ fun My_Interest(notchPadding: State<Dp>) {
                                         0 -> {
                                             AppPreferences.save_Location_Received(1)
                                             GlobalSnackbar.show("Interests Updated Successfully")
-                                            // Update initial count after successful save
+
                                             initialSelectedIds = currentSelectedIds
                                         }
                                         1 -> {
@@ -4352,8 +3916,6 @@ fun My_Interest(notchPadding: State<Dp>) {
     }
 }
 
-
-
 @Composable
 fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
 
@@ -4366,31 +3928,21 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
 
     val soldOuts by constants.Profile_ViewModel.profile_SoldOuts.collectAsState()
 
-
     val network = rememberNetworkStatus()
     var retry by remember { mutableStateOf(0) }
 
-
-
     DisposableEffect(Unit ) {
 
-       // if (soldOuts.isEmpty()) {
-            println("qwasdzxfgchvjbknm -- ${AppPreferences.getUserId()}")
             constants.API_Vm.load_Profile_SoldOuts(
                 user_id = AppPreferences.getUserId()
-                    //AppPreferences.getUserId(),
+
                 ,page = 1,
             )
-       // }
-
 
         onDispose {
-            println("Profile_FF_Structure disposed")
         }
     }
 
-
-    // Detect when near end of list
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .distinctUntilChanged()
@@ -4404,20 +3956,19 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                     totalItems > 0 &&
                     lastVisibleItemIndex >= totalItems - loadMoreThreshold
                 ) {
-                    // Check loading state and page info at this moment
+
                     if (!constants.API_Vm.isLoading_Profile_SoldOuts &&
                         constants.API_Vm.currentPage_Profile_SoldOuts < constants.API_Vm.totalPages_Profile_SoldOuts
                     ) {
                         constants.API_Vm.load_Profile_SoldOuts(
                             user_id = AppPreferences.getUserId()
-                                //AppPreferences.getUserId(),
+
                             ,page = constants.API_Vm.currentPage_Profile_SoldOuts + 1,
                         )
                     }
                 }
             }
     }
-
 
       Column(
           modifier = Modifier
@@ -4432,19 +3983,18 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
               modifier = Modifier
                   .fillMaxWidth()
                   .weight(.5f)
-                  //.background(Color.Cyan)
+
                   .padding(horizontal = 16.dp)
               ,contentAlignment = Alignment.Center
           ) {
               Backer(
                   modifier = Modifier.align(Alignment.CenterStart)
-                  //.align(Alignment.CenterHorizontally)
-                  //.background(Color.Cyan)
+
                   , onBackClick = {
                       navController.navigateUp()
                       constants.Profile_ViewModel.onSet_Settings_Click(-1)
                       constants.Profile_ViewModel.from_SoldOuts.value = false
-                      //navController.navigate(UserCredentialsScreenFlow.UserCredentials.route)
+
                   }
               )
 
@@ -4455,69 +4005,12 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                   color = Color.Black,
                   fontSize = constants.textUnit(20),
                   fontFamily = constants.fontFamily(0),
-                  //  lineHeight = 36.sp,
+
                   modifier = Modifier.align(Alignment.Center)
-                  //.padding(vertical = 8.dp)
-                  // .align(Alignment.Start) // Align title to the start
+
               )
           }
-         /* Row (
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .weight(.5f)
-                  //.background(Color.Cyan)
-                  .padding(horizontal = 16.dp)
-              , verticalAlignment = Alignment.CenterVertically
-              , horizontalArrangement = Arrangement.Start
-              // .background(Color.Cyan)
-          )
-          {
-              // Header
-                  Backer(
-                      modifier = Modifier
-                          //.align(Alignment.CenterHorizontally)
-                          //.background(Color.Cyan)
-                      , onBackClick = {
-                          navController.navigateUp()
-                          constants.Profile_ViewModel.onSet_Settings_Click(-1)
-                          constants.Profile_ViewModel.from_SoldOuts.value = false
-                          //navController.navigate(UserCredentialsScreenFlow.UserCredentials.route)
-                      }
-                  )
 
-              Spacer(modifier = Modifier.padding(8.dp))
-
-              Text(
-                  text = "RentedOut",
-                  color = Color.Black,
-                  fontSize = constants.textUnit(20),
-                  fontFamily = constants.fontFamily(0),
-                  //  lineHeight = 36.sp,
-                  modifier = Modifier.align(Alignment.CenterVertically)
-                  //.padding(vertical = 8.dp)
-                  // .align(Alignment.Start) // Align title to the start
-              )
-          }*/
-
-
-
-//          if (isLoading && currentPage == 1){
-//              Box(
-//                  modifier = Modifier
-//                      .fillMaxSize()
-//                  , contentAlignment = Alignment.Center
-//              ){
-//                  CircularProgressIndicator()
-//              }
-//          }
-//          else {
-//              if (soldOuts.isEmpty()){
-//
-//              }
-//              else {
-
-              // Show Interest Selection UI
-          
           var gridtype = if (forTab()) 3 else 2
               LazyColumn(
                   state = listState,
@@ -4525,15 +4018,14 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                       .fillMaxWidth()
                       .weight(9.5f)
                       .padding(horizontal = 16.dp , vertical = 16.dp),
-                  verticalArrangement = Arrangement.spacedBy(16.dp) // spacing between items
+                  verticalArrangement = Arrangement.spacedBy(16.dp)
               )
               {
 
                   when {
 
                       network.value == NetworkStatus.Offline && soldOuts.isEmpty() -> {
-                          /// constants.activity.getString(R.string.no_Internet) 
-                          //GlobalSnackbar.show("It Seems your are offline !!.Refresh again")
+
                           item {
                               Column(
                                   modifier = Modifier
@@ -4561,7 +4053,7 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                                   modifier = Modifier
                                       .height(800.dp)
                                       .fillMaxWidth()
-//                                      .fillMaxSize()
+
                                   , contentAlignment = Alignment.Center
                               ) {
 
@@ -4574,9 +4066,8 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                           }
                       }
 
-
                       isLoading && currentPage == 1 && soldOuts.isEmpty() -> {
-                          // ✅ show fullscreen loader if first page is loading
+
                           item {
                               Box(
                                   modifier = Modifier.fillParentMaxSize(),
@@ -4587,13 +4078,12 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                           }
                       }
 
-
                       !isLoading && soldOuts.isEmpty() -> {
-                          // no data found
+
                           item {
                               Column(
                                   modifier = Modifier
-                                      //.background(Color.Red)
+
                                       .fillMaxWidth()
                                       .height(800.dp)
                                   , verticalArrangement = Arrangement.Center
@@ -4617,7 +4107,6 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                           }
                       }
 
-
                       soldOuts.isNotEmpty() -> {
                           customGridItems(
                               count = soldOuts.size,
@@ -4630,7 +4119,7 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                                   modifier = Modifier
                                       .clip(RoundedCornerShape(6.dp))
                                       .padding(bottom = 16.dp)
-                                      .aspectRatio(0.94f) // Keeps consistent card size (approx 162/172)
+                                      .aspectRatio(0.94f)
                                       .border(1.dp, color = newGray, RoundedCornerShape(4.dp))
                               ) {
                                   Column(
@@ -4640,14 +4129,6 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                                               ClickHelper.getInstance().clickOnce {
 
                                                   constants.Reels_ViewModel.clear_view_pro_Details()
-                                                  //constants.Start_Up_ViewModel.toggleInterestSelection(index)
-//                                          val videoJson = Uri.encode(Json.encodeToString(soldOuts[index]))
-//                                          navController.navigate("${ProfileScreenFlow.SingleVideoPlayerEnquiry.route}/$videoJson")
-
-                                                  // When clicking on an item
-                                                  // constants.Profile_ViewModel.selectVideo(soldOuts[index].toPostUser())
-                                                  //  constants.Profile_ViewModel.set_From_SoldOuts(true)
-                                                  // navController.navigate(ProfileScreenFlow.SingleVideoPlayerEnquiry2.route)
 
                                                   AppPreferences.save_Post_Id(soldOuts[index].user_post_id)
                                                   constants.Search_ViewModel.select_RS_Reels_Flow(
@@ -4655,11 +4136,9 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                                                   )
                                                   constants.Reels_ViewModel.setReelsContent(
                                                       soldOuts
-                                                      //.map { it.toReelsData() }  // map each element to Get_Reels_Data
+
                                                   )
-//                                        constants.Reels_ViewModel.add_View_Property_Details(posts.value.toReelsData())
-//                                        val data = constants.Search_ViewModel.get_Search_Results()
-//                                        println("SIZE OF DATA MAPPED TO SEARCH REELS FLOW DATA HOLDER -- ${data.size}  *** ${data.map { it.video }}")
+
                                                   if (constants.Reels_ViewModel.get_Reels_Data()) {
                                                       constants.Profile_ViewModel.set_From_SoldOuts(
                                                           true
@@ -4709,7 +4188,7 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                                                   modifier = Modifier
                                                       .fillMaxSize()
                                                       .background(newLightGray)
-                                                  //.padding(8.dp)
+
                                                   , contentAlignment = Alignment.Center
                                               ) {
                                                   Image(
@@ -4741,15 +4220,11 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
                           }
                       }
 
-
                   }
 
                   }
-//              }
-//          }
+
       }
-
-
 
     BackHandler {
         ClickHelper.getInstance().clickOnce {
@@ -4758,8 +4233,6 @@ fun Sold_Outs(notchPadding: State<Dp>, navController: NavHostController) {
         }
     }
 }
-
-
 
 @OptIn(FlowPreview::class)
 @Composable
@@ -4777,46 +4250,39 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
     var onSelectAll_Tap by remember { mutableStateOf(false) }
     var delete_Confirmation by remember { mutableStateOf(false) }
 
-    // Track selected items by their post IDs
     var selectedPostIds by remember { mutableStateOf<Set<Int>>(emptySet()) }
 
     var network = rememberNetworkStatus()
 
-    // Update select all state based on individual selections
     LaunchedEffect(selectedPostIds, drafts.size) {
         if (drafts.isNotEmpty()) {
             onSelectAll_Tap = selectedPostIds.size == drafts.size
         }
     }
 
-    // Function to get the selection data for API
     fun getSelectionData(): Pair<String, Int> {
         return if (onSelectAll_Tap) {
-            // All selected: return all post IDs and 1
+
             val allPostIds = drafts.mapNotNull { it.post_property?.user_post_id }.joinToString(",")
             Pair(allPostIds, 1)
         } else {
-            // Individual selection: return comma-separated IDs and 0
+
             val postIds = selectedPostIds.joinToString(",")
             Pair(postIds, 0)
         }
     }
 
     DisposableEffect(Unit) {
-       // if (drafts.isEmpty()) {
-            println("qwasdzxfgchvjbknm -- ${AppPreferences.getUserId()}")
+
             constants.API_Vm.load_Profile_Drafts(
                 user_id = AppPreferences.getUserId(),
                 page = 1,
             )
-       // }
 
         onDispose {
-            println("Profile_FF_Structure disposed")
         }
     }
 
-    // Detect when near end of list
     LaunchedEffect(listState) {
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .distinctUntilChanged()
@@ -4860,7 +4326,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Header
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -4869,7 +4335,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
             ) {
                 Backer(
                     modifier = Modifier.align(Alignment.CenterStart)
-                       // .background(Color.Cyan)
+
                     , onBackClick = {
                         constants.Profile_ViewModel.onSet_Settings_Click(-1)
                     }
@@ -4901,7 +4367,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                             modifier = Modifier
                                 .wrapContentWidth()
                                 .background(Color.White, RoundedCornerShape(4.dp))
-                               // .border(1.dp, Color(0xffE8E8E8), RoundedCornerShape(4.dp)),
+
                             ,horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -4910,12 +4376,12 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                 onCheckedChange = { isChecked ->
                                     onSelectAll_Tap = isChecked
                                     if (isChecked) {
-                                        // Select all items
+
                                         selectedPostIds = drafts.mapNotNull {
                                             it.post_property?.user_post_id
                                         }.toSet()
                                     } else {
-                                        // Deselect all items
+
                                         selectedPostIds = emptySet()
                                     }
                                 },
@@ -4975,8 +4441,6 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                 val postId = item.post_property?.user_post_id ?: 0
                                 val isSelected = selectedPostIds.contains(postId)
 
-
-
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -5011,12 +4475,8 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                     )
                                                 )
 
-
-
                                                 constants.PostProperty_ViewModel.clear_Budget_PF5()
                                                 constants.PostProperty_ViewModel.clear_Media()
-//                                    constants.PostProperty_ViewModel.pinned_Lat_Long.value?.longitude = 0.0
-
 
                                                 constants.PostProperty_ViewModel.select_Land_Type(1)
                                                 constants.PostProperty_ViewModel.select_Land_Cat_Id(
@@ -5026,36 +4486,24 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                     -1
                                                 )
 
-
-
                                                 constants.URL_COMPLETED.clear()
-
 
                                                 val server_Data = drafts[index].post_property
 
                                                 server_Data?.let { data ->
 
-                                                    // Update Selected Fields for Form4 if available
                                                     constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                                         data.toSelectedOptionsForm4_D()
                                                     }
 
-                                                    // Log data
-                                                    println("FORM $ DATA -- ${data.carpet_area} $$ ${data.area_width} $$ ${data.area_length} -- ${data.total_floor}")
-
-                                                    // Save Post ID
                                                     if (!data.user_post_id.toString()
                                                             .isNullOrEmpty()
                                                     ) {
                                                         AppPreferences.save_Post_Id(
                                                             data.user_post_id ?: 0
                                                         )
-                                                        println("POST ID -- ${AppPreferences.get_Post_Id()} -- ${data.user_post_id}")
                                                     }
 
-                                                    println("LOCARTION DERAIKS sfjngv adsfbvkhjd bjekjdnm ${data.pincode} -__${data.longitude}--${data.latitude}--${data.address}--${data.city}- ${data.country} -- ${data.state}")
-
-                                                    // Safely set values if they’re not empty
                                                     if (!data.pincode.isNullOrEmpty()) {
                                                         constants.PostProperty_ViewModel.set_pincode3(
                                                             data.pincode
@@ -5081,7 +4529,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                             data.address
                                                         )
                                                     }
-//
+
                                                     if (data.latitude.isNotEmpty() && data.longitude.isNotEmpty()) {
                                                         constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
                                                             LatLng(
@@ -5100,7 +4548,6 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                         )
                                                     )
 
-                                                    // Set LatLng if valid
                                                     if (!data.latitude.isNullOrEmpty() && !data.longitude.isNullOrEmpty()) {
                                                         val latLng = LatLng(
                                                             data.latitude.toDoubleOrNull() ?: 0.0,
@@ -5111,8 +4558,6 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                         )
                                                     }
 
-                                                    println(" WHOOOOOOOOO-- ${data.land_type_id} --- ${data.land_categorie_id}")
-                                                    // Land type & category
                                                     if (data.land_type_id > 0) {
                                                         constants.PostProperty_ViewModel.first_Form_selected_PP(
                                                             data.land_type_id
@@ -5133,7 +4578,6 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                             data.land_categorie_id
                                                         )
                                                     }
-                                                    println("LAND CAT ID -- ${data.land_categorie_id}")
                                                     if (data.land_categorie_id > 0) {
                                                         constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
                                                             data.land_categorie_id
@@ -5147,55 +4591,16 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
 
                                                     }
 
-                                                    // Budget / Price
-//                                                    if (!data.price.isNullOrEmpty()) {
-//                                                        constants.PostProperty_ViewModel.put_budget_Price_PF5(
-//                                                            data.price
-//                                                        )
-//                                                    }
-
-
-//                                                    constants.PostProperty_ViewModel.check_Price_Negotiation(
-//                                                        data.price_negotiable == "1"
-//                                                    )
-
-                                                    println("SERVER DATA -DRAFT NO ${data}__-  -${ constants.PostProperty_ViewModel.budget_Price_PF5.value}--- cons.")
-
-                                                    // ✅ Navigate only at the end, after applying values
                                                     constants.PostProperty_ViewModel.goToPPFormPage(
                                                         page = (item.draft),
                                                         maxPages = 7,
                                                     )
-                                                    // ✅ Navigate only at the end, after applying values
-//
 
                                                     if (data.images.isNotEmpty()) {
-                                                        println("SERVERIMges__  -${ constants.PostProperty_ViewModel.budget_Price_PF5.value}--- cons.")
 
-//                                                        val imageMediaList =
-//                                                            data.images.map { imageUri ->
-//                                                                UploadPropertyMedia(
-//                                                                    uri = Uri.parse(imageUri),
-//                                                                    isVideo = false
-//                                                                )
-//                                                            }
-//                                                        constants.PostProperty_ViewModel.addImages(
-//                                                            imageMediaList
-//                                                        )
                                                     } else if (data.video.isNotEmpty()) {
-                                                        println("SERVER Video__-  -${ constants.PostProperty_ViewModel.budget_Price_PF5.value}--- cons.")
 
-//                                                        val videoMedia = UploadPropertyMedia(
-//                                                            uri = Uri.parse(data.video),
-//                                                            isVideo = true
-//                                                        )
-//                                                        constants.PostProperty_ViewModel.addVideo(
-//                                                            videoMedia
-//                                                        )
                                                     }
-
-
-                                                    println("DRAFT IPOST IDD -- ${item.post_property.user_post_id}")
 
                                                     constants.PostProperty_ViewModel.set_Post_Form_Flow(
                                                         1
@@ -5226,8 +4631,6 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                 .size(50.dp),
                                             strokeWidth = 6.dp,
 
-//                                            completedColor = newBlue,
-//                                            remainingGradient = listOf(newLightBlue  ,newLightBlue)
                                         )
                                     }
                                     constants.spacer(4)
@@ -5244,7 +4647,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                             fontSize = constants.textUnit(12),
                                             fontFamily = constants.fontFamily(1),
                                             modifier = Modifier
-                                            //.padding(vertical = 8.dp)
+
                                         )
 
                                         constants.spacer(4)
@@ -5256,7 +4659,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                 fontSize = constants.textUnit(12),
                                                 fontFamily = constants.fontFamily(3),
                                                 modifier = Modifier
-                                                //.padding(vertical = 16.dp)
+
                                             )
                                         }
                                         else if (item.draft >= 3 && item.draft < 7) {
@@ -5265,7 +4668,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                 color = Color(0xff666666),
                                                 fontSize = constants.textUnit(12),
                                                 fontFamily = constants.fontFamily(3),
-                                                modifier = Modifier//.padding(vertical = 16.dp)
+                                                modifier = Modifier
                                             )
                                         }
                                         else {
@@ -5274,7 +4677,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                 color = Color(0xff666666),
                                                 fontSize = constants.textUnit(12),
                                                 fontFamily = constants.fontFamily(3),
-                                                modifier = Modifier//.padding(vertical = 16.dp)
+                                                modifier = Modifier
                                             )
                                         }
                                     }
@@ -5289,7 +4692,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                     painter = painterResource(R.drawable.right_arrow),
                                                     "",
                                                     modifier = Modifier.noRippleClickable {
-                                                        // Navigate to edit draft
+
                                                     }
                                                 )
                                             } else {
@@ -5313,333 +4716,6 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                         }
                                     }
                                 }
-
-                                /*ListItem(
-                                    supportingContent = {
-                                        if (item.draft < 3) {
-                                            Text(
-                                                "Keep going to post your property.",
-                                                color = Color(0xff666666),
-                                                fontSize = constants.textUnit(12),
-                                                fontFamily = constants.fontFamily(3),
-                                                modifier = Modifier
-                                                    //.padding(vertical = 16.dp)
-                                            )
-                                        }
-                                        else if (item.draft >= 3 && item.draft < 7) {
-                                            Text(
-                                                "You're nearly done! ${7 - item.draft} more steps to post.",
-                                                color = Color(0xff666666),
-                                                fontSize = constants.textUnit(12),
-                                                fontFamily = constants.fontFamily(3),
-                                                modifier = Modifier//.padding(vertical = 16.dp)
-                                            )
-                                        }
-                                        else {
-                                            Text(
-                                                "Everything's set! Just hit 'Post' to publish property. ",
-                                                color = Color(0xff666666),
-                                                fontSize = constants.textUnit(12),
-                                                fontFamily = constants.fontFamily(3),
-                                                modifier = Modifier//.padding(vertical = 16.dp)
-                                            )
-                                        }
-                                    },
-                                    headlineContent = {
-                                        Text(
-                                            "Draft ${item.draft}",
-                                            color = Color(0xff7E7E7E),
-                                            fontSize = constants.textUnit(12),
-                                            fontFamily = constants.fontFamily(1),
-                                            modifier = Modifier
-                                                //.padding(vertical = 8.dp)
-                                        )
-                                    },
-                                    leadingContent = {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxHeight()
-                                                , contentAlignment = Alignment.Center
-                                        ) {
-                                            StepCircularProgress(
-                                                totalSteps = 7,
-                                                currentStep = item.draft,
-                                                modifier = Modifier.align(Alignment.Center)
-                                                    .size(50.dp),
-                                                strokeWidth = 6.dp,
-
-//                                            completedColor = newBlue,
-//                                            remainingGradient = listOf(newLightBlue  ,newLightBlue)
-                                            )
-                                        }
-                                    },
-                                    trailingContent = {
-
-                                        AnimatedContent(targetState = onDelete_Tap) { state ->
-                                            if (!state) {
-                                                Image(
-                                                    painter = painterResource(R.drawable.right_arrow),
-                                                    "",
-                                                    modifier = Modifier.noRippleClickable {
-                                                        // Navigate to edit draft
-                                                    }
-                                                )
-                                            } else {
-                                                Checkbox(
-                                                    checked = isSelected,
-                                                    onCheckedChange = { isChecked ->
-                                                        selectedPostIds = if (isChecked) {
-                                                            selectedPostIds + postId
-                                                        } else {
-                                                            selectedPostIds - postId
-                                                        }
-                                                    },
-                                                    colors = CheckboxDefaults.colors(
-                                                        checkedColor = newBlue,
-                                                        checkmarkColor = Color.White,
-                                                        uncheckedColor = Color(0xffB8B8B8),
-                                                        disabledUncheckedColor = Color(0xffB8B8B8)
-                                                    )
-                                                )
-                                            }
-                                        }
-                                    },
-                                    colors = ListItemDefaults.colors(
-                                        containerColor = Color.White,
-                                    ),
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .border(1.dp, Color(0xffB8B8B8), RoundedCornerShape(8.dp))
-                                        .noRippleClickable {
-                                            if (!onDelete_Tap) {
-                                                constants.PostProperty_ViewModel.clear_Selected_Fields_Form4()
-
-                                                constants.PostProperty_ViewModel.save_Changes_Draft.value =
-                                                    -1
-                                                constants.PostProperty_ViewModel.put_budget_Price_PF5(
-                                                    ""
-                                                )
-                                                constants.PostProperty_ViewModel.check_Price_Negotiation(
-                                                    false
-                                                )
-                                                constants.PostProperty_ViewModel.add_pp3_Data(
-                                                    PP3_API_DC(
-                                                        pincode = "",
-                                                        country = "",
-                                                        state = "",
-                                                        city = "",
-                                                        locality = ""
-                                                    )
-                                                )
-                                                constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
-                                                    LatLng(
-                                                        0.0,
-                                                        0.0
-                                                    )
-                                                )
-
-
-
-                                     constants.PostProperty_ViewModel.clear_Budget_PF5()
-                                     constants.PostProperty_ViewModel.clear_Media()
-//                                    constants.PostProperty_ViewModel.pinned_Lat_Long.value?.longitude = 0.0
-
-
-                                                constants.PostProperty_ViewModel.select_Land_Type(1)
-                                                constants.PostProperty_ViewModel.select_Land_Cat_Id(
-                                                    -1
-                                                )
-                                                constants.PostProperty_ViewModel.select_User_Type_1PF(
-                                                    -1
-                                                )
-
-
-
-                                                constants.URL_COMPLETED.clear()
-
-
-                                                val server_Data = drafts[index].post_property
-
-                                                server_Data?.let { data ->
-
-                                                    // Update Selected Fields for Form4 if available
-                                                    constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-                                                        data.toSelectedOptionsForm4_D()
-                                                    }
-
-                                                    // Log data
-                                                    println("FORM $ DATA -- ${data.carpet_area} $$ ${data.area_width} $$ ${data.area_length} -- ${data.total_floor}")
-
-                                                    // Save Post ID
-                                                    if (!data.user_post_id.toString()
-                                                            .isNullOrEmpty()
-                                                    ) {
-                                                        AppPreferences.save_Post_Id(
-                                                            data.user_post_id ?: 0
-                                                        )
-                                                        println("POST ID -- ${AppPreferences.get_Post_Id()} -- ${data.user_post_id}")
-                                                    }
-
-                                                    println("LOCARTION DERAIKS sfjngv adsfbvkhjd bjekjdnm ${data.pincode} -__${data.longitude}--${data.latitude}--${data.address}--${data.city}- ${data.country} -- ${data.state}")
-
-                                                    // Safely set values if they’re not empty
-                                                    if (!data.pincode.isNullOrEmpty()) {
-                                                        constants.PostProperty_ViewModel.set_pincode3(
-                                                            data.pincode
-                                                        )
-                                                    }
-                                                    if (!data.country.isNullOrEmpty()) {
-                                                        constants.PostProperty_ViewModel.set_country3(
-                                                            data.country
-                                                        )
-                                                    }
-                                                    if (!data.state.isNullOrEmpty()) {
-                                                        constants.PostProperty_ViewModel.set_state3(
-                                                            data.state
-                                                        )
-                                                    }
-                                                    if (!data.city.isNullOrEmpty()) {
-                                                        constants.PostProperty_ViewModel.set_city3(
-                                                            data.city
-                                                        )
-                                                    }
-                                                    if (!data.address.isNullOrEmpty()) {
-                                                        constants.PostProperty_ViewModel.set__selectedLocality3(
-                                                            data.address
-                                                        )
-                                                    }
-//
-                                                    if (data.latitude.isNotEmpty() && data.longitude.isNotEmpty()) {
-                                                        constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
-                                                            LatLng(
-                                                                data.latitude.toDouble(),
-                                                                data.longitude.toDouble()
-                                                            )
-                                                        )
-                                                    }
-                                                    constants.PostProperty_ViewModel.add_pp3_Data(
-                                                        PP3_API_DC(
-                                                            pincode = data.pincode ?:"",
-                                                            country = data.country,
-                                                            state = data.state,
-                                                            city = data.city,
-                                                            locality = data.locality
-                                                        )
-                                                    )
-
-                                                    // Set LatLng if valid
-                                                    if (!data.latitude.isNullOrEmpty() && !data.longitude.isNullOrEmpty()) {
-                                                        val latLng = LatLng(
-                                                            data.latitude.toDoubleOrNull() ?: 0.0,
-                                                            data.longitude.toDoubleOrNull() ?: 0.0
-                                                        )
-                                                        constants.PostProperty_ViewModel.set_latLng3(
-                                                            latLng
-                                                        )
-                                                    }
-
-                                                    println(" WHOOOOOOOOO-- ${data.land_type_id} --- ${data.land_categorie_id}")
-                                                    // Land type & category
-                                                    if (data.land_type_id > 0) {
-                                                        constants.PostProperty_ViewModel.first_Form_selected_PP(
-                                                            data.land_type_id
-                                                        )
-                                                        constants.PostProperty_ViewModel.select_User_Type_1PF(
-                                                            data.land_type_id
-                                                        )
-                                                        constants.PostProperty_ViewModel.set_onSelected_ProType(
-                                                            data.land_type_id
-                                                        )
-                                                        constants.PostProperty_ViewModel.select_Land_Type(
-                                                            data.land_type_id
-                                                        )
-                                                        constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
-                                                            data.land_categorie_id
-                                                        )
-                                                        constants.PostProperty_ViewModel.select_Land_Cat_Id(
-                                                            data.land_categorie_id
-                                                        )
-                                                    }
-                                                    println("LAND CAT ID -- ${data.land_categorie_id}")
-                                                    if (data.land_categorie_id > 0) {
-                                                        constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
-                                                            data.land_categorie_id
-                                                        )
-                                                        constants.PostProperty_ViewModel.LandSubType_Selected_Click(
-                                                            data.land_categorie_id
-                                                        )
-                                                        constants.PostProperty_ViewModel.select_Land_Cat_Id(
-                                                            data.land_categorie_id
-                                                        )
-
-                                                    }
-
-                                                    // Budget / Price
-//                                                    if (!data.price.isNullOrEmpty()) {
-//                                                        constants.PostProperty_ViewModel.put_budget_Price_PF5(
-//                                                            data.price
-//                                                        )
-//                                                    }
-
-
-//                                                    constants.PostProperty_ViewModel.check_Price_Negotiation(
-//                                                        data.price_negotiable == "1"
-//                                                    )
-
-                                                    println("SERVER DATA -DRAFT NO ${data}__-  -${ constants.PostProperty_ViewModel.budget_Price_PF5.value}--- cons.")
-
-                                                    // ✅ Navigate only at the end, after applying values
-                                                    constants.PostProperty_ViewModel.goToPPFormPage(
-                                                        page = (item.draft - 1),
-                                                        maxPages = 7,
-                                                    )
-                                                    // ✅ Navigate only at the end, after applying values
-//
-
-                                                    if (data.images.isNotEmpty()) {
-                                                        println("SERVERIMges__  -${ constants.PostProperty_ViewModel.budget_Price_PF5.value}--- cons.")
-
-//                                                        val imageMediaList =
-//                                                            data.images.map { imageUri ->
-//                                                                UploadPropertyMedia(
-//                                                                    uri = Uri.parse(imageUri),
-//                                                                    isVideo = false
-//                                                                )
-//                                                            }
-//                                                        constants.PostProperty_ViewModel.addImages(
-//                                                            imageMediaList
-//                                                        )
-                                                    } else if (data.video.isNotEmpty()) {
-                                                        println("SERVER Video__-  -${ constants.PostProperty_ViewModel.budget_Price_PF5.value}--- cons.")
-
-//                                                        val videoMedia = UploadPropertyMedia(
-//                                                            uri = Uri.parse(data.video),
-//                                                            isVideo = true
-//                                                        )
-//                                                        constants.PostProperty_ViewModel.addVideo(
-//                                                            videoMedia
-//                                                        )
-                                                    }
-
-
-                                                    println("DRAFT IPOST IDD -- ${item.post_property.user_post_id}")
-
-                                                    constants.PostProperty_ViewModel.set_Post_Form_Flow(
-                                                        1
-                                                    )
-
-                                                    constants.PostProperty_ViewModel.select_Land_Cat_Id(data.land_categorie_id)
-
-                                                    constants.PostProperty_ViewModel.setPostFlow(PostFlow.DRAFT)
-
-                                                    AppPreferences.save_Post_Id(data.user_post_id)
-
-                                                    navController.navigate(ProfileScreenFlow.Post_Property_Forms.route)
-                                                }
-                                            }
-
-                                        }
-                                )*/
 
                                 Spacer(modifier = Modifier.padding(16.dp))
                             }
@@ -5737,16 +4813,6 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                 Image(painter = painterResource(R.drawable.deletepopupicon) , "",
                     modifier = Modifier.size(64.dp))
 
-//                constants.spacer(2)
-                //constants.spacer(2)
-
-//                Text(
-//                    text = if (onSelectAll_Tap) "Delete all draft items" else "Delete selected draft items",
-//                    color = newBlack,
-//                    fontSize = constants.textUnit(16),
-//                    fontFamily = constants.fontFamily(0)
-//                )
-
                 spacer(2)
 
                 Text(
@@ -5757,10 +4823,9 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                     fontSize = constants.textUnit(18),
                     fontFamily = constants.fontFamily(1),
                     textAlign = TextAlign.Center
-//                   , lineHeight = 24.sp
+
                 )
 
-//                Spacer(modifier = Modifier.padding(2.dp))
                 spacer(4)
 
                 Row(
@@ -5801,8 +4866,6 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                         if (network.value == NetworkStatus.Online) {
                                             val (postIds, selectAllFlag) = getSelectionData()
 
-                                            println("Deleting drafts - PostIDs: $postIds, SelectAll: $selectAllFlag")
-
                                             constants.API_Vm.delete_Post_SM_Drafts(
                                                 user_id = AppPreferences.getUserId(),
                                                 select_all = selectAllFlag,
@@ -5817,12 +4880,12 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
                                                     }
 
                                                     is API_Result_Handling.Success -> {
-                                                        // Delete from UI
+
                                                         if (selectAllFlag == 1) {
-                                                            // Delete all drafts from UI
+
                                                             constants.Profile_ViewModel.deleteAllProfileDrafts()
                                                         } else {
-                                                            // Delete selected items from UI
+
                                                             selectedPostIds.forEach { postId ->
                                                                 constants.Profile_ViewModel.deleteProfileDraftByUserPostId(
                                                                     postId
@@ -5860,7 +4923,7 @@ fun Drafts(notchPadding: State<Dp>, navController: NavHostController) {
             }
         },
         image = "",
-        icon = 0 //R.drawable.closeenquiry
+        icon = 0
     )
 
     BackHandler {

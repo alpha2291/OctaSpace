@@ -122,13 +122,12 @@ fun MapView(
     placesClient: PlacesClient,
     fusedLocationProviderClient: FusedLocationProviderClient,
     apiKey: String,
-     initialLatLng: LatLng? = null  // Optional initial pin
+     initialLatLng: LatLng? = null
     ,navHostController: NavHostController
     ,state : Int
     ,onClose : ()-> Unit = {}
     ,onSkipClick : ()-> Unit = {}
 ) {
-
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -141,22 +140,11 @@ fun MapView(
     var selectedLatLng by remember { mutableStateOf<LatLng?>(null) }
     var pinnedLocation by remember { mutableStateOf<LatLng?>(null) }
 
-
     var searchText by remember { mutableStateOf("") }
     var lastSearchedLatLng by remember { mutableStateOf<LatLng?>(null) }
 
-//    var searchText by remember { mutableStateOf("") }           // TextField value
-//    var predictions by remember { mutableStateOf<List<AutocompletePrediction>>(emptyList()) }
-//    var pinnedLocation by remember { mutableStateOf<LatLng?>(null) }
-//    var lastSearchedLatLng by remember { mutableStateOf<LatLng?>(null) }
-
-
-
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     var placeName by remember { mutableStateOf("") }
     var addressText by remember { mutableStateOf("") }
@@ -165,20 +153,17 @@ fun MapView(
         position = CameraPosition.fromLatLngZoom(LatLng(20.0, 77.0), 4f)
     }
 
-
-
     val mapProperties by remember {
         mutableStateOf(
             MapProperties(
                 mapType = MapType.NORMAL,
                 mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
                     context,
-                    R.raw.map_light  // 👈 your JSON file reference
+                    R.raw.map_light
                 )
             )
         )
     }
-
 
     val markerState = remember { MarkerState() }
 
@@ -188,23 +173,11 @@ fun MapView(
         }
     }
 
-
-
     Box(modifier = Modifier.fillMaxSize()) {
         val uiSettings = MapUiSettings(
             zoomControlsEnabled = false
         )
 
-        // Replace your GoogleMap block with this fixed version:
-
-        // Replace the marker-related code in your MapView with this:
-
-// At the top of MapView, REMOVE the separate markerState and LaunchedEffect
-// Remove these lines:
-// val markerState = remember { MarkerState() }
-// LaunchedEffect(pinnedLocation) { ... }
-
-// Keep your existing LaunchedEffect for initialLatLng as is:
         LaunchedEffect(initialLatLng) {
             initialLatLng?.let { latLng ->
                 pinnedLocation = latLng
@@ -218,7 +191,6 @@ fun MapView(
             }
         }
 
-// Then in your GoogleMap block:
         GoogleMap(
             modifier = Modifier.padding(vertical = if (forTab()) 16.dp else rememberNotchHeightDp().value).matchParentSize(),
             properties = mapProperties,
@@ -247,9 +219,8 @@ fun MapView(
                 )
             }
 
-            // ✅ FIX: Create MarkerState with the position directly
             pinnedLocation?.let { location ->
-                // Use key() to force recreation when location changes
+
                 key(location) {
                     Marker(
                         state = rememberMarkerState(position = location),
@@ -260,59 +231,6 @@ fun MapView(
             }
         }
 
-        // Google Map
-       /* GoogleMap(
-            modifier = Modifier.padding( vertical = if (forTab()) 16.dp else  rememberNotchHeightDp().value).matchParentSize(),
-            properties = mapProperties,
-            cameraPositionState = cameraPositionState,
-            uiSettings = uiSettings,    // <--- Add this line
-            onMapClick = { latLng ->
-
-                if (network.value == NetworkStatus.Online) {
-                    pinnedLocation = latLng
-                    selectedLatLng = latLng
-
-                    // Always get full address
-                    addressText = getFullAddress(context, latLng)
-
-                    // Also try fetching POI/landmark name
-                    coroutineScope.launch(Dispatchers.IO) {
-                        val (name, _) = fetchPlaceDetailsForLatLng(latLng, apiKey)
-                        withContext(Dispatchers.Main) {
-                            placeName = name
-                        }
-                    }
-                }
-                else {
-                    GlobalSnackbar.show("Check your Internet connection")
-                }
-            }
-        )
-        {
-            val customPin = remember {
-                bitmapDescriptorFromVector(
-                    context = context,
-                    vectorResId = R.drawable.locationpinrento
-                )
-            }
-
-            pinnedLocation?.let {
-                Marker(
-                    state = MarkerState(position = it),
-                    icon = customPin,
-                    anchor = Offset(0.5f, 1f)
-                )
-            }
-
-//            pinnedLocation?.let {
-//                Marker(
-//                    state = MarkerState(position = it),
-//                    title = "Pinned Location"
-//                )
-//            }
-        }*/
-
-        // 🔍 Search Box + Predictions
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -323,7 +241,7 @@ fun MapView(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding( vertical = if (forTab()) 16.dp else  rememberNotchHeightDp().value) // padding outside
+                    .padding( vertical = if (forTab()) 16.dp else  rememberNotchHeightDp().value)
                     .background(Brush.verticalGradient(listOf(
                         Color(0xffFCFCFC),
                         Color(0xffFCFCFC),
@@ -349,7 +267,7 @@ fun MapView(
                                 .align(Alignment.End)
                                 .noRippleClickable {
                                     onSkipClick()
-                                    //show_Map_view.value = false
+
                                 }
                         )
                     }
@@ -363,7 +281,6 @@ fun MapView(
 
                     constants.spacer(8)
 
-                    // rento update header
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -390,161 +307,12 @@ fun MapView(
                         constants.spacer(8)
 
                     }
-                    // 🔹 Search field
-                   /* TextField(
-                        value = selectedPlace ?: query,
-                        onValueChange = {
-                            selectedPlace = null
-                            query = it
-                            if (query.length > 2) {
-                                fetchGlobalPlaces(query, placesClient) { newPredictions ->
-                                    predictions = newPredictions
-                                }
-                            } else {
-                                predictions = emptyList()
-                            }
-                        },
-                        leadingIcon = {
-                            Image(
-                                painterResource(R.drawable.searchnotrento),
-                                "",
-                                modifier = Modifier.size(16.dp).noRippleClickable{
-                                   // show_Map_view.value = false
-                                }
-                            )
-                        },
-                        trailingIcon = {
-                            Image(painter = painterResource(R.drawable.close), "",
-                                modifier = Modifier.noRippleClickable{
-                                    query = ""
-                                    selectedPlace = ""
-                                })
-                        },
-                        keyboardActions = KeyboardActions(
-                            onSearch = {
-                                if (query.length > 2) {
-                                    fetchGlobalPlaces(query, placesClient) { newPredictions ->
-                                        predictions = newPredictions
-                                    }
-                                }
-                            }
-                        ),
-                        textStyle = TextStyle(
-                            color = newBlack,
-                            fontSize = constants.textUnit(12),
-                            fontFamily = constants.fontFamily(2)
-                        ),
-                        placeholder = { Text("Search location") },
-                        singleLine = true,
-                        shape = RoundedCornerShape(4.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(top = if (forTab()) 36.dp else 0.dp)
-                            .border(1.dp , Color(0xffCECECE), RoundedCornerShape(4.dp))
-                    )*/
-
-                    /*TextField(
-                        value = selectedPlace ?: query,
-                        onValueChange = {
-                            selectedPlace = null
-                            query = it
-                            if (query.length > 2) {
-                                fetchGlobalPlaces(query, placesClient) { newPredictions ->
-                                    predictions = newPredictions
-                                }
-                            } else {
-                                predictions = emptyList()
-                            }
-                        },
-                        leadingIcon = {
-                            Image(
-                                painterResource(R.drawable.searchnotrento),
-                                "",
-                                modifier = Modifier
-                                    .size(16.dp)
-                                    .noRippleClickable {
-                                        // optional action if needed
-                                    }
-                            )
-                        },
-                        trailingIcon = {
-                            Row {
-                                // Clear button
-                                if (query.isNotEmpty()) {
-                                    Image(
-                                        painter = painterResource(R.drawable.close),
-                                        contentDescription = "",
-                                        modifier = Modifier.noRippleClickable {
-                                            query = ""
-                                            selectedPlace = ""
-                                            predictions = emptyList()
-                                        }
-                                    )
-                                }
-
-                                // Optional search icon to refetch
-//                                Image(
-//                                    painter = painterResource(R.drawable.searchnotrento),
-//                                    contentDescription = "",
-//                                    modifier = Modifier
-//                                        .size(16.dp)
-//                                        .padding(start = 8.dp)
-//                                        .noRippleClickable {
-//                                            if (query.length > 2) {
-//                                                fetchGlobalPlaces(query, placesClient) { newPredictions ->
-//                                                    predictions = newPredictions
-//                                                }
-//                                            }
-//                                        }
-//                                )
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                        keyboardActions = KeyboardActions(
-                            onSearch = {
-                                selectedPlace = null
-                                if (query.isNotEmpty()) {
-                                    fetchGlobalPlaces(query, placesClient) { newPredictions ->
-                                        predictions = newPredictions
-                                    }
-                                }
-                            }
-                        ),
-                        textStyle = TextStyle(
-                            color = newBlack,
-                            fontSize = constants.textUnit(12),
-                            fontFamily = constants.fontFamily(2)
-                        ),
-                        placeholder = { Text("Search location") },
-                        singleLine = true,
-                        shape = RoundedCornerShape(4.dp),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                            focusedTextColor = Color.Black,
-                            unfocusedTextColor = Color.Black,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = if (forTab()) 36.dp else 0.dp)
-                            .border(1.dp, Color(0xffCECECE), RoundedCornerShape(4.dp))
-                    )*/
 
                     TextField(
                         value = searchText,
                         onValueChange = { text ->
                             searchText = text
 
-                            // Autocomplete only while typing
                             if (text.length > 2) {
                                 if (network.value == NetworkStatus.Online) {
                                     fetchGlobalPlaces(text, placesClient) { newPredictions ->
@@ -583,13 +351,9 @@ fun MapView(
                         keyboardActions = KeyboardActions(
                             onSearch = {
                                 if (network.value == NetworkStatus.Online) {
-                                    // ✅ DO NOT fetch predictions
-                                    // ✅ Just pin to last searched location
+
                                     lastSearchedLatLng?.let { latLng ->
                                         pinnedLocation = latLng
-//                                    cameraPositionState.animate(
-//                                        CameraUpdateFactory.newLatLngZoom(latLng, 15f)
-//                                    )
 
                                         cameraPositionState.move(
                                             CameraUpdateFactory.newLatLngZoom(latLng, 15f)
@@ -597,7 +361,6 @@ fun MapView(
 
                                         addressText = getFullAddress(context, latLng)
 
-                                        // Also try fetching POI/landmark name
                                         coroutineScope.launch(Dispatchers.IO) {
                                             val (name, _) = fetchPlaceDetailsForLatLng(
                                                 latLng,
@@ -614,7 +377,6 @@ fun MapView(
                                 else {
                                     GlobalSnackbar.show("Check your Internet connection")
                                 }
-
 
                             }
                         ),
@@ -640,15 +402,12 @@ fun MapView(
                             .border(1.dp, Color(0xffCECECE), RoundedCornerShape(4.dp))
                     )
 
-
-
-                    // 🔹 Dropdown predictions (no gap)
                     if (predictions.isNotEmpty() && selectedPlace == null) {
                         Column(
                             modifier = Modifier
                                 .padding(top = 4.dp)
                                 .fillMaxWidth()
-                                //.border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(Color.White)
 
@@ -665,7 +424,7 @@ fun MapView(
                                             fetchPlaceLatLngmap(prediction.placeId, placesClient) { latLng ->
                                                 latLng?.let {
                                                     pinnedLocation = it
-                                                    lastSearchedLatLng = it   // 🔑 store searched location
+                                                    lastSearchedLatLng = it
                                                     selectedLatLng = it
                                                     addressText = getFullAddress(context, it)
 
@@ -685,37 +444,6 @@ fun MapView(
                                             }
                                         }
 
-                                        /*.noRippleClickable{
-                                            selectedPlace = prediction.getFullText(null).toString()
-                                            predictions = emptyList()
-
-                                            // Fetch LatLng
-                                            fetchPlaceLatLngmap(prediction.placeId, placesClient) { latLng ->
-                                                if (latLng != null) {
-                                                    pinnedLocation = latLng
-                                                    selectedLatLng = latLng
-                                                    addressText = getFullAddress(context, latLng)
-
-
-
-                                                    coroutineScope.launch(Dispatchers.IO) {
-                                                        val (name, _) =
-                                                            fetchPlaceDetailsForLatLng(latLng, apiKey)
-                                                        withContext(Dispatchers.Main) {
-                                                            placeName = name
-
-
-                                                            focusManager.clearFocus()
-                                                            keyboardController?.hide()
-                                                        }
-                                                    }
-
-                                                    cameraPositionState.move(
-                                                        CameraUpdateFactory.newLatLngZoom(latLng, 15f)
-                                                    )
-                                                }
-                                            }
-                                        }*/
                                         .padding(12.dp)
                                 )
                             }
@@ -725,11 +453,6 @@ fun MapView(
             }
         }
 
-
-
-
-
-        // 🔽 Bottom Location Row + Confirm
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
@@ -737,19 +460,18 @@ fun MapView(
         )
         {
             val context = LocalContext.current
-            // 📍 Current location button
+
             var showPermissionDialog by remember { mutableStateOf(false) }
             var showGpsDialog by remember { mutableStateOf(false) }
 
             FloatingActionButton(
                 onClick = {
-                    //ClickHelper.getInstance().clickOnce {
+
                     val locationManager =
                         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                     val isGpsEnabled =
                         locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
-                    // Check permission
                     if (ActivityCompat.checkSelfPermission(
                             context,
                             Manifest.permission.ACCESS_FINE_LOCATION
@@ -759,32 +481,11 @@ fun MapView(
                         return@FloatingActionButton
                     }
 
-                    // Check GPS
                     if (!isGpsEnabled) {
                         showGpsDialog = true
                         return@FloatingActionButton
                     }
 
-                    // Permissions granted and GPS enabled → get location
-                   /* fusedLocationProviderClient.lastLocation
-                        .addOnSuccessListener { location: Location? ->
-                            location?.let {
-                                val latLng = LatLng(it.latitude, it.longitude)
-                                pinnedLocation = latLng
-                                addressText = getFullAddress(context, latLng)
-                                coroutineScope.launch(Dispatchers.IO) {
-                                    val (name, _) = fetchPlaceDetailsForLatLng(latLng, apiKey)
-                                    withContext(Dispatchers.Main) { placeName = name }
-                                }
-                                coroutineScope.launch {
-                                    cameraPositionState.animate(
-                                        update = CameraUpdateFactory.newLatLngZoom(latLng, 15f),
-                                        durationMs = 1000
-                                    )
-                                }
-                            }
-                        }
-*/
                     val cancellationTokenSource = CancellationTokenSource()
 
                     fusedLocationProviderClient.getCurrentLocation(
@@ -813,7 +514,6 @@ fun MapView(
                         }
                     }
 
-                    /// }
                 },
                 modifier = Modifier
                     .align(Alignment.End)
@@ -824,7 +524,6 @@ fun MapView(
                 Image(painterResource(R.drawable.location), "",
                     colorFilter = ColorFilter.tint(newBlack))
             }
-
 
             if (showPermissionDialog) {
                 AlertDialog(
@@ -851,7 +550,6 @@ fun MapView(
                 )
             }
 
-// ✅ GPS Dialog
             if (showGpsDialog) {
                 AlertDialog(
                     onDismissRequest = { showGpsDialog = false },
@@ -872,7 +570,6 @@ fun MapView(
                     }
                 )
             }
-
 
             if (pinnedLocation != null) {
                 Surface(
@@ -925,7 +622,6 @@ fun MapView(
                     )
                 }
 
-
                 constants.spacer(12)
             }
 
@@ -943,11 +639,7 @@ fun MapView(
                         .border(1.dp , Brush.linearGradient(newPurpleGradientBorder) , RoundedCornerShape(8.dp))
                         .noRippleClickable{
                             if (addressText.isNotEmpty() && pinnedLocation != null) {
-                                // Save pinned LatLng in ViewModel
 
-                                // if (country.isNotEmpty() && state.isNotEmpty() && city.isNotEmpty() && selectedLocality.isNotEmpty()) {
-                                // Create your data object
-                                println("DATA ADDED --${addressText} %%% ${pinnedLocation}   ")
                                 val components = getAddressComponents(context, pinnedLocation!!)
 
                                 constants.PostProperty_ViewModel.add_pp3_Data(
@@ -960,12 +652,10 @@ fun MapView(
                                     )
                                 )
 
-                                println("DATA ADDED -44- ${constants.PostProperty_ViewModel.pp_3_API_Data.value}")
-                                //  }
                                 constants.PostProperty_ViewModel.add_Pinned_Lat_Long(pinnedLocation!!)
                                 constants.PostProperty_ViewModel.set__selectedLocality3(addressText)
                                 constants.PostProperty_ViewModel.add_Selected_Locality(addressText)
-//
+
                                 constants.PostProperty_ViewModel.set_country3(components.country)
                                 constants.PostProperty_ViewModel.set_country3(components.country)
                                 constants.PostProperty_ViewModel.set_state3(components.state)
@@ -973,16 +663,12 @@ fun MapView(
                                 constants.PostProperty_ViewModel.set__selectedLocality3(addressText)
                                 constants.PostProperty_ViewModel.set_pincode3(components.pincode)
 
-
-
-
-
                                 if (constants.PostProperty_ViewModel.postFlow.value == PostFlow.NONE) {
 
                                     constants.Start_Up_ViewModel.set_Country(components.country)
                                     constants.Start_Up_ViewModel.set_State(components.state)
                                     constants.Start_Up_ViewModel.set_City(components.city)
-                                   // constants.Start_Up_ViewModel.selec(addressText)
+
                                     constants.Start_Up_ViewModel.set_Pincode(components.pincode)
                                     constants.Start_Up_ViewModel.set_Longitude(pinnedLocation!!.longitude)
                                     constants.Start_Up_ViewModel.set_Latitude(pinnedLocation!!.latitude)
@@ -1001,10 +687,10 @@ fun MapView(
                                             resultCallback = { result ->
                                                 when (result) {
                                                     0 -> {
-                                                        //sucess
+
                                                         AppPreferences.save_Location_Received(1)
                                                         toast("LOCATION STORED SUCCESSFULLY")
-// Example: after completing onboarding or login
+
                                                         if (state == 0) {
                                                             navHostController?.navigate(
                                                                 UserCredentialsScreenFlow.Common_Screen.route
@@ -1015,19 +701,18 @@ fun MapView(
                                                             }
                                                         }
                                                         else {
-                                                            println("CITY STATE UPDATE -- ${components.city} ${components.state} -- ${addressText}")
                                                             AppPreferences.save_User_Lcation(" ${components.city}, ${components.state}")
                                                             onClose()
                                                         }
                                                     }
 
                                                     1 -> {
-                                                        //fail
+
                                                         toast("Something went wrong while storing location")
                                                     }
 
                                                     2 -> {
-                                                        //loading
+
                                                         constants.Common_H_ViewModel.changeStatus(
                                                             true
                                                         )
@@ -1045,7 +730,7 @@ fun MapView(
                                         GlobalSnackbar.show(text)
                                     }
                                 }
-                               // show_Map_view.value = false
+
                             }
                             else {
                                 toast("Select Address in the map")
@@ -1065,8 +750,6 @@ fun MapView(
     }
 }
 
-
-
 fun bitmapDescriptorFromVector(
     context: Context,
     @DrawableRes vectorResId: Int,
@@ -1083,7 +766,6 @@ fun bitmapDescriptorFromVector(
     return BitmapDescriptorFactory.fromBitmap(bitmap)
 }
 
-
 @Composable
 fun AnimatedMapView(enable : MutableState<Boolean>, state: Int, latlong : Pair<String , String>
                     , navHostController: NavHostController
@@ -1093,7 +775,6 @@ fun AnimatedMapView(enable : MutableState<Boolean>, state: Int, latlong : Pair<S
     val placesClient = Places.createClient(context)
 
     val (lat, lon) = latlong
-        //AppPreferences.get_Lat_Long()
 
     val initialLatLng = remember {
         if (lat.isNotEmpty() && lon.isNotEmpty()) {
@@ -1102,10 +783,6 @@ fun AnimatedMapView(enable : MutableState<Boolean>, state: Int, latlong : Pair<S
             null
         }
     }
-
-
-    println("LATITUDE LONGITUDE 22-- ${initialLatLng} -- ${latlong} -- ")
-
 
         AnimatedVisibility(
             visible = enable.value,

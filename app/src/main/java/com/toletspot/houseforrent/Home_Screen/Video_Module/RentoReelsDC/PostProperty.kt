@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Home_Screen.Video_Module.RentoReelsDC
 
-
 import com.toletspot.houseforrent.Home_Screen.PostProperty_Module.RentoDataclass.RentoMediaDC.Image
 import com.toletspot.houseforrent.Home_Screen.PostProperty_Module.RentoDataclass.RentoMediaDC.Video
 import kotlinx.serialization.SerialName

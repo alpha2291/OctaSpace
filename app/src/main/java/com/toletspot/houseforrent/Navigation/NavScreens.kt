@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Navigation
 
-
 sealed class BottomBarScreen(val route: String, val title: String) {
     object Videos : BottomBarScreen("videos", "Videos")
     object Search : BottomBarScreen("search", "Search")
@@ -8,143 +7,10 @@ sealed class BottomBarScreen(val route: String, val title: String) {
     object Enquiry : BottomBarScreen("enquiry", "Enquiry")
     object Profile : BottomBarScreen("profile", "Profile")
 
-
     companion object {
         val allTabs = listOf(Videos, Search, Post, Enquiry, Profile)
     }
 }
-
-/*
-sealed class UserCredentialsScreenFlow(val route: String, val title: String) {
-    object UserCredentials : UserCredentialsScreenFlow("user_Credentials", "User Credentials")
-    object UserInterests : UserCredentialsScreenFlow("userInterests", "User Interests")
-    object Common_Screen : UserCredentialsScreenFlow("Common_Screen", "Common Screen")
-    object In_App_Notification : UserCredentialsScreenFlow("In_App_Notification" , "In_App_Notification" )
-
-    object Onboarding : UserCredentialsScreenFlow("Onboarding", "Onboarding")
-
-    object Other_Profile_Structure : UserCredentialsScreenFlow("Other_Profile_Structure" , "Other_Profile_Structure")
-    object Justify : UserCredentialsScreenFlow("Justify" , "Justify")
-
-}
-
-sealed class VideosScreenFlow(val route: String) {
-
-    object Common_Screen : VideosScreenFlow("Common_Screen")
-
-    object ReelsView : VideosScreenFlow("videos_main")
-    object ViewPropertyStructure : VideosScreenFlow("ViewPropertyStructure")
-
-    ///
-    object Profile_Structure : VideosScreenFlow("Profile_Structure")
-
-    object Profile_FF_Structure : VideosScreenFlow("Profile_FF_Structure")
-    object Other_Profile_Structure : VideosScreenFlow("Other_Profile_Structure")
-    object Edit_Property_Option : VideosScreenFlow("Edit_Property_Option")
-    object Repost_Property : VideosScreenFlow("Repost_Property")
-    object Profile_FF_Structure_Followings : VideosScreenFlow("Profile_FF_Structure_Followings")
-
-    object ReelsView_Search_Flow : VideosScreenFlow("ReelsView_Search_Flow" )
-    object In_App_Notification : VideosScreenFlow("In_App_Notification" )
-
-
-
-}
-
-sealed class ProfileScreenFlow(val route: String , val title: String) {
-
-    object Common_Screen : ProfileScreenFlow("Common_Screen" , "Common_Screen")
-
-    object Profile_Structure : ProfileScreenFlow("Profile_Structure", "Profile Structure")
-    object Profile_FF_Structure : ProfileScreenFlow("Profile_FF_Structure", "Profile FF Structure")
-    object Other_Profile_Structure : ProfileScreenFlow("Other_Profile_Structure", "Other Profile Structure")
-
-    object ReelsView_Search_Flow : ProfileScreenFlow("ReelsView_Search_Flow" , "ReelsView_Search_Flow")
-
-    object ViewPropertyStructure : ProfileScreenFlow("ViewPropertyStructure" , "ViewPropertyStructure")
-    object Edit_Property_Option : ProfileScreenFlow("Edit_Property_Option" , "Edit_Property_Option")
-    object Repost_Property : ProfileScreenFlow("Repost_Property" , "Repost_Property")
-    object Post_Property_Forms : ProfileScreenFlow("Post_Property_Forms" , "Post_Property_Forms")
-
-    object SingleVideoPlayerEnquiry : ProfileScreenFlow("SingleVideoPlayerEnquiry" , "SingleVideoPlayerEnquiry")
-    object SingleVideoPlayerEnquiry2 : ProfileScreenFlow("SingleVideoPlayerEnquiry2" , "SingleVideoPlayerEnquiry2")
-
-    object Profile_FF_Structure_Followings : ProfileScreenFlow("Profile_FF_Structure_Followings", "Profile_FF_Structure_Followings" )
-    object Sold_Outs : ProfileScreenFlow("Sold_Outs", "Sold_Outs" )
-    object UserCredentials : ProfileScreenFlow("user_Credentials", "User Credentials")
-
-
-}
-
-sealed class SearchScreenFlow(val route: String){
-
-    object Common_Screen : SearchScreenFlow("Common_Screen")
-
-    object Search_Main_Screen : SearchScreenFlow("Search_Main_Screen")
-    object ReelsView_Search_Flow : SearchScreenFlow("ReelsView_Search_Flow")
-
-
-    object ReelsView : SearchScreenFlow("videos_main")
-    object ViewPropertyStructure : SearchScreenFlow("ViewPropertyStructure")
-
-
-    object Profile_Structure : SearchScreenFlow("Profile_Structure")
-    object Other_Profile_Structure : SearchScreenFlow("Other_Profile_Structure")
-    object Profile_FF_Structure : SearchScreenFlow("Profile_FF_Structure")
-    object Edit_Property_Option : SearchScreenFlow("Edit_Property_Option")
-    object Repost_Property : SearchScreenFlow("Repost_Property")
-    object Search_Filter_Sort : SearchScreenFlow("Search_Filter_Sort")
-
-    object Profile_FF_Structure_Followings : SearchScreenFlow("Profile_FF_Structure_Followings",  )
-
-
-
-
-
-
-}
-
-sealed class PostPropertyFlow(val route: String){
-    object Post_Property_Forms : PostPropertyFlow("Post_Property_Forms")
-    object Common_Screen : PostPropertyFlow("Common_Screen")
-    object PP_Fourth_Form : PostPropertyFlow("PP_Fourth_Form")
-
-    object ViewPropertyStructure : PostPropertyFlow("ViewPropertyStructure" )
-
-    object Profile_Structure : PostPropertyFlow("Profile_Structure")
-
-    object ReelsView_Search_Flow : PostPropertyFlow("ReelsView_Search_Flow")
-
-
-}
-
-sealed class EnquiriesFlow(val route: String){
-
-    object Common_Screen : EnquiriesFlow("Common_Screen")
-
-    object SingleVideoPlayerEnquiry : EnquiriesFlow("SingleVideoPlayerEnquiry")
-    object Enquiry_Home_Screen : EnquiriesFlow("Enquiry_Home_Screen")
-
-    object ViewPropertyStructure : EnquiriesFlow("ViewPropertyStructure")
-    object Profile_Structure : EnquiriesFlow("Profile_Structure")
-    object Profile_FF_Structure : EnquiriesFlow("Profile_FF_Structure")
-    object Other_Profile_Structure : EnquiriesFlow("Other_Profile_Structure")
-    object ReelsView_Search_Flow : EnquiriesFlow("ReelsView_Search_Flow" )
-
-
-    object Profile_FF_Structure_Followings : EnquiriesFlow("Profile_FF_Structure_Followings" )
-
-
-}
-
-
-
-*/
-
-
-
-// ✅ Unified Screen Flow Definitions
-// Every sealed class now has all 62 screen objects (same routes across all)
 
 sealed class UserCredentialsScreenFlow(val route: String, val title: String) {
 
@@ -180,8 +46,6 @@ sealed class UserCredentialsScreenFlow(val route: String, val title: String) {
     object Justify_Post : UserCredentialsScreenFlow("Justify_Post" , "Justify_Post")
 }
 
-// ----------------------------
-
 sealed class VideosScreenFlow(val route: String) {
 
     object Common_Screen : VideosScreenFlow("Common_Screen")
@@ -215,8 +79,6 @@ sealed class VideosScreenFlow(val route: String) {
 
     object In_App_Notification : VideosScreenFlow("In_App_Notification")
 }
-
-// ----------------------------
 
 sealed class ProfileScreenFlow(val route: String, val title: String) {
 
@@ -253,10 +115,7 @@ sealed class ProfileScreenFlow(val route: String, val title: String) {
 
     object PreviewScreen : PostPropertyFlow( "PreviewScreen")
 
-
 }
-
-// ----------------------------
 
 sealed class SearchScreenFlow(val route: String) {
 
@@ -291,10 +150,7 @@ sealed class SearchScreenFlow(val route: String) {
     object In_App_Notification : SearchScreenFlow("In_App_Notification")
     object Justify_Post : SearchScreenFlow("Justify_Post")
 
-
 }
-
-// ----------------------------
 
 sealed class PostPropertyFlow(val route: String) {
 
@@ -331,8 +187,6 @@ sealed class PostPropertyFlow(val route: String) {
     object PreviewScreen : PostPropertyFlow( "PreviewScreen")
 
 }
-
-// ----------------------------
 
 sealed class EnquiriesFlow(val route: String) {
 
@@ -371,5 +225,3 @@ sealed class EnquiriesFlow(val route: String) {
     object Msg_ChatScreen : EnquiriesFlow( "Msg_ChatScreen")
 
 }
-
-

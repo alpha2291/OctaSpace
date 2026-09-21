@@ -42,31 +42,7 @@ Java_com_toletspot_houseforrent_MainActivity_00024Companion_getLiveUrl(JNIEnv *e
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_toletspot_houseforrent_MainActivity_00024Companion_getDemoUrl(JNIEnv *env, jobject thiz) {
-    return (*env).NewStringUTF("");
-}
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_toletspot_houseforrent_MainActivity_00024Companion_getPrivacyUrl(JNIEnv *env,jobject thiz) {
-//    return (*env).NewStringUTF("https://land4sales.com/backend/PRIVACY_POLICY.html");
-//    return (*env).NewStringUTF("https://rent.land4sales.com/backend/PRIVACY_POLICY.html");
-    return (*env).NewStringUTF("https://toletspot.com/backend/PRIVACY_POLICY.html");
-}
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_toletspot_houseforrent_MainActivity_00024Companion_getTermsUrl(JNIEnv *env, jobject thiz) {
-//    return (*env).NewStringUTF("https://rent.land4sales.com/backend/TERMS_AND_CONDITIONS.html");
-    return (*env).NewStringUTF("https://toletspot.com/backend/TERMS_AND_CONDITIONS.html");
-//    return (*env).NewStringUTF("https://land4sales.com/backend/TERMS_AND_CONDITIONS.html");
-}
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_toletspot_houseforrent_MainActivity_00024Companion_getAboutUsUrl(JNIEnv *env,jobject thiz) {
-    return (*env).NewStringUTF("https://skyraan.com/aboutus/webview/main.html");
-}
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_toletspot_houseforrent_MainActivity_00024Companion_getFeedbackUrl(JNIEnv *env,jobject thiz) {
-    return (*env).NewStringUTF("https://skyraanapps.com/m_feedback/API/feedback_form/index.php?device_id=");
+    return (*env).NewStringUTF("https://rent.skyraantech.com/backend/api/auth/");
 }
 extern "C"
 JNIEXPORT jstring JNICALL
@@ -105,19 +81,4 @@ JNIEXPORT jstring JNICALL
 Java_com_toletspot_houseforrent_MainActivity_00024Companion_getBaseimageUrl(JNIEnv *env,
                                                                            jobject thiz) {
     return (*env).NewStringUTF(CLOUDFRONT_URL);
-}
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_toletspot_houseforrent_MainActivity_00024Companion_getFAQUrl(JNIEnv *env, jobject thiz) {
-//    return (*env).NewStringUTF("https://rent.land4sales.com/backend/FAQ.html");
-    return (*env).NewStringUTF("https://toletspot.com/backend/FAQ.html");
-//    return (*env).NewStringUTF("https://land4sales.com/backend/FAQ.html");
-}
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_toletspot_houseforrent_MainActivity_00024Companion_getdiscalimerUrl(JNIEnv *env,jobject thiz) {
-//    return (*env).NewStringUTF("https://rent.land4sales.com/discalimer.html");
-    return (*env).NewStringUTF("https://toletspot.com/discalimer.html");
-//    return (*env).NewStringUTF("https://land4sales.com/discalimer.html");
-
 }

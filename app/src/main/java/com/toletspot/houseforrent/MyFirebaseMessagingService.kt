@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent
 
-
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -16,24 +15,18 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.util.Random
 
-
 var notificationRefernace = mutableStateOf(false)
 @SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
-        // Check if data payload is not empty
-        // Log received data payload
-        println("checking--- ${remoteMessage.data}")
         if (remoteMessage.data.isNotEmpty()) {
             val message = remoteMessage.data["body"]
             val title = remoteMessage.data["title"]
 
-            // Send the notification using the data payload
             sendNotification(title, message, remoteMessage.data)
         }
-
 
     }
 
@@ -43,10 +36,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         data: MutableMap<String, String>
     ) {
 
-        // Create an intent that will open your Compose activity
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-//            putExtra("nid", "1")
+
             putExtra("title", data["title"])
             putExtra("body", data["body"])
             putExtra("id", data["id"])
@@ -73,7 +65,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val mNotifyManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        // Set Notification Channel for Android 8.0 (Oreo) and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val mChannel = NotificationChannel(
                 this.resources.getString(R.string.app_name),
@@ -116,28 +107,23 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 var deviceToken = ""
 fun getDeviceToken(onTokenReceived: (String) -> Unit) {
-    println("Fetching device token...")
 
     if (!checkForInternet(constants.activity)) {
-        println("No internet connection!")
-        onTokenReceived("") // return empty if offline
+        onTokenReceived("")
         return
     }
 
     FirebaseMessaging.getInstance().token
         .addOnCompleteListener { task ->
             if (!task.isSuccessful) {
-                println("Fetching FCM registration token failed: ${task.exception?.message}")
                 onTokenReceived("")
                 return@addOnCompleteListener
             }
 
             try {
                 val token = task.result ?: ""
-                println("Device Token: $token")
                 onTokenReceived(token)
             } catch (e: Exception) {
-                println("Token parse error: ${e.message}")
                 onTokenReceived("")
             }
         }

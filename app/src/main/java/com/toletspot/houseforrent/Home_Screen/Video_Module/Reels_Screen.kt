@@ -152,7 +152,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
-
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
@@ -167,9 +166,6 @@ import com.toletspot.houseforrent.constants
 import com.toletspot.houseforrent.ui.theme.new5757
 import kotlin.text.ifEmpty
 
-/// type 1 -> own profile in reels
-/// type 2 -> other profile in reels
-/// type 3 or else -> preview screen when posting
 @Composable
 fun PhotoRequestAssistant(
     type: Int,
@@ -214,7 +210,6 @@ fun PhotoRequestAssistant(
             }
 
             else -> {
-
 
                 Text(
                     "Hello, I’m your assistant. You haven’t added photos yet, but I’ll inform you when others request them.",
@@ -292,9 +287,9 @@ fun PhotoRequestAssistant(
                                 else {
                                     constants.API_Vm.requestMedia(
                                         user_id = AppPreferences.getUserId(),
-                                        //AppPreferences.getUserId(),
+
                                         receiver_post_id = receiverPostId
-                                        //AppPreferences.get_Post_Id(),
+
                                     )
                                     { result_Handling ->
                                         when (result_Handling) {
@@ -348,10 +343,8 @@ fun PhotoRequestAssistant(
             else -> { }
         }
 
-
     }
 }
-
 
 class VideoPlayerManager(private val ctx: Context) {
     private val players = mutableMapOf<Int, ExoPlayer>()
@@ -361,31 +354,27 @@ class VideoPlayerManager(private val ctx: Context) {
         return players[index] ?: createNewPlayer(index, videoId, uri)
     }
 
-
     @androidx.annotation.OptIn(UnstableApi::class)
     fun getOrCreatePlayer2(index: Int, id: String, url: String): ExoPlayer {
         return players2.getOrPut(id) {
-            // 1️⃣ Create custom DataSource with headers
+
             val dataSourceFactory = DefaultHttpDataSource.Factory()
                 .setDefaultRequestProperties(
                     mapOf(
                         "User-Agent" to "Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 Chrome/114.0.0.0 Mobile Safari/537.36",
-                        "Referer" to "https://yourwebsite.com" // Optional: your domain if CloudFront requires it
-                        // "Authorization" to "Bearer <token>" // Uncomment if using signed URLs
+                        "Referer" to "https://yourwebsite.com"
+
                     )
                 )
 
-            // 2️⃣ Create MediaSource using the factory
             val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(MediaItem.fromUri(url))
 
-            // 3️⃣ Build ExoPlayer
             ExoPlayer.Builder(ctx).build().apply {
                 setMediaSource(mediaSource)
                 prepare()
                 playWhenReady = true
 
-                // 4️⃣ Add debug logging for errors
                 addListener(object : Player.Listener {
                     override fun onPlayerError(error: PlaybackException) {
                         Log.e("VideoPlayerManager", "❌ Player error for video: $url")
@@ -410,7 +399,6 @@ class VideoPlayerManager(private val ctx: Context) {
         }
     }
 
-
     private fun createNewPlayer(index: Int, videoId: Int, uri: String): ExoPlayer {
         val player = ExoPlayer.Builder(ctx).build().apply {
             val mediaItem = MediaItem.Builder()
@@ -426,7 +414,6 @@ class VideoPlayerManager(private val ctx: Context) {
         return player
     }
 
-    // 🔥 Add listener for logging errors and playback state changes
     private fun ExoPlayer.addDebugListener(url: String) {
         addListener(object : Player.Listener {
             override fun onPlayerError(error: PlaybackException) {
@@ -485,8 +472,6 @@ class VideoPlayerManager(private val ctx: Context) {
         }
     }
 
-
-
     fun releaseFarPlayers(currentIndex: Int, keepRange: Int = 3) {
         val keepIndices = (currentIndex - keepRange..currentIndex + keepRange).toSet()
         val toRemove = players.keys.filter { it !in keepIndices }
@@ -503,7 +488,6 @@ class VideoPlayerManager(private val ctx: Context) {
     }
 }
 
-
 @OptIn(FlowPreview::class)
 @Composable
 fun ReelsView(
@@ -518,8 +502,6 @@ fun ReelsView(
 
     var from_DLP_State = from_DeepLink_Property.collectAsStateWithLifecycle()
 
-
-    /// post successfull
     var postSuccess = constants.PostProperty_ViewModel.postSuccessfulBtm.collectAsState()
 
     val videos by constants.Reels_ViewModel.videos.collectAsState()
@@ -557,8 +539,6 @@ fun ReelsView(
 
     var report_BS = remember { mutableStateOf(false) }
 
-
-        // rento
     var notInterested_Btm = remember { mutableStateOf(false) }
 
     val repost_Btm = remember { mutableStateOf(false) }
@@ -566,14 +546,9 @@ fun ReelsView(
     var mark_as_Sold = remember { mutableStateOf(false) }
     var delete_Post by remember { mutableStateOf(false) }
 
-    // rento
-
     val notInterestedOptions = constants.Profile_ViewModel.notInterestedOptions.collectAsState()
 
-
-
     val report_Options = constants.Profile_ViewModel.profile_Report_Options.collectAsState()
-
 
     var renewDisable = remember { mutableStateOf(false) }
 
@@ -589,12 +564,8 @@ fun ReelsView(
     var activateRentedout = remember { mutableStateOf(false) }
     var activaterenew = remember { mutableStateOf(false) }
 
-
     val viewdetailFlow = constants.PostProperty_ViewModel.viewDetailsFlow.collectAsState()
 
-
-
-    // Initial data load
     if (network.value == NetworkStatus.Online) {
         LaunchedEffect(Unit) {
             if (videos.isEmpty()) {
@@ -610,7 +581,6 @@ fun ReelsView(
         }
     }
 
-    // Retry mechanism
     LaunchedEffect(retry) {
         if (videos.isEmpty()) {
             if (retry > 0 && network.value == NetworkStatus.Online) {
@@ -623,7 +593,6 @@ fun ReelsView(
         }
     }
 
-    // Pagination
     LaunchedEffect(pagerState.currentPage) {
         if (network.value == NetworkStatus.Offline || videos.isEmpty()) return@LaunchedEffect
 
@@ -648,7 +617,6 @@ fun ReelsView(
             }
     }
 
-    // Page change handling
     LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress, videos.size) {
         if (videos.isEmpty()) return@LaunchedEffect
 
@@ -692,7 +660,6 @@ fun ReelsView(
             }
     }
 
-    // Lifecycle management
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (videos.isEmpty()) return@LifecycleEventObserver
@@ -732,7 +699,6 @@ fun ReelsView(
 
     var commentCloseDisable = constants.Reels_ViewModel.comment_Btm_Close.collectAsState()
 
-    // Main content rendering
     when {
         result == "2" -> {
             deactivated = true
@@ -743,7 +709,6 @@ fun ReelsView(
                userId = AppPreferences.getUserId().toString(),
                isDeleted = true,
                onComplete = {
-                   println("FIREBASE ACCOUNT DELECTED UPDATED")
                }
            )
         }
@@ -801,14 +766,6 @@ fun ReelsView(
 
             playerManager.releaseAll()
 
-//            FirebaseRepository.setAccountDeleted(
-//                userId = AppPreferences.getUserId().toString(),
-//                isDeleted = false,
-//                onComplete = {
-//                    println("FIREBASE ACCOUNT DELECTED UPDATED")
-//                }
-//            )
-
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -822,7 +779,6 @@ fun ReelsView(
         }
 
         videos.isEmpty() && !isLoading -> {
-
 
             Column {
                 if (from_DLP_State.value) {
@@ -841,7 +797,7 @@ fun ReelsView(
 
                         Icon(painter = painterResource(R.drawable.left_arrow), "",
                             tint = Color.White,
-                            modifier = Modifier//.padding(top = notchPadding.value)
+                            modifier = Modifier
                                 .size(24.dp)
                                 .noRippleClickable {
                                     AppPreferences.save_Noti_Post_Id("")
@@ -877,24 +833,20 @@ fun ReelsView(
                 userId = AppPreferences.getUserId().toString(),
                 isDeleted = false,
                 onComplete = {
-                    println("FIREBASE ACCOUNT DELECTED UPDATED")
                 }
             )
-            // FIXED: Removed beyondViewportPageCount to prevent preloading adjacent pages
+
             VerticalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize(),
                 key = { page -> videos.getOrNull(page)?.user_post_id ?: page }
-                // beyondViewportPageCount removed - this prevents adjacent page rendering
+
             ) { page ->
                 val item = videos.getOrNull(page) ?: return@VerticalPager
 
                 val hasVideo = item.post_property.video?.isNotEmpty()
                 val hasImages = item.post_property.images?.isNotEmpty()
-                       // && item.post_property.images.any { it.isNotBlank()
-                        //}
 
-                // FIXED: Only create player for current settled page
                 val player = if (hasVideo == true && page == pagerState.settledPage) {
                     remember(page, item.user_post_id, pagerState.settledPage) {
                         playerManager.getOrCreatePlayer(
@@ -907,7 +859,6 @@ fun ReelsView(
                     }
                 } else null
 
-                // FIXED: Dispose player immediately when not on settled page
                 DisposableEffect(page, pagerState.settledPage) {
                     onDispose {
                         if (page != pagerState.settledPage) {
@@ -925,7 +876,6 @@ fun ReelsView(
                     }
                 }
 
-                // FIXED: Added fillMaxSize and black background to prevent transparency
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -937,7 +887,6 @@ fun ReelsView(
                             .fillMaxWidth()
                             .weight(6f)
                     ) {
-
 
                         when {
 
@@ -977,16 +926,7 @@ fun ReelsView(
                                                 .padding(horizontal = 16.dp)
                                             , contentAlignment = Alignment.Center
                                         ) {
-//                                            Text(
-//                                                buildAnnotatedString {
-//                                                    withStyle(SpanStyle(color = newBlack)) { append("Your property expires.") }
-////                                        withStyle(SpanStyle(color = Color.Red)) { append("* ") }
-//                                                    withStyle(SpanStyle(color = newBlue)) { append("Renew now") }
-//                                                },
-//                                                fontSize = constants.textUnit(16),
-//                                                fontFamily = constants.fontFamily(1),
-//                                                modifier = Modifier.align(Alignment.CenterStart)
-//                                            )
+
                                             val annotatedText = buildAnnotatedString {
                                                 append("Your property expires. ")
 
@@ -1018,15 +958,12 @@ fun ReelsView(
                                                         start = offset,
                                                         end = offset
                                                     ).firstOrNull()?.let {
-                                                        // 👇 Handle click here
-                                                        // Example:
-                                                        println("Renew now clicked")
+
                                                         activateRentedout.value = true
-                                                        // navigateToRenewScreen()
+
                                                     }
                                                 }
                                             )
-
 
                                             Image(painter = painterResource(R.drawable.close), "",
                                                 colorFilter = ColorFilter.tint(Color.White),
@@ -1037,7 +974,6 @@ fun ReelsView(
                                     }
                                 }
 
-                                // Back buttons for image slides
                                 if (from_DLP_State.value) {
                                     viewModel.toggleshowTABars(false)
                                     viewModel.toggleshowBABars(false)
@@ -1063,17 +999,7 @@ fun ReelsView(
                                                 )
                                             }
                                         )
-//                                        Backer(
-//                                            modifier = Modifier,
-//                                            onBackClick = {
-//                                                AppPreferences.save_Noti_Post_Id("")
-//                                                set_FDLP_State(false)
-//                                                viewModel.selectedBABTab(0)
-//                                                navController.navigate(
-//                                                    UserCredentialsScreenFlow.Common_Screen.route
-//                                                )
-//                                            }
-//                                        )
+
                                     }
                                 }
                                 if (!from_DLP_State.value) {
@@ -1082,7 +1008,6 @@ fun ReelsView(
                                         viewModel.toggleshowBABars(false)
 
                                         BackHandler {
-                                            println("WERTTY inside  %%%${from_DLP_State.value}-&&&${AppPreferences.get_Noti_Post_Id()}- ${report_BS.value} -- ${cmt_btm_Sheet.value} -- ${reelsBTMSheetState.value} -- ${send_Eq_State.value}")
 
                                             when {
                                                 !from_DLP_State.value && AppPreferences.get_Noti_Post_Id()
@@ -1118,15 +1043,7 @@ fun ReelsView(
                                                     navController.navigate(VideosScreenFlow.In_App_Notification.route)
                                                 }
                                             )
-//                                            Backer(
-//                                                modifier = Modifier,
-//                                                onBackClick = {
-//                                                    retry = retry + 2345
-//                                                    viewModel.notification_PostId = ""
-//                                                    AppPreferences.save_Noti_Post_Id("")
-//                                                    navController.navigate(VideosScreenFlow.In_App_Notification.route)
-//                                                }
-//                                            )
+
                                         }
                                     }
                                 }
@@ -1137,7 +1054,6 @@ fun ReelsView(
                                     mutableStateOf(false)
                                 }
 
-                                // Sync playing state only for current page
                                 LaunchedEffect(page, pagerState.settledPage, player) {
                                     if (page == pagerState.settledPage) {
                                         snapshotFlow { player.isPlaying }
@@ -1149,7 +1065,6 @@ fun ReelsView(
                                     }
                                 }
 
-                                // Control playback based on current page
                                 LaunchedEffect(page, pagerState.settledPage) {
                                     if (page == pagerState.settledPage) {
                                         delay(100)
@@ -1159,7 +1074,6 @@ fun ReelsView(
                                     }
                                 }
 
-                                // FIXED: Video content with proper containment
                                 key("video_${item.user_post_id}_${page}") {
                                     Box(
                                         modifier = Modifier
@@ -1173,7 +1087,7 @@ fun ReelsView(
                                                 .padding(top = 24.dp)
                                                 .fillMaxWidth()
                                                 .fillMaxHeight(.7f)
-                                                //.aspectRatio(6f / 12f)
+
                                                 .pointerInput(item.user_post_id) {
                                                     detectTapGestures(
                                                         onTap = {
@@ -1217,7 +1131,6 @@ fun ReelsView(
                                     }
                                 }
 
-                                // Play icon overlay
                                 if (!isPlayerPlaying) {
                                     Box(
                                         modifier = Modifier
@@ -1236,7 +1149,6 @@ fun ReelsView(
                                     }
                                 }
 
-                                // Track buffering and sync play state
                                 DisposableEffect(player, page) {
                                     val listener = object : Player.Listener {
                                         override fun onPlaybackStateChanged(playbackState: Int) {
@@ -1297,7 +1209,7 @@ fun ReelsView(
                                             Text(
                                                 buildAnnotatedString {
                                                     withStyle(SpanStyle(color = newBlack)) { append("Your property expires.") }
-//                                        withStyle(SpanStyle(color = Color.Red)) { append("* ") }
+
                                                     withStyle(SpanStyle(color = newBlue)) { append("Renew now") }
                                                 },
                                                 fontSize = constants.textUnit(16),
@@ -1314,7 +1226,6 @@ fun ReelsView(
                                     }
                                 }
 
-                                // Back buttons and Reels options remain the same
                                 if (from_DLP_State.value) {
                                     viewModel.toggleshowTABars(false)
                                     viewModel.toggleshowBABars(false)
@@ -1341,19 +1252,7 @@ fun ReelsView(
                                                     UserCredentialsScreenFlow.Common_Screen.route
                                                 )
                                             })
-//                                        Backer(
-//                                            modifier = Modifier,
-//                                            onBackClick = {
-//                                                AppPreferences.save_Noti_Post_Id("")
-//                                                set_FDLP_State(false)
-//                                                viewModel.selectedBABTab(0)
-//                                                constants.API_Vm.isLoading_Reels = true
-//                                                constants.API_Vm.totalPages_Reels = 1
-//                                                navController.navigate(
-//                                                    UserCredentialsScreenFlow.Common_Screen.route
-//                                                )
-//                                            }
-//                                        )
+
                                     }
                                 }
                                 if (!from_DLP_State.value) {
@@ -1381,12 +1280,7 @@ fun ReelsView(
                                                         ViewDetailsFlow.NONE)
                                                     navController.navigate(VideosScreenFlow.In_App_Notification.route)
                                                 })
-//                                            Backer(
-//                                                modifier = Modifier,
-//                                                onBackClick = {
-//
-//                                                }
-//                                            )
+
                                         }
                                     }
                                 }
@@ -1424,7 +1318,6 @@ fun ReelsView(
                                     contentAlignment = Alignment.Center
                                 ) {
 
-
                                     if (viewdetailFlow.value == ViewDetailsFlow.RENEW){
                                         if (!renewDisable.value) {
                                             Box(
@@ -1442,7 +1335,7 @@ fun ReelsView(
                                                 Text(
                                                     buildAnnotatedString {
                                                         withStyle(SpanStyle(color = newBlack)) { append("Your property expires.") }
-//                                        withStyle(SpanStyle(color = Color.Red)) { append("* ") }
+
                                                         withStyle(SpanStyle(color = newBlue)) { append("Renew now") }
                                                     },
                                                     fontSize = constants.textUnit(16),
@@ -1478,7 +1371,6 @@ fun ReelsView(
                                     )
                                 }
 
-                                // Back buttons for error state
                                 if (from_DLP_State.value) {
                                     viewModel.toggleshowTABars(false)
                                     viewModel.toggleshowBABars(false)
@@ -1493,10 +1385,9 @@ fun ReelsView(
                                         horizontalArrangement = Arrangement.Start
                                     ) {
 
-
                                         Icon(painter = painterResource(R.drawable.left_arrow), "",
                                             tint = Color.White,
-                                            modifier = Modifier//.padding(top = notchPadding.value)
+                                            modifier = Modifier
                                                 .size(24.dp)
                                                 .noRippleClickable {
                                                     AppPreferences.save_Noti_Post_Id("")
@@ -1526,7 +1417,7 @@ fun ReelsView(
 
                                             Icon(painter = painterResource(R.drawable.left_arrow), "",
                                                 tint = Color.White,
-                                                modifier = Modifier//.padding(top = notchPadding.value)
+                                                modifier = Modifier
                                                     .size(24.dp)
                                                     .noRippleClickable {
                                                         retry = retry + 2345
@@ -1557,8 +1448,6 @@ fun ReelsView(
         }
     }
 
-
-    /// post successful
     if (postSuccess.value){
         ModalBottomSheet(
             sheetState = bottomSheetState,
@@ -1620,15 +1509,10 @@ fun ReelsView(
         }
     }
 
-
-
-    // Enquiry Form Bottom Sheet
     if (videos.isNotEmpty() && pagerState.currentPage < videos.size) {
         Enquiry_Form_Btm_Sheet_Structure(send_Eq_State.value, videos[pagerState.currentPage])
     }
 
-
-    // Reels Bottom Sheet
     if (reelsBTMSheetState.value) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -1639,15 +1523,12 @@ fun ReelsView(
         )
         {
 
-            println("ISFFIVE RENEWWW -- ${ isWithinLast5DaysOfValidity(videos[pagerState.currentPage]?.post_property?.created_at ?: "")} -- ${videos[pagerState.currentPage].post_property.created_at}")
-
             LaunchedEffect(Unit) {
 
                 when {
 
                     isWithinLast5DaysOfValidity(videos[pagerState.currentPage]?.post_property?.created_at ?:"")  &&  videos[pagerState.currentPage].user_id == AppPreferences.getUserId() -> {
-//                    viewdetailFlow.value == ViewDetailsFlow.RENEW -> {
-                        println("indisddejeididjdjdfj2222222 -- ${ isWithinLast5DaysOfValidity(videos[pagerState.currentPage]?.post_property?.created_at ?:"")}")
+
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.renewpostOptions
                         )
@@ -1656,8 +1537,6 @@ fun ReelsView(
                     videos[pagerState.currentPage].user_id != AppPreferences.getUserId() -> {
                         constants.Reels_ViewModel.removeReelsBTMSOptions(constants.Reels_ViewModel.otherIdOptions)
                     }
-
-
 
                     videos[pagerState.currentPage].user_id == AppPreferences.getUserId() -> constants.Reels_ViewModel.removeReelsBTMSOptions(
                         constants.Reels_ViewModel.ownIdOptions
@@ -1682,32 +1561,30 @@ fun ReelsView(
                 data.forEachIndexed { index, Options ->
                     Column (
                         modifier = Modifier
-                           // .fillMaxWidth()
+
                             .padding(horizontal = 16.dp)
                             .noRippleClickable {
                                 when (Options.id) {
-                                    0 -> { /* repost logic */
+                                    0 -> {
                                         constants.Reels_ViewModel.clear_view_pro_Details()
-                                        //AppPreferences.save_Post_Id(videos[pagerState.currentPage].user_post_id)
+
                                         repost_Btm.value = true
                                         constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                     }
-                                    1 -> { /* edit logic */
+                                    1 -> {
                                         constants.Reels_ViewModel.clear_view_pro_Details()
                                         navController.navigate(ProfileScreenFlow.Edit_Property_Option.route)
                                         constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                     }
-                                    2 -> { /* mark as sold */
+                                    2 -> {
                                         mark_as_Sold.value = true
                                         constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                     }
-                                    3 -> { /* delete */
-                                        println("COMING INTO HERE")
+                                    3 -> {
 
                                         delete_Post = true
                                         viewModel.toggleReelsBTMSheet(false)
 
-                                        println("COMING INSIDE DELETTING SOLDOUTS")
                                         constants.API_Vm.delete_Post_SM_Drafts(
                                             user_id = AppPreferences.getUserId(),
                                             select_all = 0,
@@ -1718,7 +1595,7 @@ fun ReelsView(
                                                 is API_Result_Handling.Loading -> {}
                                                 is API_Result_Handling.NoData -> {}
                                                 is API_Result_Handling.Deactivated -> {
-                                                    // resultCallback(5)
+
                                                 }
                                                 is API_Result_Handling.Error -> {}
                                                 is API_Result_Handling.Success -> {
@@ -1739,14 +1616,14 @@ fun ReelsView(
                                             }
                                         }
                                     }
-                                    4 -> { /* share */
+                                    4 -> {
                                         constants.DefaultShare(
                                             "https://toletspot.com/property/${videos[pagerState.currentPage].user_post_id}",
                                             1
                                         )
                                         constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                     }
-                                    5 -> { /* report */
+                                    5 -> {
                                         if (videos[pagerState.currentPage].post_property.is_report != 1) {
                                             constants.Profile_ViewModel.toggle_ReportSucces_True()
 
@@ -1756,14 +1633,13 @@ fun ReelsView(
                                             )
                                             constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                         } else {
-                                            // constants.Profile_ViewModel.toggle_ReportSucces_True()
 
                                             constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
 
                                             GlobalSnackbar.show("Post already reported")
                                         }
                                     }
-                                    6 -> { /* not interested */
+                                    6 -> {
                                         notInterested_Btm.value = true
                                     }
 
@@ -1773,7 +1649,7 @@ fun ReelsView(
 
                                 }
                             }
-                        //,verticalArrangement = Arrangement.spacedBy(8.dp)
+
                         , horizontalAlignment = Alignment.CenterHorizontally
                         , verticalArrangement = Arrangement.Center
                     )
@@ -1794,13 +1670,12 @@ fun ReelsView(
                         Spacer(modifier = Modifier.padding(8.dp))
                         Text(Options.title, color = newBlack, fontSize = constants.textUnit(14))
                     }
-                    //Spacer(modifier = Modifier.padding(8.dp))
+
                 }
             }
         }
     }
 
-    // Comment Sheet
     if (cmt_btm_Sheet.value) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -1821,7 +1696,6 @@ fun ReelsView(
         }
     }
 
-    // Report Sheet
     if (report_BS.value)
     {
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -1935,36 +1809,7 @@ fun ReelsView(
                             }
                         }
                     }
-                   /* else {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(300.dp),
-                            verticalArrangement = Arrangement.SpaceEvenly,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        )
-                        {
-                            SubcomposeAsyncImage(
-                                model = R.drawable.profile_report_submit_success,
-                                "",
-                                modifier = Modifier.size(150.dp)
-                            )
 
-                            Text(
-                                text = "Submitted Successfully",
-                                color = newBlack,
-                                fontSize = constants.textUnit(18),
-                                fontFamily = constants.fontFamily(0)
-                            )
-
-                            Text(
-                                text = "Thank you for bringing this to our attention.",
-                                color = newBlack,
-                                fontSize = constants.textUnit(12),
-                                fontFamily = constants.fontFamily(3)
-                            )
-                        }
-                    }*/
                 }
 
                 Spacer(modifier = Modifier.padding(8.dp))
@@ -2010,13 +1855,13 @@ fun ReelsView(
                                                                 constants.Reels_ViewModel.toggleLike_Report(
                                                                     videos[pagerState.currentPage].user_post_id
                                                                 )
-//                                                                constants.Profile_ViewModel.toggle_ReportSucces_False()
+
                                                                 report_BS.value = false
                                                                  GlobalSnackbar.show("Reported Successfully")
                                                             }
 
                                                             is API_Result_Handling.Deactivated -> {
-                                                                // Handle deactivation
+
                                                             }
 
                                                             is API_Result_Handling.Loading -> {
@@ -2025,7 +1870,7 @@ fun ReelsView(
 
                                                             else -> {
                                                                 toast("Something went wrong")
-                                                                // Handle other cases
+
                                                             }
                                                         }
                                                     }
@@ -2057,14 +1902,13 @@ fun ReelsView(
         }
     }
 
-    // Not Interested Sheet
     if (notInterested_Btm.value)
     {
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
         ModalBottomSheet(
             onDismissRequest = {
-                //constants.Profile_ViewModel.toggle_ReportSucces_True()
+
                 notInterested_Btm.value = false
                 constants.Profile_ViewModel.toggle_NotInterested_Options(
                     -1
@@ -2081,7 +1925,6 @@ fun ReelsView(
             ) {
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
 
                         Column(
                             modifier = Modifier
@@ -2171,10 +2014,8 @@ fun ReelsView(
                             }
                         }
 
-
                 Spacer(modifier = Modifier.padding(8.dp))
 
-                //if (report_success.value) {
                     Static_Bottom(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -2234,10 +2075,10 @@ fun ReelsView(
                                                     }
 
                                                 } else {
-                                                    //scope.launch {
+
                                                         toast("Post already set to Not Interested")
                                                         notInterested_Btm.value = false
-                                                   // }
+
                                                 }
                                             }
                                             else {
@@ -2256,12 +2097,11 @@ fun ReelsView(
                             }
                         }
                     )
-                //}
+
             }
         }
     }
 
-    /// activte renew
     if (activaterenew.value) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -2278,9 +2118,6 @@ fun ReelsView(
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
-//                Image(painter = painterResource(R.drawable.repost) , "")
-
-
 
                 CommonText(
                     "Renew Property Listing",
@@ -2330,16 +2167,16 @@ fun ReelsView(
                                         is API_Result_Handling.Error -> {
 
                                             GlobalSnackbar.show("Something went wrong")
-                                            //isLoading = false
+
                                             activaterenew.value = false
                                         }
 
                                         is API_Result_Handling.Deactivated -> {
-                                            //resultCallback(5)
+
                                         }
 
                                         is API_Result_Handling.Loading -> {
-                                            //isLoading = true
+
                                         }
 
                                         is API_Result_Handling.Success -> {
@@ -2348,14 +2185,13 @@ fun ReelsView(
                                             renewDisable.value = true
 
                                             constants.Reels_ViewModel.setNewTimeStampOnRenew(videos[pagerState.currentPage].user_post_id)
-                                            //isLoading = false
+
                                             activaterenew.value = false
 
                                             navController.navigateUp()
                                         }
                                     }
                                 }
-
 
                             }
                         , contentAlignment = Alignment.Center
@@ -2371,7 +2207,7 @@ fun ReelsView(
             }
         }
     }
-    /// activte rented out
+
     if (activateRentedout.value) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -2388,8 +2224,6 @@ fun ReelsView(
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
-//                Image(painter = painterResource(R.drawable.repost) , "")
-
 
                 com.toletspot.houseforrent.CommonText(
                     "Activate Listing",
@@ -2442,7 +2276,7 @@ fun ReelsView(
                                         }
 
                                         is API_Result_Handling.Deactivated -> {
-                                            //resultCallback(5)
+
                                         }
 
                                         is API_Result_Handling.Loading -> {
@@ -2453,21 +2287,12 @@ fun ReelsView(
                                             isLoading = false
                                             GlobalSnackbar.show("Property Activated Successfully ")
 
-//                                            constants.Reels_ViewModel.setNewTimeStampOnRenew(
-//                                                view_Details_Data.value?.user_post_id ?: 0
-//                                            )
-//                                            constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(
-//                                                videos[pagerState.currentPage].user_post_id
-//                                            )
-
-                                            //isLoading = false
                                             activateRentedout.value = false
 
                                             navController.navigateUp()
                                         }
                                     }
                                 }
-
 
                             }
                         , contentAlignment = Alignment.Center
@@ -2484,14 +2309,11 @@ fun ReelsView(
         }
     }
 
-
-    /// rento
     if (mark_as_Sold.value == true) {
         playerManager.pauseVideo(pagerState.currentPage)
         Mark_As_Sold_Flow(mark_as_Sold, videos[pagerState.currentPage].user_post_id, navController)
     }
 
-    /// repost btm
     if (repost_Btm.value) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -2534,9 +2356,7 @@ fun ReelsView(
                                 constants.PostProperty_ViewModel.first_Form_selected_PP(-1)
                                 constants.PostProperty_ViewModel.select_Land_Cat_Id(-1)
                                 constants.PostProperty_ViewModel.LandSubType_Selected_Click(-1)
-//                            constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
-//                                -1
-//                            )
+
                                 constants.PostProperty_ViewModel.select_Land_Cat_Id(
                                     -1
                                 )
@@ -2550,7 +2370,6 @@ fun ReelsView(
                                         locality = ""
                                     )
                                 )
-
 
                                 constants.PostProperty_ViewModel.clear_Selected_Fields_Form4()
                                 constants.PostProperty_ViewModel.clearAllPostFields()
@@ -2568,10 +2387,7 @@ fun ReelsView(
                                         1 -> {}
                                         2 -> {}
                                         3 -> {
-                                            println("REPOST CLICKER SUCCESS")
                                             val server_Data = constants.PostProperty_ViewModel.get_previewFormData()
-
-                                            println("Full Server Data --- ${server_Data}")
 
                                             server_Data?.let { data ->
                                                 constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
@@ -2581,9 +2397,6 @@ fun ReelsView(
 
                                             AppPreferences.save_Post_Id(server_Data?.user_post_id ?: 0)
 
-
-                                            println("POST ID -- ${AppPreferences.get_Post_Id()}")
-
                                             constants.PostProperty_ViewModel.first_Form_selected_PP(
                                                 (server_Data?.user_type ?: "0").toInt()
                                             )
@@ -2592,17 +2405,8 @@ fun ReelsView(
                                             constants.PostProperty_ViewModel.set_city3(server_Data?.city ?: "")
                                             constants.PostProperty_ViewModel.set__selectedLocality3(server_Data?.locality ?: "")
 
-                                            println(
-                                                "GIVEN ADDRESS DATA FIELD -- " +
-                                                        "${constants.PostProperty_ViewModel.get_selectedLocality3()} --- " +
-                                                        "${constants.PostProperty_ViewModel.get_latLng3()}---" +
-                                                        "-${constants.PostProperty_ViewModel.get_city3()}--" +
-                                                        "-${constants.PostProperty_ViewModel.get_state3()} ----" +
-                                                        " ${constants.PostProperty_ViewModel.get_country3()}"
-                                            )
 
                                             constants.PostProperty_ViewModel.set_onSelected_ProType((server_Data?.land_type_id ?: 0) )
-
 
                                             constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
                                                 server_Data?.land_categorie_id ?: 0
@@ -2614,21 +2418,13 @@ fun ReelsView(
 
                                             constants.PostProperty_ViewModel.LandSubType_Selected_Click(server_Data?.land_categorie_id ?: 0)
 
-                                            println("REPOST FROM PFOILE TOP____ ${server_Data?.land_type_id}")
                                             constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value =  constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.copy(
                                                 first = server_Data?.land_type_id ?: 0,
                                                 second = server_Data?.land_categorie_id ?: 0
                                             )
 
-                                            println("REPOST FROM PFOILE TOP____ ${server_Data?.land_type_id ?: 0} (((( ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}")
-
-
                                             constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value = Pair((server_Data?.land_type_id ?: 0)  , server_Data?.land_categorie_id ?: 0)
 
-                                            println("Step 2 --- ${(server_Data?.land_type_id ?: 0) - 1 } -***${ constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}***-- ${server_Data?.land_categorie_id ?: 0}")
-//                                            println("LOCARTION DERAIKS sfjngv adsfbvkhjd REPOST ${server_Data.pincode} -__${server_Data.longitude}--${server_Data.latitude}--${server_Data.address}--${server_Data.city}- ${server_Data.country} -- ${data.state}")
-
-                                            // Safely set values if they’re not empty
                                             if (!server_Data?.pincode.isNullOrEmpty()) {
                                                 constants.PostProperty_ViewModel.set_pincode3(server_Data?.pincode ?: "")
                                             }
@@ -2644,7 +2440,7 @@ fun ReelsView(
                                             if (!server_Data?.locality.isNullOrEmpty()) {
                                                 constants.PostProperty_ViewModel.set__selectedLocality3(server_Data?.locality ?:"")
                                             }
-//
+
                                             if (server_Data?.latitude?.isNotEmpty() == true && server_Data?.longitude?.isNotEmpty() == true) {
                                                 constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
                                                     LatLng(
@@ -2654,15 +2450,6 @@ fun ReelsView(
                                                 )
                                             }
 
-//                                            if (server_Data.images.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addImages(server_Data?.images ?:"")
-//                                            }
-//                                            else if(server_Data.video.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addVideo(server_Data?.images ?:"")
-//
-//                                            }
-
-                                            println("LOCALOTY CHECK -- ${server_Data?.locality ?:""} -- ${server_Data?.address ?:""}")
                                             constants.PostProperty_ViewModel.add_pp3_Data(
                                                 PP3_API_DC(
                                                     pincode = server_Data?.pincode ?: "",
@@ -2686,24 +2473,12 @@ fun ReelsView(
                                                 server_Data?.land_categorie_id ?: 0
                                             )
 
-                                            println("VIDEO ADDED IN THE List CHECH -- ${server_Data?.images}  -- ${server_Data?.video}")
                                             if (!server_Data?.images.isNullOrEmpty()) {
-//                                                val imageMediaList = server_Data.images.map { imageUri ->
-//                                                    UploadPropertyMedia(uri = Uri.parse(imageUri), isVideo = false)
-//                                                }
-//                                                constants.PostProperty_ViewModel.addImages(imageMediaList)
+
                                             }
                                             else if (!server_Data?.video.isNullOrEmpty()) {
-                                                println("VIDEO ADDED IN THE List")
-//                                                val videoMedia = UploadPropertyMedia(
-//                                                    uri = Uri.parse(server_Data.video),
-//                                                    isVideo = true
-//                                                )
-//                                                constants.PostProperty_ViewModel.addVideo(videoMedia)
+
                                             }
-
-
-                                            println("VIDEO ADDED IN THE List CHECH -- ${constants.PostProperty_ViewModel.mediaList.value}")
 
                                             constants.PostProperty_ViewModel.select_Land_Type(server_Data?.land_type_id ?: 0)
 
@@ -2713,18 +2488,11 @@ fun ReelsView(
                                                 coverUrl = server_Data?.thumbnail ?: ""
                                             )
 
-//                                            val budget_Price =
-//                                                constants.PostProperty_ViewModel.put_budget_Price_PF5(server_Data?.price ?: "")
-
-                                            println("SERVER DATA -- ${server_Data} ---- cons.${constants.PostProperty_ViewModel.get_Selected_Fields_Form()}")
-
                                             constants.Profile_ViewModel.set_From_Repost(1)
                                             constants.PostProperty_ViewModel.set_Post_Form_Flow(2)
 
-
                                             constants.PostProperty_ViewModel.setPostFlow(PostFlow.REPOST)
 
-                                            // ✅ Navigate after everything is done
                                             navController.navigate(ProfileScreenFlow.Post_Property_Forms.route)
                                         }
                                     }
@@ -2745,15 +2513,13 @@ fun ReelsView(
         }
     }
 
-
-    // delete post
     Common_Popup(
         delete_Post,
         modifier = Modifier
             .background(Color(0xffF7F0DC))
         , image = "",
         userName = "",
-        icon = R.drawable.closeenquiry /// or R.drawable
+        icon = R.drawable.closeenquiry
     )
     {
         Column (
@@ -2825,8 +2591,6 @@ fun ReelsView(
                                 if (ClickGuard.canClick()) {
 
                                     if (network.value == NetworkStatus.Online) {
-                                        println(" API CALL HIT STATUS __ ue}")
-                                        println("COMING INSIDE DELETTING SOLDOUTS")
                                         constants.API_Vm.delete_Post_SM_Drafts(
                                             user_id = AppPreferences.getUserId(),
                                             select_all = 0,
@@ -2838,7 +2602,7 @@ fun ReelsView(
                                                 is API_Result_Handling.Loading -> {}
                                                 is API_Result_Handling.NoData -> {}
                                                 is API_Result_Handling.Deactivated -> {
-                                                    // resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.Error -> {}
@@ -2852,7 +2616,6 @@ fun ReelsView(
                                                         navController.navigateUp()
                                                         delete_Post = true
                                                     } else {
-                                                        println("65212345678987654321234567890-")
                                                         constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(
                                                             videos[pagerState.currentPage].user_post_id
                                                                 ?: 0
@@ -2861,7 +2624,6 @@ fun ReelsView(
 
                                                         playerManager.releaseAll()
 
-                                                        // Now navigate away
                                                         AppPreferences.save_Post_Id(0)
                                                         constants.Profile_ViewModel.set_From_SoldOuts(
                                                             false
@@ -2877,53 +2639,10 @@ fun ReelsView(
                                                 }
                                             }
                                         }
-                                        /*constants.API_Vm.put_Block_User(
-                                    user_id = AppPreferences.getUserId(),
-                                    blocker_id = profile_Content.value?.user_id ?: 0,
-                                    //profile_Content.value?.user_id ?: 0,
-                                    status = blockStatus.value
-                                    //if (profile_Content.value?.is_blocked == 0) "1" else "0"
-                                )
-                                { apiResultHandling ->
-                                    when (apiResultHandling) {
-                                        is API_Result_Handling.Error -> {
-                                            //errror
-                                            //constants.Profile_ViewModel.change_Update_profile(false)
-                                        }
 
-                                        is API_Result_Handling.Deactivated -> {
-                                            // resultCallback(5)
-                                        }
-
-                                        is API_Result_Handling.NoData -> {
-                                            // no data
-                                        }
-
-                                        is API_Result_Handling.Loading -> {
-                                            //loading
-                                            // constants.Profile_ViewModel.change_Update_profile(true)
-                                        }
-
-                                        is API_Result_Handling.Success -> {
-                                            if (profile_Content.value?.is_blocked == 0) {
-                                                constants.Profile_ViewModel.updateBlockedStatus_Selected_Profile(
-                                                    1
-                                                )
-                                            } else {
-                                                constants.Profile_ViewModel.updateBlockedStatus_Selected_Profile(
-                                                    0
-                                                )
-                                            }
-                                            block_PopUp = false
-                                            //constants.Profile_ViewModel.enable_Edit_Profile()
-                                            //constants.Profile_ViewModel.change_Update_profile(false)
-                                            //success
-                                        }
-                                    }
-                                }*/
                                     } else {
                                         toast(constants.activity.getString(R.string.no_Internet))
-                                        // GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
+
                                     }
                                 }
                             }
@@ -2946,8 +2665,6 @@ fun ReelsView(
         }
     }
 
-
-    // Exit confirmation dialog
     Common_Popup(
         visible = app_Exit,
         modifier = Modifier.background(newLightBlue),
@@ -3027,7 +2744,7 @@ fun ReelsView(
     LaunchedEffect(!deactivated) {
         deactivated = false
     }
-    // Deactivated account dialog
+
     Common_Popup(
         visible = deactivated,
         modifier = Modifier.background(Color(0xffFCEDEC)),
@@ -3040,14 +2757,12 @@ fun ReelsView(
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
-                //constants.spacer(2)
+
                 Text("Account Restricted"
                     , color = Color.Black
                     , fontSize = constants.textUnit(16)
                     , fontFamily = constants.fontFamily(0)
                 )
-
-                //constants.spacer(2)
 
                 Text("Your account has been reported multiple times for violating our community standards. Your account has been temporarily restricted. You can appeal this decision if you believe it was a mistake."
                     , color = Color(0xff484848)
@@ -3078,10 +2793,6 @@ fun ReelsView(
                                     constants.Start_Up_ViewModel.countryCode = "+91"
                                     constants.Start_Up_ViewModel.userName = ""
                                     constants.Start_Up_ViewModel.otp = ""
-
-
-
-
 
                                     constants.Profile_ViewModel.dismiss_Logout_PP()
                                     onLogout()
@@ -3117,7 +2828,6 @@ fun ReelsView(
                             constants.Start_Up_ViewModel.userName = ""
                             constants.Start_Up_ViewModel.otp = ""
 
-
                             constants.Profile_ViewModel.dismiss_Logout_PP()
                             onLogout()
                         }
@@ -3129,7 +2839,6 @@ fun ReelsView(
         }
     )
 
-    // Exit confirmation dialog
     Common_Popup(
         visible = app_Exit,
         modifier = Modifier.background(newLightBlue),
@@ -3205,7 +2914,6 @@ fun ReelsView(
     )
 
     BackHandler {
-        println("WERTTY %%%${from_DLP_State.value}-&&&${AppPreferences.get_Noti_Post_Id()}- ${report_BS.value} -- ${cmt_btm_Sheet.value} -- ${reelsBTMSheetState.value} -- ${send_Eq_State.value}")
 
         when {
             !from_DLP_State.value && AppPreferences.get_Noti_Post_Id().isNotEmpty() -> {
@@ -3215,7 +2923,6 @@ fun ReelsView(
                                 navController.navigate(VideosScreenFlow.In_App_Notification.route)
 
             }
-
 
             report_BS.value -> {
                 report_BS.value = false
@@ -3238,11 +2945,7 @@ fun ReelsView(
         }
     }
 
-
-
 }
-
-
 
 @Composable
 fun Reels_Options(
@@ -3258,7 +2961,6 @@ fun Reels_Options(
 {
 
     val network = rememberNetworkStatus()
-
 
     Box (
         modifier = modifier
@@ -3277,7 +2979,7 @@ fun Reels_Options(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomEnd)
-                //.padding(bottom = if (showBABars.value) {if (forTab()) 100.dp else 80.dp } else 0.dp),
+
             ,verticalArrangement = Arrangement.Center
             , horizontalAlignment = Alignment.End
         )
@@ -3296,9 +2998,6 @@ fun Reels_Options(
                     val isLiked = if (currentReel.is_liked == 1) true else false
                     val isSaved = if(currentReel.is_saved == 1) true else false
 
-
-
-                    // Optional animation only for like button
                     val scale = remember { Animatable(1f) }
 
                     LaunchedEffect(icon.isLiked) {
@@ -3307,8 +3006,6 @@ fun Reels_Options(
                             scale.animateTo(1f, tween(200))
                         }
                     }
-
-
 
                     val show_Icon =  when(index){
                         0 -> {
@@ -3320,10 +3017,6 @@ fun Reels_Options(
                         else -> { icon.icon }
                     }
 
-//                    if ((index == 0 && isLike_Loading.value) || (index == 2 && isSave_Loading.value)){
-//                        CircularProgressIndicator(modifier = Modifier.size(25.dp), color = newBlue)
-//                    }
-//                    else {
                         AsyncImage(
                             model = show_Icon,
                             contentDescription = "",
@@ -3342,25 +3035,9 @@ fun Reels_Options(
                                             when (index) {
                                                 0 -> {
 
-//                                                    constants.Reels_ViewModel.toggleLike_Reels(
-//                                                        currentReel.user_post_id
-//                                                    )
-
                                                     constants.Reels_ViewModel.toggleLike_Reelsrento(
                                                         currentReel.user_post_id
                                                     )
-
-
-
-//                                                    if (isLiked) {
-//                                                        constants.Reels_ViewModel.decreaseLikeCount_Reels(
-//                                                            currentReel.user_post_id
-//                                                        )
-//                                                    } else {
-//                                                        constants.Reels_ViewModel.increaseLikeCount_Reels(
-//                                                            currentReel.user_post_id
-//                                                        )
-//                                                    }
 
                                                     if (network.value == NetworkStatus.Online) {
                                                         constants.API_Vm.like_Dislike(
@@ -3376,29 +3053,25 @@ fun Reels_Options(
                                                                     constants.Reels_ViewModel.decreaseLikeCount_Reels(
                                                                         currentReel.user_post_id
                                                                     )
-                                                                    //errror
+
                                                                 }
 
                                                                 is API_Result_Handling.NoData -> {
-                                                                    // no data
+
                                                                 }
 
                                                                 is API_Result_Handling.Loading -> {
                                                                     isLike_Loading.value = true
-                                                                    //loading
+
                                                                 }
 
                                                                 is API_Result_Handling.Deactivated -> {
-                                                                    /// resultCallback(5)
+
                                                                 }
 
                                                                 is API_Result_Handling.Success -> {
                                                                     isLike_Loading.value = false
 
-
-
-
-                                                                    //success
                                                                 }
                                                             }
                                                         }
@@ -3434,27 +3107,25 @@ fun Reels_Options(
                                                                         currentReel.user_post_id
                                                                     )
                                                                     isSave_Loading.value = false
-                                                                    //errror
+
                                                                 }
 
                                                                 is API_Result_Handling.NoData -> {
-                                                                    // no data
+
                                                                 }
 
                                                                 is API_Result_Handling.Loading -> {
                                                                     isSave_Loading.value = true
-                                                                    //loading
+
                                                                 }
 
                                                                 is API_Result_Handling.Deactivated -> {
-                                                                    // resultCallback(5)
+
                                                                 }
 
                                                                 is API_Result_Handling.Success -> {
                                                                     isSave_Loading.value = false
 
-
-                                                                    //success
                                                                 }
                                                             }
                                                         }
@@ -3475,10 +3146,7 @@ fun Reels_Options(
 
                                 }
                         )
-                    //}
 
-
-                    //if (icon.counts.isNotEmpty()) {
                     if (index == 0){
                         Text(
                             text = currentReel.total_likes.toString() ,
@@ -3494,8 +3162,6 @@ fun Reels_Options(
                         )
                     }
 
-                   // }
-
                     Spacer(modifier = Modifier.height(20.dp))
                 }
             }
@@ -3503,7 +3169,6 @@ fun Reels_Options(
         }
     }
 }
-
 
 @Composable
 fun Reels_OptionsStatic(
@@ -3520,7 +3185,6 @@ fun Reels_OptionsStatic(
 
     val network = rememberNetworkStatus()
 
-
     Box (
         modifier = modifier
     ){
@@ -3533,19 +3197,13 @@ fun Reels_OptionsStatic(
         )
         {
 
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(topStart = 24.dp , topEnd = 24.dp))
                     .background(
                         Color.White
-//                        brush = Brush.verticalGradient(
-//                            colors = listOf(
-//                                Color.Transparent,
-//                                Color.Black.copy(alpha = 0.6f)
-//                            )
-//                        )
+
                     )
             )
             {
@@ -3588,7 +3246,7 @@ fun Reels_OptionsStatic(
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .background(newLightBlue)
-                                            //.padding(8.dp)
+
                                             , contentAlignment = Alignment.Center
                                         ) {
                                             Text(
@@ -3614,7 +3272,6 @@ fun Reels_OptionsStatic(
                                                     currentReel.username ?: "username"
                                                 )
 
-                                                //new flowwewwwwwww
                                                 constants.Profile_ViewModel.add_BF_Handler(
                                                     Profile_Handle_Back(
                                                         current_UsedId = AppPreferences.getUserId(),
@@ -3622,14 +3279,9 @@ fun Reels_OptionsStatic(
                                                         ff_User_Name = currentReel?.username ?: "",
                                                         ff_Fw_Count = 999,
                                                         ff_Fg_Count = 999,
-                                                        // is_Search_Enabled = is_Search_Enabled.value,
-                                                        // search_Text = search_Text.value
+
                                                     )
                                                 )
-
-                                                /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                 constants.Profile_ViewModel.addProfile(
                                                     currentReel?.user_id ?: 0
@@ -3638,7 +3290,6 @@ fun Reels_OptionsStatic(
                                                     id = currentReel.user_id ?: 0
                                                 )
 
-                                                // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                 viewModel.toggleshowBABars(false)
                                                 navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                             }
@@ -3648,9 +3299,6 @@ fun Reels_OptionsStatic(
                                 horizontalArrangement = Arrangement.Start
                             )
                             {
-
-
-                                //Spacer(modifier = Modifier.padding(8.dp))
 
                                 Text(
                                     currentReel.name,
@@ -3662,21 +3310,20 @@ fun Reels_OptionsStatic(
                             }
                         },
                         supportingContent = {
-                           // Spacer(modifier = Modifier.padding(4.dp))
+
                             Row(
                                  verticalAlignment = Alignment.CenterVertically
                                 , horizontalArrangement = Arrangement.Start
                             ) {
-                               // if (currentReel.user_id == AppPreferences.getUserId()){
+
                                 var usertype = if (currentReel.post_property.user_type == "0")"Owner" else "Broker"
                                     Text(
                                         "$usertype \u2022 ",
                                         color = Color(0xff575757),
                                         fontSize = constants.textUnit(12),
                                         fontFamily = constants.fontFamily(1),
-                                       // overflow = TextOverflow.Ellipsis
+
                                     )
-                              //  }
 
                                 Text(
                                     "${getTimeAgo(currentReel.post_property?.created_at ?:"")}",
@@ -3782,12 +3429,12 @@ fun Reels_OptionsStatic(
                                     modifier = Modifier
                                         .height(if (forTab())84.dp else 64.dp)
                                         .weight(4.5f)
-                                       // .width(138.dp)
+
                                     , shape = RoundedCornerShape(6.dp)
                                     , colors = CardDefaults.cardColors(
                                         containerColor = Color(0xffCECECE).copy(.2f)
                                     )
-                                    //, elevation = CardDefaults.cardElevation(8.dp)
+
                                 )
                                 {
                                     Column(
@@ -3798,14 +3445,12 @@ fun Reels_OptionsStatic(
                                         , horizontalAlignment = Alignment.Start
                                     ) {
 
-
                                         BasicText(
                                             text = "\u20B9 ${currentReel.post_property.rent?.ifEmpty { currentReel.post_property.lease_amount }  }",
                                             color =  { newBlack },
                                             style = TextStyle(fontFamily = constants.fontFamily(0)),
                                             autoSize = TextAutoSize.StepBased(minFontSize = 6.sp, constants.textUnit(16), stepSize = 2.sp)
                                         )
-
 
                                         Text(
                                             "\u20B9 Amount",
@@ -3822,10 +3467,9 @@ fun Reels_OptionsStatic(
                                     modifier = Modifier
                                         .height(if (forTab())84.dp else 64.dp)
                                         .weight(4.5f)
-                                        //.width(138.dp)
+
                                     , shape = RoundedCornerShape(6.dp)
-//                                    , elevation = CardElevation()
-                                        //CardDefaults.cardElevation(12.dp)
+
                                     , colors = CardDefaults.cardColors(
                                         containerColor = Color(0xffCECECE).copy(.2f)
                                     )
@@ -3841,7 +3485,7 @@ fun Reels_OptionsStatic(
                                     ) {
                                         Text(
                                             "${currentReel.post_property.carpet_area} ${currentReel.post_property.carpet_area_unit}",
-//                                            "200 sq.ft",
+
                                             color = newBlack,
                                             fontSize = constants.textUnit(16),
                                             fontFamily = constants.fontFamily(0)
@@ -3872,7 +3516,7 @@ fun Reels_OptionsStatic(
                                     modifier = Modifier
                                         .height(if (forTab())84.dp else 64.dp)
                                         .weight(1f)
-                                        //.width(38.dp)
+
                                         .noRippleClickable {
                                             ClickHelper.getInstance().clickOnce {
                                                 constants.Reels_ViewModel.clear_view_pro_Details()
@@ -3887,7 +3531,6 @@ fun Reels_OptionsStatic(
                                                 )
                                                 var mode = if (videos[pagerState.currentPage].post_property.video?.isEmpty() == true) 1 else 0
 
-//                                                if (constants.PostProperty_ViewModel.viewDetailsFlow.value == ViewDetailsFlow.NONE) {
                                                     constants.PostProperty_ViewModel.setViewDetailsFlow(
                                                         when {
                                                             constants.PostProperty_ViewModel.viewDetailsFlow.value == ViewDetailsFlow.RENTOUT -> ViewDetailsFlow.RENTOUT
@@ -3898,12 +3541,8 @@ fun Reels_OptionsStatic(
                                                         }
 
                                                     )
-//                                                }
 
-
-                                                println("VIEWMODE -- ${mode} --- ${viewModel.view_Property_Details_Mode.value} --- ${if (videos[pagerState.currentPage].post_property.video?.isEmpty() == true) 1 else 0}")
                                                 viewModel.view_Property_Details_Mode.value = mode
-
 
                                                 navController.navigate(VideosScreenFlow.ViewPropertyStructure.route)
                                             }
@@ -3936,7 +3575,6 @@ fun Reels_OptionsStatic(
                                     }
                                 }
 
-
                             }
                         }
                         , colors = ListItemDefaults.colors(
@@ -3950,14 +3588,6 @@ fun Reels_OptionsStatic(
     }
 }
 
-
-
-
-
-
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReelsView_Search_Flow(
@@ -3967,7 +3597,6 @@ fun ReelsView_Search_Flow(
 )  {
 
     logger("Reels Udpate media" , "1234567890-")
-
 
     viewModel.toggleshowBABars(false)
     viewModel.toggleshowTABars(false)
@@ -3986,19 +3615,14 @@ fun ReelsView_Search_Flow(
 
     val send_Eq_State = constants.Reels_ViewModel.send_Enquiry_Btm_Sheet.collectAsState()
 
-
     val videos by constants.Reels_ViewModel.videos.collectAsStateWithLifecycle()
     logger("Reels Udpate media" , "${videos.firstOrNull()?.post_property?.images}")
-    println("\"Reels Udpate media\" ${videos.firstOrNull()?.post_property}")
-    //constants.Search_ViewModel.search_Result_Content.collectAsState()
+
     val lifecycleOwner = LocalLifecycleOwner.current
     val playerManager = remember { VideoPlayerManager(context) }
 
     val total = videos.size
-//    val pagerState = rememberPagerState(
-//        initialPage = startIndex.coerceIn(0, total - 1),
-//        pageCount = { if (total > 0) total else 1 }
-//    )
+
     val pagerState = rememberPagerState(
         initialPage = if (total > 0) startIndex.coerceIn(0, total - 1) else 0,
         pageCount = { if (total > 0) total else 1 }
@@ -4006,21 +3630,17 @@ fun ReelsView_Search_Flow(
 
     var previousPage by remember { mutableStateOf(-1) }
 
-    // Track loading states
     val isBuffering = remember { mutableStateMapOf<Int, Boolean>() }
     val isPrepared = remember { mutableStateMapOf<Int, Boolean>() }
 
-    // Comment bottom sheet state
     val cmt_btm_Sheet = viewModel.comment_btm_Sheet.collectAsState()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val reelsBTMSheetState = viewModel.reelsBtm_sheet.collectAsState()
     val reelsBTMSOptions = constants.Reels_ViewModel.reelsBTMSOptions.collectAsState()
 
-
     var mark_as_Sold = remember { mutableStateOf(false) }
     var delete_Post by remember { mutableStateOf(false) }
-
 
     var isLike_Loading = remember { mutableStateOf(false) }
     var isSave_Loading = remember { mutableStateOf(false) }
@@ -4029,16 +3649,9 @@ fun ReelsView_Search_Flow(
     val report_Options = constants.Profile_ViewModel.profile_Report_Options.collectAsState()
     val report_success = constants.Profile_ViewModel.report_Submit_Success.collectAsState()
 
-
-    // rento
     var notInterested_Btm = remember { mutableStateOf(false) }
-    // rento
 
     val notInterestedOptions = constants.Profile_ViewModel.notInterestedOptions.collectAsState()
-
-
-
-
 
     DisposableEffect(Unit) {
         onDispose {
@@ -4047,25 +3660,21 @@ fun ReelsView_Search_Flow(
         }
     }
 
-
     LaunchedEffect(pagerState.currentPage, videos.size) {
         if (videos.isEmpty()) return@LaunchedEffect
 
         val currentIndex = pagerState.currentPage.coerceIn(0, videos.lastIndex)
         if (currentIndex == previousPage) return@LaunchedEffect
 
-        // Stop previous player ASAP
         if (previousPage != -1) {
             playerManager.pauseVideo(previousPage)
             playerManager.releasePlayer(previousPage)
         }
 
-        // Start current player
         val currentVideo = videos[currentIndex]
 
         playerManager.playVideo(currentIndex)
 
-        // Preload next
         val preloadIndices = listOf(currentIndex + 1).filter { it in 0 until videos.size }
         preloadIndices.forEach { index ->
             val video = videos[index]
@@ -4073,14 +3682,11 @@ fun ReelsView_Search_Flow(
             playerManager.prepareVideoIfNeeded(index)
         }
 
-        // Release far ones
         playerManager.releaseFarPlayers(currentIndex, keepRange = 1)
 
         previousPage = currentIndex
     }
 
-
-    // Lifecycle management
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (videos.isEmpty()) return@LifecycleEventObserver
@@ -4139,26 +3745,19 @@ fun ReelsView_Search_Flow(
             VerticalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize(),
-                key = { page -> videos.getOrNull(page)?.user_post_id ?: page } // Important: use unique keys
+                key = { page -> videos.getOrNull(page)?.user_post_id ?: page }
             )
             { page ->
 
-
-
-
                 val item = videos.getOrNull(page) ?: return@VerticalPager
                 val hasVideo = !item.post_property.video.isNullOrEmpty()
-                // Get the player for this specific page
-                //val player = playerManager.getOrCreatePlayer(page, item.user_post_id, item.video)
-                // Create player only if video exists
+
                 val player = if (hasVideo) {
                     remember(page) {
                         playerManager.getOrCreatePlayer(page, item.user_post_id, item.post_property.video.firstOrNull()?.url ?:"")
                     }
                 } else null
 
-                //player.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
-                //player.surfaceSize = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -4171,7 +3770,6 @@ fun ReelsView_Search_Flow(
                             .background(Color.Black)
                     )
                     {
-
 
                         if (item.post_property.images?.isNotEmpty() == true) {
                             val animationType = SlideshowAnimation.values()[page % SlideshowAnimation.values().size]
@@ -4196,17 +3794,12 @@ fun ReelsView_Search_Flow(
                                 viewModel
                             )
 
-
                         }
                         else  if (hasVideo) {
-                            // val player = playerManager.getOrCreatePlayer(page, item.user_post_id, item.post_property.video)
-//                    var isPlayerPlaying by remember(page, player) { mutableStateOf(player?.isPlaying) }
 
                             var isPlayerPlaying by remember(page, player) { mutableStateOf(player?.isPlaying) }
 
-
                             key(page, item.user_post_id) {
-                                // key("player_page_${page}_${item.user_post_id}") {
 
                                 if (page == pagerState.currentPage && player != null) {
 
@@ -4229,17 +3822,15 @@ fun ReelsView_Search_Flow(
                                                         }
                                                     },
                                                     onDoubleTap = {
-                                                        // constants.Reels_ViewModel.toggleLike_Reels(item.user_post_id)
+
                                                     }
                                                 )
                                             }
                                     )
                                 }
-                                //}
 
                             }
 
-                            // Track buffering
                             DisposableEffect(player, page) {
                                 val listener = object : Player.Listener {
                                     override fun onPlaybackStateChanged(playbackState: Int) {
@@ -4255,7 +3846,6 @@ fun ReelsView_Search_Flow(
                                 onDispose { player?.removeListener(listener); isBuffering.remove(page); isPrepared.remove(page) }
                             }
 
-                            // Show loading indicator only for current video
                             if (isBuffering[page] == true && page == pagerState.currentPage) {
                                 CircularProgressIndicator(
                                     modifier = Modifier
@@ -4285,7 +3875,6 @@ fun ReelsView_Search_Flow(
                                 }
                             }
 
-                            // Overlay options (likes, comments, etc.)
                             Reels_Options_Search_Flow(
                                 modifier = Modifier.align(Alignment.BottomCenter),
                                 videos,
@@ -4301,7 +3890,6 @@ fun ReelsView_Search_Flow(
                             )
 
                         }
-
 
                         else {
                             player?.release()
@@ -4328,7 +3916,6 @@ fun ReelsView_Search_Flow(
                                         item.post_interest
                                     )
 
-
                                 Reels_Options_Search_Flow(
                                     modifier = Modifier.align(Alignment.BottomCenter),
                                     videos,
@@ -4345,10 +3932,6 @@ fun ReelsView_Search_Flow(
                             }
                         }
 
-                        //Text("${item.user_post_id}", color = Color.Red , modifier = Modifier.align(Alignment.Center))
-
-
-
                         SubcomposeAsyncImage(
                             model = R.drawable.left_arrow,
                             " ",
@@ -4359,9 +3942,8 @@ fun ReelsView_Search_Flow(
                                 .align(Alignment.TopStart)
                                 .noRippleClickable{
                                     coroutineScope.launch {
-                                        // Stop playback smoothly
-                                        //playerManager.pa()
-                                        delay(100) // give ExoPlayer a brief frame to finish rendering
+
+                                        delay(100)
                                         playerManager.releaseAll()
                                         constants.PostProperty_ViewModel.setViewDetailsFlow(
                                             ViewDetailsFlow.NONE
@@ -4372,7 +3954,6 @@ fun ReelsView_Search_Flow(
 
                                         constants.Profile_ViewModel.change_OwnProfileTab(0)
 
-                                        // Now navigate away
                                         AppPreferences.save_Post_Id(0)
                                         constants.Profile_ViewModel.set_From_SoldOuts(false)
                                         constants.API_Vm.totalPages_PS_FF = 0
@@ -4384,13 +3965,9 @@ fun ReelsView_Search_Flow(
 
                                         navController.navigateUp()
                                     }
-//                            AppPreferences.save_Post_Id(0)
-//                            constants.Profile_ViewModel.set_From_SoldOuts(false)
-//                            constants.API_Vm.totalPages_PS_FF = 0
-//                            navController.navigateUp()
+
                                 }
                         )
-
 
                     }
 
@@ -4412,12 +3989,9 @@ fun ReelsView_Search_Flow(
             }
     }
 
-
     val repost_Btm = remember { mutableStateOf(false) }
 
     val viewdetailFlow = constants.PostProperty_ViewModel.viewDetailsFlow.collectAsState()
-
-
 
     if (reelsBTMSheetState.value) {
         ModalBottomSheet(
@@ -4429,33 +4003,23 @@ fun ReelsView_Search_Flow(
         )
         {
 
-            println("viewDEETAILS FLOW REELS -- ${viewdetailFlow.value}")
-
-
             LaunchedEffect(Unit) {
                constants.Reels_ViewModel.resetReelsBTMSOptions()
                 when {
                     viewdetailFlow.value == ViewDetailsFlow.EXPIRY -> {
-                        println("aqwqwqwqwqw2reels")
 
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.expiredIdOptions
                         )
                     }
 
-
                     viewdetailFlow.value == ViewDetailsFlow.OTHERS -> {
-                        println("aqwqwqwqwqw7reels")
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.pviewotherIdOptions
                         )
                     }
 
-
-
                     viewdetailFlow.value == ViewDetailsFlow.RENTOUT -> {
-                        println("indisddejeididjdjdfj2222222")
-                        println("aqwqwqwqwqw3reels")
 
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.soldoutIdOptions
@@ -4463,31 +4027,25 @@ fun ReelsView_Search_Flow(
                     }
 
                     constants.Profile_ViewModel.selectedOwnProfileTab.value == OwnProfileTab.EXPIRED -> {
-                        println("aqwqwqwqwqw4reels")
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.expiredIdOptions
                         )
                     }
 
                     isWithinLast5DaysOfValidity(videos[pagerState.currentPage].post_property?.created_at ?: "") &&  videos[pagerState.currentPage].user_id == AppPreferences.getUserId() -> {
-//                        viewdetailFlow.value == ViewDetailsFlow.RENEW -> {
-                        println("aqwqwqwqwqw0reels")
+
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.renewpostOptions
                         )
                     }
 
                     videos[pagerState.currentPage].user_id == AppPreferences.getUserId() -> {
-                        println("aqwqwqwqwqw5reels")
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.ownIdOptions
                         )
                     }
 
-
-
                     else -> {
-                        println("aqwqwqwqwqw6reels")
                         constants.Reels_ViewModel.removeReelsBTMSOptions(constants.Reels_ViewModel.pviewotherIdOptions)
                     }
                 }
@@ -4503,42 +4061,40 @@ fun ReelsView_Search_Flow(
                 data.forEachIndexed { index, Options ->
                     Column (
                         modifier = Modifier
-                            // .fillMaxWidth()
+
                             .padding(horizontal = 16.dp)
                             .noRippleClickable {
                                 when (Options.id) {
-                                    0 -> { /* repost logic */
+                                    0 -> {
                                         constants.Reels_ViewModel.clear_view_pro_Details()
-                                        //AppPreferences.save_Post_Id(videos[pagerState.currentPage].user_post_id)
+
                                         repost_Btm.value = true
                                         constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                     }
-                                    1 -> { /* edit logic */
+                                    1 -> {
                                         constants.Reels_ViewModel.clear_view_pro_Details()
                                         constants.PostProperty_ViewModel.setPostFlow(PostFlow.EDIT)
                                         navController.navigate(ProfileScreenFlow.Edit_Property_Option.route)
                                         constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                     }
-                                    2 -> { /* mark as sold */
+                                    2 -> {
                                         mark_as_Sold.value = true
                                         constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                     }
-                                    3 -> { /* delete */
-                                        println("COMING INTO HERE")
+                                    3 -> {
 
                                         delete_Post = true
                                         viewModel.toggleReelsBTMSheet(false)
 
-
                                     }
-                                    4 -> { /* share */
+                                    4 -> {
                                         constants.DefaultShare(
                                             "https://toletspot.com/property/${videos[pagerState.currentPage].user_post_id}",
                                             1
                                         )
                                         constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                     }
-                                    5 -> { /* report */
+                                    5 -> {
                                         if (videos[pagerState.currentPage].post_property.is_report != 1) {
                                             constants.Profile_ViewModel.toggle_ReportSucces_True()
 
@@ -4548,18 +4104,17 @@ fun ReelsView_Search_Flow(
                                             )
                                             constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                         } else {
-                                            // constants.Profile_ViewModel.toggle_ReportSucces_True()
 
                                             constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
 
                                             GlobalSnackbar.show("Post already reported")
                                         }
                                     }
-                                    6 -> { /* not interested */
+                                    6 -> {
                                         notInterested_Btm.value = true
                                     }
                                     7 -> {
-                                        /* activate */
+
                                         activateRentedout.value = true
                                     }
 
@@ -4568,7 +4123,7 @@ fun ReelsView_Search_Flow(
                                     }
                                 }
                             }
-                        //,verticalArrangement = Arrangement.spacedBy(8.dp)
+
                         , horizontalAlignment = Alignment.CenterHorizontally
                     )
                     {
@@ -4588,12 +4143,11 @@ fun ReelsView_Search_Flow(
                         Spacer(modifier = Modifier.padding(8.dp))
                         Text(Options.title, color = newBlack, fontSize = constants.textUnit(14))
                     }
-                    //Spacer(modifier = Modifier.padding(8.dp))
+
                 }
             }
         }
     }
-
 
     if (repost_Btm.value) {
         ModalBottomSheet(
@@ -4611,8 +4165,6 @@ fun ReelsView_Search_Flow(
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.Start
             ){
-//                Image(painter = painterResource(R.drawable.repost) , "")
-
 
                 CommonText(
                     "Repost Property",
@@ -4622,7 +4174,6 @@ fun ReelsView_Search_Flow(
                     , modifier = Modifier
                         .padding(horizontal = 8.dp)
                 )
-
 
                 Text("Repost lets you create a new post using details from your existing one. You can update photos, videos, or edit information before posting again. The original post will remain unchanged."
                     , modifier = Modifier
@@ -4648,9 +4199,7 @@ fun ReelsView_Search_Flow(
                                 constants.PostProperty_ViewModel.first_Form_selected_PP(-1)
                                 constants.PostProperty_ViewModel.select_Land_Cat_Id(-1)
                                 constants.PostProperty_ViewModel.LandSubType_Selected_Click(-1)
-//                            constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
-//                                -1
-//                            )
+
                                 constants.PostProperty_ViewModel.select_Land_Cat_Id(
                                     -1
                                 )
@@ -4664,7 +4213,6 @@ fun ReelsView_Search_Flow(
                                         locality = ""
                                     )
                                 )
-
 
                                 constants.PostProperty_ViewModel.clear_Selected_Fields_Form4()
                                 constants.PostProperty_ViewModel.clearAllPostFields()
@@ -4682,10 +4230,7 @@ fun ReelsView_Search_Flow(
                                         1 -> {}
                                         2 -> {}
                                         3 -> {
-                                            println("REPOST CLICKER SUCCESS")
                                             val server_Data = constants.PostProperty_ViewModel.get_previewFormData()
-
-                                            println("Full Server Data --- ${server_Data}")
 
                                             server_Data?.let { data ->
                                                 constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
@@ -4695,9 +4240,6 @@ fun ReelsView_Search_Flow(
 
                                             AppPreferences.save_Post_Id(server_Data?.user_post_id ?: 0)
 
-
-                                            println("POST ID -- ${AppPreferences.get_Post_Id()}")
-
                                             constants.PostProperty_ViewModel.first_Form_selected_PP(
                                                 (server_Data?.user_type ?: "0").toInt()
                                             )
@@ -4706,17 +4248,8 @@ fun ReelsView_Search_Flow(
                                             constants.PostProperty_ViewModel.set_city3(server_Data?.city ?: "")
                                             constants.PostProperty_ViewModel.set__selectedLocality3(server_Data?.locality ?: "")
 
-                                            println(
-                                                "GIVEN ADDRESS DATA FIELD -- " +
-                                                        "${constants.PostProperty_ViewModel.get_selectedLocality3()} --- " +
-                                                        "${constants.PostProperty_ViewModel.get_latLng3()}---" +
-                                                        "-${constants.PostProperty_ViewModel.get_city3()}--" +
-                                                        "-${constants.PostProperty_ViewModel.get_state3()} ----" +
-                                                        " ${constants.PostProperty_ViewModel.get_country3()}"
-                                            )
 
                                             constants.PostProperty_ViewModel.set_onSelected_ProType((server_Data?.land_type_id ?: 0) )
-
 
                                             constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
                                                 server_Data?.land_categorie_id ?: 0
@@ -4728,21 +4261,13 @@ fun ReelsView_Search_Flow(
 
                                             constants.PostProperty_ViewModel.LandSubType_Selected_Click(server_Data?.land_categorie_id ?: 0)
 
-                                            println("REPOST FROM PFOILE TOP____ ${server_Data?.land_type_id}")
                                             constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value =  constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.copy(
                                                 first = server_Data?.land_type_id ?: 0,
                                                 second = server_Data?.land_categorie_id ?: 0
                                             )
 
-                                            println("REPOST FROM PFOILE TOP____ ${server_Data?.land_type_id ?: 0} (((( ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}")
-
-
                                             constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value = Pair((server_Data?.land_type_id ?: 0)  , server_Data?.land_categorie_id ?: 0)
 
-                                            println("Step 2 --- ${(server_Data?.land_type_id ?: 0) - 1 } -***${ constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}***-- ${server_Data?.land_categorie_id ?: 0}")
-//                                            println("LOCARTION DERAIKS sfjngv adsfbvkhjd REPOST ${server_Data.pincode} -__${server_Data.longitude}--${server_Data.latitude}--${server_Data.address}--${server_Data.city}- ${server_Data.country} -- ${data.state}")
-
-                                            // Safely set values if they’re not empty
                                             if (!server_Data?.pincode.isNullOrEmpty()) {
                                                 constants.PostProperty_ViewModel.set_pincode3(server_Data?.pincode ?: "")
                                             }
@@ -4758,7 +4283,7 @@ fun ReelsView_Search_Flow(
                                             if (!server_Data?.locality.isNullOrEmpty()) {
                                                 constants.PostProperty_ViewModel.set__selectedLocality3(server_Data?.locality ?:"")
                                             }
-//
+
                                             if (server_Data?.latitude?.isNotEmpty() == true && server_Data?.longitude?.isNotEmpty() == true) {
                                                 constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
                                                     LatLng(
@@ -4768,15 +4293,6 @@ fun ReelsView_Search_Flow(
                                                 )
                                             }
 
-//                                            if (server_Data.images.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addImages(server_Data?.images ?:"")
-//                                            }
-//                                            else if(server_Data.video.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addVideo(server_Data?.images ?:"")
-//
-//                                            }
-
-                                            println("LOCALOTY CHECK -- ${server_Data?.locality ?:""} -- ${server_Data?.address ?:""}")
                                             constants.PostProperty_ViewModel.add_pp3_Data(
                                                 PP3_API_DC(
                                                     pincode = server_Data?.pincode ?: "",
@@ -4800,24 +4316,12 @@ fun ReelsView_Search_Flow(
                                                 server_Data?.land_categorie_id ?: 0
                                             )
 
-                                            println("VIDEO ADDED IN THE List CHECH -- ${server_Data?.images}  -- ${server_Data?.video}")
                                             if (!server_Data?.images.isNullOrEmpty()) {
-//                                                val imageMediaList = server_Data.images.map { imageUri ->
-//                                                    UploadPropertyMedia(uri = Uri.parse(imageUri), isVideo = false)
-//                                                }
-//                                                constants.PostProperty_ViewModel.addImages(imageMediaList)
+
                                             }
                                             else if (!server_Data?.video.isNullOrEmpty()) {
-                                                println("VIDEO ADDED IN THE List")
-//                                                val videoMedia = UploadPropertyMedia(
-//                                                    uri = Uri.parse(server_Data.video),
-//                                                    isVideo = true
-//                                                )
-//                                                constants.PostProperty_ViewModel.addVideo(videoMedia)
+
                                             }
-
-
-                                            println("VIDEO ADDED IN THE List CHECH -- ${constants.PostProperty_ViewModel.mediaList.value}")
 
                                             constants.PostProperty_ViewModel.select_Land_Type(server_Data?.land_type_id ?: 0)
 
@@ -4827,18 +4331,11 @@ fun ReelsView_Search_Flow(
                                                 coverUrl = server_Data?.thumbnail ?: ""
                                             )
 
-//                                            val budget_Price =
-//                                                constants.PostProperty_ViewModel.put_budget_Price_PF5(server_Data?.price ?: "")
-
-                                            println("SERVER DATA -- ${server_Data} ---- cons.${constants.PostProperty_ViewModel.get_Selected_Fields_Form()}")
-
                                             constants.Profile_ViewModel.set_From_Repost(1)
                                             constants.PostProperty_ViewModel.set_Post_Form_Flow(2)
 
-
                                             constants.PostProperty_ViewModel.setPostFlow(PostFlow.REPOST)
 
-                                            // ✅ Navigate after everything is done
                                             navController.navigate(ProfileScreenFlow.Post_Property_Forms.route)
                                         }
                                     }
@@ -4859,7 +4356,6 @@ fun ReelsView_Search_Flow(
         }
     }
 
-    // renew
     if (activaterenew.value) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -4876,9 +4372,6 @@ fun ReelsView_Search_Flow(
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
-//                Image(painter = painterResource(R.drawable.repost) , "")
-
-
 
                 CommonText(
                     "Activate Listing",
@@ -4910,41 +4403,7 @@ fun ReelsView_Search_Flow(
                             .background(Brush.verticalGradient(newPurpleGradient))
                             .border(1.dp , Brush.linearGradient(newPurpleGradientBorder) , RoundedCornerShape(6.dp))
                             .noRippleClickable {
-                                /*constants.API_Vm.put_Sold_Unsold_Property(
-                                    user_id = AppPreferences.getUserId(),
-                                    user_post_id = videos[pagerState.currentPage].user_post_id,
-                                    status = 2,
-                                )
-                                { aPI_Result_Handling ->
-                                    when (aPI_Result_Handling) {
-                                        is API_Result_Handling.NoData -> {}
-                                        is API_Result_Handling.Error -> {
 
-                                            GlobalSnackbar.show("Something went wrong")
-                                            isLoading = false
-                                            activateRentedout.value = false
-                                        }
-
-                                        is API_Result_Handling.Deactivated -> {
-                                            //resultCallback(5)
-                                        }
-
-                                        is API_Result_Handling.Loading -> {
-                                            isLoading = true
-                                        }
-
-                                        is API_Result_Handling.Success -> {
-
-                                            GlobalSnackbar.show("Property Activated Successfully ")
-                                            constants.Reels_ViewModel.setNewTimeStampOnRenew(videos[pagerState.currentPage].user_post_id)
-
-                                            isLoading = false
-                                            activateRentedout.value = false
-                                            navController.navigateUp()
-                                        }
-                                    }
-                                }
-*/
                                 constants.API_Vm.activate_RentedOut(
                                     user_id = AppPreferences.getUserId(),
                                     user_post_id = videos[pagerState.currentPage].user_post_id,
@@ -4955,16 +4414,16 @@ fun ReelsView_Search_Flow(
                                         is API_Result_Handling.Error -> {
 
                                             GlobalSnackbar.show("Something went wrong")
-                                            //isLoading = false
+
                                             activateRentedout.value = false
                                         }
 
                                         is API_Result_Handling.Deactivated -> {
-                                            //resultCallback(5)
+
                                         }
 
                                         is API_Result_Handling.Loading -> {
-                                            //isLoading = true
+
                                         }
 
                                         is API_Result_Handling.Success -> {
@@ -4973,7 +4432,7 @@ fun ReelsView_Search_Flow(
 
                                             constants.Reels_ViewModel.setNewTimeStampOnRenew(videos[pagerState.currentPage].user_post_id)
                                             constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(videos[pagerState.currentPage].user_post_id,)
-                                            //isLoading = false
+
                                             activateRentedout.value = false
 
                                             navController.navigateUp()
@@ -4995,8 +4454,6 @@ fun ReelsView_Search_Flow(
         }
     }
 
-
-    /// activte rented out
     if (activateRentedout.value) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -5013,8 +4470,6 @@ fun ReelsView_Search_Flow(
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
-//                Image(painter = painterResource(R.drawable.repost) , "")
-
 
                 com.toletspot.houseforrent.CommonText(
                     "Activate Listing",
@@ -5067,7 +4522,7 @@ fun ReelsView_Search_Flow(
                                         }
 
                                         is API_Result_Handling.Deactivated -> {
-                                            //resultCallback(5)
+
                                         }
 
                                         is API_Result_Handling.Loading -> {
@@ -5078,21 +4533,16 @@ fun ReelsView_Search_Flow(
                                             isLoading = false
                                             GlobalSnackbar.show("Property Activated Successfully ")
 
-//                                            constants.Reels_ViewModel.setNewTimeStampOnRenew(
-//                                                view_Details_Data.value?.user_post_id ?: 0
-//                                            )
                                             constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(
                                                 videos[pagerState.currentPage].user_post_id
                                             )
 
-                                            //isLoading = false
                                             activateRentedout.value = false
 
                                             navController.navigateUp()
                                         }
                                     }
                                 }
-
 
                             }
                         , contentAlignment = Alignment.Center
@@ -5109,7 +4559,6 @@ fun ReelsView_Search_Flow(
         }
     }
 
-    // Report Sheet
     if (report_BS.value){
 
         val sheetState = rememberModalBottomSheetState(
@@ -5136,8 +4585,6 @@ fun ReelsView_Search_Flow(
             ){
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
-
 
                 AnimatedContent (
                     targetState = report_success
@@ -5252,14 +4699,12 @@ fun ReelsView_Search_Flow(
                                     .size(150.dp)
                             )
 
-
                             Text(
                                 text = "Submitted Successfully",
                                 color = newBlack,
                                 fontSize = constants.textUnit(18),
                                 fontFamily = constants.fontFamily(0)
                             )
-
 
                             Text(
                                 text = "Thank you for bringing this to our attention.",
@@ -5304,7 +4749,7 @@ fun ReelsView_Search_Flow(
                                                     constants.API_Vm.put_Report_All(
                                                         user_id = AppPreferences.getUserId(),
                                                         user_post_id = videos[pagerState.currentPage].user_post_id.toString(),
-                                                        //AppPreferences.get_Post_Id(),
+
                                                         receiver_id = videos[pagerState.currentPage].user_id.toString(),
                                                         comment_id = "",
                                                         report_sentence_id = (constants.Profile_ViewModel.getSelectedProfileReportOptionId()
@@ -5316,46 +4761,34 @@ fun ReelsView_Search_Flow(
 
                                                         when (apiResultHandling) {
                                                             is API_Result_Handling.Loading -> {
-                                                                // loading
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                             }
 
                                                             is API_Result_Handling.Error -> {
-                                                                // fail
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.Success -> {
-
 
                                                                 constants.Profile_ViewModel.toggleReportSubmissionSuccess()
                                                                 constants.Reels_ViewModel.toggleLike_Report(
                                                                     videos[pagerState.currentPage].user_post_id
                                                                 )
-                                                                //constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(videos[pagerState.currentPage].user_id)
-                                                                // success
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.NoData -> {
-                                                                // no data
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.Deactivated -> {
-                                                                /// resultCallback(5)
+
                                                             }
                                                         }
                                                     }
                                                 } else {
 
-                                                    //constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
-//                                                scope.launch {
                                                     GlobalSnackbar.show(" Post Already Reported")
-//
-//                                                    report_BS.value = false
-//                                                }
-                                                    //SimpleSnackbar(" Post Already Reported")
 
                                                 }
                                             }else {
@@ -5380,15 +4813,13 @@ fun ReelsView_Search_Flow(
         }
     }
 
-
-    // Not Interested Sheet
     if (notInterested_Btm.value)
     {
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
         ModalBottomSheet(
             onDismissRequest = {
-                //constants.Profile_ViewModel.toggle_ReportSucces_True()
+
                 notInterested_Btm.value = false
                 constants.Profile_ViewModel.toggle_NotInterested_Options(
                     -1
@@ -5405,7 +4836,6 @@ fun ReelsView_Search_Flow(
             ) {
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
 
                 Column(
                     modifier = Modifier
@@ -5495,10 +4925,8 @@ fun ReelsView_Search_Flow(
                     }
                 }
 
-
                 Spacer(modifier = Modifier.padding(8.dp))
 
-                //if (report_success.value) {
                 Static_Bottom(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -5540,15 +4968,13 @@ fun ReelsView_Search_Flow(
                                                             constants.Reels_ViewModel.toggleLike_Report(
                                                                 videos[pagerState.currentPage].user_post_id
                                                             )
-//                                                                constants.Profile_ViewModel.toggle_ReportSucces_False()
 
                                                             notInterested_Btm.value = false
 
-                                                            /// GlobalSnackbar.show("Post Reported Successfully")
                                                         }
 
                                                         is API_Result_Handling.Deactivated -> {
-                                                            // Handle deactivation
+
                                                         }
 
                                                         is API_Result_Handling.Loading -> {
@@ -5557,16 +4983,16 @@ fun ReelsView_Search_Flow(
 
                                                         else -> {
                                                             toast("Something went wrong")
-                                                            // Handle other cases
+
                                                         }
                                                     }
                                                 }
                                             } else {
-                                                //scope.launch {
+
                                                 GlobalSnackbar.show("Post Already Reported")
-                                                   // snackbarHostState.showSnackbar("Post Already Reported")
+
                                                     notInterested_Btm.value = false
-                                               // }
+
                                             }
                                         }
                                         else {
@@ -5585,11 +5011,10 @@ fun ReelsView_Search_Flow(
                         }
                     }
                 )
-                //}
+
             }
         }
     }
-
 
     if (send_Eq_State.value) {
         if (videos.isNotEmpty() && pagerState.currentPage <= pagerState.pageCount) {
@@ -5597,7 +5022,6 @@ fun ReelsView_Search_Flow(
         }
     }
 
-    // Comment sheet
     if (cmt_btm_Sheet.value) {
         playerManager.pauseVideo(pagerState.currentPage)
         ModalBottomSheet(
@@ -5612,21 +5036,18 @@ fun ReelsView_Search_Flow(
         }
     }
 
-
-
     if (mark_as_Sold.value == true) {
         playerManager.pauseVideo(pagerState.currentPage)
         Mark_As_Sold_Flow(mark_as_Sold, videos[pagerState.currentPage].user_post_id, navController)
     }
 
-    // delete post
     Common_Popup(
         delete_Post,
         modifier = Modifier
             .background(Color(0xffF7F0DC))
         , image = "",
         userName = "",
-        icon = R.drawable.closeenquiry /// or R.drawable
+        icon = R.drawable.closeenquiry
     )
     {
         Column (
@@ -5645,15 +5066,6 @@ fun ReelsView_Search_Flow(
 
             constants.spacer(2)
 
-
-
-//            Text(
-//                text = "Are you Sure, You want to delete?",
-//                color = newBlack,
-//                fontSize = constants.textUnit(16),
-//                fontFamily = constants.fontFamily(0)
-//            )
-
             Text(
                 text = "Are you sure you want to delete this property?",
                 color = newBlack,
@@ -5663,7 +5075,6 @@ fun ReelsView_Search_Flow(
                , lineHeight = 24.sp
                 , modifier = Modifier.padding(horizontal = if (forTab()) 46.dp else 36.dp)
             )
-
 
             constants.spacer(4)
 
@@ -5704,8 +5115,6 @@ fun ReelsView_Search_Flow(
                                 if (ClickGuard.canClick()) {
 
                                     if (network.value == NetworkStatus.Online) {
-                                        println(" API CALL HIT STATUS __ ue}")
-                                        println("COMING INSIDE DELETTING SOLDOUTS")
 
                                         constants.API_Vm.delete_Post_SM_Drafts(
                                             user_id = AppPreferences.getUserId(),
@@ -5718,7 +5127,7 @@ fun ReelsView_Search_Flow(
                                                 is API_Result_Handling.Loading -> {}
                                                 is API_Result_Handling.NoData -> {}
                                                 is API_Result_Handling.Deactivated -> {
-                                                    // resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.Error -> {}
@@ -5732,7 +5141,6 @@ fun ReelsView_Search_Flow(
                                                         navController.navigateUp()
                                                         delete_Post = true
                                                     } else {
-                                                        println("65212345678987654321234567890-")
                                                         constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(
                                                             videos[pagerState.currentPage].user_post_id
                                                                 ?: 0
@@ -5741,7 +5149,6 @@ fun ReelsView_Search_Flow(
 
                                                         playerManager.releaseAll()
 
-                                                        // Now navigate away
                                                         AppPreferences.save_Post_Id(0)
                                                         constants.Profile_ViewModel.set_From_SoldOuts(
                                                             false
@@ -5757,53 +5164,10 @@ fun ReelsView_Search_Flow(
                                                 }
                                             }
                                         }
-                                        /*constants.API_Vm.put_Block_User(
-                                    user_id = AppPreferences.getUserId(),
-                                    blocker_id = profile_Content.value?.user_id ?: 0,
-                                    //profile_Content.value?.user_id ?: 0,
-                                    status = blockStatus.value
-                                    //if (profile_Content.value?.is_blocked == 0) "1" else "0"
-                                )
-                                { apiResultHandling ->
-                                    when (apiResultHandling) {
-                                        is API_Result_Handling.Error -> {
-                                            //errror
-                                            //constants.Profile_ViewModel.change_Update_profile(false)
-                                        }
 
-                                        is API_Result_Handling.Deactivated -> {
-                                            // resultCallback(5)
-                                        }
-
-                                        is API_Result_Handling.NoData -> {
-                                            // no data
-                                        }
-
-                                        is API_Result_Handling.Loading -> {
-                                            //loading
-                                            // constants.Profile_ViewModel.change_Update_profile(true)
-                                        }
-
-                                        is API_Result_Handling.Success -> {
-                                            if (profile_Content.value?.is_blocked == 0) {
-                                                constants.Profile_ViewModel.updateBlockedStatus_Selected_Profile(
-                                                    1
-                                                )
-                                            } else {
-                                                constants.Profile_ViewModel.updateBlockedStatus_Selected_Profile(
-                                                    0
-                                                )
-                                            }
-                                            block_PopUp = false
-                                            //constants.Profile_ViewModel.enable_Edit_Profile()
-                                            //constants.Profile_ViewModel.change_Update_profile(false)
-                                            //success
-                                        }
-                                    }
-                                }*/
                                     } else {
                                         toast(constants.activity.getString(R.string.no_Internet))
-                                        // GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
+
                                     }
                                 }
                                 }
@@ -5821,13 +5185,11 @@ fun ReelsView_Search_Flow(
                 }
             }
 
-//            Spacer(modifier = Modifier.padding(8.dp))
             constants.spacer(8)
         }
     }
 
     BackHandler {
-        println("WERTTY -- ${report_BS.value} -- ${cmt_btm_Sheet.value} -- ${reelsBTMSheetState.value} -- ${send_Eq_State.value}")
 
         when {
             report_BS.value -> {
@@ -5852,9 +5214,6 @@ fun ReelsView_Search_Flow(
 
 }
 
-
-
-
 @Composable
 fun Reels_Options_Search_Flow(
     modifier: Modifier,
@@ -5870,13 +5229,9 @@ fun Reels_Options_Search_Flow(
     viewModel: Common_H_ViewModel,
 ) {
 
-
     Box (
         modifier = modifier
     ){
-
-
-        println("STSTUS -- ${videos[page].post_property.status} -- ${constants.expired}")
 
         if (videos[page].post_property.status == "1") {
             Image(
@@ -5910,7 +5265,7 @@ fun Reels_Options_Search_Flow(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomEnd)
-                //.padding(bottom = if (showBABars.value) 100.dp else 0.dp),
+
             ,verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.End
         )
@@ -5929,9 +5284,6 @@ fun Reels_Options_Search_Flow(
                     val isLiked = if (currentReel.is_liked == 1) true else false
                     val isSaved = if(currentReel.is_saved == 1) true else false
 
-
-
-                    // Optional animation only for like button
                     val scale = remember { Animatable(1f) }
 
                     LaunchedEffect(icon.isLiked) {
@@ -5940,8 +5292,6 @@ fun Reels_Options_Search_Flow(
                             scale.animateTo(1f, tween(200))
                         }
                     }
-
-
 
                     val show_Icon =  when(index){
                         0 -> {
@@ -5953,10 +5303,6 @@ fun Reels_Options_Search_Flow(
                         else -> { icon.icon }
                     }
 
-//                    if ((index == 0 && isLike_Loading.value) || (index == 2 && isSave_Loading.value)){
-//                        CircularProgressIndicator(modifier = Modifier.size(25.dp), color = newBlue)
-//                    }
-//                    else {
                         AsyncImage(
                             model = show_Icon,
                             contentDescription = "",
@@ -5967,7 +5313,6 @@ fun Reels_Options_Search_Flow(
                                 }
                                 .size(if (forTab()) 40.dp else 36.dp)
                                 .noRippleClickable{
-                                    println("CLIKING COMMENT index ")
                                     when (index) {
                                         0 -> {
 
@@ -5987,45 +5332,30 @@ fun Reels_Options_Search_Flow(
                                                                 currentReel.user_post_id
                                                             )
                                                         toast("Something Went Wrong")
-                                                        //errror
+
                                                     }
                                                     is API_Result_Handling.Deactivated -> {
-                                                        //resultCallback(5)
+
                                                     }
 
                                                     is API_Result_Handling.NoData -> {
-                                                        // no data
+
                                                     }
 
                                                     is API_Result_Handling.Loading -> {
                                                         isLike_Loading.value = true
-                                                        //loading
+
                                                     }
 
                                                     is API_Result_Handling.Success -> {
                                                         isLike_Loading.value = false
 
-//                                                        if (isLiked) {
-//                                                            constants.Reels_ViewModel.decreaseLikeCount_Reels(
-//                                                                currentReel.user_post_id
-//                                                            )
-//                                                        } else {
-//                                                            constants.Reels_ViewModel.increaseLikeCount_Reels(
-//                                                                currentReel.user_post_id
-//                                                            )
-//                                                        }
-//                                                        constants.Reels_ViewModel.toggleLike_Reels(
-//                                                            currentReel.user_post_id
-//                                                        )
-
-                                                        //success
                                                     }
                                                 }
                                             }
                                         }
 
                                         1 -> {
-                                            println("CLIKING COMMENT in ")
                                             constants.API_Vm.isLoading_MComments = false
                                             constants.API_Vm.totalPages_MComments = 1
                                             constants.Reels_ViewModel.clear_MCommentList()
@@ -6044,19 +5374,19 @@ fun Reels_Options_Search_Flow(
                                                     is API_Result_Handling.Error -> {
                                                         isSave_Loading.value = false
                                                         toast("Something Went Wrong")
-                                                        //errror
+
                                                     }
                                                     is API_Result_Handling.Deactivated -> {
-                                                       // resultCallback(5)
+
                                                     }
 
                                                     is API_Result_Handling.NoData -> {
-                                                        // no data
+
                                                     }
 
                                                     is API_Result_Handling.Loading -> {
                                                         isSave_Loading.value = true
-                                                        //loading
+
                                                     }
 
                                                     is API_Result_Handling.Success -> {
@@ -6065,7 +5395,7 @@ fun Reels_Options_Search_Flow(
                                                         constants.Reels_ViewModel.toggleSave_Reels(
                                                             currentReel.user_post_id
                                                         )
-                                                        //success
+
                                                     }
                                                 }
                                             }
@@ -6079,10 +5409,7 @@ fun Reels_Options_Search_Flow(
 
                                 }
                         )
-//                    }
 
-
-                    //if (icon.counts.isNotEmpty()) {
                     if (index == 0){
                         Text(
                             text = currentReel.total_likes.toString() ,
@@ -6098,19 +5425,14 @@ fun Reels_Options_Search_Flow(
                         )
                     }
 
-                    // }
-
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
             }
 
-
-
         }
     }
 }
-
 
 @Composable
 fun Reels_Options_Search_Flow_Static(
@@ -6127,24 +5449,20 @@ fun Reels_Options_Search_Flow_Static(
     viewModel: Common_H_ViewModel,
 ) {
 
-
     Box (
         modifier = modifier
     ){
 
-
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                //.padding(bottom = if (showBABars.value) 100.dp else 0.dp),
+
             ,verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.End
         )
         {
 
             Spacer(modifier = Modifier.height(16.dp))
-
-
 
             Box(
                 modifier = Modifier
@@ -6165,12 +5483,7 @@ fun Reels_Options_Search_Flow_Static(
                         horizontalAlignment = Alignment.Start
                     )
                     {
-//                        if (videos[page].post_property.is_sold == 1) {
-//                            Image(
-//                                painterResource(R.drawable.soldoutidentifier), "",
-//                                modifier = Modifier.padding(start = 16.dp)
-//                            )
-//                        }
+
                         ListItem(
                             leadingContent = {
                                 Box(
@@ -6188,7 +5501,6 @@ fun Reels_Options_Search_Flow_Static(
                                                         videos[page].username ?: "Username "
                                                     )
 
-                                                    //new flowwewwwwwww
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         Profile_Handle_Back(
                                                             current_UsedId = AppPreferences.getUserId(),
@@ -6196,14 +5508,9 @@ fun Reels_Options_Search_Flow_Static(
                                                             ff_User_Name = videos[page]?.username ?: "",
                                                             ff_Fw_Count = 999,
                                                             ff_Fg_Count = 999,
-                                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                                            // search_Text = search_Text.value
+
                                                         )
                                                     )
-
-                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                     constants.Profile_ViewModel.addProfile(
                                                         videos[page]?.user_id ?: 0
@@ -6212,7 +5519,6 @@ fun Reels_Options_Search_Flow_Static(
                                                         id = videos[page].user_id ?: 0
                                                     )
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     viewModel.toggleshowBABars(false)
                                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -6221,12 +5527,7 @@ fun Reels_Options_Search_Flow_Static(
                                     , contentAlignment = Alignment.Center
                                 )
                                 {
-//                                        Icon(
-//                                            painter = painterResource(R.drawable.person),
-//                                            contentDescription = null,
-//                                            modifier = Modifier.padding(8.dp),
-//                                            tint = Color.White
-//                                        )
+
                                     SubcomposeAsyncImage(
                                         model = videos[page]?.profile_image ?: "",
                                         modifier = Modifier
@@ -6243,7 +5544,7 @@ fun Reels_Options_Search_Flow_Static(
                                                 modifier = Modifier
                                                     .fillMaxSize()
                                                     .background(newLightBlue)
-                                                //.padding(8.dp)
+
                                                 , contentAlignment = Alignment.Center
                                             ) {
                                                 Text(
@@ -6270,7 +5571,6 @@ fun Reels_Options_Search_Flow_Static(
                                                         videos[page].username ?: "UserName"
                                                     )
 
-                                                    //new flowwewwwwwww
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         Profile_Handle_Back(
                                                             current_UsedId = AppPreferences.getUserId(),
@@ -6278,14 +5578,9 @@ fun Reels_Options_Search_Flow_Static(
                                                             ff_User_Name = videos[page]?.username ?: "",
                                                             ff_Fw_Count = 999,
                                                             ff_Fg_Count = 999,
-                                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                                            // search_Text = search_Text.value
+
                                                         )
                                                     )
-
-                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                     constants.Profile_ViewModel.addProfile(
                                                         videos[page]?.user_id ?: 0
@@ -6294,7 +5589,6 @@ fun Reels_Options_Search_Flow_Static(
                                                         id = videos[page].user_id ?: 0
                                                     )
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     viewModel.toggleshowBABars(false)
                                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -6304,7 +5598,6 @@ fun Reels_Options_Search_Flow_Static(
                                     horizontalArrangement = Arrangement.Start
                                 )
                                 {
-                                    //Spacer(modifier = Modifier.padding(8.dp))
 
                                     Text(
                                         videos[page].username,
@@ -6316,21 +5609,20 @@ fun Reels_Options_Search_Flow_Static(
                                 }
                             }
                             , supportingContent = {
-                                // Spacer(modifier = Modifier.padding(4.dp))
+
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start
                                 ) {
-                                    // if (currentReel.user_id == AppPreferences.getUserId()){
+
                                     var text = if (videos[page].post_property.user_type == "0")"Owner" else "Broker"
                                     Text(
                                         "$text \u2022 ",
                                         color = Color(0xff575757),
                                         fontSize = constants.textUnit(12),
                                         fontFamily = constants.fontFamily(1),
-                                        // overflow = TextOverflow.Ellipsis
+
                                     )
-                                    //  }
 
                                     Text(
                                         "Posted ${getTimeAgo(videos[page].post_property?.created_at ?:"")}",
@@ -6416,7 +5708,6 @@ fun Reels_Options_Search_Flow_Static(
                                             horizontalAlignment = Alignment.Start
                                         ) {
 
-
                                             BasicText(
                                                 text = "\u20B9 ${videos[page].post_property.rent?.ifEmpty { videos[page].post_property.lease_amount }}",
                                                 color = { newBlack },
@@ -6427,7 +5718,6 @@ fun Reels_Options_Search_Flow_Static(
                                                     stepSize = 2.sp
                                                 )
                                             )
-
 
                                             Text(
                                                 "\u20B9 Amount",
@@ -6442,7 +5732,7 @@ fun Reels_Options_Search_Flow_Static(
                                         modifier = Modifier
                                             .height(64.dp)
                                             .width(138.dp)
-                                        // .padding(horizontal = 8.dp)
+
                                         ,
                                         shape = RoundedCornerShape(6.dp),
                                         colors = CardDefaults.cardColors(
@@ -6511,15 +5801,12 @@ fun Reels_Options_Search_Flow_Static(
                                                     constants.Profile_ViewModel.set_Profile_Mode(
                                                         user_type
                                                     )
-                                                    println("VIEW PROPERTY DATA -- ${constants.Reels_ViewModel.get_View_Property_Details()}")
                                                     var mode =
                                                         if (videos[pagerState.currentPage].post_property.video?.isEmpty() == true) 1 else 0
                                                     constants.Common_H_ViewModel.view_Property_Details_Mode.value =
                                                         mode
 
-//                                                    if (constants.PostProperty_ViewModel.viewDetailsFlow.value == ViewDetailsFlow.NONE) {
                                                         constants.PostProperty_ViewModel.setViewDetailsFlow(
-
 
                                                             when {
                                                                 constants.PostProperty_ViewModel.viewDetailsFlow.value == ViewDetailsFlow.RENTOUT -> ViewDetailsFlow.RENTOUT
@@ -6529,7 +5816,6 @@ fun Reels_Options_Search_Flow_Static(
                                                                 else -> ViewDetailsFlow.OTHERS
                                                             }
                                                         )
-//                                                    }
 
                                                     navController.navigate(VideosScreenFlow.ViewPropertyStructure.route)
                                                 }
@@ -6562,7 +5848,6 @@ fun Reels_Options_Search_Flow_Static(
                                             }
                                         }
                                     }
-
 
                                 }
                             }
@@ -6605,7 +5890,6 @@ fun Reels_Options_Search_Flow_Static(
                                                         videos[page].username ?: "Username "
                                                     )
 
-                                                    //new flowwewwwwwww
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         Profile_Handle_Back(
                                                             current_UsedId = AppPreferences.getUserId(),
@@ -6613,14 +5897,9 @@ fun Reels_Options_Search_Flow_Static(
                                                             ff_User_Name = videos[page]?.username ?: "",
                                                             ff_Fw_Count = 999,
                                                             ff_Fg_Count = 999,
-                                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                                            // search_Text = search_Text.value
+
                                                         )
                                                     )
-
-                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                     constants.Profile_ViewModel.addProfile(
                                                         videos[page]?.user_id ?: 0
@@ -6629,7 +5908,6 @@ fun Reels_Options_Search_Flow_Static(
                                                         id = videos[page].user_id ?: 0
                                                     )
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     viewModel.toggleshowBABars(false)
                                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -6654,7 +5932,7 @@ fun Reels_Options_Search_Flow_Static(
                                                 modifier = Modifier
                                                     .fillMaxSize()
                                                     .background(newLightBlue)
-                                                //.padding(8.dp)
+
                                                 , contentAlignment = Alignment.Center
                                             ) {
                                                 Text(
@@ -6681,7 +5959,6 @@ fun Reels_Options_Search_Flow_Static(
                                                         videos[page].username ?: "UserName"
                                                     )
 
-                                                    //new flowwewwwwwww
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         Profile_Handle_Back(
                                                             current_UsedId = AppPreferences.getUserId(),
@@ -6689,14 +5966,9 @@ fun Reels_Options_Search_Flow_Static(
                                                             ff_User_Name = videos[page]?.username ?: "",
                                                             ff_Fw_Count = 999,
                                                             ff_Fg_Count = 999,
-                                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                                            // search_Text = search_Text.value
+
                                                         )
                                                     )
-
-                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                     constants.Profile_ViewModel.addProfile(
                                                         videos[page]?.user_id ?: 0
@@ -6705,7 +5977,6 @@ fun Reels_Options_Search_Flow_Static(
                                                         id = videos[page].user_id ?: 0
                                                     )
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     viewModel.toggleshowBABars(false)
                                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -6715,9 +5986,6 @@ fun Reels_Options_Search_Flow_Static(
                                     horizontalArrangement = Arrangement.Start
                                 )
                                 {
-
-
-                                    //Spacer(modifier = Modifier.padding(8.dp))
 
                                     Text(
                                         videos[page].name,
@@ -6729,12 +5997,11 @@ fun Reels_Options_Search_Flow_Static(
                                 }
                             }
                             , supportingContent = {
-                                // Spacer(modifier = Modifier.padding(4.dp))
+
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start
                                 ) {
-                                    // if (currentReel.user_id == AppPreferences.getUserId()){
 
                                     var text = if (videos[page].post_property.user_type == "0") "Owner" else "Broker"
 
@@ -6743,9 +6010,8 @@ fun Reels_Options_Search_Flow_Static(
                                         color = Color(0xff575757),
                                         fontSize = constants.textUnit(12),
                                         fontFamily = constants.fontFamily(1),
-                                        // overflow = TextOverflow.Ellipsis
+
                                     )
-                                    //  }
 
                                     Text(
                                         "Posted ${getTimeAgo(videos[page].post_property?.created_at ?:"")}",
@@ -6801,7 +6067,6 @@ fun Reels_Options_Search_Flow_Static(
                                         fontFamily = constants.fontFamily(0)
                                     )
 
-
                                     Text(
                                         " \u2022 ${videos[page].post_property.is_this_property_for_rent_or_lease}",
                                         color = newBlack,
@@ -6848,12 +6113,12 @@ fun Reels_Options_Search_Flow_Static(
                                         modifier = Modifier
                                             .height(if (forTab())84.dp else 64.dp)
                                             .weight(4.5f)
-                                        // .width(138.dp)
+
                                         , shape = RoundedCornerShape(6.dp)
                                         , colors = CardDefaults.cardColors(
                                             containerColor = Color(0xffCECECE).copy(.2f)
                                         )
-                                        //, elevation = CardDefaults.cardElevation(8.dp)
+
                                     )
                                     {
                                         Column(
@@ -6864,14 +6129,12 @@ fun Reels_Options_Search_Flow_Static(
                                             , horizontalAlignment = Alignment.Start
                                         ) {
 
-
                                             BasicText(
                                                 text = "\u20B9 ${videos[page].post_property.rent?.ifEmpty { videos[page].post_property.lease_amount }  }",
                                                 color =  { newBlack },
                                                 style = TextStyle(fontFamily = constants.fontFamily(0)),
                                                 autoSize = TextAutoSize.StepBased(minFontSize = 6.sp, constants.textUnit(16), stepSize = 2.sp)
                                             )
-
 
                                             Text(
                                                 "\u20B9 Amount",
@@ -6888,10 +6151,9 @@ fun Reels_Options_Search_Flow_Static(
                                         modifier = Modifier
                                             .height(if (forTab())84.dp else 64.dp)
                                             .weight(4.5f)
-                                        //.width(138.dp)
+
                                         , shape = RoundedCornerShape(6.dp)
-//                                    , elevation = CardElevation()
-                                        //CardDefaults.cardElevation(12.dp)
+
                                         , colors = CardDefaults.cardColors(
                                             containerColor = Color(0xffCECECE).copy(.2f)
                                         )
@@ -6907,7 +6169,7 @@ fun Reels_Options_Search_Flow_Static(
                                         ) {
                                             Text(
                                                 "${videos[page].post_property.carpet_area} ${videos[page].post_property.carpet_area_unit}",
-//                                            "200 sq.ft",
+
                                                 color = newBlack,
                                                 fontSize = constants.textUnit(16),
                                                 fontFamily = constants.fontFamily(0)
@@ -6938,7 +6200,7 @@ fun Reels_Options_Search_Flow_Static(
                                         modifier = Modifier
                                             .height(if (forTab())84.dp else 64.dp)
                                             .weight(1f)
-                                            //.width(38.dp)
+
                                             .noRippleClickable {
                                                 ClickHelper.getInstance().clickOnce {
 
@@ -6958,12 +6220,10 @@ fun Reels_Options_Search_Flow_Static(
                                                     constants.Profile_ViewModel.set_Profile_Mode(
                                                         user_type
                                                     )
-                                                    println("VIEW PROPERTY DATA -- ${constants.Reels_ViewModel.get_View_Property_Details()}")
                                                     var mode =
                                                         if (videos[pagerState.currentPage].post_property.video?.isEmpty() == true) 1 else 0
                                                     constants.Common_H_ViewModel.view_Property_Details_Mode.value =
                                                         mode
-
 
                                                     constants.PostProperty_ViewModel.setViewDetailsFlow(
                                                         when {
@@ -7003,7 +6263,6 @@ fun Reels_Options_Search_Flow_Static(
                                         }
                                     }
 
-
                                 }
 
                             }
@@ -7016,21 +6275,17 @@ fun Reels_Options_Search_Flow_Static(
                 }
             }
 
-
             Spacer(modifier = Modifier.padding(2.dp))
-
 
         }
     }
 }
 
-
-
 @Composable
 fun SingleVideoPlayerEnquiry(
-    video: PostUser, // single video
+    video: PostUser,
     modifier: Modifier = Modifier,
-    navController: NavHostController, // optional
+    navController: NavHostController,
     reels_Show: MutableState<Boolean>,
     viewModel: Common_H_ViewModel
 ) {
@@ -7040,46 +6295,23 @@ fun SingleVideoPlayerEnquiry(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-
-// ✅ ADD THIS: Observe the updated list from ViewModel
     val myLeadsData by constants.Enquiry_ViewModel.my_Leads.collectAsState()
     val selfEnquiryData by constants.Enquiry_ViewModel.self_Enquiry.collectAsState()
 
-    // ✅ Find current video from either list
-    // ✅ Find current video from either list
-//    val currentVideo = remember(myLeadsData, selfEnquiryData, video) {
-//        when {
-//            myLeadsData.isNotEmpty() -> {
-//                myLeadsData
-//                    .firstOrNull { it.post_user.user_post_id == video.user_post_id }?.post_user
-//            }
-//
-//            else -> {
-//                selfEnquiryData
-//                    .firstOrNull { it?.post_user?.user_post_id == video.user_post_id }?.post_user
-//            }
-//        }
-//    }
-
-    // Debug recomposition
     LaunchedEffect(video) {
-//        println("🔄 Recompose -> id:${currentVideo.user_post_id} liked:${currentVideo.is_liked} saved:${currentVideo.is_saved}")
+
     }
 
     val reelsBTMSheetState = constants.Common_H_ViewModel.reelsBtm_sheet.collectAsState()
     val reelsBTMSOptions = constants.Reels_ViewModel.reelsBTMSOptions.collectAsState()
 
-
-    // Comment bottom sheet state
     val cmt_btm_Sheet = constants.Common_H_ViewModel.comment_btm_Sheet.collectAsState()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     val send_Eq_State = constants.Reels_ViewModel.send_Enquiry_Btm_Sheet.collectAsState()
 
-
     var mark_as_Sold = remember { mutableStateOf(false) }
     var delete_Post by remember { mutableStateOf(false) }
-
 
     var report_BS = remember { mutableStateOf(false) }
     val report_Options = constants.Profile_ViewModel.profile_Report_Options.collectAsState()
@@ -7088,22 +6320,18 @@ fun SingleVideoPlayerEnquiry(
 
     val repost_Btm = remember { mutableStateOf(false) }
 
-
-    println("SINGLE VIDEO PLAYER VIDEO URL -- ${video.post_property.video}")
-    // Player setup
     val playerManager = remember { VideoPlayerManager(context) }
-    val hasVideo = !video.post_property.video.isNullOrEmpty()  // ✅ Fixed: added NOT operator
+    val hasVideo = !video.post_property.video.isNullOrEmpty()
 
     val player = if (hasVideo) {
         remember(video.user_post_id) {
             playerManager.getOrCreatePlayer2(0, video.user_post_id.toString(), video.post_property.video.firstOrNull()?.url ?: "").apply {
-                playWhenReady = true  // ✅ This starts playback
-                prepare()             // ✅ Prepare the media
+                playWhenReady = true
+                prepare()
             }
         }
     } else null
 
-    // Video size tracking
     var videoWidth by remember { mutableStateOf(0) }
     var videoHeight by remember { mutableStateOf(0) }
 
@@ -7112,7 +6340,6 @@ fun SingleVideoPlayerEnquiry(
             playerManager.releaseAll()
         }
     }
-
 
     DisposableEffect(player) {
         val listener = object : Player.Listener {
@@ -7136,7 +6363,6 @@ fun SingleVideoPlayerEnquiry(
         }
     }
 
-    // Progress tracking
     val position = remember { mutableStateOf(0L) }
     val duration = remember { mutableStateOf(1L) }
 
@@ -7145,7 +6371,7 @@ fun SingleVideoPlayerEnquiry(
             when (event) {
                 Lifecycle.Event.ON_PAUSE -> player?.pause()
                 Lifecycle.Event.ON_RESUME -> {
-                    player?.playWhenReady = true  // ✅ Ensure playback resumes
+                    player?.playWhenReady = true
                     player?.play()
                 }
                 Lifecycle.Event.ON_DESTROY -> player?.release()
@@ -7160,19 +6386,10 @@ fun SingleVideoPlayerEnquiry(
         }
     }
 
-    // Loading states
     val isLikeLoading = remember { mutableStateOf(false) }
     val isSaveLoading = remember { mutableStateOf(false) }
     val showBABars = remember { mutableStateOf(true) }
     val viewdetailFlow = constants.PostProperty_ViewModel.viewDetailsFlow.collectAsState()
-
-    // UI
-//    Box(
-//        modifier = modifier
-//            .fillMaxSize()
-//            .background(Color.Black)
-//    ) {
-    // Video Surface
 
     Column(
         modifier = Modifier
@@ -7186,7 +6403,6 @@ fun SingleVideoPlayerEnquiry(
                 .background(Color.Black)
         )
         {
-            println("PLAYER COMES -- ${player}")
             if (hasVideo) {
                 if (player != null) {
                     PlayerSurface(
@@ -7208,15 +6424,12 @@ fun SingleVideoPlayerEnquiry(
                                 detectTapGestures(
                                     onTap = { if (player.isPlaying) player.pause() else player.play() },
                                     onDoubleTap = {
-//                                        scope.launch {
-//                                          //  snackbarHostState.showSnackbar("❤️ Double tapped (Like)")
-//                                        }
+
                                     }
                                 )
                             }
                     )
 
-                    // Reels options overlay
                     ReelsOptionsSingle(
                         modifier = Modifier
                             .align(Alignment.BottomCenter), navController = navController,
@@ -7232,10 +6445,8 @@ fun SingleVideoPlayerEnquiry(
             }
             else if (video.post_property.images?.isNotEmpty() == true) {
 
-                //  val animationType = SlideshowAnimation.values()[page % SlideshowAnimation.values().size]
                 SingleSlideshowReel_Single(
-                    // imagesList = item.post_property.image_urls,
-                    //animationType = animationType,
+
                     postId = video.user_post_id,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -7272,7 +6483,6 @@ fun SingleVideoPlayerEnquiry(
                         video.post_interest
                     )
 
-
                     ReelsOptionsSingle(
                         modifier = Modifier
                             .align(Alignment.BottomCenter), navController = navController,
@@ -7285,27 +6495,7 @@ fun SingleVideoPlayerEnquiry(
                         showBABars = showBABars
                     )
                 }
-                /*Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black),
-                    contentAlignment = Alignment.Center
-                )
-                {
 
-
-                    //Text("No media available", color = Color.White)
-                    Image(
-                        painterResource(R.drawable.emptypostsrento),
-                        ""
-                    )
-                    // Reels options overlay
-
-
-
-
-
-                }*/
             }
 
             Image(
@@ -7323,12 +6513,11 @@ fun SingleVideoPlayerEnquiry(
                     .padding(vertical = rememberNotchHeightDp().value, horizontal = 16.dp)
             )
 
-
         }
 
         ReelsOptionsSingle_Static(
             modifier = Modifier
-                ///.align(Alignment.BottomCenter)
+
             , navController = navController
             , player = player,
             postId = video.user_post_id,
@@ -7339,14 +6528,11 @@ fun SingleVideoPlayerEnquiry(
             showBABars = showBABars
         )
 
-
     }
 
     val network = rememberNetworkStatus()
 
     Enquiry_Form_Btm_Sheet_Structure(send_Eq_State.value , video.toGetReelsData() )
-
-
 
     if (repost_Btm.value) {
         ModalBottomSheet(
@@ -7390,9 +6576,7 @@ fun SingleVideoPlayerEnquiry(
                                 constants.PostProperty_ViewModel.first_Form_selected_PP(-1)
                                 constants.PostProperty_ViewModel.select_Land_Cat_Id(-1)
                                 constants.PostProperty_ViewModel.LandSubType_Selected_Click(-1)
-//                            constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
-//                                -1
-//                            )
+
                                 constants.PostProperty_ViewModel.select_Land_Cat_Id(
                                     -1
                                 )
@@ -7406,7 +6590,6 @@ fun SingleVideoPlayerEnquiry(
                                         locality = ""
                                     )
                                 )
-
 
                                 constants.PostProperty_ViewModel.clear_Selected_Fields_Form4()
                                 constants.PostProperty_ViewModel.clearAllPostFields()
@@ -7423,7 +6606,6 @@ fun SingleVideoPlayerEnquiry(
                                         1 -> {}
                                         2 -> {}
                                         3 -> {
-                                            println("REPOST CLICKER SUCCESS")
                                             val server_Data = constants.PostProperty_ViewModel.get_Preview_Data()
 
                                             server_Data?.let { data ->
@@ -7433,7 +6615,6 @@ fun SingleVideoPlayerEnquiry(
                                             }
 
                                             AppPreferences.save_Post_Id(server_Data?.user_post_id ?: 0)
-                                            println("POST ID -- ${AppPreferences.get_Post_Id()}")
 
                                             constants.PostProperty_ViewModel.first_Form_selected_PP(
                                                 server_Data?.land_type_id ?: -1
@@ -7443,14 +6624,6 @@ fun SingleVideoPlayerEnquiry(
                                             constants.PostProperty_ViewModel.set_city3(server_Data?.city ?: "")
                                             constants.PostProperty_ViewModel.set__selectedLocality3(server_Data?.locality ?: "")
 
-                                            println(
-                                                "GIVEN ADDRESS DATA FIELD -- " +
-                                                        "${constants.PostProperty_ViewModel.get_selectedLocality3()} --- " +
-                                                        "${constants.PostProperty_ViewModel.get_latLng3()}---" +
-                                                        "-${constants.PostProperty_ViewModel.get_city3()}--" +
-                                                        "-${constants.PostProperty_ViewModel.get_state3()} ----" +
-                                                        " ${constants.PostProperty_ViewModel.get_country3()}"
-                                            )
 
                                             constants.PostProperty_ViewModel.set_onSelected_ProType((server_Data?.land_type_id ?: 0) )
                                             constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
@@ -7463,21 +6636,13 @@ fun SingleVideoPlayerEnquiry(
 
                                             constants.PostProperty_ViewModel.LandSubType_Selected_Click(server_Data?.land_categorie_id ?: 0)
 
-                                            println("REPOST FROM PFOILE TOP____ ${server_Data?.land_type_id ?: 0}")
                                             constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value =  constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.copy(
                                                 first = server_Data?.land_type_id ?: 0,
                                                 second = server_Data?.land_categorie_id ?: 0
                                             )
 
-                                            println("REPOST FROM PFOILE TOP____ ${server_Data?.land_type_id ?: 0} (((( ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}")
-
-
                                             constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value = Pair((server_Data?.land_type_id ?: 0)  , server_Data?.land_categorie_id ?: 0)
 
-                                            println("Step 2 --- ${(server_Data?.land_type_id ?: 0) - 1 } -***${ constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}***-- ${server_Data?.land_categorie_id ?: 0}")
-//                                            println("LOCARTION DERAIKS sfjngv adsfbvkhjd REPOST ${server_Data.pincode} -__${server_Data.longitude}--${server_Data.latitude}--${server_Data.address}--${server_Data.city}- ${server_Data.country} -- ${data.state}")
-
-                                            // Safely set values if they’re not empty
                                             if (!server_Data?.pincode.isNullOrEmpty()) {
                                                 constants.PostProperty_ViewModel.set_pincode3(server_Data?.pincode ?: "")
                                             }
@@ -7493,7 +6658,7 @@ fun SingleVideoPlayerEnquiry(
                                             if (!server_Data?.locality.isNullOrEmpty()) {
                                                 constants.PostProperty_ViewModel.set__selectedLocality3(server_Data?.locality ?:"")
                                             }
-//
+
                                             if (server_Data?.latitude?.isNotEmpty() == true && server_Data?.longitude?.isNotEmpty() == true) {
                                                 constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
                                                     LatLng(
@@ -7503,13 +6668,6 @@ fun SingleVideoPlayerEnquiry(
                                                 )
                                             }
 
-//                                            if (server_Data.images.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addImages(server_Data?.images ?:"")
-//                                            }
-//                                            else if(server_Data.video.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addVideo(server_Data?.images ?:"")
-//
-//                                            }
                                             constants.PostProperty_ViewModel.add_pp3_Data(
                                                 PP3_API_DC(
                                                     pincode = server_Data?.pincode ?: "",
@@ -7534,34 +6692,17 @@ fun SingleVideoPlayerEnquiry(
                                             )
 
                                             if (!server_Data?.images.isNullOrEmpty()) {
-//                                                val imageMediaList = server_Data.images.map { imageUri ->
-//                                                    UploadPropertyMedia(uri = Uri.parse(imageUri), isVideo = false)
-//                                                }
-//                                                constants.PostProperty_ViewModel.addImages(imageMediaList)
+
                                             }
                                             else if (!server_Data?.video.isNullOrEmpty()) {
-//                                                val videoMedia = UploadPropertyMedia(
-//                                                    uri = Uri.parse(server_Data.video),
-//                                                    isVideo = true
-//                                                )
-//                                                constants.PostProperty_ViewModel.addVideo(videoMedia)
+
                                             }
 
-
-
                                             constants.PostProperty_ViewModel.select_Land_Type(server_Data?.land_type_id ?: 0)
-
-//                                            val budget_Price =
-//                                                constants.PostProperty_ViewModel.put_budget_Price_PF5(server_Data?.price ?: "")
-
-                                            println("SERVER DATA -- ${server_Data} ---- cons.${constants.PostProperty_ViewModel.get_Selected_Fields_Form()}")
 
                                             constants.Profile_ViewModel.set_From_Repost(1)
                                             constants.PostProperty_ViewModel.set_Post_Form_Flow(2)
 
-
-
-                                            // ✅ Navigate after everything is done
                                             navController.navigate(ProfileScreenFlow.Post_Property_Forms.route)
                                         }
                                     }
@@ -7582,9 +6723,8 @@ fun SingleVideoPlayerEnquiry(
         }
     }
 
-
     if (reelsBTMSheetState.value) {
-       // playerManager.pauseVideo(pagerState.currentPage)
+
         ModalBottomSheet(
             onDismissRequest = {
                 viewModel.toggleReelsBTMSheet(false)
@@ -7597,17 +6737,7 @@ fun SingleVideoPlayerEnquiry(
                 constants.Reels_ViewModel.resetReelsBTMSOptions()
                 when {
 
-
-//                    !isWithinLast5DaysOfValidity(videos[pagerState.currentPage].post_property?.created_at ?: "") -> {
-//                    viewdetailFlow.value == ViewDetailsFlow.RENEW -> {
-//                        println("aqwqwqwqwqw0reels")
-//                        constants.Reels_ViewModel.removeReelsBTMSOptions(
-//                            constants.Reels_ViewModel.renewpostOptions
-//                        )
-//                    }
-
                     viewdetailFlow.value == ViewDetailsFlow.EXPIRY -> {
-                        println("aqwqwqwqwqw2reels")
 
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.expiredIdOptions
@@ -7615,8 +6745,6 @@ fun SingleVideoPlayerEnquiry(
                     }
 
                     viewdetailFlow.value == ViewDetailsFlow.RENTOUT -> {
-                        println("indisddejeididjdjdfj2222222")
-                        println("aqwqwqwqwqw3reels")
 
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.soldoutIdOptions
@@ -7624,45 +6752,24 @@ fun SingleVideoPlayerEnquiry(
                     }
 
                     constants.Profile_ViewModel.selectedOwnProfileTab.value == OwnProfileTab.EXPIRED -> {
-                        println("aqwqwqwqwqw4reels")
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.expiredIdOptions
                         )
                     }
 
                     video.user_id == AppPreferences.getUserId() -> {
-                        println("aqwqwqwqwqw5reels")
                         constants.Reels_ViewModel.removeReelsBTMSOptions(
                             constants.Reels_ViewModel.ownIdOptions
                         )
                     }
 
-
-
                     else -> {
-                        println("aqwqwqwqwqw6reels")
                         constants.Reels_ViewModel.removeReelsBTMSOptions(constants.Reels_ViewModel.pviewotherIdOptions)
                     }
                 }
             }
 
             val data = reelsBTMSOptions.value
-
-//            val data = when {
-//                constants.Profile_ViewModel.from_SoldOuts.value == true -> {
-//                    // Third scenario: Show only Repost and Delete
-//                    reelsBTMSOptions.value.filter { it.title == "Repost Property" || it.title == "Delete Property" }
-//                }
-//               video.user_id == AppPreferences.getUserId() -> {
-//                    // Owner: Show full list except the last item
-//                    reelsBTMSOptions.value.dropLast(1)
-//                }
-//                else -> {
-//                    // Not owner: Show only last 2 items
-//                    reelsBTMSOptions.value.takeLast(2)
-//                }
-//            }
-
 
             data.forEachIndexed { index, Options ->
                 Row(
@@ -7671,24 +6778,12 @@ fun SingleVideoPlayerEnquiry(
                         .background(newWhite)
                         .padding(horizontal = 16.dp)
                         .noRippleClickable{
-//                            if (index == data.size - 1) {
-//                                // report_BS.value = true
-//                            } else if (Options.title == "Mark as Sold") {
-//                                mark_as_Sold.value = true
-//                            }
-//                            when(index) {
-//                                0 -> {
-//
-//                                }
-//                                1 -> {
-//
-//                                }
-//                            }
+
                             when {
                                 Options.title == "Repost Property" -> {
 
                                     constants.Reels_ViewModel.clear_view_pro_Details()
-                                    //AppPreferences.save_Post_Id(videos[pagerState.currentPage].user_post_id)
+
                                     repost_Btm.value = true
                                     constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                 }
@@ -7698,7 +6793,6 @@ fun SingleVideoPlayerEnquiry(
                                     constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                 }
                                 Options.title == "Delete Property" -> {
-                                    println("COMING INTO HERE")
 
                                     delete_Post = true
                                     viewModel.toggleReelsBTMSheet(false)
@@ -7714,9 +6808,6 @@ fun SingleVideoPlayerEnquiry(
                                             -1
                                         )
 
-                                        //AppPreferences.getUserId(),
-
-
                                         constants.Profile_ViewModel.toggle_ReportSucces_True()
                                         report_BS.value = true
 
@@ -7727,7 +6818,7 @@ fun SingleVideoPlayerEnquiry(
                                     }
                                 }
                                 Options.title == "Share" -> {
-                                    //Options.onClick()
+
                                     constants.DefaultShare("https://toletspot.com/property/${video.user_post_id}" ,1)
                                     constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                 }
@@ -7765,8 +6856,6 @@ fun SingleVideoPlayerEnquiry(
         }
     }
 
-    println("DUMMY LIST MAPPED -- ${video.whatsapp_num}")
-    // Comment sheet
     if (cmt_btm_Sheet.value) {
 
         ModalBottomSheet(
@@ -7784,18 +6873,17 @@ fun SingleVideoPlayerEnquiry(
     }
 
     if (mark_as_Sold.value == true) {
-        //playerManager.pauseVideo(pagerState.currentPage)
+
         Mark_As_Sold_Flow(mark_as_Sold, video.user_post_id, navController)
     }
 
-    // delete post
     Common_Popup(
         delete_Post,
         modifier = Modifier
             .background(Color(0xffF7F0DC))
         , image = "",
         userName = "",
-        icon = R.drawable.closeenquiry /// or R.drawable
+        icon = R.drawable.closeenquiry
     )
     {
         Column (
@@ -7808,7 +6896,6 @@ fun SingleVideoPlayerEnquiry(
         {
 
             Spacer(modifier = Modifier.padding(2.dp))
-            //constants.spacer(2)
 
             Text(
                 text = "Are you Sure, You want to delete?",
@@ -7816,8 +6903,6 @@ fun SingleVideoPlayerEnquiry(
                 fontSize = constants.textUnit(16),
                 fontFamily = constants.fontFamily(0)
             )
-
-            //constants.spacer(2)
 
             Text(
                 text = "This action cannot be undone. Are you sure you want to delete this property permanently?",
@@ -7868,8 +6953,6 @@ fun SingleVideoPlayerEnquiry(
                                 if (ClickGuard.canClick()) {
 
                                     if (network.value == NetworkStatus.Online) {
-                                        println(" API CALL HIT STATUS __ ue}")
-                                        println("COMING INSIDE DELETTING SOLDOUTS")
                                         constants.API_Vm.delete_Post_SM_Drafts(
                                             user_id = AppPreferences.getUserId(),
                                             select_all = 0,
@@ -7881,7 +6964,7 @@ fun SingleVideoPlayerEnquiry(
                                                 is API_Result_Handling.Loading -> {}
                                                 is API_Result_Handling.NoData -> {}
                                                 is API_Result_Handling.Deactivated -> {
-                                                    // resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.Error -> {}
@@ -7894,7 +6977,6 @@ fun SingleVideoPlayerEnquiry(
                                                         navController.navigateUp()
                                                         delete_Post = true
                                                     } else {
-                                                        println("65212345678987654321234567890-")
                                                         constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(
                                                             video.user_post_id
                                                         )
@@ -7902,7 +6984,6 @@ fun SingleVideoPlayerEnquiry(
 
                                                         playerManager.releaseAll()
 
-                                                        // Now navigate away
                                                         AppPreferences.save_Post_Id(0)
                                                         constants.Profile_ViewModel.set_From_SoldOuts(
                                                             false
@@ -7918,53 +6999,10 @@ fun SingleVideoPlayerEnquiry(
                                                 }
                                             }
                                         }
-                                        /*constants.API_Vm.put_Block_User(
-                                    user_id = AppPreferences.getUserId(),
-                                    blocker_id = profile_Content.value?.user_id ?: 0,
-                                    //profile_Content.value?.user_id ?: 0,
-                                    status = blockStatus.value
-                                    //if (profile_Content.value?.is_blocked == 0) "1" else "0"
-                                )
-                                { apiResultHandling ->
-                                    when (apiResultHandling) {
-                                        is API_Result_Handling.Error -> {
-                                            //errror
-                                            //constants.Profile_ViewModel.change_Update_profile(false)
-                                        }
 
-                                        is API_Result_Handling.Deactivated -> {
-                                            // resultCallback(5)
-                                        }
-
-                                        is API_Result_Handling.NoData -> {
-                                            // no data
-                                        }
-
-                                        is API_Result_Handling.Loading -> {
-                                            //loading
-                                            // constants.Profile_ViewModel.change_Update_profile(true)
-                                        }
-
-                                        is API_Result_Handling.Success -> {
-                                            if (profile_Content.value?.is_blocked == 0) {
-                                                constants.Profile_ViewModel.updateBlockedStatus_Selected_Profile(
-                                                    1
-                                                )
-                                            } else {
-                                                constants.Profile_ViewModel.updateBlockedStatus_Selected_Profile(
-                                                    0
-                                                )
-                                            }
-                                            block_PopUp = false
-                                            //constants.Profile_ViewModel.enable_Edit_Profile()
-                                            //constants.Profile_ViewModel.change_Update_profile(false)
-                                            //success
-                                        }
-                                    }
-                                }*/
                                     } else {
                                         toast(constants.activity.getString(R.string.no_Internet))
-                                        // GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
+
                                     }
                                 }
                             }
@@ -7986,7 +7024,6 @@ fun SingleVideoPlayerEnquiry(
             Spacer(modifier = Modifier.padding(8.dp))
         }
     }
-
 
     if (report_BS.value){
 
@@ -8014,8 +7051,6 @@ fun SingleVideoPlayerEnquiry(
             ){
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
-
 
                 AnimatedContent (
                     targetState = report_success
@@ -8077,38 +7112,7 @@ fun SingleVideoPlayerEnquiry(
                                 user_Manual_report.value,
                                 enter = slideInHorizontally(tween(900)) { it }
                             ) {
-                                /* Box(
-                                 modifier = Modifier
-                                     .fillMaxWidth()
-                                     .heightIn(min = 50.dp , max = 80.dp)
-                                     .clip(RoundedCornerShape(8.dp))
-                                     .background(Color.White)
-                                     .border(1.dp , newGray , RoundedCornerShape(8.dp))
-                             )
-                             {
-                                 TextField(
-                                     value = user_Manual_report_String.value,
-                                     onValueChange = {
-                                         user_Manual_report_String.value = it
-                                     },
-                                     placeholder = {
-                                         Text(
-                                             text = "What else we need to know...",
-                                             color = newBlack,
-                                             fontSize = constants.textUnit(12),
-                                             fontFamily = constants.fontFamily(3)
-                                         )
-                                     },
-                                     colors = TextFieldDefaults.colors(
-                                         focusedContainerColor = Color.White
-                                         ,unfocusedContainerColor = Color.White
-                                         , focusedIndicatorColor = Color.Transparent
-                                         , unfocusedIndicatorColor = Color.Transparent
-                                         , focusedTextColor = newBlack
-                                         , unfocusedTextColor = newGray
-                                     )
-                                 )
-                             }*/
+
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -8162,14 +7166,12 @@ fun SingleVideoPlayerEnquiry(
                                     .size(150.dp)
                             )
 
-
                             Text(
                                 text = "Submitted Successfully",
                                 color = newBlack,
                                 fontSize = constants.textUnit(18),
                                 fontFamily = constants.fontFamily(0)
                             )
-
 
                             Text(
                                 text = "Thank you for bringing this to our attention.",
@@ -8221,17 +7223,15 @@ fun SingleVideoPlayerEnquiry(
 
                                                         when (apiResultHandling) {
                                                             is API_Result_Handling.Loading -> {
-                                                                // loading
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                             }
 
                                                             is API_Result_Handling.Deactivated -> {
-                                                                //resultCallback(5)
+
                                                             }
 
                                                             is API_Result_Handling.Error -> {
-                                                                // fail
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.Success -> {
@@ -8240,13 +7240,11 @@ fun SingleVideoPlayerEnquiry(
 
                                                                 constants.Enquiry_ViewModel.toggle__video_Report_Enquiry(video.user_post_id)
                                                                 constants.Enquiry_ViewModel.toggle__video_Report_SelfEnquiry(video.user_post_id)
-                                                                // success
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.NoData -> {
-                                                                // no data
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
                                                         }
                                                     }
@@ -8254,7 +7252,7 @@ fun SingleVideoPlayerEnquiry(
                                                 else
                                                 {
                                                     report_BS.value = false
-                                                    //constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
+
                                                     scope.launch {
                                                         snackbarHostState.showSnackbar(" Post Already Reported")
                                                     }
@@ -8263,7 +7261,6 @@ fun SingleVideoPlayerEnquiry(
                                             else {
                                                 toast(constants.activity.getString(R.string.no_Internet))
                                             }
-
 
                                         }
                                     , contentAlignment = Alignment.Center
@@ -8324,7 +7321,7 @@ fun ReelsOptionsSingle(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomEnd)
-            //  .padding(bottom = if (showBABars.value) 100.dp else 0.dp),
+
             , verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.End
         ) {
@@ -8351,7 +7348,6 @@ fun ReelsOptionsSingle(
                     2 -> if (isSaved) icon.enabled_Icon else icon.icon
                     else -> icon.icon
                 }
-
 
                 AsyncImage(
                     model = showIcon,
@@ -8385,137 +7381,6 @@ fun ReelsOptionsSingle(
     }
 }
 
-
-/*@Composable
-fun ReelsOptionsSingle(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    player: ExoPlayer?,
-    currentVideo: PostUser,
-    duration: MutableState<Long>,
-    position: MutableState<Long>,
-    isLikeLoading: MutableState<Boolean>,
-    isSaveLoading: MutableState<Boolean>,
-    showBABars: State<Boolean>
-) {
-
-    // ✅ ADD THIS: Observe the updated list from ViewModel
-    val myLeadsData by constants.Enquiry_ViewModel.my_Leads.collectAsState()
-    val selfEnquiryData by constants.Enquiry_ViewModel.self_Enquiry.collectAsState()
-
-    // ✅ Find current video from either list
-//    val currentVideo = remember(myLeadsData, selfEnquiryData, video) {
-//        when {
-//            myLeadsData.isNotEmpty() -> {
-//                myLeadsData
-//                    .firstOrNull { it.post_user.user_post_id == video.user_post_id }?.post_user
-//            }
-//
-//            else -> {
-//                selfEnquiryData
-//                    .firstOrNull { it?.post_user?.user_post_id == video.user_post_id }?.post_user
-//            }
-//        }
-//
-//    }
-
-    // Debug recomposition
-    LaunchedEffect(currentVideo) {
-//        println("🔄 Recompose -> id:${currentVideo.user_post_id} liked:${currentVideo.is_liked} saved:${currentVideo.is_saved}")
-    }
-
-
-    println("dfghuio")
-    Box(modifier = modifier) {
-        if (currentVideo.user_id == AppPreferences.getUserId()) {
-            Image(
-                painter = painterResource(R.drawable.ownpropertybadgerento), "",
-                modifier = Modifier
-                    .padding(vertical = 16.dp, horizontal = 16.dp)
-                    .zIndex(3f)
-                    .align(Alignment.BottomStart)
-            )
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomEnd)
-            //  .padding(bottom = if (showBABars.value) 100.dp else 0.dp),
-            , verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.End
-        ) {
-            // Right-side actions (like, comment, save, more)
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .wrapContentSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            )
-            {
-                constants.Reels_ViewModel.reels_Options_List.forEachIndexed { index, icon ->
-
-                    val isLiked = currentVideo?.is_liked == 1
-                    val isSaved = currentVideo?.is_saved == 1
-
-                    val scale = remember { Animatable(1f) }
-                    LaunchedEffect(isLiked) {
-                        if (isLiked && index == 0) {
-                            scale.animateTo(1.3f, tween(200))
-                            scale.animateTo(1f, tween(200))
-                        }
-                    }
-
-                    val showIcon = when (index) {
-                        0 -> if (isLiked) icon.enabled_Icon else icon.icon
-                        2 -> if (isSaved) icon.enabled_Icon else icon.icon
-                        else -> icon.icon
-                    }
-
-//                    if ((index == 0 && isLikeLoading.value) || (index == 2 && isSaveLoading.value)) {
-//                        CircularProgressIndicator(
-//                            modifier = Modifier.size(25.dp),
-//                            color = newBlue
-//                        )
-//                    } else {
-                    AsyncImage(
-                        model = showIcon,
-                        contentDescription = "",
-                        modifier = Modifier
-                            .graphicsLayer { scaleX = scale.value; scaleY = scale.value }
-                            .size(24.dp)
-                            .noRippleClickable {
-                                ClickHelper.getInstance().clickOnce {
-                                    when (index) {
-                                        0 -> handleLikeClick(currentVideo.user_post_id, isLiked, isLikeLoading)
-                                        1 -> handleCommentClick()
-                                        2 -> handleSaveClick(currentVideo, isSaved, isSaveLoading)
-                                        3 -> constants.Common_H_ViewModel.toggleReelsBTMSheet(true)
-                                    }
-                                }
-                            }
-                    )
-                    // }
-
-                    // Counters
-                    if (index == 0) {
-                        Text((currentVideo?.total_likes ?: 0).toString(), color = newWhite, fontSize = constants.textUnit(12), fontFamily = constants.fontFamily(2))
-                    } else if (index == 1) {
-                        Text((currentVideo?.total_comments ?:0 ).toString(), color = newWhite, fontSize = constants.textUnit(12), fontFamily = constants.fontFamily(2))
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}*/
-
-
-
 @Composable
 fun ReelsOptionsSingle_Static(
     modifier: Modifier = Modifier,
@@ -8530,7 +7395,6 @@ fun ReelsOptionsSingle_Static(
 )
 {
 
-    // ✅ ADD THIS: Observe the updated list from ViewModel
     val myLeads by constants.Enquiry_ViewModel.my_Leads.collectAsState()
     val selfEnquiry by constants.Enquiry_ViewModel.self_Enquiry.collectAsState()
 
@@ -8539,25 +7403,20 @@ fun ReelsOptionsSingle_Static(
             ?: selfEnquiry.firstOrNull { it?.post_user?.user_post_id == postId }?.post_user
     } ?: return
 
-    // Debug recomposition
     LaunchedEffect(video) {
-//        println("🔄 Recompose -> id:${currentVideo.user_post_id} liked:${currentVideo.is_liked} saved:${currentVideo.is_saved}")
+
     }
 
-
-    println("dfghuio")
     Box(modifier = modifier) {
         Column(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-            //  .padding(bottom = if (showBABars.value) 100.dp else 0.dp),
+
             , verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.End
         ) {
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Bottom gradient + user info + actions
 
             Box(
                 modifier = Modifier
@@ -8601,7 +7460,6 @@ fun ReelsOptionsSingle_Static(
                                                         video.username ?: "username"
                                                     )
 
-                                                    //new flowwewwwwwww
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         Profile_Handle_Back(
                                                             current_UsedId = AppPreferences.getUserId(),
@@ -8609,14 +7467,9 @@ fun ReelsOptionsSingle_Static(
                                                             ff_User_Name = video?.username ?: "",
                                                             ff_Fw_Count = 999,
                                                             ff_Fg_Count = 999,
-                                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                                            // search_Text = search_Text.value
+
                                                         )
                                                     )
-
-                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                     constants.Profile_ViewModel.addProfile(
                                                         video?.user_id ?: 0
@@ -8625,7 +7478,6 @@ fun ReelsOptionsSingle_Static(
                                                         id = video.user_id ?: 0
                                                     )
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     constants.Common_H_ViewModel.toggleshowBABars(false)
                                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -8650,7 +7502,7 @@ fun ReelsOptionsSingle_Static(
                                                 modifier = Modifier
                                                     .fillMaxSize()
                                                     .background(newLightBlue)
-                                                //.padding(8.dp)
+
                                                 , contentAlignment = Alignment.Center
                                             ) {
                                                 Text(
@@ -8677,7 +7529,6 @@ fun ReelsOptionsSingle_Static(
                                                         video.username ?: "username"
                                                     )
 
-                                                    //new flowwewwwwwww
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         Profile_Handle_Back(
                                                             current_UsedId = AppPreferences.getUserId(),
@@ -8685,14 +7536,9 @@ fun ReelsOptionsSingle_Static(
                                                             ff_User_Name = video?.username ?: "",
                                                             ff_Fw_Count = 999,
                                                             ff_Fg_Count = 999,
-                                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                                            // search_Text = search_Text.value
+
                                                         )
                                                     )
-
-                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                     constants.Profile_ViewModel.addProfile(
                                                         video?.user_id ?: 0
@@ -8701,7 +7547,6 @@ fun ReelsOptionsSingle_Static(
                                                         id = video.user_id ?: 0
                                                     )
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     constants.Common_H_ViewModel.toggleshowBABars(false)
                                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -8721,12 +7566,11 @@ fun ReelsOptionsSingle_Static(
                                 }
                             }
                             , supportingContent = {
-                                // Spacer(modifier = Modifier.padding(4.dp))
+
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start
                                 ) {
-                                    // if (currentReel.user_id == AppPreferences.getUserId()){
 
                                     var text = if (video.post_property.user_type == "0") "Owner" else "Broker"
                                     Text(
@@ -8734,9 +7578,8 @@ fun ReelsOptionsSingle_Static(
                                         color = Color(0xff575757),
                                         fontSize = constants.textUnit(12),
                                         fontFamily = constants.fontFamily(1),
-                                        // overflow = TextOverflow.Ellipsis
+
                                     )
-                                    //  }
 
                                     Text(
                                         "Posted ${getTimeAgo(video.post_property.created_at ?:"")}",
@@ -8823,7 +7666,6 @@ fun ReelsOptionsSingle_Static(
                                             horizontalAlignment = Alignment.Start
                                         ) {
 
-
                                             BasicText(
                                                 text = "\u20B9 ${video.post_property.rent?.ifEmpty { video.post_property.lease_amount }}",
                                                 color = { newBlack },
@@ -8834,7 +7676,6 @@ fun ReelsOptionsSingle_Static(
                                                     stepSize = 2.sp
                                                 )
                                             )
-
 
                                             Text(
                                                 "\u20B9 Amount",
@@ -8849,7 +7690,7 @@ fun ReelsOptionsSingle_Static(
                                         modifier = Modifier
                                             .height(64.dp)
                                             .width(138.dp)
-                                        // .padding(horizontal = 8.dp)
+
                                         ,
                                         shape = RoundedCornerShape(6.dp),
                                         colors = CardDefaults.cardColors(
@@ -8948,7 +7789,6 @@ fun ReelsOptionsSingle_Static(
                                         }
                                     }
 
-
                                 }
                             }
                             , colors = ListItemDefaults.colors(
@@ -8990,7 +7830,6 @@ fun ReelsOptionsSingle_Static(
                                                         video.username ?: "Unknown"
                                                     )
 
-                                                    //new flowwewwwwwww
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         Profile_Handle_Back(
                                                             current_UsedId = AppPreferences.getUserId(),
@@ -8998,14 +7837,9 @@ fun ReelsOptionsSingle_Static(
                                                             ff_User_Name = video?.username ?: "",
                                                             ff_Fw_Count = 999,
                                                             ff_Fg_Count = 999,
-                                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                                            // search_Text = search_Text.value
+
                                                         )
                                                     )
-
-                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                     constants.Profile_ViewModel.addProfile(
                                                         video?.user_id ?: 0
@@ -9014,7 +7848,6 @@ fun ReelsOptionsSingle_Static(
                                                         id = video.user_id ?: 0
                                                     )
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     constants.Common_H_ViewModel.toggleshowBABars(false)
                                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -9039,7 +7872,7 @@ fun ReelsOptionsSingle_Static(
                                                 modifier = Modifier
                                                     .fillMaxSize()
                                                     .background(newLightBlue)
-                                                //.padding(8.dp)
+
                                                 , contentAlignment = Alignment.Center
                                             ) {
                                                 Text(
@@ -9066,7 +7899,6 @@ fun ReelsOptionsSingle_Static(
                                                         video.username ?: "Unknown"
                                                     )
 
-                                                    //new flowwewwwwwww
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         Profile_Handle_Back(
                                                             current_UsedId = AppPreferences.getUserId(),
@@ -9074,14 +7906,9 @@ fun ReelsOptionsSingle_Static(
                                                             ff_User_Name = video?.username ?: "",
                                                             ff_Fw_Count = 999,
                                                             ff_Fg_Count = 999,
-                                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                                            // search_Text = search_Text.value
+
                                                         )
                                                     )
-
-                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                     constants.Profile_ViewModel.addProfile(
                                                         video?.user_id ?: 0
@@ -9090,7 +7917,6 @@ fun ReelsOptionsSingle_Static(
                                                         id = video.user_id ?: 0
                                                     )
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     constants.Common_H_ViewModel.toggleshowBABars(false)
                                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -9110,20 +7936,19 @@ fun ReelsOptionsSingle_Static(
                                 }
                             }
                             , supportingContent = {
-                                // Spacer(modifier = Modifier.padding(4.dp))
+
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.Start
                                 ) {
-                                    // if (currentReel.user_id == AppPreferences.getUserId()){
+
                                     Text(
                                         "Owner \u2022 ",
                                         color = Color(0xff575757),
                                         fontSize = constants.textUnit(12),
                                         fontFamily = constants.fontFamily(1),
-                                        // overflow = TextOverflow.Ellipsis
+
                                     )
-                                    //  }
 
                                     Text(
                                         "Posted ${getTimeAgo(video.post_property.created_at ?:"")}",
@@ -9192,7 +8017,7 @@ fun ReelsOptionsSingle_Static(
                                 if (video.post_property.is_sold == 1) {
                                     Image(
                                         painterResource(R.drawable.soldoutidentifier), "",
-                                        modifier = Modifier.padding(start = 16.dp)//.align(Alignment.CenterEnd)
+                                        modifier = Modifier.padding(start = 16.dp)
                                     )
                                 }
                             }
@@ -9233,12 +8058,12 @@ fun ReelsOptionsSingle_Static(
                                         modifier = Modifier
                                             .height(if (forTab())84.dp else 64.dp)
                                             .weight(4.5f)
-                                        // .width(138.dp)
+
                                         , shape = RoundedCornerShape(6.dp)
                                         , colors = CardDefaults.cardColors(
                                             containerColor = Color(0xffCECECE).copy(.2f)
                                         )
-                                        //, elevation = CardDefaults.cardElevation(8.dp)
+
                                     )
                                     {
                                         Column(
@@ -9249,14 +8074,12 @@ fun ReelsOptionsSingle_Static(
                                             , horizontalAlignment = Alignment.Start
                                         ) {
 
-
                                             BasicText(
                                                 text = "\u20B9 ${video.post_property.rent?.ifEmpty { video.post_property.lease_amount }  }",
                                                 color =  { newBlack },
                                                 style = TextStyle(fontFamily = constants.fontFamily(0)),
                                                 autoSize = TextAutoSize.StepBased(minFontSize = 6.sp, constants.textUnit(16), stepSize = 2.sp)
                                             )
-
 
                                             Text(
                                                 "\u20B9 Amount",
@@ -9273,10 +8096,9 @@ fun ReelsOptionsSingle_Static(
                                         modifier = Modifier
                                             .height(if (forTab())84.dp else 64.dp)
                                             .weight(4.5f)
-                                        //.width(138.dp)
+
                                         , shape = RoundedCornerShape(6.dp)
-//                                    , elevation = CardElevation()
-                                        //CardDefaults.cardElevation(12.dp)
+
                                         , colors = CardDefaults.cardColors(
                                             containerColor = Color(0xffCECECE).copy(.2f)
                                         )
@@ -9292,7 +8114,7 @@ fun ReelsOptionsSingle_Static(
                                         ) {
                                             Text(
                                                 "${video.post_property.carpet_area} ${video.post_property.carpet_area_unit}",
-//                                            "200 sq.ft",
+
                                                 color = newBlack,
                                                 fontSize = constants.textUnit(16),
                                                 fontFamily = constants.fontFamily(0)
@@ -9323,7 +8145,7 @@ fun ReelsOptionsSingle_Static(
                                         modifier = Modifier
                                             .height(if (forTab())84.dp else 64.dp)
                                             .weight(1f)
-                                            //.width(38.dp)
+
                                             .noRippleClickable {
                                                 ClickHelper.getInstance().clickOnce {
                                                     constants.Reels_ViewModel.clear_view_pro_Details()
@@ -9377,7 +8199,6 @@ fun ReelsOptionsSingle_Static(
                                         }
                                     }
 
-
                                 }
 
                             }
@@ -9389,8 +8210,6 @@ fun ReelsOptionsSingle_Static(
                     }
                 }
             }
-
-
 
         }
     }
@@ -9408,7 +8227,6 @@ private fun handleLikeClickold(video: PostUser, isLiked: Boolean, isLikeLoading:
             is API_Result_Handling.Success -> {
                 isLikeLoading.value = false
 
-                // ✅ Toggle Like in all relevant lists
                 constants.Reels_ViewModel.toggleLike_Reels(video.user_post_id)
                 constants.Enquiry_ViewModel.toggleLike_Reels_Enquiry(video.user_post_id)
                 constants.Enquiry_ViewModel.toggleLike_Reels_SelfEnquiry(video.user_post_id)
@@ -9457,7 +8275,6 @@ private fun handleLikeClick(
     }
 }
 
-
 private fun handleCommentClick() {
     constants.API_Vm.isLoading_MComments = false
     constants.API_Vm.totalPages_MComments = 1
@@ -9479,7 +8296,7 @@ private fun handleSaveClick(postId: Int, isSaved: Boolean, isSaveLoading: Mutabl
 
                 constants.Reels_ViewModel.toggleSave_Reels(postId)
                 constants.Enquiry_ViewModel.atomicupdateSaveleadsSelf(postId, isSaved)
-//                constants.Enquiry_ViewModel.toggleSave_Reels_Enquiry(video.user_post_id)
+
             }
 
             is API_Result_Handling.Error -> {
@@ -9492,9 +8309,6 @@ private fun handleSaveClick(postId: Int, isSaved: Boolean, isSaveLoading: Mutabl
     }
 }
 
-
-
-
 @OptIn(FlowPreview::class)
 @Composable
 fun ReelsViewolddddd(
@@ -9502,7 +8316,6 @@ fun ReelsViewolddddd(
     viewModel: Common_H_ViewModel
     ,onLogout: () -> Unit
 ) {
-
 
    var showTABars = viewModel.showTABars.collectAsState()
    var showBABars = viewModel.showBABars.collectAsState()
@@ -9517,11 +8330,10 @@ fun ReelsViewolddddd(
     val playerManager = remember { VideoPlayerManager(context) }
 
     val total = videos.size
-    //val pagerState = rememberPagerState(initialPage = 0, pageCount = { if (total > 0) total else 1 })
 
     val pagerState = rememberPagerState(
         initialPage = 0,
-        pageCount = { videos.size.coerceAtLeast(1) } // dynamic page count
+        pageCount = { videos.size.coerceAtLeast(1) }
     )
 
     var previousPage by remember { mutableStateOf(-1) }
@@ -9563,9 +8375,7 @@ fun ReelsViewolddddd(
             constants.API_Vm.load_Reels(AppPreferences.getUserId(), AppPreferences.get_Post_Id().toString() ,1)
         }
 
-        // Pagination / load more
         LaunchedEffect(pagerState.currentPage, currentPage, isLoading, totalPages, nxtPage) {
-            println("PAGINATION NEW REELS  ${pagerState.currentPage}-- $currentPage  $isLoading $totalPages $nxtPage")
             snapshotFlow { pagerState.currentPage }
                 .debounce(300)
                 .collect { page ->
@@ -9576,16 +8386,12 @@ fun ReelsViewolddddd(
                                 currentPage < totalPages &&
                                 nxtPage > 0
 
-                    println("PAGINATION NEW REELS22 ${constants.API_Vm.isLoading_Reels} $page  $shouldLoadMore  ${pagerState.pageCount} ${pagerState.currentPage}-- $currentPage  $isLoading $totalPages $nxtPage")
-
                     if (shouldLoadMore) {
-                        println("PAGINATION NEW REELS 333$shouldLoadMore ${pagerState.currentPage}-- $currentPage  $isLoading $totalPages $nxtPage")
                         constants.API_Vm.load_Reels(AppPreferences.getUserId(), AppPreferences.get_Post_Id().toString(),nxtPage)
                     }
                 }
         }
 
-        // Page change handling
         LaunchedEffect(pagerState.currentPage, videos.size) {
             if (videos.isEmpty()) return@LaunchedEffect
             val currentIndex = pagerState.currentPage.coerceIn(0, videos.lastIndex)
@@ -9593,10 +8399,8 @@ fun ReelsViewolddddd(
 
             val currentVideo = videos[currentIndex]
 
-            // Pause all other videos
             playerManager.pauseAllExcept(currentIndex)
 
-            // Initialize current player if video exists
             if (!currentVideo.post_property.video.isNullOrEmpty()) {
                 playerManager.getOrCreatePlayer(
                     currentIndex,
@@ -9609,17 +8413,17 @@ fun ReelsViewolddddd(
             val isGoingUp = currentIndex < previousPage
             when {
                 currentIndex == 0 -> {
-                    // First video – show bars
+
                     viewModel.toggleshowTABars(true)
                     viewModel.toggleshowBABars(true)
                 }
                 isGoingUp -> {
-                    // Swiping up – show bars
+
                     viewModel.toggleshowTABars(true)
                     viewModel.toggleshowBABars(true)
                 }
                 else -> {
-                    // Scrolling down – hide bars
+
                     viewModel.toggleshowTABars(false)
                     viewModel.toggleshowBABars(false)
                 }
@@ -9628,7 +8432,6 @@ fun ReelsViewolddddd(
             previousPage = currentIndex
         }
 
-        // Lifecycle management
         DisposableEffect(lifecycleOwner) {
             val observer = LifecycleEventObserver { _, event ->
                 if (videos.isEmpty()) return@LifecycleEventObserver
@@ -9661,13 +8464,10 @@ fun ReelsViewolddddd(
             deactivated = true
         }
 
-        // Offline
         !isLoading && network.value == NetworkStatus.Offline -> {
             toast(constants.activity.getString(R.string.no_Internet))
         }
 
-
-        // Loader state
         isLoading && videos.isEmpty() -> {
             Box(
                 modifier = Modifier.fillMaxSize().background(Color.Black),
@@ -9676,7 +8476,6 @@ fun ReelsViewolddddd(
                 CircularProgressIndicator(color = Color.White)
             }
         }
-
 
         !error.isNullOrEmpty() -> {
             playerManager.releaseAll()
@@ -9696,8 +8495,6 @@ fun ReelsViewolddddd(
         }
 
         videos.isEmpty() && !isLoading -> {
-            // No videos after loading
-
 
             Box(
                 modifier = Modifier
@@ -9714,7 +8511,6 @@ fun ReelsViewolddddd(
             }
         }
 
-
         videos.isNotEmpty() -> {
                 VerticalPager(
                     state = pagerState,
@@ -9725,9 +8521,7 @@ fun ReelsViewolddddd(
 
                     val item = videos.getOrNull(page) ?: return@VerticalPager
                     val hasVideo = item.post_property.video?.isNotEmpty()
-                    println("HAS VIDEOO N111__ ${ item.post_property.video}")
 
-                    // Create player only if video exists
                     val player = if (hasVideo == true) {
                         remember(page) {
                             playerManager.getOrCreatePlayer(page, item.user_post_id, item.post_property.video?.firstOrNull()?.url ?: "")
@@ -9736,11 +8530,7 @@ fun ReelsViewolddddd(
 
                     Box(modifier = Modifier.fillMaxSize()) {
 
-                        println("HAS VIDEOO N4444__ ${ item.post_property.video} -- ${item.post_property.images}")
-
-
                         if (hasVideo == true) {
-                            // val player = playerManager.getOrCreatePlayer(page, item.user_post_id, item.post_property.video)
 
                             key(page, item.user_post_id) {
                                 if (player != null) {
@@ -9785,7 +8575,6 @@ fun ReelsViewolddddd(
                                 }
                             }
 
-                            // Track buffering
                             DisposableEffect(player, page) {
                                 val listener = object : Player.Listener {
                                     override fun onPlaybackStateChanged(playbackState: Int) {
@@ -9818,7 +8607,6 @@ fun ReelsViewolddddd(
                                 }
                             }
 
-
                             Reels_Options(
                                 modifier = Modifier.align(Alignment.BottomCenter),
                                 showBABars,
@@ -9830,14 +8618,11 @@ fun ReelsViewolddddd(
                                 viewModel
                             )
 
-
-
                         }
                         else if (item.post_property.images?.isNotEmpty() == true) {
                             val animationType = SlideshowAnimation.values()[page % SlideshowAnimation.values().size]
                             SingleSlideshowReel2(
-                                // imagesList = item.post_property.image_urls,
-                                //animationType = animationType,
+
                                 item = item,
                                 page = page,
                                 modifier = Modifier
@@ -9855,14 +8640,13 @@ fun ReelsViewolddddd(
                             )
                         }
                         else {
-                            println("HAS VIDEOO N333__ ${ item.post_property.video} -- ${item.post_property.images}")
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(Color.Black),
                                 contentAlignment = Alignment.Center
                             ) {
-                               // Text("No media available", color = Color.White)
+
                                 Image(painterResource(R.drawable.emptypostsrento) ,"")
 
                                 Reels_Options(
@@ -9876,37 +8660,29 @@ fun ReelsViewolddddd(
                                     viewModel
                                 )
 
-
                             }
                         }
-
 
                     }
                 }
             }
 
-
     }
-
 
     if (videos.isNotEmpty() && pagerState.currentPage < videos.size) {
         Enquiry_Form_Btm_Sheet_Structure(send_Eq_State.value, videos[pagerState.currentPage])
     }
 
-    // Reels Bottom Sheet
     if (reelsBTMSheetState.value) {
         ModalBottomSheet(
             onDismissRequest = { constants.Common_H_ViewModel.toggleReelsBTMSheet(false) }
             , containerColor = newWhite
         ) {
             val data =
-//                if (videos[pagerState.currentPage].user_id == AppPreferences.getUserId())
-//                reelsBTMSOptions.value.dropLast(1)
-//            else
+
                 reelsBTMSOptions.value.takeLast(2)
 
             data.forEachIndexed { index, Options ->
-
 
                 Row(
                     modifier = Modifier
@@ -9931,12 +8707,6 @@ fun ReelsViewolddddd(
                                 }
                             }
 
-
-                            //Options.onClick()
-//                            if (index == data.size - 1) {
-//
-//                                }
-//                            }
                                    },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -9957,7 +8727,6 @@ fun ReelsViewolddddd(
         }
     }
 
-    // Comment Sheet
     if (cmt_btm_Sheet.value) {
         ModalBottomSheet(
             onDismissRequest = { constants.Common_H_ViewModel.dismiss_Cmt_btm_Sheet() },
@@ -9969,8 +8738,6 @@ fun ReelsViewolddddd(
         }
     }
 
-
-    // Report Sheet
     if (report_BS.value){
 
         val sheetState = rememberModalBottomSheetState(
@@ -9997,8 +8764,6 @@ fun ReelsViewolddddd(
             ){
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
-
 
                 AnimatedContent (
                     targetState = report_success
@@ -10113,14 +8878,12 @@ fun ReelsViewolddddd(
                                     .size(150.dp)
                             )
 
-
                             Text(
                                 text = "Submitted Successfully",
                                 color = newBlack,
                                 fontSize = constants.textUnit(18),
                                 fontFamily = constants.fontFamily(0)
                             )
-
 
                             Text(
                                 text = "Thank you for bringing this to our attention.",
@@ -10166,7 +8929,7 @@ fun ReelsViewolddddd(
                                                     constants.API_Vm.put_Report_All(
                                                         user_id = AppPreferences.getUserId(),
                                                         user_post_id = videos[pagerState.currentPage].user_post_id.toString(),
-                                                        //AppPreferences.get_Post_Id(),
+
                                                         receiver_id = videos[pagerState.currentPage].user_id.toString(),
                                                         comment_id = "",
                                                         report_sentence_id = (constants.Profile_ViewModel.getSelectedProfileReportOptionId()
@@ -10178,46 +8941,38 @@ fun ReelsViewolddddd(
 
                                                         when (apiResultHandling) {
                                                             is API_Result_Handling.Loading -> {
-                                                                // loading
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                             }
 
                                                             is API_Result_Handling.Error -> {
-                                                                // fail
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.Success -> {
-
 
                                                                 constants.Profile_ViewModel.toggleReportSubmissionSuccess()
                                                                 constants.Reels_ViewModel.toggleLike_Report(
                                                                     videos[pagerState.currentPage].user_post_id
                                                                 )
-                                                                //constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(videos[pagerState.currentPage].user_id)
-                                                                // success
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.NoData -> {
-                                                                // no data
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.Deactivated -> {
-                                                                /// resultCallback(5)
+
                                                             }
                                                         }
                                                     }
                                                 } else {
 
-                                                    //constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
                                                     scope.launch {
                                                         snackbarHostState.showSnackbar(" Post Already Reported")
 
                                                         report_BS.value = false
                                                     }
-                                                    //SimpleSnackbar(" Post Already Reported")
 
                                                 }
                                             }
@@ -10242,7 +8997,6 @@ fun ReelsViewolddddd(
             }
         }
     }
-
 
     var app_Exit by remember { mutableStateOf(false) }
 
@@ -10385,7 +9139,6 @@ fun ReelsViewolddddd(
                             constants.Start_Up_ViewModel.userName = ""
                             constants.Start_Up_ViewModel.otp = ""
 
-
                             constants.Profile_ViewModel.dismiss_Logout_PP()
                             onLogout()
                         }
@@ -10418,7 +9171,6 @@ fun ReelsViewolddddd(
                             constants.Start_Up_ViewModel.userName = ""
                             constants.Start_Up_ViewModel.otp = ""
 
-
                             constants.Profile_ViewModel.dismiss_Logout_PP()
                             onLogout()
                         }
@@ -10431,12 +9183,6 @@ fun ReelsViewolddddd(
         }
     )
 }
-
-
-
-
-
-
 
 @Composable
 fun SingleSlideshowReel2(
@@ -10453,18 +9199,14 @@ fun SingleSlideshowReel2(
 )
 {
 
-
-
     val showBABars = viewmodel.showBABars.collectAsState()
 
     var currentIndex by remember { mutableStateOf(0) }
     var isPlaying by remember { mutableStateOf(true) }
 
-    // Animations
     val alpha = remember { Animatable(1f) }
     val scale = remember { Animatable(1f) }
 
-    // Slideshow animation loop
     LaunchedEffect(isPlaying) {
         while (isPlaying && item.post_property.images?.isNotEmpty() == true) {
             delay(intervalMillis)
@@ -10478,11 +9220,10 @@ fun SingleSlideshowReel2(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .noRippleClickable{ isPlaying = !isPlaying }, // tap to play/pause
+            .noRippleClickable{ isPlaying = !isPlaying },
         contentAlignment = Alignment.Center
     ) {
 
-        // Show current image
         if (item.post_property.images?.isNotEmpty() == true) {
             SubcomposeAsyncImage(
                 model = item.post_property.images[currentIndex].url,
@@ -10504,7 +9245,7 @@ fun SingleSlideshowReel2(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(newLightBlue)
-                        //.padding(8.dp)
+
                         , contentAlignment = Alignment.Center
                     ){
                        Image(painterResource(R.drawable.emptypostsrento) , "",
@@ -10522,14 +9263,11 @@ fun SingleSlideshowReel2(
                     .fillMaxSize()
                 , contentAlignment = Alignment.Center
             ) {
-                //Text("No media available", color = Color.White)
+
                 Image(painterResource(R.drawable.emptypostsrento) ,"")
             }
         }
 
-
-
-        // Reels options overlay (like, comment, save, bottom sheet)
         Reels_Options(
             modifier = Modifier.align(Alignment.BottomCenter),
             showBABars = showBABars,
@@ -10541,7 +9279,6 @@ fun SingleSlideshowReel2(
             viewModel = viewmodel
         )
 
-        // Play icon overlay when paused
         if (!isPlaying) {
             Box(
                 modifier = Modifier
@@ -10561,8 +9298,6 @@ fun SingleSlideshowReel2(
     }
 }
 
-
-
 @Composable
 fun SingleSlideshowReel2_Search_Flow23456789(
     item: Get_Reels_Data,
@@ -10578,28 +9313,21 @@ fun SingleSlideshowReel2_Search_Flow23456789(
 )
 {
 
-
-
     val showBABars = viewModel.showBABars.collectAsState()
 
     var currentIndex by remember { mutableStateOf(0) }
     var isPlaying by remember { mutableStateOf(true) }
 
-    // Animations
     val alpha = remember { Animatable(1f) }
     val scale = remember { Animatable(1f) }
 
-
-    // Comment bottom sheet state
     val cmt_btm_Sheet = viewModel.comment_btm_Sheet.collectAsState()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
     val reelsBTMSheetState = viewModel.reelsBtm_sheet.collectAsState()
     val reelsBTMSOptions = constants.Reels_ViewModel.reelsBTMSOptions.collectAsState()
 
-
     var mark_as_Sold = remember { mutableStateOf(false) }
-
 
     var isLike_Loading = remember { mutableStateOf(false) }
     var isSave_Loading = remember { mutableStateOf(false) }
@@ -10610,8 +9338,6 @@ fun SingleSlideshowReel2_Search_Flow23456789(
 
     val send_Eq_State = constants.Reels_ViewModel.send_Enquiry_Btm_Sheet.collectAsState()
 
-
-    // Slideshow animation loop
     LaunchedEffect(isPlaying) {
         while (isPlaying && item.post_property.images?.isNotEmpty() == true) {
             delay(intervalMillis)
@@ -10625,25 +9351,12 @@ fun SingleSlideshowReel2_Search_Flow23456789(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .noRippleClickable{ isPlaying = !isPlaying }, // tap to play/pause
+            .noRippleClickable{ isPlaying = !isPlaying },
         contentAlignment = Alignment.Center
     )
     {
 
-        // Show current image
         if (item.post_property.images?.isNotEmpty() == true) {
-//            AsyncImage(
-//                model = item.post_property.image_urls[currentIndex],
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .graphicsLayer(
-//                        alpha = alpha.value,
-//                        scaleX = scale.value,
-//                        scaleY = scale.value
-//                    ),
-//                contentScale = ContentScale.Crop
-//            )
 
             SubcomposeAsyncImage(
                 model = item.post_property.images[currentIndex].url,
@@ -10664,7 +9377,7 @@ fun SingleSlideshowReel2_Search_Flow23456789(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(newLightBlue)
-                        //.padding(8.dp)
+
                         , contentAlignment = Alignment.Center
                     ){
                         Image(painterResource(R.drawable.emptypostsrento) , "",
@@ -10680,12 +9393,10 @@ fun SingleSlideshowReel2_Search_Flow23456789(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                //Text("No media available", color = Color.White)
+
                 Image(painterResource(R.drawable.emptypostsrento) ,"")
             }
         }
-
-
 
         Reels_Options_Search_Flow(
             modifier = Modifier.align(Alignment.BottomCenter),
@@ -10701,7 +9412,6 @@ fun SingleSlideshowReel2_Search_Flow23456789(
             viewModel
         )
 
-        // Play icon overlay when paused
         if (!isPlaying) {
             Box(
                 modifier = Modifier
@@ -10720,9 +9430,8 @@ fun SingleSlideshowReel2_Search_Flow23456789(
         }
     }
 
-
     if (reelsBTMSheetState.value) {
-       // playerManager.pauseVideo(pagerState.currentPage)
+
         ModalBottomSheet(
             onDismissRequest = {
                 viewModel.toggleReelsBTMSheet(false)
@@ -10730,30 +9439,21 @@ fun SingleSlideshowReel2_Search_Flow23456789(
             , containerColor = newWhite
         )
         {
-//            val data = if (videos[pagerState.currentPage].user_id == AppPreferences.getUserId()) {
-//
-//                // Show full list
-//                reelsBTMSOptions.value.dropLast(1)
-//            } else {
-//                // Show only last 2 items, but avoid crash if list has < 2 items
-//                reelsBTMSOptions.value.takeLast(2)
-//            }
 
             val data = when {
                 videos[pagerState.currentPage].user_id == AppPreferences.getUserId() -> {
-                    // Owner: Show full list except the last item
+
                     reelsBTMSOptions.value.dropLast(1)
                 }
                 constants.Profile_ViewModel.from_SoldOuts.value == true -> {
-                    // Third scenario: Show only Repost and Delete
+
                     reelsBTMSOptions.value.filter { it.title == "Repost Property" || it.title == "Delete Property" }
                 }
                 else -> {
-                    // Not owner: Show only last 2 items
+
                     reelsBTMSOptions.value.takeLast(2)
                 }
             }
-
 
             data.forEachIndexed { index, Options ->
                 Row(
@@ -10762,19 +9462,7 @@ fun SingleSlideshowReel2_Search_Flow23456789(
                         .background(newWhite)
                         .padding(horizontal = 16.dp)
                         .noRippleClickable{
-//                            if (index == data.size - 1) {
-//                                // report_BS.value = true
-//                            } else if (Options.title == "Mark as Sold") {
-//                                mark_as_Sold.value = true
-//                            }
-//                            when(index) {
-//                                0 -> {
-//
-//                                }
-//                                1 -> {
-//
-//                                }
-//                            }
+
                             when {
                                 Options.title == "Repost Property" -> {}
                                 Options.title == "Edit Property" -> {}
@@ -10827,7 +9515,7 @@ fun SingleSlideshowReel2_Search_Flow23456789(
     }
 
     var network = rememberNetworkStatus()
-    // Report Sheet
+
     if (report_BS.value){
 
         val sheetState = rememberModalBottomSheetState(
@@ -10854,8 +9542,6 @@ fun SingleSlideshowReel2_Search_Flow23456789(
             ){
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
-
 
                 AnimatedContent (
                     targetState = report_success
@@ -10970,14 +9656,12 @@ fun SingleSlideshowReel2_Search_Flow23456789(
                                     .size(150.dp)
                             )
 
-
                             Text(
                                 text = "Submitted Successfully",
                                 color = newBlack,
                                 fontSize = constants.textUnit(18),
                                 fontFamily = constants.fontFamily(0)
                             )
-
 
                             Text(
                                 text = "Thank you for bringing this to our attention.",
@@ -11023,7 +9707,7 @@ fun SingleSlideshowReel2_Search_Flow23456789(
                                                         constants.API_Vm.put_Report_All(
                                                             user_id = AppPreferences.getUserId(),
                                                             user_post_id = videos[pagerState.currentPage].user_post_id.toString(),
-                                                            //AppPreferences.get_Post_Id(),
+
                                                             receiver_id = videos[pagerState.currentPage].user_id.toString(),
                                                             comment_id = "",
                                                             report_sentence_id = (constants.Profile_ViewModel.getSelectedProfileReportOptionId()
@@ -11035,46 +9719,34 @@ fun SingleSlideshowReel2_Search_Flow23456789(
 
                                                             when (apiResultHandling) {
                                                                 is API_Result_Handling.Loading -> {
-                                                                    // loading
-                                                                    //constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                                 }
 
                                                                 is API_Result_Handling.Error -> {
-                                                                    // fail
-                                                                    //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                                 }
 
                                                                 is API_Result_Handling.Success -> {
-
 
                                                                     constants.Profile_ViewModel.toggleReportSubmissionSuccess()
                                                                     constants.Reels_ViewModel.toggleLike_Report(
                                                                         videos[pagerState.currentPage].user_post_id
                                                                     )
-                                                                    //constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(videos[pagerState.currentPage].user_id)
-                                                                    // success
-                                                                    //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                                 }
 
                                                                 is API_Result_Handling.NoData -> {
-                                                                    // no data
-                                                                    //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                                 }
 
                                                                 is API_Result_Handling.Deactivated -> {
-                                                                    /// resultCallback(5)
+
                                                                 }
                                                             }
                                                         }
                                                     } else {
 
-                                                        //constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
-//                                                scope.launch {
                                                         GlobalSnackbar.show(" Post Already Reported")
-//
-//                                                    report_BS.value = false
-//                                                }
-                                                        //SimpleSnackbar(" Post Already Reported")
 
                                                     }
                                                 }
@@ -11105,9 +9777,8 @@ fun SingleSlideshowReel2_Search_Flow23456789(
         Enquiry_Form_Btm_Sheet_Structure(send_Eq_State.value, videos[pagerState.currentPage]  )
     }
 
-    // Comment sheet
     if (cmt_btm_Sheet.value) {
-        //playerManager.pauseVideo(pagerState.currentPage)
+
         ModalBottomSheet(
             onDismissRequest = {
                 viewModel.dismiss_Cmt_btm_Sheet()
@@ -11121,7 +9792,7 @@ fun SingleSlideshowReel2_Search_Flow23456789(
     }
 
     if (mark_as_Sold.value == true) {
-        //playerManager.pauseVideo(pagerState.currentPage)
+
         Mark_As_Sold_Flow(mark_as_Sold, videos[pagerState.currentPage].user_post_id, navController)
     }
 }
@@ -11137,7 +9808,7 @@ fun SingleSlideshowReel2_Search_Flow(
     isLike_Loading: MutableState<Boolean>,
     isSave_Loading: MutableState<Boolean>,
     intervalMillis: Long = 1000L,
-    viewModel: Common_H_ViewModel  // ADD THIS PARAMETER
+    viewModel: Common_H_ViewModel
 )
 {
     val showBABars = viewModel.showBABars.collectAsState()
@@ -11145,11 +9816,9 @@ fun SingleSlideshowReel2_Search_Flow(
     var currentIndex by remember { mutableStateOf(0) }
     var isPlaying by remember { mutableStateOf(true) }
 
-    // Animations
     val alpha = remember { Animatable(1f) }
     val scale = remember { Animatable(1f) }
 
-    // Comment bottom sheet state
     val cmt_btm_Sheet = viewModel.comment_btm_Sheet.collectAsState()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
@@ -11158,17 +9827,12 @@ fun SingleSlideshowReel2_Search_Flow(
 
     var mark_as_Sold = remember { mutableStateOf(false) }
 
-    // REMOVE THESE DUPLICATE DECLARATIONS - THEY'RE ALREADY PARAMETERS
-    // var isLike_Loading = remember { mutableStateOf(false) }
-    // var isSave_Loading = remember { mutableStateOf(false) }
-
     var report_BS = remember { mutableStateOf(false) }
     val report_Options = constants.Profile_ViewModel.profile_Report_Options.collectAsState()
     val report_success = constants.Profile_ViewModel.report_Submit_Success.collectAsState()
 
     val send_Eq_State = constants.Reels_ViewModel.send_Enquiry_Btm_Sheet.collectAsState()
 
-    // Slideshow animation loop
     LaunchedEffect(isPlaying) {
         while (isPlaying && item.post_property.images?.isNotEmpty() == true) {
             delay(intervalMillis)
@@ -11182,11 +9846,11 @@ fun SingleSlideshowReel2_Search_Flow(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .noRippleClickable{ isPlaying = !isPlaying }, // tap to play/pause
+            .noRippleClickable{ isPlaying = !isPlaying },
         contentAlignment = Alignment.Center
     )
     {
-        // Show current image
+
         if (item.post_property.images?.isNotEmpty() == true) {
             SubcomposeAsyncImage(
                 model = item.post_property.images[currentIndex].url,
@@ -11226,7 +9890,6 @@ fun SingleSlideshowReel2_Search_Flow(
             }
         }
 
-        // Reels options overlay (like, comment, save, bottom sheet)
         Reels_Options_Search_Flow(
             modifier = Modifier.align(Alignment.BottomCenter),
             videos,
@@ -11241,7 +9904,6 @@ fun SingleSlideshowReel2_Search_Flow(
             viewModel
         )
 
-        // Play icon overlay when paused
         if (!isPlaying) {
             Box(
                 modifier = Modifier
@@ -11262,8 +9924,6 @@ fun SingleSlideshowReel2_Search_Flow(
 
 }
 
-
-
 @Composable
 fun SingleSlideshowReel_Single(
     postId: Int,
@@ -11276,30 +9936,22 @@ fun SingleSlideshowReel_Single(
 )
 {
 
-
-    // 🔹 Observe updated data from ViewModel
     val myLeads by constants.Enquiry_ViewModel.my_Leads.collectAsState()
     val selfEnquiry by constants.Enquiry_ViewModel.self_Enquiry.collectAsState()
 
-    // 🔹 Always resolve latest PostUser from Flow
     val currentPost = remember(myLeads, selfEnquiry, postId) {
         myLeads.firstOrNull { it.post_user.user_post_id == postId }?.post_user
             ?: selfEnquiry.firstOrNull { it?.post_user?.user_post_id == postId }?.post_user
     } ?: return
-
 
     val showBABars = viewmodel.showBABars.collectAsState()
 
     var currentIndex by remember { mutableStateOf(0) }
     var isPlaying by remember { mutableStateOf(true) }
 
-    // Animations
     val alpha = remember { Animatable(1f) }
     val scale = remember { Animatable(1f) }
 
-
-
-    // Slideshow animation loop
     LaunchedEffect(isPlaying) {
         while (isPlaying && currentPost.post_property.images?.isNotEmpty() == true) {
             delay(intervalMillis)
@@ -11313,24 +9965,11 @@ fun SingleSlideshowReel_Single(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .noRippleClickable{ isPlaying = !isPlaying }, // tap to play/pause
+            .noRippleClickable{ isPlaying = !isPlaying },
         contentAlignment = Alignment.Center
     ) {
 
-        // Show current image
         if (currentPost.post_property.images?.isNotEmpty() == true) {
-//            AsyncImage(
-//                model = item.post_property.image_urls[currentIndex],
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .graphicsLayer(
-//                        alpha = alpha.value,
-//                        scaleX = scale.value,
-//                        scaleY = scale.value
-//                    ),
-//                contentScale = ContentScale.Crop
-//            )
 
             SubcomposeAsyncImage(
                 model = currentPost.post_property.images[currentIndex].url,
@@ -11351,7 +9990,7 @@ fun SingleSlideshowReel_Single(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(newLightBlue)
-                        //.padding(8.dp)
+
                         , contentAlignment = Alignment.Center
                     ){
                         Image(painterResource(R.drawable.emptypostsrento) , "",
@@ -11366,7 +10005,7 @@ fun SingleSlideshowReel_Single(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                //Text("No media available", color = Color.White)
+
                 Image(painterResource(R.drawable.emptypostsrento) ,"")
             }
         }
@@ -11374,9 +10013,6 @@ fun SingleSlideshowReel_Single(
         val position = remember { mutableStateOf(0L) }
         val duration = remember { mutableStateOf(1L) }
 
-
-        // Reels options overlay (like, comment, save, bottom sheet)
-        // Reels options overlay
         ReelsOptionsSingle(
             modifier = Modifier
                 .align(Alignment.BottomCenter), navController = navController,
@@ -11389,7 +10025,6 @@ fun SingleSlideshowReel_Single(
             showBABars = showBABars
         )
 
-        // Play icon overlay when paused
         if (!isPlaying) {
             Box(
                 modifier = Modifier

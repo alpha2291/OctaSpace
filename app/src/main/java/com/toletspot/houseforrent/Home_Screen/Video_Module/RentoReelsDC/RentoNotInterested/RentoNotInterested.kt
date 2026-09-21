@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Home_Screen.Video_Module.RentoReelsDC.RentoNotInterested
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

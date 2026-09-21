@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs.AppNotifcation
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -42,4 +41,3 @@ data class App_Notification_Data(
     val reported: Int,
 
 )
-

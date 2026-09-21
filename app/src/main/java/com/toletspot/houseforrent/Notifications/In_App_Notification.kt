@@ -144,14 +144,12 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
     var activateRentedout = remember { mutableStateOf(false) }
     var activateid = remember { mutableStateOf(0) }
 
-
     var selectedOptionIndex = remember { mutableListOf("1", "2", "3" , "4" ,"5" ,"6", "7", "8") }
 
     val network = rememberNetworkStatus()
 
-
     if (network.value == NetworkStatus.Online) {
-        // Initial load and filter reload
+
         LaunchedEffect(Unit, selectedOption, retry) {
             constants.API_Vm.totalPages_AN = 1
 
@@ -163,7 +161,6 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
             )
         }
 
-        // Pagination
         LaunchedEffect(currentPage, isLoading, totalPages, nxtPage) {
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                 .collect { lastVisibleItemIndex ->
@@ -189,7 +186,7 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
     val notifications = constants.Common_H_ViewModel.appNotification.collectAsStateWithLifecycle()
 
     val optionsList = remember {
-        //listOf("All", "Enquiries", "Likes", "Comments", "Follows")
+
         listOf("Follows", "Likes", "Comments", "Enquiries", "Declines", "Photo Request" , "All")
     }
 
@@ -202,7 +199,7 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Header
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -240,7 +237,6 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
             )
         }
 
-        // Dropdown filter
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -291,7 +287,7 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                     containerColor = newWhite
-                    //, modifier = Modifier.wrapContentWidth()
+
                 ) {
                     optionsList.forEachIndexed { index, option ->
                         DropdownMenuItem(
@@ -318,16 +314,14 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
                                     selectedOptionIndex.add("8")
                                 }
                             }
-                           // , modifier = Modifier.padding(horizontal = 4.dp)
+
                         )
                     }
                 }
             }
         }
 
-        // Main UI states
         when {
-
 
             network.value == NetworkStatus.Offline -> {
                 Column(
@@ -345,14 +339,11 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
                 }
             }
 
-
             isLoading && currentPage == 1 -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     LottiAnimation(2)
                 }
             }
-
-
 
             !error.isNullOrEmpty() -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -451,7 +442,6 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.padding(2.dp))
-               // constants.spacer(2)
 
                 Text(
                     text = "Unfollow ${content.user_Name} ?",
@@ -459,8 +449,6 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
                     fontSize = constants.textUnit(16),
                     fontFamily = constants.fontFamily(0)
                 )
-
-                //constants.spacer(2)
 
                 Text(
                     text = "By unfollowing, you cannot able to view their property posts.",
@@ -583,9 +571,6 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
-//                Image(painter = painterResource(R.drawable.repost) , "")
-
-
 
                 CommonText(
                     "Renew Property Listing",
@@ -635,27 +620,24 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
                                         is API_Result_Handling.Error -> {
 
                                             GlobalSnackbar.show("Something went wrong")
-                                            //isLoading = false
+
                                             activateRentedout.value = false
                                         }
 
                                         is API_Result_Handling.Deactivated -> {
-                                            //resultCallback(5)
+
                                         }
 
                                         is API_Result_Handling.Loading -> {
-                                            //isLoading = true
+
                                         }
 
                                         is API_Result_Handling.Success -> {
 
                                             GlobalSnackbar.show("Property Activated Successfully ")
-                                            //isLoading = false
+
                                             activateRentedout.value = false
 
-
-
-                                            //navController.navigateUp()
                                         }
                                     }
                                 }
@@ -674,14 +656,6 @@ fun In_App_Notification(navController: NavHostController, viewModel: Common_H_Vi
         }
     }
 }
-
-
-
-// 1folow
-// 2 like
-// 3 comments
-// 4 enquirees
-// 5 decline enquiree
 
 @Composable
 fun About_Property(
@@ -719,7 +693,6 @@ fun About_Property(
                                             GlobalSnackbar.show("User Not found")
                                         } else {
 
-//                                    viewModel.toggleshowTABars(false)
                                             ClickHelper.getInstance().clickOnce {
                                                 if (ClickGuard.canClick()) {
                                                     logD("clicks reels profile")
@@ -728,7 +701,6 @@ fun About_Property(
                                                         item.user_name ?: "Unknown"
                                                     )
 
-                                                    //new flowwewwwwwww
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         Profile_Handle_Back(
                                                             current_UsedId = AppPreferences.getUserId(),
@@ -736,14 +708,9 @@ fun About_Property(
                                                             ff_User_Name = item.user_name ?: "",
                                                             ff_Fw_Count = 0,
                                                             ff_Fg_Count = 0,
-                                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                                            // search_Text = search_Text.value
+
                                                         )
                                                     )
-
-                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                     constants.Profile_ViewModel.addProfile(
                                                         item.user_id ?: 0
@@ -752,7 +719,6 @@ fun About_Property(
                                                         id = item.user_id ?: 0
                                                     )
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     viewModel.toggleshowBABars(false)
                                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -772,7 +738,7 @@ fun About_Property(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(newLightBlue, CircleShape)
-                                    //.padding(8.dp)
+
                                     , contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -808,7 +774,7 @@ fun About_Property(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .background(newLightBlue)
-                                        //.padding(8.dp)
+
                                         , contentAlignment = Alignment.Center
                                     ) {
                                         Image(painterResource(R.drawable.emptypostsrento), "")
@@ -846,9 +812,8 @@ fun About_Property(
 
                                 else -> {
 
-                                    // When navigating FROM notifications to Enquiry:
                                     navController.navigate(
-                                        UserCredentialsScreenFlow.Common_Screen.route + "/3"  // ← Pass tab index 3
+                                        UserCredentialsScreenFlow.Common_Screen.route + "/3"
                                     ) {
                                         popUpTo(UserCredentialsScreenFlow.Common_Screen.route) {
                                             inclusive = true
@@ -856,11 +821,6 @@ fun About_Property(
                                         launchSingleTop = true
                                     }
 
-//                               viewModel.selectedBABTab(3)
-//                                navController.navigate(UserCredentialsScreenFlow.Common_Screen.route) {
-//                                    popUpTo(UserCredentialsScreenFlow.Common_Screen.route) { inclusive = true }
-//                                    launchSingleTop = true
-//                                }
                                 }
                             }
 
@@ -881,7 +841,7 @@ fun About_Property(
             )
         }
         else {
-            // declined
+
             ListItem(
                 headlineContent = {
                     Text(item.message)
@@ -907,7 +867,7 @@ fun About_Property(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(newLightBlue)
-                                    //.padding(8.dp)
+
                                     , contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -946,9 +906,9 @@ fun About_Property(
                                 }
 
                                 else -> {
-                                    // When navigating FROM notifications to Enquiry:
+
                                     navController.navigate(
-                                        UserCredentialsScreenFlow.Common_Screen.route + "/3"  // ← Pass tab index 3
+                                        UserCredentialsScreenFlow.Common_Screen.route + "/3"
                                     ) {
                                         popUpTo(UserCredentialsScreenFlow.Common_Screen.route) {
                                             inclusive = true
@@ -974,8 +934,6 @@ fun About_Property(
             )
         }
 }
-
-
 
 @Composable
 fun About_Comment(
@@ -1005,7 +963,6 @@ fun About_Comment(
                                     GlobalSnackbar.show("User Not found")
                                 } else {
 
-//                                    viewModel.toggleshowTABars(false)
                                     ClickHelper.getInstance().clickOnce {
                                         if (ClickGuard.canClick()) {
                                             logD("clicks reels profile")
@@ -1014,7 +971,6 @@ fun About_Comment(
                                                 item.user_name ?: "Unknown"
                                             )
 
-                                            //new flowwewwwwwww
                                             constants.Profile_ViewModel.add_BF_Handler(
                                                 Profile_Handle_Back(
                                                     current_UsedId = AppPreferences.getUserId(),
@@ -1022,14 +978,9 @@ fun About_Comment(
                                                     ff_User_Name = item.user_name ?: "",
                                                     ff_Fw_Count = 0,
                                                     ff_Fg_Count = 0,
-                                                    // is_Search_Enabled = is_Search_Enabled.value,
-                                                    // search_Text = search_Text.value
+
                                                 )
                                             )
-
-                                            /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                            println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                             constants.Profile_ViewModel.addProfile(
                                                 item.user_id ?: 0
@@ -1038,7 +989,6 @@ fun About_Comment(
                                                 id = item.user_id ?: 0
                                             )
 
-                                            // if (view_Details_Data.value?.user_id == AppPreferences.)
                                             viewModel.toggleshowBABars(false)
                                             navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                         }
@@ -1058,7 +1008,7 @@ fun About_Comment(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(newLightBlue)
-                            //.padding(8.dp)
+
                             , contentAlignment = Alignment.Center
                         ){
                             Text(
@@ -1093,7 +1043,7 @@ fun About_Comment(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ) {
                                 Image(painterResource(R.drawable.emptypostsrento), "")
@@ -1144,11 +1094,6 @@ fun About_Comment(
                             constants.API_Vm.isLoading_Reels = true
                             constants.API_Vm.totalPages_Reels = 1
 
-//                        navController.navigate(UserCredentialsScreenFlow.Common_Screen.route + "/0") {
-//                            popUpTo(UserCredentialsScreenFlow.Common_Screen.route) { inclusive = true }
-//                            launchSingleTop = true
-//                        }
-
                             navController.navigate(UserCredentialsScreenFlow.Common_Screen.route) {
                                 popUpTo(UserCredentialsScreenFlow.Common_Screen.route) {
                                     inclusive = true
@@ -1175,7 +1120,6 @@ fun About_Comment(
         ),
     )
 }
-
 
 var notification_Comment_Clicked = mutableStateOf(false)
 
@@ -1208,7 +1152,6 @@ fun About_Likes(
                                         GlobalSnackbar.show("User Not found")
                                     } else {
 
-//                                    viewModel.toggleshowTABars(false)
                                         ClickHelper.getInstance().clickOnce {
                                             if (ClickGuard.canClick()) {
                                                 logD("clicks reels profile")
@@ -1217,7 +1160,6 @@ fun About_Likes(
                                                     item.user_name ?: "Unknown"
                                                 )
 
-                                                //new flowwewwwwwww
                                                 constants.Profile_ViewModel.add_BF_Handler(
                                                     Profile_Handle_Back(
                                                         current_UsedId = AppPreferences.getUserId(),
@@ -1225,14 +1167,9 @@ fun About_Likes(
                                                         ff_User_Name = item.user_name ?: "",
                                                         ff_Fw_Count = 0,
                                                         ff_Fg_Count = 0,
-                                                        // is_Search_Enabled = is_Search_Enabled.value,
-                                                        // search_Text = search_Text.value
+
                                                     )
                                                 )
-
-                                                /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                 constants.Profile_ViewModel.addProfile(
                                                     item.user_id ?: 0
@@ -1241,7 +1178,6 @@ fun About_Likes(
                                                     id = item.user_id ?: 0
                                                 )
 
-                                                // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                 viewModel.toggleshowBABars(false)
                                                 navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                             }
@@ -1261,7 +1197,7 @@ fun About_Likes(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ){
                                 Text(
@@ -1297,7 +1233,7 @@ fun About_Likes(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(newLightBlue)
-                                    //.padding(8.dp)
+
                                     , contentAlignment = Alignment.Center
                                 ) {
                                     Image(painterResource(R.drawable.emptypostsrento), "")
@@ -1343,11 +1279,6 @@ fun About_Likes(
                                 constants.Reels_ViewModel.clear_All_Reels()
                                 constants.API_Vm.isLoading_Reels = true
                                 constants.API_Vm.totalPages_Reels = 1
-
-//                            navController.navigate(UserCredentialsScreenFlow.Common_Screen.route + "/0") {
-//                                popUpTo(UserCredentialsScreenFlow.Common_Screen.route) { inclusive = true }
-//                                launchSingleTop = true
-//                            }
 
                                 viewModel.selectedBABTab(0)
                                 navController.navigate(UserCredentialsScreenFlow.Common_Screen.route) {
@@ -1398,7 +1329,6 @@ fun About_Likes(
                                         GlobalSnackbar.show("User Not found")
                                     } else {
 
-//                                    viewModel.toggleshowTABars(false)
                                         ClickHelper.getInstance().clickOnce {
                                             if (ClickGuard.canClick()) {
                                                 logD("clicks reels profile")
@@ -1407,7 +1337,6 @@ fun About_Likes(
                                                     item.user_name ?: "Unknown"
                                                 )
 
-                                                //new flowwewwwwwww
                                                 constants.Profile_ViewModel.add_BF_Handler(
                                                     Profile_Handle_Back(
                                                         current_UsedId = AppPreferences.getUserId(),
@@ -1415,14 +1344,9 @@ fun About_Likes(
                                                         ff_User_Name = item.user_name ?: "",
                                                         ff_Fw_Count = 0,
                                                         ff_Fg_Count = 0,
-                                                        // is_Search_Enabled = is_Search_Enabled.value,
-                                                        // search_Text = search_Text.value
+
                                                     )
                                                 )
-
-                                                /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                 constants.Profile_ViewModel.addProfile(
                                                     item.user_id ?: 0
@@ -1431,7 +1355,6 @@ fun About_Likes(
                                                     id = item.user_id ?: 0
                                                 )
 
-                                                // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                 viewModel.toggleshowBABars(false)
                                                 navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                             }
@@ -1451,7 +1374,7 @@ fun About_Likes(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ){
                                 Text(
@@ -1488,27 +1411,6 @@ fun About_Likes(
                 .padding(horizontal = 8.dp, vertical = 12.dp)
                 .noRippleClickable {
 
-//                    when {
-//                        item.is_sold == 1 -> {}
-//                        item.is
-//                    }
-//
-//
-//
-//                    viewModel.notification_PostId = item.user_post_id.toString()
-//                    AppPreferences.save_Noti_Post_Id(item.user_post_id.toString())
-//                    viewModel.toggleshowTABars(false)
-//                    viewModel.toggleshowBABars(false)
-//
-//                    println("POST IDD --- ${ viewModel.notification_PostId}")
-//
-//                    constants.Reels_ViewModel.clear_All_Reels()
-//                    constants.API_Vm.isLoading_Reels = true
-//                    constants.API_Vm.totalPages_Reels = 1
-//                    navController.navigate(UserCredentialsScreenFlow.Common_Screen.route + "/0") {
-//                        popUpTo(UserCredentialsScreenFlow.Common_Screen.route) { inclusive = true }
-//                        launchSingleTop = true
-//                    }
                 }
 
             , colors = ListItemColors(
@@ -1526,8 +1428,6 @@ fun About_Likes(
     }
 }
 
-
-
 @Composable
 fun About_Users(
     item: App_Notification_Data,
@@ -1538,7 +1438,6 @@ fun About_Users(
 
     var followLoader by remember { mutableStateOf(false) }
 
-    // FIX: Use remember with keys to recalculate when item changes
     val followType = remember(item.im_followed, item.is_followed) {
         val type = if(item.im_followed == 1 && item.is_followed == 1 || item.im_followed == 1 && item.is_followed == 0) 1 else 0
         Log.d("AboutUsers", "Calculated followType: $type")
@@ -1585,8 +1484,6 @@ fun About_Users(
                                                 )
                                             )
 
-                                            println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
-
                                             constants.Profile_ViewModel.addProfile(
                                                 item.user_id ?: 0
                                             )
@@ -1624,7 +1521,6 @@ fun About_Users(
             }
         },
         trailingContent = {
-            println("FOLLOWTYPE -- $followType for notification_id: ${item.notification_id}")
 
             Box(
                 modifier = Modifier
@@ -1633,7 +1529,7 @@ fun About_Users(
                     .noRippleClickable {
                         ClickHelper.getInstance().clickOnce {
                             if (followType == 1) {
-                                // Unfollow - show popup
+
                                 constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
                                     id = item.user_id ?: 0,
                                     username = item.user_name ?: "username",
@@ -1645,7 +1541,7 @@ fun About_Users(
                                 constants.Profile_ViewModel.put_Following_Id(item.user_id)
                                 constants.Profile_ViewModel.setunfollowClicker()
                             } else {
-                                // Follow Back
+
                                 followLoader = true
                                 constants.Profile_ViewModel.put_follow_unfollow_Status(1)
                                 constants.Profile_ViewModel.put_Following_Id(item.user_id)
@@ -1683,20 +1579,14 @@ fun About_Users(
                     .padding(horizontal = 8.dp, vertical = 12.dp),
                 contentAlignment = Alignment.Center
             ) {
-//                if (followLoader) {
-//                    CircularProgressIndicator(
-//                        modifier = Modifier.size(15.dp),
-//                        color = if (followType == 1) newDarkGray else Color.White,
-//                        strokeWidth = 2.dp
-//                    )
-//                } else {
+
                     Text(
                         if (followType == 1) "Following" else "Follow Back",
                         color = if (followType == 1) newDarkGray else newWhite,
                         fontSize = constants.textUnit(12),
                         fontFamily = constants.fontFamily(0)
                     )
-               // }
+
             }
         },
         modifier = Modifier
@@ -1716,8 +1606,6 @@ fun About_Users(
         ),
     )
 }
-
-
 
 @Composable
 fun MediaAssistance(
@@ -1765,7 +1653,7 @@ fun MediaAssistance(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue, CircleShape)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ) {
                                 Image(
@@ -1815,9 +1703,8 @@ fun MediaAssistance(
 
                         else -> {
 
-                            // When navigating FROM notifications to Enquiry:
                             navController.navigate(
-                                UserCredentialsScreenFlow.Common_Screen.route + "/3"  // ← Pass tab index 3
+                                UserCredentialsScreenFlow.Common_Screen.route + "/3"
                             ) {
                                 popUpTo(UserCredentialsScreenFlow.Common_Screen.route) {
                                     inclusive = true
@@ -1825,11 +1712,6 @@ fun MediaAssistance(
                                 launchSingleTop = true
                             }
 
-//                               viewModel.selectedBABTab(3)
-//                                navController.navigate(UserCredentialsScreenFlow.Common_Screen.route) {
-//                                    popUpTo(UserCredentialsScreenFlow.Common_Screen.route) { inclusive = true }
-//                                    launchSingleTop = true
-//                                }
                         }
                     }
                 }
@@ -1874,8 +1756,7 @@ fun RenewPost(
                     fontFamily = constants.fontFamily(0)
                     , modifier = Modifier
                         .noRippleClickable {
-//                            onRenewClick(item.user_post_id)
-//                            onDeleteAfterRenew(item.notification_id)
+
                         }
                 )
             }
@@ -1912,7 +1793,7 @@ fun RenewPost(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue, CircleShape)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ) {
                                 Image(
@@ -1956,7 +1837,7 @@ fun RenewPost(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ) {
                                 Image(painterResource(R.drawable.emptypostsrento), "")
@@ -1994,8 +1875,6 @@ fun RenewPost(
                             toast("Post Already Renewed")
                         }
 
-
-
                         else -> {
 
                             constants.PostProperty_ViewModel.setViewDetailsFlow(ViewDetailsFlow.RENEW)
@@ -2008,11 +1887,6 @@ fun RenewPost(
                             constants.API_Vm.isLoading_Reels = true
                             constants.API_Vm.totalPages_Reels = 1
 
-//                            navController.navigate(UserCredentialsScreenFlow.Common_Screen.route + "/0") {
-//                                popUpTo(UserCredentialsScreenFlow.Common_Screen.route) { inclusive = true }
-//                                launchSingleTop = true
-//                            }
-
                             constants.PostProperty_ViewModel.setViewDetailsFlow(ViewDetailsFlow.RENEW)
 
                             viewModel.selectedBABTab(0)
@@ -2023,11 +1897,6 @@ fun RenewPost(
                                 launchSingleTop = true
                             }
 
-//                               viewModel.selectedBABTab(3)
-//                                navController.navigate(UserCredentialsScreenFlow.Common_Screen.route) {
-//                                    popUpTo(UserCredentialsScreenFlow.Common_Screen.route) { inclusive = true }
-//                                    launchSingleTop = true
-//                                }
                         }
                     }
                 }
@@ -2047,7 +1916,6 @@ fun RenewPost(
     )
 }
 
-
 @Composable
 fun PostExpired(
     type: Int,
@@ -2065,16 +1933,6 @@ fun PostExpired(
                     fontFamily = constants.fontFamily(2),
                 )
 
-//                Text(
-//                    "Renew now", color = newBlue,
-//                    fontSize = constants.textUnit(14),
-//                    fontFamily = constants.fontFamily(0)
-//                    , modifier = Modifier
-//                        .noRippleClickable {
-//                            onRenewClick(item.user_post_id)
-//
-//                        }
-//                )
             }
         },
         supportingContent = {
@@ -2109,7 +1967,7 @@ fun PostExpired(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue, CircleShape)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ) {
                                 Image(
@@ -2153,7 +2011,7 @@ fun PostExpired(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ) {
                                 Image(painterResource(R.drawable.emptypostsrento), "")
@@ -2171,56 +2029,7 @@ fun PostExpired(
             .noRippleClickable {
                 ClickHelper.getInstance().clickOnce {
                     GlobalSnackbar.show("Property Expired")
-//                    when {
-//
-//                        item.is_sold == 1 -> {
-//                            GlobalSnackbar.show("Property Not found")
-//                        }
-//
-//                        item.reported == 1 -> {
-//                            GlobalSnackbar.show("Property Not found")
-//                        }
-//
-//                        item.post_deleted == 1 -> {
-//                            GlobalSnackbar.show("Property Not found")
-//                        }
-//
-//                        item.id_deleted == 1 -> {
-//                            GlobalSnackbar.show("Property Not found")
-//                        }
-//
-//                        else -> {
-//
-//                            constants.PostProperty_ViewModel.setViewDetailsFlow(ViewDetailsFlow.RENEW)
-//                            AppPreferences.save_Noti_Post_Id(item.user_post_id.toString())
-//                            viewModel.notification_PostId = item.user_post_id.toString()
-//                            viewModel.toggleshowTABars(false)
-//                            viewModel.toggleshowBABars(false)
-//
-//                            constants.Reels_ViewModel.clear_All_Reels()
-//                            constants.API_Vm.isLoading_Reels = true
-//                            constants.API_Vm.totalPages_Reels = 1
-//
-////                            navController.navigate(UserCredentialsScreenFlow.Common_Screen.route + "/0") {
-////                                popUpTo(UserCredentialsScreenFlow.Common_Screen.route) { inclusive = true }
-////                                launchSingleTop = true
-////                            }
-//
-//                            viewModel.selectedBABTab(0)
-//                            navController.navigate(UserCredentialsScreenFlow.Common_Screen.route) {
-//                                popUpTo(UserCredentialsScreenFlow.Common_Screen.route) {
-//                                    inclusive = true
-//                                }
-//                                launchSingleTop = true
-//                            }
-//
-////                               viewModel.selectedBABTab(3)
-////                                navController.navigate(UserCredentialsScreenFlow.Common_Screen.route) {
-////                                    popUpTo(UserCredentialsScreenFlow.Common_Screen.route) { inclusive = true }
-////                                    launchSingleTop = true
-////                                }
-//                        }
-//                    }
+
                 }
             }
 

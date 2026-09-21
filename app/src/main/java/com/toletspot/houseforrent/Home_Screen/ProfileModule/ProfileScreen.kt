@@ -154,7 +154,6 @@ import kotlinx.coroutines.launch
 import kotlin.collections.isNotEmpty
 import kotlin.text.isNotEmpty
 
-
 enum class OwnProfileTab {
     ACTIVE,
     EXPIRED
@@ -165,29 +164,18 @@ data class ThumbnailData(
     val modifier: Modifier
 )
 
-
-
-
-
-
-
 var apiOnce = mutableStateOf(false)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Profile_Structure(navController: NavHostController, viewModel: Common_H_ViewModel ,onLogout: () -> Unit ) {
 
-
-
-
     BackHandler {
-        println("Backhandler Restricted")
         viewModel.selectedBABTab(0)
         viewModel.toggleshowBABars(true)
         viewModel.toggleshowTABars(true)
     }
 
     val network = rememberNetworkStatus()
-
 
     val notchPadding = rememberNotchHeightDp()
 
@@ -201,8 +189,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
 
     var deactivated by remember { mutableStateOf(false) }
 
-
-
     var clicker by remember { mutableStateOf(0) }
 
     var block_PopUp by remember { mutableStateOf(false) }
@@ -215,15 +201,11 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
 
     val open_Settings = constants.Profile_ViewModel.settings_Open.collectAsState()
 
-
-
     var retry by remember { mutableStateOf(0) }
 
     var failure = remember { mutableStateOf(false) }
 
-
     var apiResult by remember { mutableStateOf<Int?>(null) }
-
 
     val isLoading = constants.API_Vm.isLoading_Profile_Posts
     val errorMessage = constants.API_Vm.errorMessage_Profile_Posts
@@ -232,23 +214,17 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
     val nxtpage = constants.API_Vm.nextPage_Profile_Posts
     val listState = rememberLazyListState()
 
-
-
     if (network.value == NetworkStatus.Online){
     DisposableEffect (true) {
 
         constants.Profile_ViewModel.put_Other_User_Id(0)
-        println("HOW MANY TIMES")
             Get_User_Profile_API_Call { result ->
                 apiResult = result
-                println("RESULT OWN PROFILE -- ${result}")
             }
-
 
         constants.Profile_ViewModel.clear_All_BF_Handler()
 
         onDispose {
-            println("OWN PROFILE DISPOSED")
         }
     }
     }
@@ -256,26 +232,17 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
         GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
     }
 
-
     val profile_Content_Original = constants.Profile_ViewModel.own_Profile_Content.collectAsStateWithLifecycle()
 
     val profile_Content = constants.Profile_ViewModel.get_Content_own_Profile()
 
-
     val posts = constants.Profile_ViewModel.profile_Posts.collectAsStateWithLifecycle()
-
-
-    println("API RESULT __ ${apiResult} DATA _4444${profile_Content_Original.value}__ ${ constants.Profile_ViewModel.get_Content_Own_Profile_Check()}  DHUVD __ ${ constants.Profile_ViewModel.get_Content_own_Profile()}")
-
-
-
 
     val tabs = listOf("Published" , "Expired")
     var selectedTab by remember { mutableStateOf(0) }
     var selectedTabTitle by remember { mutableStateOf("") }
 
     LaunchedEffect(AppPreferences.get_ProfileImage().isNotEmpty() , Unit) {
-        println("PROFILE IMAGE SHARE PFRS -- ${AppPreferences.get_ProfileImage()} -- ${profile_Content?.profile_image ?: ""}")
         selectedTab = constants.Profile_ViewModel.onclickedProfileTab.value
     }
 
@@ -294,7 +261,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                 userId = AppPreferences.getUserId().toString(),
                 isDeleted = true,
                 onComplete = {
-                    println("FIREBASE ACCOUNT DELECTED UPDATED")
                 }
             )
 
@@ -346,9 +312,8 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
             }
         }
 
-
         apiResult == 3 && constants.Profile_ViewModel.get_Content_Own_Profile_Check() -> {
-            // no data
+
             failure.value = true
             Box(modifier = Modifier
                 .fillMaxSize()
@@ -360,14 +325,12 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                 }
         }
 
-       //apiResult == 1 &&
         !constants.Profile_ViewModel.get_Content_Own_Profile_Check() -> {
 
             FirebaseRepository.setAccountDeleted(
                 userId = AppPreferences.getUserId().toString(),
                 isDeleted = false,
                 onComplete = {
-                    println("FIREBASE ACCOUNT DELECTED UPDATED")
                 }
             )
 
@@ -375,7 +338,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                 AppPreferences.save_ProfileImage(profile_Content?.profile_image ?: "")
             }
 
-//            AppPreferences.save_Email(profile_Content?)
             constants.Start_Up_ViewModel.set_Country(profile_Content?.country ?: constants.Start_Up_ViewModel.country.value)
             constants.Start_Up_ViewModel.set_State(profile_Content?.state ?: constants.Start_Up_ViewModel.state.value)
             constants.Start_Up_ViewModel.set_City(profile_Content?.city ?: constants.Start_Up_ViewModel.city.value)
@@ -390,22 +352,16 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
 
                    var failure_posts = remember { mutableStateOf(false) }
 
-
-            // Initial load
             if (network.value == NetworkStatus.Online) {
 
-                // ✅ INITIAL LOAD - Only load page 1 once
                 LaunchedEffect(Unit,selectedTab, retry_posts) {
-                    println("📍 Initial load triggered - retry_posts=$retry_posts")
 
-                    // Reset state ONLY - Don't set isLoading here!
                     constants.Profile_ViewModel.clearPosts()
                     constants.API_Vm.currentPage_Profile_Posts = 0
                     constants.API_Vm.totalPages_Profile_Posts = 1
                     constants.API_Vm.nextPage_Profile_Posts = 1
                     constants.API_Vm.errorMessage_Profile_Posts = null
 
-                    // Now call API (it will set isLoading internally)
                     constants.API_Vm.load_Profile_Posts(
                         user_id = AppPreferences.getUserId(),
                         others_id = 0,
@@ -414,7 +370,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                     )
                 }
 
-                // ✅ PAGINATION - Load more when scrolling
                 LaunchedEffect(listState) {
                     snapshotFlow {
                         listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
@@ -427,9 +382,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                         val isLoading = constants.API_Vm.isLoading_Profile_Posts
                         val nextPage = constants.API_Vm.nextPage_Profile_Posts
 
-                        println("📊 Scroll → last=$lastVisibleItemIndex total=$totalItems isLoading=$isLoading current=$currentPage/$totalPages")
-
-                        // ✅ Load next page when near bottom
                         if (lastVisibleItemIndex != null &&
                             totalItems > 0 &&
                             lastVisibleItemIndex >= totalItems - loadMoreThreshold &&
@@ -437,7 +389,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                             currentPage < totalPages &&
                             nextPage > 0
                         ) {
-                            println("🔄 Triggering next page load → $nextPage")
 
                             constants.API_Vm.load_Profile_Posts(
                                 user_id = AppPreferences.getUserId(),
@@ -466,21 +417,13 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                     )
                 )
 
-
-
                 constants.Profile_ViewModel.add_Current_Profile_UserId(
                     profile_Content?.user_id ?: 999
                 )
 
-
-                println("NEW FLOW OP  = ${new.value.map { it }}")
-
-
                 constants.Profile_ViewModel.add_Selected_User_Name(
                     profile_Content?.username ?: "Profile"
                 )
-
-                println("STACK ADDING OWN PROFILE-- ${constants.Profile_ViewModel.currentBFHandler.value}")
 
                 onDispose {
                     constants.Profile_ViewModel.add_BF_Handler(
@@ -510,7 +453,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                     lastSeen = System.currentTimeMillis(),
                 ),
                 onComplete = {
-                    println("USER FIREBASE UPDATED FROM PROFILE")
                 }
             )
 
@@ -524,12 +466,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
             )
             {
 
-
                 var tabUnit = if (forTab()) 3 else 2
-
-
-
-
 
                 LazyColumn(
                     modifier = Modifier
@@ -540,7 +477,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                 )
                 {
                     stickyHeader {
-
 
                         constants.spacer(2)
                         Box(
@@ -566,12 +502,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                 modifier = Modifier
                                     .align(Alignment.CenterEnd)
                                     .size(if (forTab()) 28.dp else 24.dp)
-//                                    .clip(RoundedCornerShape(4.dp))
-//                                    .border(
-//                                        1.dp,
-//                                        newGray,
-//                                        RoundedCornerShape(4.dp)
-//                                    )
+
                                     .background(Color.Transparent)
                                     .noRippleClickable {
                                         constants.Profile_ViewModel.set_open_settings()
@@ -588,7 +519,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                     }
 
                     item {
-                        // new top app bar
+
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -601,7 +532,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                         )
                                     )
                                 )
-                            //.padding(top = if (forTab()) 16.dp else notchPadding.value)
+
                         )
                         {
                             Box(
@@ -618,7 +549,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                     )
                             )
 
-
                             Box(
                                 modifier = Modifier
                                     .padding(top = 20.dp)
@@ -633,7 +563,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                         .background(Color.White)
                                         .padding(6.dp)
 
-
                                 )
                                 {
                                     Box(
@@ -643,12 +572,9 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                             .size(if (forTab()) 92.dp else 80.dp)
                                             .clip(CircleShape)
                                             .background(newWhite)
-                                        //.zIndex(2f)
-                                        //.padding(4.dp)
 
                                     )
                                     {
-                                        println("OWN PROFILE IMAGE -- ${profile_Content?.profile_image}")
 
                                         SubcomposeAsyncImage(
                                             model = profile_Content?.profile_image
@@ -666,7 +592,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                                     modifier = Modifier
                                                         .fillMaxSize()
                                                         .background(newLightBlue)
-                                                    //.padding(8.dp)
+
                                                     ,
                                                     contentAlignment = Alignment.Center
                                                 ) {
@@ -690,7 +616,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                         .zIndex(0f)
                                         .fillMaxWidth()
                                         .wrapContentHeight()
-                                        //clip(RoundedCornerShape(8.dp))
+
                                         .background(Color.White)
                                         .padding(horizontal = 16.dp)
                                         .padding(top = 40.dp, bottom = 16.dp),
@@ -699,13 +625,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                 )
                                 {
                                     constants.spacer(4)
-//                                                   Text(
-//                                                       text = profile_Content?.username ?: "",
-//                                                       color = newBlack,
-//                                                       fontSize = constants.textUnit(18),
-//                                                       fontFamily = constants.fontFamily(0)
-//                                                   )
-//                                                   constants.spacer(2)
 
                                     Text(
                                         text = profile_Content?.name ?: "",
@@ -715,20 +634,16 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                     )
                                     constants.spacer(2)
 
-//"This is about me in two hello lines. If the content gets longer, it will end with an ellipsis and a clickable 'see more' to view the full text."
-
                                     if (!profile_Content?.bio.isNullOrEmpty()) {
                                         ExpandableText(
                                             fullText = profile_Content?.bio ?: "",
                                             maxCharacters = 80,
                                             modifier = Modifier.fillMaxWidth(.9f)
                                         )
-                                        //Spacer(modifier = Modifier.padding(4.dp))
 
                                         constants.spacer(2)
                                     }
 
-                                    // follow follwing , post show box
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth(.9f)
@@ -755,55 +670,26 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
 
                                                                             constants.Profile_ViewModel.clear_FF_Lists()
 
-
-                                                                            /// following
-
                                                                             constants.Common_H_ViewModel.toggleshowBABars(
                                                                                 false
                                                                             )
-//
-                                                                            // backtrack variable
-//                                                                            constants.Profile_ViewModel.add_Tapped_FFs(
-//                                                                                Profile_ViewModel.Tap_Flw_Flg_DC(
-//                                                                                    id = profile_Content?.user_id
-//                                                                                        ?: 0,
-//                                                                                    tap_data = 0,
-//                                                                                    flg_Count = profile_Content?.following
-//                                                                                        ?: 0,
-//                                                                                    flw_Count = profile_Content?.followers
-//                                                                                        ?: 0
-//                                                                                )
-//                                                                            )
 
-
-                                                                            /// new flowww
-
-                                                                            // ✅ Add handler for FF screen
                                                                             if (new.value.isNotEmpty()) {
                                                                                 constants.Profile_ViewModel.add_BF_Handler(
                                                                                     Profile_Handle_Back(
                                                                                         current_UsedId = AppPreferences.getUserId(),
                                                                                         other_UserId = 0,
-                                                                                        selected_Tab = 0, // Followers
+                                                                                        selected_Tab = 0,
                                                                                         ff_User_Name = profile_Content?.username ?: "Username",
                                                                                         ff_Fw_Count = profile_Content?.followers ?: 0,
                                                                                         ff_Fg_Count = profile_Content?.following ?: 0,
-                                                                                        screenType = ScreenType.FF_LIST // ✅ Set to FF_LIST
+                                                                                        screenType = ScreenType.FF_LIST
                                                                                     )
                                                                                 )
                                                                             }
 
-
-//                                                                            if (new.value.isNotEmpty()) {
-//                                                                                constants.Profile_ViewModel.updateSelectedTab_BF_Handler(
-//                                                                                    new.value.first().id,
-//                                                                                    0
-//                                                                                )
-//                                                                            }
-
                                                                             clicker =
                                                                                 0
-
 
                                                                             navController.navigate(
                                                                                 ProfileScreenFlow.Profile_FF_Structure.route
@@ -814,58 +700,27 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
 
                                                                             constants.Profile_ViewModel.clear_FF_Lists()
 
-                                                                            // followers
-
                                                                             constants.Common_H_ViewModel.toggleshowBABars(
                                                                                 false
                                                                             )
-//
 
-                                                                            // backtrack var
-//                                                                            constants.Profile_ViewModel.add_Tapped_FFs(
-//                                                                                Profile_ViewModel.Tap_Flw_Flg_DC(
-//                                                                                    id = profile_Content?.user_id
-//                                                                                        ?: 1,
-//                                                                                    tap_data = 1,
-//                                                                                    flg_Count = profile_Content?.following
-//                                                                                        ?: 1,
-//                                                                                    flw_Count = profile_Content?.followers
-//                                                                                        ?: 1
-//                                                                                )
-//                                                                            )
-
-                                                                            // ✅ Add handler for FF screen
                                                                             if (new.value.isNotEmpty()) {
                                                                                 constants.Profile_ViewModel.add_BF_Handler(
                                                                                     Profile_Handle_Back(
                                                                                         current_UsedId = AppPreferences.getUserId(),
                                                                                         other_UserId = 0,
-                                                                                        selected_Tab = 1, // Following
+                                                                                        selected_Tab = 1,
                                                                                         ff_User_Name = profile_Content?.username ?: "Username",
                                                                                         ff_Fw_Count = profile_Content?.followers ?: 0,
                                                                                         ff_Fg_Count = profile_Content?.following ?: 0,
-                                                                                        screenType = ScreenType.FF_LIST // ✅ Set to FF_LIST
+                                                                                        screenType = ScreenType.FF_LIST
                                                                                     )
                                                                                 )
                                                                             }
 
-                                                                            println(
-                                                                                "COUNTS NOT ADIDING -222-${new.value} ${profile_Content?.following} -- ${profile_Content?.followers}"
-                                                                            )
-
-                                                                            /// new flowww
-
-//                                                                            if (new.value.isNotEmpty()) {
-//                                                                                constants.Profile_ViewModel.updateSelectedTab_BF_Handler(
-//                                                                                    new.value.first().id,
-//                                                                                    1
-//                                                                                )
-//                                                                            }
 
                                                                             clicker =
                                                                                 1
-
-
 
                                                                             navController.navigate(
                                                                                 ProfileScreenFlow.Profile_FF_Structure.route
@@ -923,41 +778,12 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                         }
                                     }
 
-                                    //Spacer(modifier = Modifier.padding(4.dp))
-
-//                                                   constants.spacer(2)
-//
-//                                                   Row(
-//                                                       modifier = Modifier
-//                                                           .fillMaxWidth(.9f)
-//                                                           .height(if (forTab()) 44.dp else 32.dp)
-//                                                           .clip(RoundedCornerShape(8.dp))
-//                                                           .background(Color(0xffF7F0DC))
-//                                                           .border(
-//                                                               1.dp,
-//                                                               newBlue,
-//                                                               RoundedCornerShape(8.dp)
-//                                                           )
-//                                                           .noRippleClickable {
-//                                                               constants.Profile_ViewModel.enable_Edit_Profile()
-//                                                           },
-//                                                       verticalAlignment = Alignment.CenterVertically,
-//                                                       horizontalArrangement = Arrangement.Center
-//                                                   ) {
-//                                                       Text(
-//                                                           text = "Edit profile",
-//                                                           color = newBlack,
-//                                                           fontSize = constants.textUnit(14),
-//                                                           fontFamily = constants.fontFamily(0)
-//                                                       )
-//                                                   }
-
                                     constants.spacer(2)
 
                                 }
                             }
                         }
-                        // top bar end
+
                     }
 
                     item {
@@ -992,30 +818,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                             constants.spacer(4)
                         }
 
-
-
-
-
-
-//                        Column() {
-//                            SecondaryTabRow(
-//                                selectedTabIndex = selectedTab,
-//                                divider = {},
-//                                containerColor = Color.White) {
-//                                tabs.forEachIndexed { index, title ->
-//                                    Tab(
-//                                        text = { Text(title) },
-//                                        selected = selectedTab == index,
-//                                        onClick = { selectedTab = index }
-//                                    )
-//                                }
-//                            }
-//
-//                            constants.spacer(4)
-//                        }
                     }
-
-
 
                     when {
                         isLoading && posts.value.isEmpty() -> {
@@ -1050,13 +853,13 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
 
                         !isLoading && posts.value.isEmpty() -> {
                             item {
-                                // no data
+
                                 if (selectedTab == 0){
                                     Column(
                                         modifier = Modifier
                                             .padding(top = if (forTab()) 154.dp else 64.dp)
                                             .fillMaxSize()
-                                        // .background(newBlue)
+
                                         , verticalArrangement = Arrangement.Bottom,
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     )
@@ -1087,7 +890,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                         modifier = Modifier
                                             .padding(top = if (forTab()) 154.dp else 64.dp)
                                             .fillMaxSize()
-                                        // .background(newBlue)
+
                                         , verticalArrangement = Arrangement.Bottom,
                                         horizontalAlignment = Alignment.CenterHorizontally
                                     )
@@ -1111,13 +914,11 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                         }
 
                         posts.value.isNotEmpty() -> {
-                            println("POSTS DATA PROFILE -- ${posts.value.map { it.user_post_id }}")
-
 
                             customGridItems(
                                 count = posts.value.size,
                                 nColumns = tabUnit
-                                //, horizontalArrangement = Arrangement.spacedBy(16.dp)
+
                             )
                             { itemIndex ->
 
@@ -1125,7 +926,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                 Box(
                                     modifier = Modifier
                                         .padding(vertical = 8.dp, horizontal = 8.dp)
-                                        //.padding(top = 16.dp)
+
                                         .height(216.dp)
                                         .width(162.dp)
                                         .clip(RoundedCornerShape(4.dp))
@@ -1140,26 +941,20 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                                 itemIndex
                                             )
                                             constants.Reels_ViewModel.setReelsContent(
-                                                posts.value.map { it.toReelsData() }  // map each element to Get_Reels_Data
+                                                posts.value.map { it.toReelsData() }
                                             )
 
                                             constants.PostProperty_ViewModel.set_Post_Form_Flow(
                                                 -1
                                             )
-//                                            constants.PostProperty_ViewModel.setViewDetailsFlow(
-//                                                ViewDetailsFlow.OWN
-//                                            )
 
-                                            println("SELECTED TABBBB -- ${selectedTabTitle}")
                                             if (selectedTabTitle == "Expired") {
-                                                println("SELECTED TABBBB11111 -- ${selectedTabTitle}")
 
                                                 constants.PostProperty_ViewModel.setViewDetailsFlow(
                                                     ViewDetailsFlow.EXPIRY
                                                 )
                                             }
                                             else {
-                                                println("SELECTED TABBBB2222 -- ${selectedTabTitle}")
 
                                                 constants.PostProperty_ViewModel.setViewDetailsFlow(
                                                     ViewDetailsFlow.OWN
@@ -1200,10 +995,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                                 }
 
                                                 item.post_property.images.isEmpty() && item.post_property.video.isEmpty() -> {
-//                                                                   ThumbnailData(
-//                                                                       model = R.drawable.photorequestimage,
-//                                                                       modifier = Modifier.size(80.dp)
-//                                                                   )
+
                                                     ThumbnailData(
                                                         model = R.drawable.emptypostsrento,
                                                         modifier = Modifier.size(100.dp)
@@ -1222,9 +1014,8 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                     logger("CREATE" , "$thumbnailData ** ${item.post_property.video.firstOrNull()?.url ?: ""}")
                                     SubcomposeAsyncImage(
                                         model = thumbnailData.model
-                                        // item?.thumbnail ?: ""
+
                                         , modifier = thumbnailData.modifier
-                                        //.size(40.dp)
 
                                         , contentDescription = ""
                                         , contentScale = ContentScale.FillBounds
@@ -1258,14 +1049,9 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                 }
             }
 
-
         }
     }
 
-
-
-
-    /// settings
     AnimatedVisibility(
         visible = open_Settings.value
         , enter = slideInHorizontally (tween(400)){ it }
@@ -1280,8 +1066,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
         }
     }
 
-
-    // block popup
     Common_Popup(
        visible =  block_PopUp,
         modifier = Modifier
@@ -1298,7 +1082,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
         {
 
             Spacer(modifier = Modifier.padding(2.dp))
-//            constants.spacer(2)
 
             Text(
                 text = "Block Akash Kishore ?",
@@ -1306,8 +1089,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                 fontSize = constants.textUnit(16),
                 fontFamily = constants.fontFamily(0)
             )
-
-//            constants.spacer(2)
 
             Text(
                 text = "After blocking, your posts won’t visible to them. Are you sure you want to block?",
@@ -1376,7 +1157,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
         modifier = Modifier.background(Color(0xffFCEDEC)),
         image = "",
         icon = 0,
-            //R.drawable.deactivated,
+
         userName = "",
         content = {
             Column (
@@ -1390,7 +1171,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                     modifier = Modifier.size(64.
                     dp))
                 constants.spacer(2)
-
 
                 Text("Account Restricted"
                     , color = Color.Black
@@ -1412,47 +1192,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                 constants.spacer(8)
 
                 Row() {
-                    /*Box(
-                        modifier = Modifier
-                            .height(32.dp)
-                            .fillMaxWidth(.9f)
-                            .noRippleClickable {
-
-                                ClickHelper.getInstance().clickOnce {
-                                    if (ClickGuard.canClick()) {
-                                        AppPreferences.clearAll()
-
-                                        constants.Profile_ViewModel.set_open_settings()
-                                        constants.Profile_ViewModel.onSet_Settings_Click(0)
-
-                                        constants.Common_H_ViewModel.changeStatus(false)
-
-                                        constants.Common_H_ViewModel.toggleshowBABars(true)
-                                        constants.Start_Up_ViewModel.updateLoginState(0)
-                                        constants.Start_Up_ViewModel.phoneNumber = ""
-                                        constants.Start_Up_ViewModel.countryCode = "+91"
-                                        constants.Start_Up_ViewModel.userName = ""
-                                        constants.Start_Up_ViewModel.otp = ""
-
-
-                                        //constants.Profile_ViewModel.dismiss_Logout_PP()
-
-                                        constants.Profile_ViewModel.onSet_Settings_Click(-1)
-                                        constants.Profile_ViewModel.setSelected_AS_Settings("")
-                                        onLogout()
-                                        deactivated = false
-                                        constants.Profile_ViewModel.dismiss_Logout_PP()
-                                    }
-                                }
-                            }, contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            "Disagree with Decision",
-                            color = Color.White,
-                            fontSize = constants.textUnit(14),
-                            fontFamily = constants.fontFamily(0)
-                        )
-                    }*/
 
                     Text(
                         "Okay",
@@ -1476,7 +1215,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                         constants.Start_Up_ViewModel.userName = ""
                                         constants.Start_Up_ViewModel.otp = ""
 
-
                                         constants.Profile_ViewModel.dismiss_Logout_PP()
                                         onLogout()
                                     }
@@ -1485,15 +1223,11 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                     )
                 }
 
-                //Spacer(modifier = Modifier.padding(8.dp))
                 constants.spacer(8)
             }
         }
     )
 
-
-
-    /// report bottom sheet
     if (report_BS){
 
         val sheetState = rememberModalBottomSheetState(
@@ -1516,8 +1250,6 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
             ){
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
-
 
                 AnimatedContent (
                     targetState = report_success
@@ -1576,38 +1308,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                 user_Manual_report.value,
                                 enter = slideInHorizontally(tween(900)) { it }
                             ) {
-                                /* Box(
-                                 modifier = Modifier
-                                     .fillMaxWidth()
-                                     .heightIn(min = 50.dp , max = 80.dp)
-                                     .clip(RoundedCornerShape(8.dp))
-                                     .background(Color.White)
-                                     .border(1.dp , newGray , RoundedCornerShape(8.dp))
-                             )
-                             {
-                                 TextField(
-                                     value = user_Manual_report_String.value,
-                                     onValueChange = {
-                                         user_Manual_report_String.value = it
-                                     },
-                                     placeholder = {
-                                         Text(
-                                             text = "What else we need to know...",
-                                             color = newBlack,
-                                             fontSize = constants.textUnit(12),
-                                             fontFamily = constants.fontFamily(3)
-                                         )
-                                     },
-                                     colors = TextFieldDefaults.colors(
-                                         focusedContainerColor = Color.White
-                                         ,unfocusedContainerColor = Color.White
-                                         , focusedIndicatorColor = Color.Transparent
-                                         , unfocusedIndicatorColor = Color.Transparent
-                                         , focusedTextColor = newBlack
-                                         , unfocusedTextColor = newGray
-                                     )
-                                 )
-                             }*/
+
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -1660,14 +1361,12 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
                                     .size(150.dp)
                             )
 
-
                             Text(
                                 text = "Submitted Successfully",
                                 color = newBlack,
                                 fontSize = constants.textUnit(18),
                                 fontFamily = constants.fontFamily(0)
                             )
-
 
                             Text(
                                 text = "Thank you for bringing this to our attention.",
@@ -1720,29 +1419,7 @@ fun Profile_Structure(navController: NavHostController, viewModel: Common_H_View
         }
     }
 
-
-    /*///edit profile view
-    AnimatedVisibility(
-        visible = edit_profile_Listener.value
-        , enter = slideInHorizontally (tween(600)){ it }
-        , exit = slideOutHorizontally (tween(600)) { it }
-        , modifier = Modifier
-            .fillMaxSize()
-    )
-    {
-        if (edit_profile_Listener.value) {
-           viewModel.toggleshowBABars(false)
-        }
-        else {
-            triggerEdited_Profile_details.value = triggerEdited_Profile_details.value + 9876
-        }
-            Edit_Profile(notchPadding ,navController)
-    }*/
-
 }
-
-
-//var isLoadingChange =  mutableStateOf(false)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1750,20 +1427,15 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
 {
 
     BackHandler {
-        println("Backhandler Restricted other profile")
     }
 
     var isLoadingChange = remember { mutableStateOf(false) }
 
-
     val network = rememberNetworkStatus()
-
 
     val notchPadding = rememberNotchHeightDp()
 
-
     val BA_Bar_Listener = viewModel.showBABars.collectAsState()
-
 
     LaunchedEffect (BA_Bar_Listener.value , Unit){
         viewModel.toggleshowBABars(BA_Bar_Listener.value)
@@ -1785,20 +1457,13 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
 
     var from_DLP_State = from_DeepLink_Property.collectAsStateWithLifecycle()
 
-    //val profile_Mode = constants.Profile_ViewModel.switch_Profile_Mode.collectAsState()
-
     var apiResult by remember { mutableStateOf<Int?>(null) }
 
     val context = LocalContext.current
 
-
     val getter = constants.Profile_ViewModel.show_Current_BF_Handler()
 
     var test = constants.Profile_ViewModel.profile_BF_Handler.collectAsState()
-
-    println("CHECKING NOWWWWW --- ${getter} %%% -${test}- ")
-
-
 
     val is_Search_State_FF = constants.Profile_ViewModel.is_Search_Enabled.collectAsStateWithLifecycle()
 
@@ -1808,30 +1473,22 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
     val totalPages = constants.API_Vm.totalPages_Profile_Posts
     val listState = rememberLazyListState()
 
-
     var retry by remember { mutableStateOf(0) }
 
     var failure = remember { mutableStateOf(false) }
 
-
     val posts = constants.Profile_ViewModel.profile_Posts.collectAsStateWithLifecycle()
-
 
     if (network.value == NetworkStatus.Online){
     DisposableEffect (Unit ,retry) {
 
-        println("PRINTLN 1 = ${constants.Profile_ViewModel.get_Other_User_Id()}")
         constants.Profile_ViewModel.put_Other_User_Id(getter?.other_UserId ?: 0)
-        println("PRINTLN 2 = ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
         Get_User_Profile_API_Call { result ->
             apiResult = result
-            println("APIRESULT -- ${apiResult}")
         }
 
-
         onDispose {
-            println("OTHER PROFILES DISPOSED")
         }
     }
     }
@@ -1839,11 +1496,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
         GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
     }
 
-
-
     when {
-
-
 
         apiResult == 5 -> {
             viewModel.toggleshowBABars(false)
@@ -1860,9 +1513,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                         .padding(start = 16.dp)
                         .align(Alignment.TopStart)
                     , onBackClick = {
-                        // constants.Profile_ViewModel.remove_Selected_User_Name_last()
-                        //constants.Profile_ViewModel.remove_Tapped_FFs_last()
-                        //constants.Profile_ViewModel.setProfileSelectedTab(profile_Content.value!!.type)
 
                         constants.Profile_ViewModel.remove_last_BF_Handler()
 
@@ -1873,7 +1523,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                    // .background(newBlue)
+
                     , verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 )
@@ -1906,7 +1556,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
             )
             {
 
-
                 Row (
                     modifier = Modifier
                         .padding(top = if (forTab()) 16.dp else rememberNotchHeightDp().value)
@@ -1922,10 +1571,8 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                             ClickHelper.getInstance().clickOnce {
                                 if (ClickGuard.canClick()) {
                                     if (from_DLP_State.value) {
-                                        println("waesdgrjhkl")
                                         viewModel.toggleshowBABars(true)
                                         viewModel.toggleshowTABars(true)
-
 
                                         constants.Profile_ViewModel.put_Other_User_Id(
                                             0
@@ -1947,19 +1594,13 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                         set_FDLP_State(false)
 
                                     } else {
-                                        // constants.Profile_ViewModel.remove_Selected_User_Name_last()
-                                        //constants.Profile_ViewModel.remove_Tapped_FFs_last()
-                                        //constants.Profile_ViewModel.setProfileSelectedTab(profile_Content.value!!.type)
 
                                         constants.Profile_ViewModel.remove_last_BF_Handler()
-
 
                                         navController.navigateUp()
                                     }
                                 }
                             }
-
-
 
                         }
                     )
@@ -1971,8 +1612,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                         fontFamily = constants.fontFamily(0)
                     )
                 }
-
-
 
                     Column (
                         modifier = Modifier
@@ -2015,7 +1654,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
             }
         }
 
-
         apiResult == 2 -> {
             Box (
                 modifier = Modifier
@@ -2030,14 +1668,13 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
             }
         }
 
-
         apiResult == 3 && constants.Profile_ViewModel.get_Content_Others_Profile_Check() -> {
-            // no data
+
             Column(
                 modifier = Modifier
                     .padding(top = 64.dp)
                     .fillMaxSize()
-                // .background(newBlue)
+
                 , verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally
             )
@@ -2057,49 +1694,18 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
             }
         }
 
-        //apiResult == 1 &&
         !constants.Profile_ViewModel.get_Content_Others_Profile_Check() -> {
 
             val userBFHandler = constants.Profile_ViewModel.show_Current_BF_Handler()
 
-            // ✅ ADD HANDLER FOR BOTH DEEP LINK AND NORMAL NAVIGATION
-           /* DisposableEffect(Unit) {
-                // Only add if not already added (check if this profile is already in the stack)
-                val currentStack = constants.Profile_ViewModel.profile_BF_Handler.value
-                val alreadyInStack = currentStack.any {
-                    it.other_UserId == profile_Content.value?.user_id
-                }
-
-                if (!alreadyInStack) {
-                    println("➕ Adding handler for other profile: ${profile_Content.value?.username}")
-
-                    constants.Profile_ViewModel.add_BF_Handler(
-                        Profile_Handle_Back(
-                            current_UsedId = AppPreferences.getUserId(),
-                            other_UserId = profile_Content.value?.user_id ?: 0,
-                            ff_User_Name = profile_Content.value?.username ?: "",
-                            ff_Fw_Count = profile_Content.value?.followers ?: 0,
-                            ff_Fg_Count = profile_Content.value?.following ?: 0,
-                        )
-                    )
-                }
-
-                onDispose {
-                    println("🗑️ Other_Profile_Structure disposed")
-                }
-            }*/
-
-            // ✅ Only observe the profile data, don't add handler here
             DisposableEffect(profile_Content.value?.user_id) {
                 if (profile_Content.value != null) {
                     val profileId = profile_Content.value?.user_id ?: 0
                     constants.Profile_ViewModel.add_Current_Profile_UserId(profileId)
 
-                    println("👁️ Observing profile: ${profile_Content.value?.username} (ID: $profileId)")
                 }
 
                 onDispose {
-                    println("🗑️ Other_Profile_Structure disposed")
                 }
             }
 
@@ -2107,25 +1713,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                 constants.Profile_ViewModel.add_Selected_User_Name(
                     profile_Content.value?.username ?: "UserName"
                 )
-
-
-
-//                new flowwewwwwwww
-//                constants.Profile_ViewModel.add_BF_Handler(
-//                    Profile_Handle_Back(
-//                        current_UsedId = AppPreferences.getUserId(),
-//                        other_UserId = profile_Content.value?.user_id ?: 0,
-//                        ff_User_Name = profile_Content.value?.username ?: "",
-//                        ff_Fw_Count = profile_Content.value?.followers ?: 0,
-//                        ff_Fg_Count = profile_Content.value?.following ?: 0,
-//                         is_Search_Enabled = is_Search_Enabled.value,
-//                         search_Text = search_Text.value
-//                    )
-//                )
-
-                /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                 constants.Profile_ViewModel.addProfile(
                     profile_Content.value?.user_id ?: 0
@@ -2135,22 +1722,17 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                 )
             }
 
-
-            // ✅ FIX: Detect when navigating to a different profile
             LaunchedEffect(getter?.other_UserId) {
                 if (getter?.other_UserId != null && getter.other_UserId != 0) {
-                    // Show shimmer immediately when profile ID changes
+
                     isLoadingChange.value = true
 
-                    // Keep shimmer visible until new data arrives
-                    // The shimmer will be hidden after profile_Content updates (see next LaunchedEffect)
                 }
             }
 
-// Keep your existing LaunchedEffect for hiding shimmer after data loads
             LaunchedEffect(profile_Content.value?.user_id) {
                 if (profile_Content.value != null) {
-                    delay(100) // Small delay for smooth transition
+                    delay(100)
                     isLoadingChange.value = false
                 }
             }
@@ -2159,18 +1741,14 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
 
             if (network.value == NetworkStatus.Online) {
 
-                // ✅ INITIAL LOAD - Only load page 1 once
                 LaunchedEffect(Unit, retry_posts) {
-                    println("📍 Initial load triggered - retry_posts=$retry_posts")
 
-                    // Reset state ONLY - Don't set isLoading here!
                     constants.Profile_ViewModel.clearPosts()
                     constants.API_Vm.currentPage_Profile_Posts = 0
                     constants.API_Vm.totalPages_Profile_Posts = 1
                     constants.API_Vm.nextPage_Profile_Posts = 1
                     constants.API_Vm.errorMessage_Profile_Posts = null
 
-                    // Now call API (it will set isLoading internally)
                     constants.API_Vm.load_Profile_Posts(
                         user_id = AppPreferences.getUserId(),
                         others_id = constants.Profile_ViewModel.get_Other_User_Id(),
@@ -2179,7 +1757,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                     )
                 }
 
-                // ✅ PAGINATION - Load more when scrolling
                 LaunchedEffect(listState) {
                     snapshotFlow {
                         listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
@@ -2192,9 +1769,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                         val isLoading = constants.API_Vm.isLoading_Profile_Posts
                         val nextPage = constants.API_Vm.nextPage_Profile_Posts
 
-                        println("📊 Scroll → last=$lastVisibleItemIndex total=$totalItems isLoading=$isLoading current=$currentPage/$totalPages")
-
-                        // ✅ Load next page when near bottom
                         if (lastVisibleItemIndex != null &&
                             totalItems > 0 &&
                             lastVisibleItemIndex >= totalItems - loadMoreThreshold &&
@@ -2202,7 +1776,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                             currentPage < totalPages &&
                             nextPage > 0
                         ) {
-                            println("🔄 Triggering next page load → $nextPage")
 
                             constants.API_Vm.load_Profile_Posts(
                                 user_id = AppPreferences.getUserId(),
@@ -2219,27 +1792,17 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                 GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
             }
 
-
             DisposableEffect (Unit){
 
                 constants.Profile_ViewModel.addProfile(profile_Content.value?.user_id ?: 0)
 
-
-                println("OTHER USER CURRENT PRPFILE USERID ___ ${profile_Content.value?.user_id}")
-
                 constants.Profile_ViewModel.add_Current_Profile_UserId(profile_Content.value?.user_id ?: 999)
 
-
-
-                println("BLOCK STATUS VALUE GIVEN __ ${constants.Profile_ViewModel.get_Block_Status()}")
-
                 onDispose {
-                    println("VALUESS ADDDING DISPOSED")
                 }
             }
 
             val collect = constants.Profile_ViewModel.tapped_Profile_List.collectAsState()
-
 
                     Column(
                         modifier = Modifier
@@ -2249,129 +1812,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                         , horizontalAlignment = Alignment.CenterHorizontally
                     )
                     {
-
-                      /*  // top bar
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                            , contentAlignment = Alignment.Center
-                        )
-                        {
-                            Row (
-                                modifier = Modifier
-                                    .align(Alignment.CenterStart)
-                                , verticalAlignment = Alignment.CenterVertically
-                                , horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            )
-                            {
-                                Backer(
-                                    modifier = Modifier
-                                    , onBackClick = {
-                                        ClickHelper.getInstance().clickOnce {
-                                            if (ClickGuard.canClick()) {
-                                                if (from_DLP_State.value) {
-                                                    println("waesdgrjhkl")
-                                                    viewModel.toggleshowBABars(true)
-                                                    viewModel.toggleshowTABars(true)
-
-
-                                                    constants.Profile_ViewModel.put_Other_User_Id(
-                                                        0
-                                                    )
-
-                                                    constants.Profile_ViewModel.add_Selected_Profile_Id(
-                                                        0
-                                                    )
-
-                                                    AppPreferences.save_Post_Id(0)
-
-                                                    navController.navigate(
-                                                        UserCredentialsScreenFlow.Common_Screen.route
-                                                    ) {
-                                                        popUpTo(navController.graph.startDestinationId) {
-                                                            inclusive = true
-                                                        }
-                                                    }
-                                                    set_FDLP_State(false)
-
-                                                } else {
-                                                    // constants.Profile_ViewModel.remove_Selected_User_Name_last()
-                                                    //constants.Profile_ViewModel.remove_Tapped_FFs_last()
-                                                    //constants.Profile_ViewModel.setProfileSelectedTab(profile_Content.value!!.type)
-
-                                                    constants.Profile_ViewModel.remove_last_BF_Handler()
-
-
-                                                    navController.navigateUp()
-                                                }
-                                            }
-                                        }
-                                    }
-                                )
-
-                                Text(
-                                    text = userBFHandler?.ff_User_Name ?: "Profile",
-                                    color = newBlack,
-                                    fontSize = constants.textUnit(24),
-                                    fontFamily = constants.fontFamily(0)
-                                )
-                            }
-
-
-                            if (!from_DLP_State.value) {
-                                Box(
-                                    modifier = Modifier
-                                        .align(Alignment.CenterEnd)
-                                        .size(24.dp)
-                                        .clip(RoundedCornerShape(4.dp))
-                                        .border(1.dp, newGray, RoundedCornerShape(4.dp))
-                                        .background(Color.White)
-                                        .noRippleClickable {
-                                            expanded.value = true
-                                        }, contentAlignment = Alignment.Center
-                                )
-                                {
-                                    Common_DropDown2Options(
-                                        expanded = expanded,
-                                        mainIcon = R.drawable.more_vert,
-                                        content = listOf(
-                                            Common_DropDown2Options_DC(
-                                                icon = R.drawable.block_profile,
-                                                if ((profile_Content.value?.is_blocked
-                                                        ?: 0) == 0
-                                                ) "Block" else "Unblock"
-                                            ),
-                                            Common_DropDown2Options_DC(
-                                                icon = R.drawable.reelsreport,
-                                                "Report"
-                                            ),
-                                        ),
-                                        onClick1 = {
-                                            if (profile_Content.value?.is_blocked == 0) {
-                                                constants.Profile_ViewModel.put_Block_Status(1)
-                                            } else {
-                                                constants.Profile_ViewModel.put_Block_Status(2)
-                                            }
-                                            block_PopUp = true
-                                            expanded.value = false
-                                        },
-                                        onClick2 = {
-                                            if (profile_Content.value?.is_report != 1) {
-                                                constants.Profile_ViewModel.toggle_ReportSucces_True()
-                                                report_BS = true
-                                            } else {
-                                                GlobalSnackbar.show("Profile Already Reported")
-                                            }
-                                            expanded.value = false
-                                        },
-                                        modifier = Modifier
-                                            .size(18.dp)
-                                    )
-                                }
-                            }
-                        }
-
-                        //top bar end*/
 
                         var grditype = if (forTab()) 3 else 2
 
@@ -2390,64 +1830,12 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                         modifier = Modifier
                                             .background(Color(0xffF7F0DC))
                                             .fillMaxWidth()
-                                            //.padding(top = rememberNotchHeightDp().value)
+
                                             .padding(horizontal = 16.dp)
                                             .padding(top = if (forTab()) 16.dp else (notchPadding.value + 4.dp))
                                         , contentAlignment = Alignment.Center
                                     )
                                     {
-//                                        Row (
-//                                            modifier = Modifier
-//                                                .align(Alignment.CenterStart)
-//                                            , verticalAlignment = Alignment.CenterVertically
-//                                            , horizontalArrangement = Arrangement.spacedBy(8.dp)
-//                                        )
-//                                        {
-                                           /* Backer(
-                                                modifier = Modifier.align(Alignment.CenterStart)
-                                                , onBackClick = {
-                                                    ClickHelper.getInstance().clickOnce {
-                                                        if (ClickGuard.canClick()) {
-                                                            constants.API_Vm.isLoading_ProfileS = true
-                                                            if (from_DLP_State.value) {
-                                                                println("waesdgrjhkl")
-                                                                viewModel.toggleshowBABars(true)
-                                                                viewModel.toggleshowTABars(true)
-
-
-                                                                constants.Profile_ViewModel.put_Other_User_Id(
-                                                                    0
-                                                                )
-
-                                                                constants.Profile_ViewModel.add_Selected_Profile_Id(
-                                                                    0
-                                                                )
-
-                                                                AppPreferences.save_Post_Id(0)
-
-                                                                navController.navigate(
-                                                                    UserCredentialsScreenFlow.Common_Screen.route
-                                                                ) {
-                                                                    popUpTo(navController.graph.startDestinationId) {
-                                                                        inclusive = true
-                                                                    }
-                                                                }
-                                                                set_FDLP_State(false)
-
-                                                            } else {
-                                                                // constants.Profile_ViewModel.remove_Selected_User_Name_last()
-                                                                //constants.Profile_ViewModel.remove_Tapped_FFs_last()
-                                                                //constants.Profile_ViewModel.setProfileSelectedTab(profile_Content.value!!.type)
-
-                                                                constants.Profile_ViewModel.remove_last_BF_Handler()
-
-
-                                                                navController.navigateUp()
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            )*/
 
                                         Backer(
                                             modifier = Modifier.align(Alignment.CenterStart),
@@ -2457,7 +1845,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                         constants.API_Vm.isLoading_ProfileS = true
 
                                                         if (from_DLP_State.value) {
-                                                            // Deep link case
+
                                                             viewModel.toggleshowBABars(true)
                                                             viewModel.toggleshowTABars(true)
                                                             constants.Profile_ViewModel.put_Other_User_Id(0)
@@ -2479,14 +1867,11 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                 val currentHandler = currentStack.last()
                                                                 val previousHandler = currentStack[currentStack.size - 2]
 
-                                                                println("🔙 Back from Profile - current: ${currentHandler.screenType}, previous: ${previousHandler.screenType}")
-
-                                                                // Remove current handler (Profile screen)
                                                                 constants.Profile_ViewModel.remove_last_BF_Handler()
 
                                                                 when (previousHandler.screenType) {
                                                                     ScreenType.PROFILE -> {
-                                                                        // ✅ Going back to another Profile
+
                                                                         val profileId = if (previousHandler.other_UserId == 0) {
                                                                             previousHandler.current_UsedId
                                                                         } else {
@@ -2512,15 +1897,13 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                     }
 
                                                                     ScreenType.FF_LIST -> {
-                                                                        // ✅ Going back to FF screen
-                                                                        // Just restore the state, navigateUp will go to FF screen
-                                                                        println("✅ Going back to FF screen")
+
                                                                     }
                                                                 }
 
                                                                 navController.navigateUp()
                                                             } else {
-                                                                // Last profile - go to own profile
+
                                                                 constants.Profile_ViewModel.put_Other_User_Id(0)
                                                                 constants.Profile_ViewModel.add_Selected_Profile_Id(0)
                                                                 viewModel.toggleshowBABars(true)
@@ -2533,7 +1916,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                             }
                                         )
 
-
                                         Text(
                                                 text = userBFHandler?.ff_User_Name ?: "Profile",
                                                 color = newBlack,
@@ -2541,7 +1923,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                 fontFamily = constants.fontFamily(0)
                                                 , modifier = Modifier.align(Alignment.Center)
                                             )
-//                                        }
 
                                         if (!from_DLP_State.value && profile_Content.value?.user_id != AppPreferences.getUserId()) {
                                             Box(
@@ -2549,7 +1930,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                     .align(Alignment.CenterEnd)
                                                     .size(24.dp)
                                                     .clip(RoundedCornerShape(4.dp))
-//                                                    .border(1.dp, newGray, RoundedCornerShape(4.dp))
+
                                                     .background(Color.Transparent)
                                                     .noRippleClickable {
                                                         expanded.value = true
@@ -2601,7 +1982,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                 }
 
                                 item {
-                                    // new top app bar
+
                                     Box(
                                         modifier = Modifier
                                             .fillMaxWidth()
@@ -2614,7 +1995,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                     )
                                                 )
                                             )
-                                        //.padding(top = if (forTab()) 16.dp else notchPadding.value)
+
                                     )
                                     {
                                         Box(
@@ -2652,14 +2033,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                         .background(newWhite)
                                                 )
                                                 {
-                                                    /// profile pic
 
-                                                    println("PROFILE IMAGE __ ${profile_Content.value?.profile_image ?: ""}")
-//                                AsyncImage (
-//                                    model = profile_Content.value?.profile_image ?: "",
-//                                    "",
-//                                    contentScale = ContentScale.FillBounds
-//                                )
                                                     SubcomposeAsyncImage(
                                                         model = profile_Content.value?.profile_image ?: "",
                                                         modifier = Modifier
@@ -2674,7 +2048,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                 modifier = Modifier
                                                                     .fillMaxSize()
                                                                     .background(newLightBlue)
-                                                                //.padding(8.dp)
+
                                                                 , contentAlignment = Alignment.Center
                                                             ) {
                                                                 Text(
@@ -2695,7 +2069,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                     .zIndex(0f)
                                                     .fillMaxWidth()
                                                     .wrapContentHeight()
-                                                    //clip(RoundedCornerShape(8.dp))
+
                                                     .background(Color.White)
                                                     .padding(horizontal = 16.dp)
                                                     .padding(top = 40.dp, bottom = 16.dp),
@@ -2703,7 +2077,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                 horizontalAlignment = Alignment.CenterHorizontally
                                             )
                                             {
-
 
                                                 constants.spacer(2)
 
@@ -2714,8 +2087,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                     fontFamily = constants.fontFamily(1)
                                                 )
 
-//"This is about me in two hello lines. If the content gets longer, it will end with an ellipsis and a clickable 'see more' to view the full text."
-
                                                 ExpandableText(
                                                     fullText = profile_Content.value?.bio ?: "",
                                                     maxCharacters = 80,
@@ -2724,7 +2095,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
 
                                                 Spacer(modifier = Modifier.padding(4.dp))
 
-                                                // follow follwing , post show box
                                                 Row(
                                                     modifier = Modifier
                                                         .fillMaxWidth(.9f)
@@ -2758,33 +2128,18 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                                     viewModel.toggleshowBABars(
                                                                                         false
                                                                                     )
-//
-                                                                                    println("PROFILE CONTENT --- ${profile_Content.value?.followers} -- ${profile_Content.value?.following}")
 
-//                                                                                    constants.Profile_ViewModel.updateSelectedTab_BF_Handler(
-//                                                                                        userBFHandler?.id
-//                                                                                            ?: 0,
-//                                                                                        0,
-//                                                                                        flw_count = profile_Content.value?.followers
-//                                                                                            ?: 0,
-//                                                                                        fing_Count = profile_Content.value?.following
-//                                                                                            ?: 0
-//                                                                                    )
-
-                                                                                    // ✅ Add handler with FF_LIST type
                                                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                                                         Profile_Handle_Back(
                                                                                             current_UsedId = AppPreferences.getUserId(),
                                                                                             other_UserId = profile_Content.value?.user_id ?: 0,
-                                                                                            selected_Tab = 0, // Followers
+                                                                                            selected_Tab = 0,
                                                                                             ff_User_Name = profile_Content.value?.username ?: "Profile",
                                                                                             ff_Fw_Count = profile_Content.value?.followers ?: 0,
                                                                                             ff_Fg_Count = profile_Content.value?.following ?: 0,
-                                                                                            screenType = ScreenType.FF_LIST // ✅ Set to FF_LIST
+                                                                                            screenType = ScreenType.FF_LIST
                                                                                         )
                                                                                     )
-
-                                                                                    println("TESTING 111 --${userBFHandler}-${profile_Content.value?.following ?: 0}- ${profile_Content.value?.followers ?: 0}")
 
                                                                                     constants.API_Vm.totalPages_FF =
                                                                                         1
@@ -2803,30 +2158,18 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                                     viewModel.toggleshowBABars(
                                                                                         false
                                                                                     )
-//
-//                                                                                    constants.Profile_ViewModel.updateSelectedTab_BF_Handler(
-//                                                                                        userBFHandler?.id
-//                                                                                            ?: 0,
-//                                                                                        1,
-//                                                                                        flw_count = profile_Content.value?.followers
-//                                                                                            ?: 0,
-//                                                                                        fing_Count = profile_Content.value?.following
-//                                                                                            ?: 0
-//                                                                                    )
 
-                                                                                    // ✅ Add handler with FF_LIST type
                                                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                                                         Profile_Handle_Back(
                                                                                             current_UsedId = AppPreferences.getUserId(),
                                                                                             other_UserId = profile_Content.value?.user_id ?: 0,
-                                                                                            selected_Tab = 1, // Following
+                                                                                            selected_Tab = 1,
                                                                                             ff_User_Name = profile_Content.value?.username ?: "Profile",
                                                                                             ff_Fw_Count = profile_Content.value?.followers ?: 0,
                                                                                             ff_Fg_Count = profile_Content.value?.following ?: 0,
-                                                                                            screenType = ScreenType.FF_LIST // ✅ Set to FF_LIST
+                                                                                            screenType = ScreenType.FF_LIST
                                                                                         )
                                                                                     )
-                                                                                    println("TESTING 11 2222 --${userBFHandler}-${profile_Content.value?.following ?: 0}- ${profile_Content.value?.followers ?: 0}")
                                                                                     constants.API_Vm.totalPages_FF =
                                                                                         1
 
@@ -2880,11 +2223,8 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                     }
                                                 }
 
-                                                //Spacer(modifier = Modifier.padding(4.dp))
-
                                                 constants.spacer(2)
                                                 constants.spacer(2)
-
 
                                                 Row(
                                                     modifier = Modifier
@@ -2915,42 +2255,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                         )
                                                                         block_PopUp = true
 
-                                                                        /*constants.API_Vm.put_Block_User(
-                                                                        user_id = AppPreferences.getUserId(),
-                                                                        blocker_id = profile_Content.value?.user_id
-                                                                            ?: 0,
-                                                                        //profile_Content.value?.user_id ?: 0,
-                                                                        status = 2
-                                                                        //if (profile_Content.value?.is_blocked == 0) "1" else "0"
-                                                                    )
-                                                                    {
-                                                                        apiResultHandling ->
-                                                                        when (apiResultHandling) {
-                                                                            is API_Result_Handling.Error -> {
-                                                                                //errror
-                                                                                //constants.Profile_ViewModel.change_Update_profile(false)
-                                                                            }
-
-                                                                            is API_Result_Handling.NoData -> {
-                                                                                // no data
-                                                                            }
-
-                                                                            is API_Result_Handling.Loading -> {
-                                                                                //loading
-                                                                                // constants.Profile_ViewModel.change_Update_profile(true)
-                                                                            }
-
-                                                                            is API_Result_Handling.Success -> {
-                                                                                constants.Profile_ViewModel.updateBlockedStatus_Selected_Profile(
-                                                                                    0
-                                                                                )
-                                                                                //block_PopUp = false
-                                                                                //constants.Profile_ViewModel.enable_Edit_Profile()
-                                                                                //constants.Profile_ViewModel.change_Update_profile(false)
-                                                                                //success
-                                                                            }
-                                                                        }
-                                                                    }*/
                                                                         GlobalSnackbar.show(
                                                                             constants.activity.getString(
                                                                                 R.string.no_Internet
@@ -3029,12 +2333,11 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                             }
 
                                                             Spacer(modifier = Modifier.weight(.5f))
-                                                            println("USER ID IM FOLLOWED __ ${profile_Content.value?.im_followed}")
                                                             var type = when {
                                                                 profile_Content.value?.im_followed == "0" && profile_Content.value?.is_followed == "0" -> 0
                                                                 profile_Content.value?.im_followed == "0" && profile_Content.value?.is_followed == "1" -> 1
                                                                 else -> 2
-                                                                //profile_Content.value?.im_followed == "1" && profile_Content.value?.is_followed == "0" -> 2
+
                                                             }
 
                                                             if (profile_Content.value?.im_followed == "1" && profile_Content.value?.is_followed == "1"){
@@ -3074,17 +2377,9 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                                                 when (result2) {
                                                                                                     0 -> {
 
-
                                                                                                     }
 
                                                                                                     1 -> {
-                                                                                                        // toast("Try Again later")
-//                                                                                                        constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-//                                                                                                            userId = profile_Content.value?.user_id
-//                                                                                                                ?: 0,
-//                                                                                                            newFollowers = constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
-//                                                                                                            newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
-//                                                                                                        )
 
                                                                                                         constants.Profile_ViewModel.update_Previous_BF_Handler_FF_Counts(
                                                                                                             constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
@@ -3101,9 +2396,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                                                 }
                                                                                             }
 
-                                                                                            println(
-                                                                                                "Success"
-                                                                                            )
 
                                                                                             if (!is_Search_State_FF.value) {
                                                                                                 constants.Profile_ViewModel.updateImFollowedByUserId_FF(
@@ -3116,7 +2408,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                                                         ?: 0
                                                                                                 )
                                                                                             }
-                                                                                            // constants.Profile_ViewModel.setunfollowClicker()
+
                                                                                         }
 
                                                                                         1 -> {
@@ -3142,10 +2434,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                             constants.Profile_ViewModel.setunfollowClicker()
 
                                                                         }
-//                                                                    constants.Profile_ViewModel.put_follow_unfollow_Status(
-//                                                                        1
-//                                                                    )
-
 
                                                                     }
                                                                     .clip(RoundedCornerShape(4.dp))
@@ -3157,14 +2445,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                                 0xffF4F4F4
                                                                             ))
                                                                     )
-//                                                                    .background(
-//                                                                        if ((profile_Content.value?.im_followed
-//                                                                                ?: "") == "0"
-//                                                                        ) newBlue
-//                                                                        else Color(
-//                                                                            0xffF4F4F4
-//                                                                        )
-//                                                                    )
+
                                                                 , contentAlignment = Alignment.Center
                                                             )
                                                             {
@@ -3174,10 +2455,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                         1 -> "Follow Back"
                                                                         else -> "Following"
                                                                     }
-//                                                                        if ((profile_Content.value?.im_followed
-//                                                                            ?: "") == "0"
-//                                                                    ) "Follow" else "Following",
-//
+
                                                                     ,color = if ((profile_Content.value?.im_followed
                                                                             ?: "") == "0"
                                                                     ) Color.White else newBlack,
@@ -3191,13 +2469,12 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                     }
                                                 }
 
-//                                                constants.spacer(2)
                                                 constants.spacer(4)
-                                               // Spacer(modifier = Modifier.padding(8.dp))
+
                                             }
                                         }
                                     }
-                                    // top bar end
+
                                 }
                             }
                             else{
@@ -3238,10 +2515,10 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                 }
 
                                 !isLoading && posts.value.isEmpty() -> {
-                                    // no data
+
                                     item {
                                         if ((profile_Content.value?.is_blocked ?: 0) == 1){
-//                                            item {
+
                                                 Column(
                                                     modifier = Modifier
                                                         .fillMaxWidth()
@@ -3259,15 +2536,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                             .size(70.dp)
                                                     )
 
-//                                                    Spacer(modifier = Modifier.height(16.dp))
-
-//                                                    Text(
-//                                                        text =  "You blocked this user",
-//                                                        color = newBlack,
-//                                                        fontSize = constants.textUnit(16),
-//                                                        fontFamily = constants.fontFamily(1)
-//                                                    )
-
                                                     Spacer(modifier = Modifier.height(16.dp))
 
                                                     Text(
@@ -3278,9 +2546,8 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                         fontFamily = constants.fontFamily(2)
                                                     )
 
-
                                                 }
-//                                            }
+
                                         }
                                         else {
                                             Column(
@@ -3352,33 +2619,15 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                     fontFamily = constants.fontFamily(2)
                                                 )
 
-
                                             }
                                         }
                                     }
                                     else {
-//                                        if (posts.value.isEmpty()){
-//                                            item {
-//                                                Column (
-//                                                    modifier = Modifier
-//                                                        .fillMaxWidth()
-//                                                        .height(400.dp)
-//                                                    , verticalArrangement = Arrangement.Center
-//                                                    , horizontalAlignment = Alignment.CenterHorizontally
-//                                                ){
-//                                                    Image(painter = painterResource(R.drawable.empty_posts), "")
-//                                                    Text("No land listed!")
-//                                                    Text("Create your first land post today.")
-//                                                }
-//                                            }
-//                                        }else {
 
-
-                                            println("POSTS DATA OTHER PROFILE -- ${posts.value.map { it.user_post_id }}")
                                             customGridItems(
                                                 count = posts.value.size,
                                                 nColumns = grditype
-                                                //, horizontalArrangement = Arrangement.spacedBy(16.dp)
+
                                             )
                                             { itemIndex ->
 
@@ -3407,10 +2656,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                             }
 
                                                             item.post_property.images.isEmpty() && item.post_property.video.isEmpty() -> {
-//                                                                   ThumbnailData(
-//                                                                       model = R.drawable.photorequestimage,
-//                                                                       modifier = Modifier.size(80.dp)
-//                                                                   )
+
                                                                 ThumbnailData(
                                                                     model = R.drawable.emptypostsrento,
                                                                     modifier = Modifier.size(100.dp)
@@ -3430,8 +2676,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                 Box(
                                                     modifier = Modifier
                                                         .padding(vertical = 8.dp, horizontal = 8.dp)
-//                                                        .padding(horizontal = 16.dp)
-//                                                        .padding(top = 16.dp)
+
                                                         .height(216.dp)
                                                         .width(162.dp)
                                                         .clip(RoundedCornerShape(4.dp))
@@ -3444,7 +2689,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                     itemIndex
                                                                 )
                                                                 constants.Reels_ViewModel.setReelsContent(
-                                                                    posts.value.map { it.toReelsData() }  // map each element to Get_Reels_Data
+                                                                    posts.value.map { it.toReelsData() }
                                                                 )
                                                                 constants.PostProperty_ViewModel.set_Post_Form_Flow(
                                                                     -1
@@ -3455,9 +2700,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                 )
 
                                                                 constants.Common_H_ViewModel.dismiss_Cmt_btm_Sheet()
-//                                        constants.Reels_ViewModel.add_View_Property_Details(posts.value.toReelsData())
-//                                        val data = constants.Search_ViewModel.get_Search_Results()
-//                                        println("SIZE OF DATA MAPPED TO SEARCH REELS FLOW DATA HOLDER -- ${data.size}  *** ${data.map { it.video }}")
+
                                                                 if (constants.Reels_ViewModel.get_Reels_Data()) {
                                                                     navController.navigate(
                                                                         ProfileScreenFlow.ReelsView_Search_Flow.route + "/$itemIndex"
@@ -3499,24 +2742,20 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                             }
                         }
 
-
-
                     }
         }
 
     }
 
-
     val blockStatus = constants.Profile_ViewModel.block_Status.collectAsState()
 
-    // block popup
     Common_Popup(
         block_PopUp,
         modifier = Modifier
             .background(Color(0xffF7F0DC))
         , image = "",
         userName = "",
-        icon = 0 /// or R.drawable
+        icon = 0
     )
     {
         Column (
@@ -3528,8 +2767,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
         )
         {
 
-
-
             constants.spacer(2)
 
             Image(painter = painterResource(
@@ -3540,17 +2777,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
             ) , "",
                 modifier = Modifier.size(64.dp))
 
-
             constants.spacer(2)
-
-//            Text(
-//                text = "${if (profile_Content.value?.is_blocked == 0)"Block" else "Unblock"} ${getter?.ff_User_Name ?: "Other_User"} ?",
-//                color = newBlack,
-//                fontSize = constants.textUnit(16),
-//                fontFamily = constants.fontFamily(0)
-//            )
-
-            //constants.spacer(2)
 
             Text(
                 text = "Are you sure you want to ${if (profile_Content.value?.is_blocked == 0)  "Block" else "Unblock" }  this profile?",
@@ -3558,11 +2785,10 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                 fontSize = constants.textUnit(18),
                 fontFamily = constants.fontFamily(1)
                 , textAlign = TextAlign.Center
-//               , lineHeight = 24.sp
+
                 , modifier = Modifier.padding(horizontal = if (forTab()) 46.dp else 36.dp)
             )
 
-//            Spacer(modifier = Modifier.padding(2.dp))
             constants.spacer(4)
 
             Row (
@@ -3600,32 +2826,29 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                             ClickHelper.getInstance().clickOnce {
                                 if (ClickGuard.canClick()) {
                                     if (network.value == NetworkStatus.Online) {
-                                        println("BLOCKED API CALL HIT STATUS __ ${constants.Profile_ViewModel.get_Block_Status()} --- ${blockStatus.value}")
                                         constants.API_Vm.put_Block_User(
                                             user_id = AppPreferences.getUserId(),
                                             blocker_id = profile_Content.value?.user_id ?: 0,
-                                            //profile_Content.value?.user_id ?: 0,
+
                                             status = blockStatus.value
-                                            //if (profile_Content.value?.is_blocked == 0) "1" else "0"
+
                                         )
                                         { apiResultHandling ->
                                             when (apiResultHandling) {
                                                 is API_Result_Handling.Error -> {
-                                                    //errror
-                                                    //constants.Profile_ViewModel.change_Update_profile(false)
+
                                                 }
 
                                                 is API_Result_Handling.Deactivated -> {
-                                                    // resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.NoData -> {
-                                                    // no data
+
                                                 }
 
                                                 is API_Result_Handling.Loading -> {
-                                                    //loading
-                                                    // constants.Profile_ViewModel.change_Update_profile(true)
+
                                                 }
 
                                                 is API_Result_Handling.Success -> {
@@ -3634,7 +2857,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                         when (result2) {
                                                             0 -> {}
                                                             1 -> {
-                                                                // ✅ FIX: Update counts for the OTHER user's profile
+
                                                                 constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
                                                                     userId = profile_Content.value?.user_id
                                                                         ?: 0,
@@ -3642,8 +2865,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                     newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
                                                                 )
 
-                                                                // ✅ FIX: Also update YOUR OWN profile's following count
-                                                                // Since you unfollowed someone, YOUR following count decreases
                                                                 val myUserId =
                                                                     AppPreferences.getUserId()
                                                                 val myCurrentHandler =
@@ -3683,9 +2904,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                         }
                                                     }
 
-                                                    //constants.Profile_ViewModel.enable_Edit_Profile()
-                                                    //constants.Profile_ViewModel.change_Update_profile(false)
-                                                    //success
                                                 }
                                             }
                                         }
@@ -3725,10 +2943,9 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
             .background(Color(0xffF7F0DC))
         , content = {
 
-
             Column(
                 modifier = Modifier
-                    //.fillMaxHeight()
+
                     .padding(horizontal = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -3737,14 +2954,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
 
                 constants.spacer(2)
 
-                //constants.spacer(2)
-
-//                Text(
-//                    text = "Unfollow ${content.user_Name} ?",
-//                    color = newBlack,
-//                    fontSize = constants.textUnit(16),
-//                    fontFamily = constants.fontFamily(0)
-//                )
                 Image(painter = painterResource(R.drawable.profilepopicon) , "",
                     modifier = Modifier.size(56.dp))
 
@@ -3756,11 +2965,10 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                     fontSize = constants.textUnit(18),
                     fontFamily = constants.fontFamily(1),
                     textAlign = TextAlign.Center
-//                   , lineHeight = 24.sp
+
                     , modifier = Modifier.padding(horizontal = if (forTab()) 46.dp else 36.dp)
                 )
 
-//                Spacer(modifier = Modifier.padding(2.dp))
                 constants.spacer(4)
 
                 Row(
@@ -3776,7 +2984,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color(0xffE8E8E8))
                             .noRippleClickable {
-//                                constants.Profile_ViewModel.setunfollowClicker()
+
                                 constants.Profile_ViewModel.closeUnFollowClick()
                             }, contentAlignment = Alignment.Center
                     ) {
@@ -3824,7 +3032,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                             profile_Content.value?.user_id ?: 0
                                         )
 
-
                                         constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
                                             id = profile_Content.value?.user_id
                                                 ?: 0,
@@ -3847,39 +3054,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                             when (result2) {
                                                                                 0 -> {}
                                                                                 1 -> {
-                                                                                    // ✅ FIX: Update counts for the OTHER user's profile
-//                                                                                    constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-//                                                                                        userId = profile_Content.value?.user_id
-//                                                                                            ?: 0,
-//                                                                                        newFollowers = constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
-//                                                                                        newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
-//                                                                                    )
-                                                                                    // ✅ FIX: Update counts for the OTHER user's profile
-//                                                                                    constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-//                                                                                        userId = profile_Content.value?.user_id ?: 0,  // The profile you're viewing
-//                                                                                        newFollowers = constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
-//                                                                                        newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
-//                                                                                    )
 
-                                                                                    // ✅ FIX: Also update YOUR OWN profile's following count
-                                                                                    // Since you unfollowed someone, YOUR following count decreases
-//                                                                                    val myUserId =
-//                                                                                        AppPreferences.getUserId()
-//                                                                                    val myCurrentHandler =
-//                                                                                        constants.Profile_ViewModel.profile_BF_Handler.value
-//                                                                                            .find { it.current_UsedId == myUserId && it.other_UserId == 0 }
-//
-//                                                                                    if (myCurrentHandler != null) {
-//                                                                                        constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-//                                                                                            userId = myUserId,
-//                                                                                            newFollowers = myCurrentHandler.ff_Fw_Count,
-//                                                                                            newFollowing = (myCurrentHandler.ff_Fg_Count - 1).coerceAtLeast(
-//                                                                                                0
-//                                                                                            )
-//                                                                                        )
-//                                                                                    }
-
-//                                                                                    constants.Profile_ViewModel.setunfollowClicker()
                                                                                     constants.Profile_ViewModel.closeUnFollowClick()
 
                                                                                 }
@@ -3892,9 +3067,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                             }
                                                                         }
 
-                                                                        println("Success - Unfollow Status: ${constants.Profile_ViewModel.get_follow_unfollow_Status()}")
-
-                                                                        // ✅ ADD THIS: Update the FF map when unfollowing
                                                                         val currentUserId =
                                                                             AppPreferences.getUserId()
                                                                         val targetUserId =
@@ -3902,14 +3074,13 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                                 ?: 0
 
                                                                         if (constants.Profile_ViewModel.get_follow_unfollow_Status() == 2) {
-                                                                            // Unfollowing - remove from Following tab (tab = 1)
+
                                                                             constants.Profile_ViewModel.deleteUserById_Profile_FF_Map(
                                                                                 mapUserId = currentUserId,
-                                                                                mapTab = 1, // Following tab
+                                                                                mapTab = 1,
                                                                                 targetUserId = targetUserId
                                                                             )
 
-                                                                            // Also update search map if search is active
                                                                             if (is_Search_State_FF.value) {
                                                                                 constants.Profile_ViewModel.deleteUserById_Profile_Search_FF_NEW(
                                                                                     targetUserId = targetUserId
@@ -3927,8 +3098,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                             }
                                                         }
 
-                                                        println("Success")
-
                                                         if (!is_Search_State_FF.value) {
                                                             constants.Profile_ViewModel.updateImFollowedByUserId_FF(
                                                                 profile_Content.value?.user_id
@@ -3940,7 +3109,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                                                     ?: 0
                                                             )
                                                         }
-                                                        // constants.Profile_ViewModel.setunfollowClicker()
+
                                                     }
 
                                                     1 -> {
@@ -3977,7 +3146,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
         , userName = content.user_Name
     )
 
-    /// report bottom sheet
     if (report_BS){
 
         val sheetState = rememberModalBottomSheetState(
@@ -4001,8 +3169,6 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
             ){
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
-
 
                 AnimatedContent (
                     targetState = report_success
@@ -4061,38 +3227,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                 user_Manual_report.value,
                                 enter = slideInHorizontally(tween(900)) { it }
                             ) {
-                                /* Box(
-                                 modifier = Modifier
-                                     .fillMaxWidth()
-                                     .heightIn(min = 50.dp , max = 80.dp)
-                                     .clip(RoundedCornerShape(8.dp))
-                                     .background(Color.White)
-                                     .border(1.dp , newGray , RoundedCornerShape(8.dp))
-                             )
-                             {
-                                 TextField(
-                                     value = user_Manual_report_String.value,
-                                     onValueChange = {
-                                         user_Manual_report_String.value = it
-                                     },
-                                     placeholder = {
-                                         Text(
-                                             text = "What else we need to know...",
-                                             color = newBlack,
-                                             fontSize = constants.textUnit(12),
-                                             fontFamily = constants.fontFamily(3)
-                                         )
-                                     },
-                                     colors = TextFieldDefaults.colors(
-                                         focusedContainerColor = Color.White
-                                         ,unfocusedContainerColor = Color.White
-                                         , focusedIndicatorColor = Color.Transparent
-                                         , unfocusedIndicatorColor = Color.Transparent
-                                         , focusedTextColor = newBlack
-                                         , unfocusedTextColor = newGray
-                                     )
-                                 )
-                             }*/
+
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -4145,14 +3280,12 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                     .size(150.dp)
                             )
 
-
                             Text(
                                 text = "Submitted Successfully",
                                 color = newBlack,
                                 fontSize = constants.textUnit(18),
                                 fontFamily = constants.fontFamily(0)
                             )
-
 
                             Text(
                                 text = "Thank you for bringing this to our attention.",
@@ -4194,7 +3327,7 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
                                             constants.API_Vm.put_Report_All(
                                                 user_id = AppPreferences.getUserId(),
                                                 user_post_id = "",
-                                                //AppPreferences.get_Post_Id(),
+
                                                 receiver_id = (profile_Content.value?.user_id
                                                     ?: 0).toString(),
                                                 comment_id = "",
@@ -4207,34 +3340,28 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
 
                                                 when (apiResultHandling) {
                                                     is API_Result_Handling.Loading -> {
-                                                        // loading
-                                                        //constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                     }
 
                                                     is API_Result_Handling.Error -> {
-                                                        // fail
-                                                        //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                     }
 
                                                     is API_Result_Handling.Success -> {
-
 
                                                         constants.Profile_ViewModel.updateReported_Selected_Profile(
                                                             1
                                                         )
                                                         constants.Profile_ViewModel.toggleReportSubmissionSuccess()
-                                                        //constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(videos[pagerState.currentPage].user_id)
-                                                        // success
-                                                        //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                     }
 
                                                     is API_Result_Handling.NoData -> {
-                                                        // no data
-                                                        //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                     }
 
                                                     is API_Result_Handling.Deactivated -> {
-                                                        /// resultCallback(5)
+
                                                     }
                                                 }
                                             }
@@ -4256,18 +3383,12 @@ fun Other_Profile_Structure(navController: NavHostController, viewModel: Common_
         }
     }
 
-
 }
-
-
-
 
 @Composable
 fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_ViewModel) {
 
-
     BackHandler {
-        println("Backhandler Restricted ff view")
     }
 
     val network = rememberNetworkStatus()
@@ -4279,8 +3400,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
         viewModel.toggleshowBABars(BA_Bar_Listener.value)
     }
 
-
-
     val context = LocalContext.current
 
     val profile_selected_Index = constants.Profile_ViewModel.show_Tapped_FFs.collectAsState()
@@ -4289,23 +3408,18 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
 
     val new_Stack by constants.Profile_ViewModel.currentBFHandler.collectAsStateWithLifecycle()
 
-
-    // ✅ This will refresh YOUR counts when you return
     LaunchedEffect(new_Stack?.id, new_Stack?.ff_Fw_Count, new_Stack?.ff_Fg_Count) {
         if (new_Stack != null) {
-            println("🔄 Profile_FF_Structure detected stack change -- ${new_Stack}")
 
             if (network.value == NetworkStatus.Online) {
-                // ✅ Make sure to fetch YOUR profile, not the other user's
+
                 val savedOtherUserId = constants.Profile_ViewModel.get_Other_User_Id()
-                constants.Profile_ViewModel.put_Other_User_Id(0)  // ✅ Set to 0 to get YOUR profile
+                constants.Profile_ViewModel.put_Other_User_Id(0)
 
                 Get_User_Profile_API_Call() { result ->
                     when (result) {
                         1 -> {
-                            val userId = AppPreferences.getUserId()  // ✅ Always YOUR user ID
-
-                            println("call going inside ###0 -- $$$$${userId}")
+                            val userId = AppPreferences.getUserId()
 
                             constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
                                 userId = userId,
@@ -4313,33 +3427,24 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                 newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
                             )
 
-                            println("✅ Updated counts - Followers: ${constants.Profile_ViewModel.get_Followers_Count_BGAPIC()}, Following: ${constants.Profile_ViewModel.get_Following_Count_BGAPIC()}")
                         }
                     }
                 }
 
-                // ✅ Restore the saved other_UserId
                 constants.Profile_ViewModel.put_Other_User_Id(savedOtherUserId)
             }
         }
     }
 
-
-    println("CHECKING NOWWWWW --- ${new_Stack}")
-
-    // ✅ Get current user and tab
     val currentUserId = if (new_Stack?.other_UserId == 0 || new_Stack?.other_UserId == null) {
         AppPreferences.getUserId()
     } else {
         new_Stack?.other_UserId ?: 0
-        //AppPreferences.getUserId()
+
     }
     val currentTab = new_Stack?.selected_Tab ?: 0
     val currentKey = constants.Profile_ViewModel.createFFKey(currentUserId, currentTab)
 
-    println("📍 Profile_FF_Structure - UserId: $currentUserId, Tab: $currentTab, Key: $currentKey")
-
-    // ✅ Collect the entire map and extract the specific list
     val ffListMap by constants.Profile_ViewModel.users_FF_List_Map.collectAsStateWithLifecycle()
     val ffSearchMap by constants.Profile_ViewModel.users_FF_Search_Map.collectAsStateWithLifecycle()
 
@@ -4348,22 +3453,15 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
 
     val tapped_Profiles_List = constants.Profile_ViewModel.tapped_Profile_List.collectAsState()
 
-    // ✅ These need to be State objects to trigger recomposition
     var isLoading by remember { mutableStateOf(constants.API_Vm.isLoading_FF) }
     var errorMessage by remember { mutableStateOf(constants.API_Vm.errorMessage_FF) }
     var currentPage by remember { mutableStateOf(constants.API_Vm.currentPage_FF) }
     var totalPages by remember { mutableStateOf(constants.API_Vm.totalPages_FF) }
     val listState = rememberLazyListState()
 
-
-    // 1. In Profile_FF_Structure LaunchedEffect:
     LaunchedEffect(new_Stack?.id) {
-        println("📍 Profile_FF_Structure state:")
-        println("   Stack size: ${constants.Profile_ViewModel.profile_BF_Handler.value.size}")
-        println("   Current handler: ${new_Stack}")
-        println("   Current user: ${currentUserId}, Tab: ${currentTab}")
     }
-    // ✅ Sync with API_Vm values
+
     LaunchedEffect(Unit) {
         snapshotFlow {
             Triple(
@@ -4402,17 +3500,13 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
     }
 
     LaunchedEffect(new_Stack) {
-        println("🔥 New stack updated = $new_Stack")
     }
 
     var retry by remember { mutableStateOf(0) }
 
-    // ✅ Load data if not already cached
     if (network.value == NetworkStatus.Online) {
-        println("DISPOSAL SEARCH ENABLED -- ${is_Search_Enabled.value}")
         LaunchedEffect(currentUserId, currentTab, is_Search_Enabled.value, search_Text.value, retry) {
             if (is_Search_Enabled.value) {
-                println("COMES GIVE SEARCH")
                 constants.API_Vm.totalPages_FF = 1
                 constants.API_Vm.load_Search_FF(
                     user_id = AppPreferences.getUserId(),
@@ -4422,22 +3516,17 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                     page = 1
                 )
             } else {
-                // ✅ Only load if list is empty (not cached)
-                //if (users_Profiles_List.isEmpty()) {
-                    println("📥 Loading FF list for user: $currentUserId, tab: $currentTab")
+
                     constants.API_Vm.load_Profile_FF_List(
                         user_id = AppPreferences.getUserId(),
                         others_id = if (currentUserId == AppPreferences.getUserId()) "" else currentUserId.toString(),
                         status = currentTab + 1,
                         page = 1
                     )
-               // } else {
-                    println("✅ Using cached data for user: $currentUserId, tab: $currentTab, size: ${users_Profiles_List.size}")
-                //}
+
             }
         }
 
-        // ✅ Pagination - Observe list state changes
         LaunchedEffect(users_Profiles_List.size) {
             if (!is_Search_Enabled.value) {
                 snapshotFlow {
@@ -4455,7 +3544,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                             currentPage < totalPages &&
                             network.value == NetworkStatus.Online
                         ) {
-                            println("📄 Loading page ${currentPage + 1} - Current: $currentPage, Total: $totalPages")
                             constants.API_Vm.load_Profile_FF_List(
                                 user_id = AppPreferences.getUserId(),
                                 others_id = if (currentUserId == AppPreferences.getUserId()) "" else currentUserId.toString(),
@@ -4481,49 +3569,11 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
     )
     {
 
-        // Top Row: Back Button + Username
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            /*Backer(
-                modifier = Modifier,
-                onBackClick = {
-                    ClickHelper.getInstance().clickOnce {
-                        if (ClickGuard.canClick()) {
-                            if (tapped_Profiles_List.value.profiles.isNotEmpty()) {
-                                constants.Profile_ViewModel.removeLastProfile()
-                                constants.Profile_ViewModel.remove_Tapped_FFs_last()
-                                constants.Profile_ViewModel.unfollow_Dismiss()
-                                constants.Profile_ViewModel.delete_Follow_Dismiss()
-                                // ✅ ADD THIS: Refresh the counts when going back
-                                Get_User_Profile_API_Call() { result ->
-                                    when (result) {
-                                        1 -> {
-                                            val previousUserId = constants.Profile_ViewModel.show_Current_BF_Handler()?.let {
-                                                if (it.other_UserId == 0) it.current_UsedId else it.other_UserId
-                                            } ?: 0
-
-                                            constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-                                                userId = previousUserId,
-                                                newFollowers = constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
-                                                newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
-                                            )
-                                        }
-                                    }
-                                }
-                            } else {
-                                constants.Profile_ViewModel.add_Selected_Profile_Id(0)
-                                constants.Profile_ViewModel.put_Other_User_Id(0)
-                                viewModel.toggleshowBABars(true)
-                            }
-                            constants.API_Vm.totalPages_Profile_Posts = 1
-                            navController.navigateUp()
-                        }
-                    }
-                }
-            )*/
 
             Backer(
                 modifier = Modifier,
@@ -4539,16 +3589,11 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                 val currentHandler = currentStack.last()
                                 val previousHandler = currentStack[currentStack.size - 2]
 
-                                println("🔙 Back pressed from ${currentHandler.screenType}")
-                                println("   Previous screen: ${previousHandler.screenType}")
-
-                                // Remove current handler (FF screen)
                                 constants.Profile_ViewModel.remove_last_BF_Handler()
 
-                                // Determine navigation based on previous screen type
                                 when (previousHandler.screenType) {
                                     ScreenType.PROFILE -> {
-                                        // ✅ Going back to a Profile screen
+
                                         val profileId = if (previousHandler.other_UserId == 0) {
                                             previousHandler.current_UsedId
                                         } else {
@@ -4558,7 +3603,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                         constants.Profile_ViewModel.put_Other_User_Id(previousHandler.other_UserId)
                                         constants.Profile_ViewModel.add_Selected_Profile_Id(profileId)
 
-                                        // Refresh profile data
                                         if (network.value == NetworkStatus.Online) {
                                             Get_User_Profile_API_Call() { result ->
                                                 when (result) {
@@ -4577,14 +3621,12 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                     }
 
                                     ScreenType.FF_LIST -> {
-                                        // ✅ Going back to another FF screen
-                                        // This shouldn't happen in normal flow, but handle it
-                                        println("⚠️ Unexpected: Going from FF to FF")
+
                                         navController.navigateUp()
                                     }
                                 }
                             } else {
-                                // Last item in stack - go back to own profile
+
                                 constants.Profile_ViewModel.put_Other_User_Id(0)
                                 constants.Profile_ViewModel.add_Selected_Profile_Id(0)
                                 viewModel.toggleshowBABars(true)
@@ -4609,7 +3651,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Tab Row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -4632,7 +3673,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                 .getInstance()
                                 .clickOnce {
                                     if (ClickGuard.canClick()) {
-                                       // if (network.value == NetworkStatus.Online) {
 
                                             constants.Profile_ViewModel.clear_Search_Text_FF()
                                             constants.Profile_ViewModel.disable_Search()
@@ -4672,9 +3712,7 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                             keyboardController?.hide()
                                             focusManager.clearFocus()
                                         }
-                                    //} else {
-                                       // GlobalSnackbar.show("It Seems your are offline !!.Refresh again")
-                                   // }
+
                                 }
                         },
                     contentAlignment = Alignment.Center
@@ -4705,7 +3743,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Search Bar
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -4829,7 +3866,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
         Spacer(modifier = Modifier.height(16.dp))
 
         LaunchedEffect(users_Profiles_List) {
-            println("List updated: size=${users_Profiles_List.size}")
         }
 
         Column(
@@ -4987,33 +4023,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
 
                 users_Profiles_List.isNotEmpty() || users_Profiles_Search_List.isNotEmpty() -> {
 
-                    // Add this after your DisposableEffect in Profile_FF_Structure
-//                    LaunchedEffect(new_Stack?.id) {
-//                        // When the stack changes (navigating back), refresh the current profile's counts
-//                        if (network.value == NetworkStatus.Online) {
-//                            Get_User_Profile_API_Call() { result ->
-//                                when (result) {
-//                                    1 -> {
-//                                        // Update the current handler with fresh counts
-//                                        val currentHandler = constants.Profile_ViewModel.show_Current_BF_Handler()
-//                                        if (currentHandler != null) {
-//                                            val targetUserId = if (currentHandler.other_UserId == 0) {
-//                                                currentHandler.current_UsedId
-//                                            } else {
-//                                                currentHandler.other_UserId
-//                                            }
-//
-//                                            constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-//                                                userId = targetUserId,
-//                                                newFollowers = constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
-//                                                newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
-//                                            )
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
                     AnimatedContent(
                         targetState = currentTab,
                         transitionSpec = {
@@ -5066,7 +4075,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
         }
     }
 
-
     val content = constants.Profile_ViewModel.get_Unflw_Flw_Content_Pup()
     Common_Popup(
         visible = unfollow_PUP.value,
@@ -5078,18 +4086,11 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-//                Spacer(modifier = Modifier.padding(2.dp))
+
                 constants.spacer(2)
 
                 Image(painter = painterResource(R.drawable.profilepopicon) , "",
                     modifier = Modifier.size(56.dp))
-
-//                Text(
-//                    text = "Unfollow ${content.user_Name} ?",
-//                    color = newBlack,
-//                    fontSize = constants.textUnit(16),
-//                    fontFamily = constants.fontFamily(0)
-//                )
 
                 constants.spacer(2)
 
@@ -5099,11 +4100,10 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                     fontSize = constants.textUnit(18),
                     fontFamily = constants.fontFamily(1),
                     textAlign = TextAlign.Center
-                   //, lineHeight = 24.sp
+
                     ,modifier = Modifier.padding(horizontal = if(forTab())46.dp else 36.dp)
                 )
 
-                //Spacer(modifier = Modifier.padding(2.dp))
                 constants.spacer(4)
 
                 Row(
@@ -5118,7 +4118,7 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color(0xffE8E8E8))
                             .noRippleClickable {
-//                                constants.Profile_ViewModel.setunfollowClicker()
+
                                 constants.Profile_ViewModel.closeUnFollowClick()
 
                             },
@@ -5159,7 +4159,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                                                 }
 
                                                                 1 -> {
-                                                                    println("CHECKING FF-${BPAIC__FR_HANDER.value} --${BPAIC__FW_HANDER.value}****- ${new_Stack?.current_UsedId} -${constants.Profile_ViewModel.get_Following_Count_BGAPIC()}- ${constants.Profile_ViewModel.get_Followers_Count_BGAPIC()}")
                                                                     constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
                                                                         userId = new_Stack?.current_UsedId
                                                                             ?: 0,
@@ -5172,11 +4171,7 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                                             }
                                                         }
 
-                                                        println("HELLO  NOW --- ${currentUserId}")
-
-
                                                         if (currentTab == 1) {
-                                                            println("HELLO  NOW 2222--- ${currentUserId}")
                                                             if (AppPreferences.getUserId() == currentUserId) {
                                                                 if (!is_Search_Enabled.value) {
                                                                     constants.Profile_ViewModel.deleteUserById_Profile_FF_Map(
@@ -5191,7 +4186,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                                                     )
                                                                 }
                                                             } else {
-                                                                println("HELLO  NOW -3333-- ${currentUserId}")
                                                                 constants.Profile_ViewModel.updateImFollowedByUserId_FF_Map(
                                                                     mapUserId = currentUserId,
                                                                     mapTab = currentTab,
@@ -5200,15 +4194,13 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                                                 )
                                                             }
                                                         } else if (currentTab == 0) {
-                                                            println("HELLO  NOW 4444--- ${currentUserId}")
                                                             constants.Profile_ViewModel.updateImFollowedByUserId_FF_Map(
                                                                 mapUserId = currentUserId,
                                                                 mapTab = currentTab,
                                                                 targetUserId = content.user_Id ?: 0
                                                             )
                                                         }
-                                                        // }
-//                                                        constants.Profile_ViewModel.setunfollowClicker()
+
                                                         constants.Profile_ViewModel.closeUnFollowClick()
 
                                                     }
@@ -5254,14 +4246,7 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.padding(2.dp))
-               // constants.spacer(2)
 
-//                Text(
-//                    text = "Remove ${content.user_Name} ?",
-//                    color = newBlack,
-//                    fontSize = constants.textUnit(16),
-//                    fontFamily = constants.fontFamily(0)
-//                )
                 Image(painter = painterResource(R.drawable.profileremoveicon) , "",
                     modifier = Modifier.size(56.dp))
 
@@ -5273,11 +4258,10 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                     fontSize = constants.textUnit(18),
                     fontFamily = constants.fontFamily(1),
                     textAlign = TextAlign.Center
-//                   , lineHeight = 24.sp
+
                     , modifier = Modifier.padding(horizontal = if (forTab()) 46.dp else 36.dp)
                 )
 
-//                Spacer(modifier = Modifier.padding(2.dp))
                 constants.spacer(4)
 
                 Row(
@@ -5327,7 +4311,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
                                                         Get_User_Profile_API_Call() { result2 ->
                                                             when (result2) {
                                                                 0 -> {
-
 
                                                                 }
 
@@ -5390,9 +4373,6 @@ fun Profile_FF_Structure(navController: NavHostController, viewModel: Common_H_V
     )
 
 }
-
-
-
 
 @Composable
 fun Profile_Following_Item_Structure(
@@ -5464,18 +4444,18 @@ fun Profile_Following_Item_Structure(
             },
             trailingContent = {
                 if (item.user_id == AppPreferences.getUserId()) {
-                    // Don't show buttons for yourself
+
                 } else {
                     val isViewingOwnProfile = (new_Stack?.other_UserId == 0
                             || new_Stack?.other_UserId == null
                             || new_Stack?.other_UserId == AppPreferences.getUserId())
 
                     if (isViewingOwnProfile) {
-                        // Viewing your own profile
+
                         val followers_State = if (item.is_followed == 1 && item.im_followed == 0) {
-                            0  // "Follow back"
+                            0
                         } else {
-                            1  // "Following"
+                            1
                         }
 
                         Own_Profile_FF_Buttons(
@@ -5580,18 +4560,18 @@ fun Profile_Following_Item_Structure(
                             }
                         )
                     } else {
-                        // Viewing someone else's profile
+
                         val followers_State = when {
-                            item.im_followed == 0 && item.is_followed == 1 -> 1  // Follow back
-                            item.im_followed == 1 && item.is_followed == 1 -> 2  // Following
-                            item.im_followed == 0 && item.is_followed == 0 -> 0  // Follow
+                            item.im_followed == 0 && item.is_followed == 1 -> 1
+                            item.im_followed == 1 && item.is_followed == 1 -> 2
+                            item.im_followed == 0 && item.is_followed == 0 -> 0
                             else -> 2
                         }
 
                         val following_State = when {
-                            item.is_followed == 1 && item.im_followed == 0 -> 1  // "Follow back"
-                            item.im_followed == 1 || item.im_followed == 1 && item.is_followed == 0 -> 2 // "Following"
-                            else -> 0  // "Follow"
+                            item.is_followed == 1 && item.im_followed == 0 -> 1
+                            item.im_followed == 1 || item.im_followed == 1 && item.is_followed == 0 -> 2
+                            else -> 0
                         }
 
                         Others_Profile_FF_Buttons(
@@ -5713,56 +4693,7 @@ fun Profile_Following_Item_Structure(
                 disabledLeadingIconColor = Color.Gray.copy(alpha = 0.5f),
                 disabledTrailingIconColor = Color.Gray.copy(alpha = 0.5f)
             ),
-            /*modifier = Modifier.noRippleClickable {
-                ClickHelper.getInstance().clickOnce {
-                    if (ClickGuard.canClick()) {
-                        // ✅ FIX: Check if you're already viewing this profile
-                        val currentProfileId = constants.Profile_ViewModel.selected_Profile_Id.value
 
-                        // Don't navigate if clicking on the same profile you're already viewing
-//                        if (item.user_id == currentProfileId) {
-//                            println("⚠️ Already viewing this profile, skipping navigation")
-//                            return@clickOnce
-//                        }
-
-                        // ✅ FIX: Don't navigate if clicking on your own profile when you're on your own profile
-//                        if (item.user_id == AppPreferences.getUserId() &&
-//                            (new_Stack?.other_UserId == 0 || new_Stack?.other_UserId == null)) {
-//                            println("⚠️ Can't navigate to your own profile from your own profile")
-//                            return@clickOnce
-//                        }
-                        keyboardController1?.hide()
-                        focusManager1.clearFocus()
-
-                        constants.Profile_ViewModel.add_BF_Handler(
-                            item = Profile_Handle_Back(
-                                //id = ,
-                                current_UsedId = AppPreferences.getUserId(),
-                                other_UserId = item.user_id,
-                                selected_Tab = new_Stack?.selected_Tab ?: 0,
-                                ff_User_Name = item.username,
-                                ff_Fw_Count = item.followers_count,
-                                ff_Fg_Count = item.following_count,
-                                is_Search_Enabled = is_Search_Enabled.value,
-                                search_Text = search_Text.value
-                            )
-                        )
-
-                        constants.Profile_ViewModel.clearSelectedUserProfile()
-                        constants.Profile_ViewModel.add_Selected_User_Name(item.username ?: "Profile")
-
-                        // Set the profile ID and navigate
-                        constants.Profile_ViewModel.addProfile(item.user_id)
-                        constants.Profile_ViewModel.add_Selected_Profile_Id(id = item.user_id)
-                        constants.Profile_ViewModel.put_Other_User_Id(item.user_id)
-                        constants.Profile_ViewModel.clear_SearchList_FF()
-                        constants.API_Vm.totalPages_Profile_Posts = 1
-
-                        println("✅ Navigating to profile: ${item.username} (ID: ${item.user_id})")
-                        navController.navigate(ProfileScreenFlow.Other_Profile_Structure.route)
-                    }
-                }
-            }*/
             modifier = Modifier.noRippleClickable {
                 ClickHelper.getInstance().clickOnce {
                     if (ClickGuard.canClick()) {
@@ -5773,16 +4704,13 @@ fun Profile_Following_Item_Structure(
                         val targetProfileId = item.user_id
 
                         if (targetProfileId == AppPreferences.getUserId() && currentProfileId == 0) {
-                            println("⚠️ Can't navigate to your own profile from your own FF list")
                             return@clickOnce
                         }
 
                         if (targetProfileId == currentProfileId) {
-                            println("⚠️ Already viewing this profile, skipping navigation")
                             return@clickOnce
                         }
 
-                        // ✅ Add handler for PROFILE screen
                         constants.Profile_ViewModel.add_BF_Handler(
                             item = Profile_Handle_Back(
                                 current_UsedId = AppPreferences.getUserId(),
@@ -5793,11 +4721,10 @@ fun Profile_Following_Item_Structure(
                                 ff_Fg_Count = item.following_count ?: 0,
                                 is_Search_Enabled = false,
                                 search_Text = "",
-                                screenType = ScreenType.PROFILE // ✅ Set to PROFILE
+                                screenType = ScreenType.PROFILE
                             )
                         )
 
-                        // Clear and set new profile data
                         constants.Profile_ViewModel.clearSelectedUserProfile()
                         constants.Profile_ViewModel.add_Selected_User_Name(item.username ?: "Profile")
                         constants.Profile_ViewModel.addProfile(item.user_id)
@@ -5808,7 +4735,6 @@ fun Profile_Following_Item_Structure(
                         constants.Profile_ViewModel.disable_Search()
                         constants.API_Vm.totalPages_Profile_Posts = 1
 
-                        println("✅ Navigating to profile: ${item.username} (ID: ${item.user_id})")
                         navController.navigate(ProfileScreenFlow.Other_Profile_Structure.route)
                     }
                 }
@@ -5820,15 +4746,12 @@ fun Profile_Following_Item_Structure(
     }
 }
 
-
 @Composable
 fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
-
 
     val network = rememberNetworkStatus()
 
     LaunchedEffect(Unit) {
-        println("USERNAME----${AppPreferences.get_User_Name()}")
         constants.Profile_ViewModel.save_new_name_edit_profile(AppPreferences.get_User_Name())
         constants.Profile_ViewModel.save_new_Bio_Content(AppPreferences.get_ProfileBio())
         constants.Profile_ViewModel.save_New_Realname(AppPreferences.get_Real_Name())
@@ -5849,7 +4772,6 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
     val context = LocalContext.current
 
     val scope = rememberCoroutineScope()
-
 
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
@@ -5876,10 +4798,9 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                     thumbail = false,
                     profile = "profileview"
                 ) { progress ->
-                    // optional: update progress state
+
                 }
 
-                // ✅ update state after upload
                 PROFILE_IMAGE_URL.value = result.url
 
             } catch (e: Exception) {
@@ -5888,35 +4809,6 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
             }
         }
     }
-
-//    val imagePickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.OpenDocument()
-//    ) { uri: Uri? ->
-//        // Only proceed if the user selected an image
-//        constants.Profile_ViewModel.set_From_Profile_Pic_Update(true)
-//        uri?.let {
-//            val s3Uploader = S3Uploader(
-//                bucket = constants.BUCKET_NAME,
-//                cloudFront = constants.CLOUD_FRONT_URL,
-//                accessId = constants.ACCESS_ID,
-//                secretKey = constants.SECRET_KEY
-//            )
-//
-//                val result = s3Uploader.uploadSingle(
-//                    context = context,
-//                    userId = AppPreferences.getUserId().toString(),
-//                    uri = uri,
-//                    false,
-//                    ""
-//                ) { progress ->
-//
-//                }
-//
-//            constants.PROFILE_IMAGE_URL.value = result.url
-//
-//            //GenertateLink(constants.activity, it, navController , onComplete = {})
-//        }
-//    }
 
     Column(
         modifier = Modifier
@@ -5933,39 +4825,12 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                 .padding(top = if (forTab()) 16.dp else notchPadding.value)
                 .padding(horizontal = 16.dp)
             , verticalArrangement = Arrangement.spacedBy(8.dp)
-            //, horizontalAlignment = Alignment.CenterHorizontally
+
         )
         {
             item {
                 Column  {
-                    /*  Row(
-                          modifier = Modifier
-                              .fillMaxWidth(),
-                          verticalAlignment = Alignment.CenterVertically,
-                          horizontalArrangement = Arrangement.spacedBy(8.dp)
-                      )
-                      {
-                          Backer(
-                              modifier = Modifier, onBackClick = {
-                                  constants.Profile_ViewModel.dismiss_Edit_Profile()
-  //                                constants.Common_H_ViewModel.toggleshowBABars(true)
-                                  constants.Profile_ViewModel.clear_All_BF_Handler()
-  //                                constants.Profile_ViewModel.save_new_name_edit_profile("")
-  //                                constants.Profile_ViewModel.save_new_Bio_Content("")
-  //                                constants.Profile_ViewModel.save_New_Realname("")
 
-                              }
-                          )
-
-                          Text(
-                              "Edit Profile",
-                              fontSize = constants.textUnit(24),
-                              fontFamily = constants.fontFamily(0)
-                              , color = newBlack
-                          )
-                      }*/
-
-                    // profile imge
                     Box(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
@@ -5982,7 +4847,6 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                                 .background(newLightBlue)
                         ) {
                             if (constants.URL_COMPLETED.isNotEmpty()) {
-                                println("Profile image url --- ${constants.URL_COMPLETED} -- ${PROFILE_IMAGE_URL.value}")
                                 SubcomposeAsyncImage(
                                     model = PROFILE_IMAGE_URL.value.ifEmpty { AppPreferences.get_ProfileImage() },
                                     modifier = Modifier
@@ -6002,7 +4866,7 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                                                 text =  user_name.value.takeIf { it.isNotEmpty() }?.take(1)?.uppercase() ?: ""
                                                 , fontSize = constants.textUnit(16)
                                             )
-                                           // CircularProgressIndicator(modifier = Modifier.size(10.dp) ,)
+
                                         }
                                     } else {
                                         SubcomposeAsyncImageContent()
@@ -6021,11 +4885,7 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                         )
                     }
 
-
-
                     Spacer(modifier = Modifier.padding(8.dp))
-
-                    // user name change
 
                     Text(
                         "User Name",
@@ -6061,7 +4921,7 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                                         fontSize = constants.textUnit(14),
                                         fontFamily = constants.fontFamily(1),
                                         modifier = Modifier
-                                        //.align(Alignment.Start)
+
                                     )
                                 }, singleLine = true,
                                 enabled = !isLoading.value,
@@ -6078,7 +4938,6 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
 
                             VerticalDivider(color = newGray)
 
-                            println("NAMESS -- ${AppPreferences.get_Real_Name()} --- ${user_name.value}")
                             Box(
                                 modifier = Modifier
                                     .fillMaxHeight()
@@ -6099,7 +4958,7 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                                             ) { apiResultHandling ->
                                                 when (apiResultHandling) {
                                                     is API_Result_Handling.Error -> {
-                                                        // AppPreferences.save_User_Name(constants.Profile_ViewModel.get_new_username())
+
                                                         focusManager.clearFocus()
                                                         keyboardController?.hide()
                                                         constants.Profile_ViewModel.save_new_name_edit_profile(
@@ -6108,39 +4967,29 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                                                         GlobalSnackbar.show(
                                                             profileChangeErrorMessage.value
                                                         )
-                                                        //errror
-                                                        //constants.Profile_ViewModel.change_Update_profile(false)
+
                                                     }
 
                                                     is API_Result_Handling.NoData -> {
-                                                        // no data
+
                                                     }
 
                                                     is API_Result_Handling.Loading -> {
-                                                        //loading
-                                                        //  constants.Profile_ViewModel.change_Update_profile(true)
+
                                                     }
 
                                                     is API_Result_Handling.Success -> {
                                                         constants.Profile_ViewModel.enable_Edit_Profile()
-//                                                    constants.Profile_ViewModel.change_Update_profile(false)
-//                                                    constants.Profile_ViewModel.set_From_Profile_Pic_Update(false)
 
-                                                        // AppPreferences.save_ProfileImage(constants.PROFILE_IMAGE_URL.value)
                                                         focusManager.clearFocus()
                                                         keyboardController?.hide()
                                                         AppPreferences.save_User_Name(constants.Profile_ViewModel.get_new_username())
                                                         GlobalSnackbar.show("UserName Successfully Updated")
 
-                                                        //AppPreferences.save_Real_Name(constants.Profile_ViewModel.get_New_Realname())
-
-                                                        println("API STORING PROFILE IMAGE -- ${AppPreferences.get_ProfileImage()} -- ${AppPreferences.get_Real_Name()}")
-
-                                                        //success
                                                     }
 
                                                     is API_Result_Handling.Deactivated -> {
-                                                        //resultCallback(5)
+
                                                     }
                                                 }
                                             }
@@ -6172,7 +5021,7 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                                 fontSize = constants.textUnit(12),
                                 fontFamily = constants.fontFamily(2),
                                 modifier = Modifier
-                                //.align(Alignment.Start)
+
                             )
 
                             Text(
@@ -6181,14 +5030,12 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                                 fontSize = constants.textUnit(12),
                                 fontFamily = constants.fontFamily(2),
                                 modifier = Modifier
-                                //.align(Alignment.Start)
+
                             )
                         }
                     }
 
                     Spacer(modifier = Modifier.padding(8.dp))
-
-                    // real name
 
                     Text(
                         "Name",
@@ -6225,7 +5072,7 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                                     fontSize = constants.textUnit(14),
                                     fontFamily = constants.fontFamily(1),
                                     modifier = Modifier
-                                    //.align(Alignment.Start)
+
                                 )
                             },
                             singleLine = true,
@@ -6247,8 +5094,6 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
 
                     Spacer(modifier = Modifier.padding(8.dp))
 
-                    // bio changes
-
                     Text(
                         "Bio",
                         color = newBlack,
@@ -6264,7 +5109,7 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color.White)
                             .border(1.dp, newGray, RoundedCornerShape(8.dp))
-                        //.padding(horizontal = 8.dp , vertical = 8.dp)
+
                         , contentAlignment = Alignment.TopStart
                     )
                     {
@@ -6359,12 +5204,6 @@ fun Edit_Profile(notchPadding: State<Dp>, navController: NavHostController) {
     }
 }
 
-
-
-
-//////// iswhich - Main State Following or Followers tab
-/////// followers State -  followback 0, following 1
-
 @Composable
 fun Own_Profile_FF_Buttons(
     isWhich_FF : Int
@@ -6375,9 +5214,8 @@ fun Own_Profile_FF_Buttons(
     , onDelete : () -> Unit
 )
 {
-    println("iswhich -- ${isWhich_FF}")
     if (isWhich_FF == 1){
-        /// for Following
+
         Row(
             modifier = Modifier
                 .wrapContentSize()
@@ -6392,12 +5230,6 @@ fun Own_Profile_FF_Buttons(
             horizontalArrangement = Arrangement.SpaceEvenly
         )
         {
-//            SubcomposeAsyncImage(
-//                model = R.drawable.profile_following_users_icon, "", modifier = Modifier
-//                    .size(14.dp)
-//            )
-//
-//            Spacer(modifier = Modifier.width(4.dp))
 
             Text(
                 text = "Unfollow",
@@ -6409,7 +5241,6 @@ fun Own_Profile_FF_Buttons(
 
     }
     else {
-        /// for followers
 
         Row (
             modifier = Modifier
@@ -6446,15 +5277,6 @@ fun Own_Profile_FF_Buttons(
                 horizontalArrangement = Arrangement.SpaceEvenly
             )
             {
-//                SubcomposeAsyncImage(
-//                    model = R.drawable.profile_following_users_icon,
-//                    "",
-//                    modifier = Modifier
-//                        .size(14.dp)
-//                    , colorFilter = ColorFilter.tint(if (Followers_State == 0) newBlue else newBlack)
-//                )
-//
-//                Spacer(modifier = Modifier.width(4.dp))
 
                 Text(
                     text = if (Followers_State == 0)"Follow back" else "Following",
@@ -6479,7 +5301,7 @@ fun Own_Profile_FF_Buttons(
                 AsyncImage(
                     model = R.drawable.deletefllwersrento
                     ,""
-                    //, colorFilter = ColorFilter.tint(Color.Red)
+
                     , modifier = Modifier
                         .size(16.dp)
                 )
@@ -6488,9 +5310,6 @@ fun Own_Profile_FF_Buttons(
 
     }
 }
-
-
-
 
 object ClickGuard {
     private var lastClickTime = 0L
@@ -6504,9 +5323,6 @@ object ClickGuard {
         } else false
     }
 }
-
-
-
 
 @Composable
 fun Profile_Following_Item_Structure_Old(
@@ -6547,7 +5363,7 @@ fun Profile_Following_Item_Structure_Old(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ){
                                 Text(
@@ -6577,33 +5393,22 @@ fun Profile_Following_Item_Structure_Old(
                 )
             },
             trailingContent = {
-                // Skip if viewing own user in the list
+
                 if (item.user_id == AppPreferences.getUserId()) {
-                    // Don't show any buttons for yourself
+
                 } else {
-                    // ✅ FIXED: Determine if viewing own profile or other's profile
+
                     val isViewingOwnProfile = (new_Stack?.other_UserId == 0
                             || new_Stack?.other_UserId == null
                             || new_Stack?.other_UserId == AppPreferences.getUserId())
 
-                    println("👤 Viewing profile: ${if (isViewingOwnProfile) "OWN" else "OTHER"}")
-                    println("📊 Item: user_id=${item.user_id}, im_followed=${item.im_followed}, is_followed=${item.is_followed}")
-
                     if (isViewingOwnProfile) {
-                        // ========================================
-                        // VIEWING YOUR OWN PROFILE
-                        // ========================================
 
-                        // For FOLLOWERS tab: Determine button state
-                        // - If they follow you but you don't follow them: Show "Follow back"
-                        // - If you already follow them: Show "Following"
                         val followers_State = if (item.is_followed == 1 && item.im_followed == 0) {
-                            0  // They follow you, you don't follow them → "Follow back"
+                            0
                         } else {
-                            1  // You follow them → "Following"
+                            1
                         }
-
-                        println("🔵 Own Profile - Followers State: $followers_State")
 
                         Own_Profile_FF_Buttons(
                             isWhich_FF = isWhich,
@@ -6680,32 +5485,19 @@ fun Profile_Following_Item_Structure_Old(
                             }
                         )
                     } else {
-                        // ========================================
-                        // VIEWING SOMEONE ELSE'S PROFILE
-                        // ========================================
 
-                        // For FOLLOWERS tab:
-                        // 0 = You don't follow them
-                        // 1 = They follow you but you don't follow them → "Follow back"
-                        // 2 = You follow them → "Following"
                         val followers_State = when {
-                            item.im_followed == 0 && item.is_followed == 1 -> 1  // Follow back
-                            item.im_followed == 1 && item.is_followed == 1 -> 2  // Following
-                            item.im_followed == 0 && item.is_followed == 0 -> 0  // Follow
+                            item.im_followed == 0 && item.is_followed == 1 -> 1
+                            item.im_followed == 1 && item.is_followed == 1 -> 2
+                            item.im_followed == 0 && item.is_followed == 0 -> 0
                             else -> 2
                         }
 
-                        // For FOLLOWING tab:
-                        // 0 = You don't follow them → "Follow"
-                        // 1 = They follow you but you don't follow them → "Follow back"
-                        // 2 = You follow them → "Following"
                         val following_State = when {
-                            item.im_followed == 0 && item.is_followed == 1 -> 1  // Follow back
-                            item.im_followed == 1 && item.is_followed == 1 -> 2  // Following
-                            else -> 0  // Follow
+                            item.im_followed == 0 && item.is_followed == 1 -> 1
+                            item.im_followed == 1 && item.is_followed == 1 -> 2
+                            else -> 0
                         }
-
-                        println("🟢 Other Profile - Following State: $following_State, Followers State: $followers_State")
 
                         Others_Profile_FF_Buttons(
                             isWhich_FF = isWhich,
@@ -6753,7 +5545,7 @@ fun Profile_Following_Item_Structure_Old(
                                 }
                             },
                             onFollowBack = {
-                                // Same as onFollow logic
+
                                 constants.Profile_ViewModel.put_follow_unfollow_Status(1)
                                 constants.Profile_ViewModel.put_Following_Id(item.user_id)
                                 constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
@@ -6808,294 +5600,7 @@ fun Profile_Following_Item_Structure_Old(
                     }
                 }
             }
-            /*  trailingContent = {
-                  if (item.user_id == AppPreferences.getUserId()) {
 
-
-                  }
-                  else {
-                      if (profile_Type == 0) {
-                          println("THIS ONE HERE3333 --- ${item.im_followed} -${isWhich}- ${item.is_followed}")
-  //                        val followers_State = remember(item.user_id, item.im_followed, item.is_followed, isWhich) {
-  //                            if (item.im_followed == 0 && item.is_followed == 1) 0 else 1
-  //                        }
-
-                          val followers_State =
-  //                            when {
-  //                            // If on FOLLOWING tab (isWhich = 1)
-  //                            isWhich == 1 -> {
-  //                                // Always show "Following" state (value = 1)
-  //                                1
-  //                            }
-  //                            // If on FOLLOWERS tab (isWhich = 0)
-  //                            else -> {
-                                  // Show "Follow back" (0) if they follow you but you don't follow them
-                                  // Show "Following" (1) if you already follow them
-                                  if (item.is_followed == 1 && item.im_followed == 0) 0 else 1
-  //                            }
-  //                        }
-
-                          println("THIS ONE HERE --${followers_State}- ${item.im_followed} -- ${item.is_followed}")
-                          Own_Profile_FF_Buttons(
-                              isWhich_FF = isWhich,
-                              Followers_State = followers_State,
-                              onUnfollow = {
-                                  constants.Profile_ViewModel.put_follow_unfollow_Status(2)
-                                  constants.Profile_ViewModel.put_Following_Id(item.user_id)
-                                  constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
-                                      id = item.user_id,
-                                      username = item.username,
-                                      profilePic = item.profile_image,
-                                  )
-                                  constants.Profile_ViewModel.setunfollowClicker()
-                              },
-                              onFollowBack = {
-                                  constants.Profile_ViewModel.put_follow_unfollow_Status(1)
-                                  constants.Profile_ViewModel.put_Following_Id(item.user_id)
-                                  constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
-                                      id = item.user_id,
-                                      username = item.username,
-                                      profilePic = item.profile_image,
-                                  )
-                                  if (network.value == NetworkStatus.Online){
-                                      follow_Unfollow_Delete_API_Call() { result ->
-                                          when (result) {
-                                              0 -> {
-
-                                                  Get_User_Profile_API_Call() { result2 ->
-                                                      when (result2) {
-                                                          0 -> {
-
-                                                              constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-                                                                  userId = new_Stack?.current_UsedId ?: 0,
-                                                                  newFollowers = constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
-                                                                  newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
-                                                              )
-
-                                                          }
-
-                                                          1 -> {
-                                                              // toast("Try Again later")
-                                                          }
-
-                                                          2 -> {
-
-                                                          }
-                                                      }
-                                                  }
-                                                  println("Success")
-
-                                                  if (!is_Search_Enabled.value){
-                                                      constants.Profile_ViewModel.updateImFollowedByUserId_FF(
-                                                          item.user_id
-                                                      )
-                                                  }
-                                                  else {
-                                                      constants.Profile_ViewModel.updateImFollowedByUserId_Search_FF(
-                                                          item.user_id
-                                                      )
-                                                  }
-
-                                                  // constants.Profile_ViewModel.setunfollowClicker()
-                                              }
-
-                                              1 -> {
-                                                  toast("Try Again later")
-                                              }
-
-                                              2 -> {
-
-                                              }
-                                          }
-                                      }
-                                  }
-                                  else {
-                                      GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
-                                  }
-                              },
-                              onFollowing = {
-                                  constants.Profile_ViewModel.put_follow_unfollow_Status(2)
-                                  constants.Profile_ViewModel.put_Following_Id(item.user_id)
-                                  constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
-                                      id = item.user_id,
-                                      username = item.username,
-                                      profilePic = item.profile_image,
-                                  )
-                                  constants.Profile_ViewModel.setunfollowClicker()
-                              },
-                              onDelete = {
-                                  constants.Profile_ViewModel.put_follow_unfollow_Status(3)
-                                  constants.Profile_ViewModel.put_Following_Id(item.user_id)
-                                  constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
-                                      id = item.user_id,
-                                      username = item.username,
-                                      profilePic = item.profile_image,
-                                  )
-                                  constants.Profile_ViewModel.delete_Follow_Request()
-                              }
-                          )
-
-                      }
-                      else {
-                          println("THIS TWO HERE")
-
-                          val followers_State = if (item.im_followed == 0 && item.is_followed == 1) 1
-                          else if (item.im_followed == 1 && item.is_followed == 1) 2 else if (item.im_followed == 0 && item.is_followed == 0) 0 else 2
-
-                          val following_State = if (item.im_followed == 0 && item.is_followed == 1) 1
-                          else if (item.im_followed == 1 && item.is_followed == 1) 2 else 0
-
-                          println("THIS TWO HERE  ${following_State} ${following_State}")
-
-                          Others_Profile_FF_Buttons(
-                              isWhich_FF = isWhich,
-                              Following_State = following_State,
-                              Followers_State = followers_State,
-                              onFollow = {
-                                  constants.Profile_ViewModel.put_follow_unfollow_Status(1)
-                                  constants.Profile_ViewModel.put_Following_Id(item.user_id)
-                                  constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
-                                      id = item.user_id,
-                                      username = item.username,
-                                      profilePic = item.profile_image,
-                                  )
-
-                                  if (network.value == NetworkStatus.Online){
-                                      follow_Unfollow_Delete_API_Call() { result ->
-                                          when (result) {
-                                              0 -> {
-
-                                                  Get_User_Profile_API_Call() { result2 ->
-                                                      when (result2) {
-                                                          0 -> {
-
-                                                              constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-                                                                  userId = new_Stack?.current_UsedId ?: 0,
-                                                                  newFollowers = constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
-                                                                  newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
-                                                              )
-
-                                                          }
-
-                                                          1 -> {
-                                                              // toast("Try Again later")
-                                                          }
-
-                                                          2 -> {
-
-                                                          }
-                                                      }
-                                                  }
-                                                  println("Success")
-
-                                                  if (!is_Search_Enabled.value){
-                                                      constants.Profile_ViewModel.updateImFollowedByUserId_FF(
-                                                          item.user_id
-                                                      )
-                                                  }
-                                                  else {
-                                                      constants.Profile_ViewModel.updateImFollowedByUserId_Search_FF(
-                                                          item.user_id
-                                                      )
-                                                  }
-
-                                                  // constants.Profile_ViewModel.setunfollowClicker()
-                                              }
-
-                                              1 -> {
-                                                  toast("Try Again later")
-                                              }
-
-                                              2 -> {
-
-                                              }
-                                          }
-                                      }
-                                  }
-                                  else {
-                                      GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
-                                  }
-                              },
-                              onFollowBack = {
-                                  constants.Profile_ViewModel.put_follow_unfollow_Status(1)
-                                  constants.Profile_ViewModel.put_Following_Id(item.user_id)
-                                  constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
-                                      id = item.user_id,
-                                      username = item.username,
-                                      profilePic = item.profile_image,
-                                  )
-
-                                  if (network.value == NetworkStatus.Online){
-                                      follow_Unfollow_Delete_API_Call() { result ->
-                                          when (result) {
-                                              0 -> {
-
-                                                  Get_User_Profile_API_Call() { result2 ->
-                                                      when (result2) {
-                                                          0 -> {
-
-                                                              constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-                                                                  userId = new_Stack?.current_UsedId ?: 0,
-                                                                  newFollowers = constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
-                                                                  newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
-                                                              )
-
-                                                          }
-
-                                                          1 -> {
-                                                              // toast("Try Again later")
-                                                          }
-
-                                                          2 -> {
-
-                                                          }
-                                                      }
-                                                  }
-                                                  println("Success")
-
-                                                  if (!is_Search_Enabled.value) {
-                                                      constants.Profile_ViewModel.updateImFollowedByUserId_FF(
-                                                          item.user_id
-                                                      )
-                                                  }
-                                                  else {
-                                                      constants.Profile_ViewModel.updateImFollowedByUserId_Search_FF(
-                                                          item.user_id
-                                                      )
-                                                  }
-                                                  // constants.Profile_ViewModel.setunfollowClicker()
-                                              }
-
-                                              1 -> {
-                                                  toast("Try Again later")
-                                              }
-
-                                              2 -> {
-
-                                              }
-                                          }
-                                      }
-                                  }
-                                  else {
-                                      GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
-                                  }
-                              },
-                              onFollowing = {
-                                  constants.Profile_ViewModel.put_follow_unfollow_Status(2)
-                                  constants.Profile_ViewModel.put_Following_Id(item.user_id)
-                                  constants.Profile_ViewModel.add_Unflw_Flw_Content_Pup(
-                                      id = item.user_id,
-                                      username = item.username,
-                                      profilePic = item.profile_image,
-                                  )
-                                  constants.Profile_ViewModel.setunfollowClicker()
-                              }
-                          )
-                      }
-
-                  }
-
-              }*/
             , colors = ListItemColors(
                 containerColor = newWhite,
                 headlineColor = Color.Black,
@@ -7109,29 +5614,19 @@ fun Profile_Following_Item_Structure_Old(
             )
             , modifier = Modifier
                 .noRippleClickable{
-//                    is_Search_Enabled.value = false
-//                    constants.API_Vm.isLoading_FF = false
-//                    constants.API_Vm.totalPages_FF = 1
-//                    search_Text.value = ""
-                    //constants.Profile_ViewModel.setSelectedUser(item)]
+
                     constants.Profile_ViewModel.add_Selected_User_Name(
                         item.username ?: "Profile"
                     )
 
-                    //new flowwewwwwwww
                     constants.Profile_ViewModel.add_BF_Handler(Profile_Handle_Back(
                         current_UsedId = AppPreferences.getUserId(),
                         other_UserId = item.user_id,
                         ff_User_Name = item.username ,
                         ff_Fw_Count = item.followers_count,
                         ff_Fg_Count = item.following_count,
-                        // is_Search_Enabled = is_Search_Enabled.value,
-                        // search_Text = search_Text.value
+
                     ))
-
-                    println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                     constants.Profile_ViewModel.addProfile(item.user_id)
                     constants.Profile_ViewModel.add_Selected_Profile_Id(id = item.user_id)
@@ -7139,8 +5634,6 @@ fun Profile_Following_Item_Structure_Old(
                     constants.Profile_ViewModel.clear_SearchList_FF()
 
                     constants.API_Vm.totalPages_Profile_Posts = 1
-//                    constants.Profile_ViewModel.clear_Search_Text_FF()
-
 
                     navController.navigate(ProfileScreenFlow.Other_Profile_Structure.route)
                 }
@@ -7149,8 +5642,6 @@ fun Profile_Following_Item_Structure_Old(
         HorizontalDivider()
     }
 }
-
-
 
 @Composable
 fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel: Common_H_ViewModel) {
@@ -7165,11 +5656,7 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
 
     }
 
-
-    // val network = remember { mutableStateOf(isConnected.value) }
-
     BackHandler {  }
-
 
     val profile_selected_Index = constants.Profile_ViewModel.show_Tapped_FFs.collectAsState()
 
@@ -7177,37 +5664,23 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
 
     val followRequest_Delete = constants.Profile_ViewModel.followRequestDelete.collectAsState()
 
-
     val users_Profiles_List = constants.Profile_ViewModel.get_User_FF_List.collectAsStateWithLifecycle()
     val users_Profiles_Search_List = constants.Profile_ViewModel.get_User_FF_Search_List.collectAsStateWithLifecycle()
-
-
 
     val tapped_Profiles_List = constants.Profile_ViewModel.tapped_Profile_List.collectAsState()
 
     val isLoading = constants.API_Vm.isLoading_FF
-    //val errorMessage = constants.API_Vm.errorMessage_FF
+
     val currentPage = constants.API_Vm.currentPage_FF
     val totalPages = constants.API_Vm.totalPages_FF
     val listState = rememberLazyListState()
 
-
-
-    println("WHY 2222 FFFFFFFFFFFFF -- ${constants.Profile_ViewModel.currentBFHandler.value} --- list full ${constants.Profile_ViewModel.profile_BF_Handler.value}" )
-
-
-    /// showing user name count of followers/ followeing
     val new_Stack by constants.Profile_ViewModel.currentBFHandler.collectAsStateWithLifecycle()
-    // constants.Profile_ViewModel.show_Current_BF_Handler()
-
-    println("NEW STACK __ ${new_Stack}")
-
 
     var search_Text = constants.Profile_ViewModel.search_Text_FF.collectAsStateWithLifecycle()
     var search_Text_Handler = constants.Profile_ViewModel.search_Text_FF_Handler.collectAsStateWithLifecycle()
     var is_Search_Enabled = constants.Profile_ViewModel.is_Search_Enabled.collectAsStateWithLifecycle()
     var is_Search_Enabled_Handler = constants.Profile_ViewModel.is_Search_Enabled_Handler.collectAsStateWithLifecycle()
-
 
     DisposableEffect(Unit) {
         constants.Profile_ViewModel.add_Search_Text_FF(search_Text_Handler.value)
@@ -7215,21 +5688,11 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
         onDispose {  }
     }
 
-
-
-
-    println("IS ENABLE OR NOT OUTSIDE DISPOSE __ ${is_Search_Enabled.value}  -- ${search_Text.value}")
-
     LaunchedEffect(users_Profiles_List.value) {
-        println("List updated: size=${users_Profiles_List.value.size}")
     }
-
 
     LaunchedEffect(new_Stack) {
-        println("🔥 New stack updated = $new_Stack")
     }
-
-
 
     DisposableEffect(new_Stack?.selected_Tab, is_Search_Enabled, search_Text.value) {
 
@@ -7257,19 +5720,15 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
         }
 
         onDispose {
-            println("Profile_FF_Structure disposed")
         }
     }
 
-
-    // Detect when near end of list
     LaunchedEffect(listState, currentPage, isLoading, totalPages) {
         if (!is_Search_Enabled.value) {
-            println("WHEN SEARCHED HITTING")
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                 .collect { lastVisibleItemIndex ->
                     val totalItems = listState.layoutInfo.totalItemsCount
-                    val loadMoreThreshold = 2// 👈 trigger when 4 items from the end
+                    val loadMoreThreshold = 2
 
                     if (
                         lastVisibleItemIndex != null &&
@@ -7278,8 +5737,7 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                         !isLoading &&
                         currentPage < totalPages
                     ) {
-                        println("CURRENT PAGE - ${currentPage}")
-                        //constants.API_Vm.loadCategories(currentPage + 1)
+
                         constants.API_Vm.load_Profile_FF_List(
                             user_id = AppPreferences.getUserId(),
                             others_id = if (new_Stack?.other_UserId == 0 || new_Stack?.other_UserId == null) "" else new_Stack?.other_UserId.toString()
@@ -7293,7 +5751,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
         }
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -7304,8 +5761,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
     )
     {
 
-        //if (isConnected.value) {
-        // Top Row: Back Button + Username
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -7331,7 +5786,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                 }
             )
 
-
             Text(
                 text = new_Stack?.ff_User_Name ?: "Unknown",
                 color = newBlack,
@@ -7344,7 +5798,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
 
         if (isLoading && currentPage == 1) {
 
-            // ⏳ Loading UI Composable
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -7353,12 +5806,12 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // LottiAnimation(2)
+
                 CircularProgressIndicator()
             }
         }
         else {
-            // Tabs Row
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -7379,15 +5832,9 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                             .background(if (new_Stack?.selected_Tab ?: 0 == index) newBlack else Color.White)
                             .noRippleClickable {
 
-
                                 constants.Profile_ViewModel.clear_Search_Text_FF()
                                 constants.Profile_ViewModel.disable_Search()
 
-//                                    search_Text.value = ""
-//                                    is_Search_Enabled.value = false
-                                println("1111111111111111111111111111111111111111111111111111111")
-
-                                // if (is_Search_Enabled.value == false) {
                                 if (index == 0) {
                                     constants.Profile_ViewModel.updateSelectedTab_BF_Handler(
                                         new_Stack?.id ?: 999,
@@ -7396,7 +5843,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                             ?: 0,
                                         users_Profiles_List.value[index]?.following_count
                                             ?: 0,
-
 
                                         )
                                 } else {
@@ -7409,7 +5855,7 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                             ?: 0,
                                     )
                                 }
-                                // if(!isLoading) {
+
                                 constants.Profile_ViewModel.replace_Last_Tapped_FF(
                                     Profile_ViewModel.Tap_Flw_Flg_DC(
                                         id = users_Profiles_List.value[index]?.user_id ?: 0,
@@ -7420,11 +5866,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                             ?: 0
                                     )
                                 )
-
-
-                                //}
-                                //}
-
 
                             },
                         contentAlignment = Alignment.Center
@@ -7458,7 +5899,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Search Bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -7466,9 +5906,9 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                     .clip(RoundedCornerShape(8.dp))
                     .background(Color.White)
                     .border(1.dp, newBlack, RoundedCornerShape(8.dp))
-                // .padding(horizontal = 8.dp)
+
                 , verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.spacedBy(8.dp)
+
             )
             {
                 TextField(
@@ -7537,8 +5977,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Main content area
-
             AnimatedContent(
                 targetState = profile_selected_Index.value?.tap_data ?: 0,
                 transitionSpec = {
@@ -7550,11 +5988,10 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(8f)
-                //.background(newBlue)
+
             )
             { targetState ->
 
-                println("TARGET STATE __ ${targetState}")
                 if (!isLoading) {
 
                     val emptycheck = if (!is_Search_Enabled.value) users_Profiles_List.value else users_Profiles_Search_List.value
@@ -7570,7 +6007,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                     }
                     else {
 
-
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             state = listState
@@ -7578,7 +6014,7 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                         {
                             itemsIndexed(
                                 items = if (!is_Search_Enabled.value) {
-                                    // if ()
+
                                     users_Profiles_List.value
                                 }
                                 else {
@@ -7589,22 +6025,13 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                             { _, item ->
                                 if (item != null) {
                                     val type = if ((new_Stack?.other_UserId == 0 || new_Stack?.other_UserId == null)
-                                        && AppPreferences.getUserId() == 0 // <-- adjust if needed
+                                        && AppPreferences.getUserId() == 0
                                     ) {
                                         1
                                     } else {
                                         0
                                     }
 
-//                                    Profile_Following_Item_Structure(
-//                                        isWhich = targetState,
-//                                        profile_Type = type,
-//                                        item = item,
-//                                        navController = navController,
-//                                        new_Stack,
-//                                        is_Search_Enabled,
-//                                        search_Text
-//                                    )
                                 }
                             }
 
@@ -7642,14 +6069,12 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
         }
     }
 
-
     val content = constants.Profile_ViewModel.get_Unflw_Flw_Content_Pup()
 
     Common_Popup(
         visible = unfollow_PUP.value,
         modifier = Modifier
             .background(Color(0xffF7F0DC)), content = {
-
 
             Column(
                 modifier = Modifier
@@ -7661,7 +6086,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
             {
 
                 Spacer(modifier = Modifier.padding(2.dp))
-               // constants.spacer(2)
 
                 Text(
                     text = "Unfollow ${content.user_Name} ?",
@@ -7669,8 +6093,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                     fontSize = constants.textUnit(16),
                     fontFamily = constants.fontFamily(0)
                 )
-
-                //constants.spacer(2)
 
                 Text(
                     text = "By unfollowing, you cannot able to view their property posts.",
@@ -7698,7 +6120,7 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                             .clip(RoundedCornerShape(8.dp))
                             .background(Color(0xffE8E8E8))
                             .noRippleClickable {
-//                                constants.Profile_ViewModel.setunfollowClicker()
+
                                 constants.Profile_ViewModel.closeUnFollowClick()
 
                             }, contentAlignment = Alignment.Center
@@ -7726,12 +6148,10 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                             when (result) {
                                                 0 -> {
 
-
                                                     Get_User_Profile_API_Call() { result2 ->
                                                         when (result2) {
                                                             0 -> {
 
-                                                                println("BACKGROUNF API __ ${new_Stack?.current_UsedId} --${constants.Profile_ViewModel.get_Following_Count_BGAPIC()} ")
                                                                 constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
                                                                     userId = new_Stack?.current_UsedId
                                                                         ?: 0,
@@ -7742,7 +6162,7 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                                             }
 
                                                             1 -> {
-                                                                // toast("Try Again later")
+
                                                             }
 
                                                             2 -> {
@@ -7750,7 +6170,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                                             }
                                                         }
                                                     }
-                                                    println("Success")
                                                     if (constants.Profile_ViewModel.get_follow_unfollow_Status() == 3) {
                                                         if (!is_Search_Enabled.value) {
                                                             constants.Profile_ViewModel.deleteUserById_Profile_FF(
@@ -7769,8 +6188,7 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                                             content.user_Id
                                                         )
                                                     }
-                                                    println("DELETION ID __ ${content.user_Id}")
-//                                                    constants.Profile_ViewModel.setunfollowClicker()
+
                                                     constants.Profile_ViewModel.closeUnFollowClick()
 
                                                 }
@@ -7801,11 +6219,9 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
         }, image = content.user_Image
     )
 
-
     Common_Popup(
         visible = followRequest_Delete.value,
         modifier = Modifier.background(Color(0xffFCEDEC)), content = {
-
 
             Column(
                 modifier = Modifier
@@ -7816,7 +6232,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
             )
             {
                 Spacer(modifier = Modifier.padding(2.dp))
-               // constants.spacer(2)
 
                 Text(
                     text = "Remove ${content.user_Name} ?",
@@ -7824,8 +6239,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                     fontSize = constants.textUnit(16),
                     fontFamily = constants.fontFamily(0)
                 )
-
-               // constants.spacer(2)
 
                 Text(
                     text = "By removing, this person will be removed from your follower list.",
@@ -7881,7 +6294,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                                         when (result2) {
                                                             0 -> {
 
-                                                                println("BACKGROUNF API __ ${new_Stack?.current_UsedId} --${constants.Profile_ViewModel.get_Following_Count_BGAPIC()} ")
                                                                 constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
                                                                     userId = new_Stack?.current_UsedId
                                                                         ?: 0,
@@ -7892,7 +6304,7 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                                             }
 
                                                             1 -> {
-                                                                // toast("Try Again later")
+
                                                             }
 
                                                             2 -> {
@@ -7900,7 +6312,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                                             }
                                                         }
                                                     }
-                                                    println("Success")
                                                     if (!is_Search_Enabled.value) {
                                                         constants.Profile_ViewModel.deleteUserById_Profile_FF(
                                                             content.user_Id ?: 0
@@ -7910,7 +6321,6 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
                                                             content.user_Id ?: 0
                                                         )
                                                     }
-                                                    println("DELETION ID __ ${content.user_Id}")
                                                     constants.Profile_ViewModel.delete_Follow_Dismiss()
 
                                                 }
@@ -7942,16 +6352,7 @@ fun Profile_FF_Structure_Followings(navController: NavHostController, viewModel:
         }, image = content.user_Image
     )
 
-
 }
-
-
-
-
-//////// iswhich - Main State Following or Followers tab
-/////// Following State - follow 0 , followback 1, following 2
-/////// followers State - follow 0 , followback 1, following 2
-
 
 @Composable
 fun Others_Profile_FF_Buttons(
@@ -7963,11 +6364,10 @@ fun Others_Profile_FF_Buttons(
     onFollowing :() -> Unit
 ){
     if (isWhich_FF == 1){
-        /// for Following
 
         when(Following_State){
             0 -> {
-                /// follow button
+
                 Row(
                     modifier = Modifier
                         .wrapContentSize()
@@ -7999,8 +6399,6 @@ fun Others_Profile_FF_Buttons(
                 }
             }
             1 -> {
-
-                // follow back button
 
                 Row(
                     modifier = Modifier
@@ -8034,8 +6432,6 @@ fun Others_Profile_FF_Buttons(
             }
             2 -> {
 
-                // following button
-
                 Row(
                     modifier = Modifier
                         .wrapContentSize()
@@ -8044,7 +6440,7 @@ fun Others_Profile_FF_Buttons(
                         .noRippleClickable {
                             onFollowing()
                         }
-                        //.border(1.dp, newGray, RoundedCornerShape(4.dp))
+
                         .padding(horizontal = 8.dp, vertical = 8.dp)
                     , verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -8070,11 +6466,10 @@ fun Others_Profile_FF_Buttons(
     }
     else
     {
-        /// for followers
 
         when(Followers_State){
             0 -> {
-                /// follow button
+
                 Row(
                     modifier = Modifier
                         .wrapContentSize()
@@ -8106,8 +6501,6 @@ fun Others_Profile_FF_Buttons(
                 }
             }
             1 -> {
-
-                // follow back button
 
                 Row(
                     modifier = Modifier
@@ -8141,8 +6534,6 @@ fun Others_Profile_FF_Buttons(
             }
             2 -> {
 
-                // following button
-
                 Row(
                     modifier = Modifier
                         .wrapContentSize()
@@ -8151,7 +6542,7 @@ fun Others_Profile_FF_Buttons(
                         .noRippleClickable {
                             onFollowing()
                         }
-                        //.border(1.dp, newGray, RoundedCornerShape(4.dp))
+
                         .padding(horizontal = 8.dp, vertical = 8.dp)
                     , verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
@@ -8177,6 +6568,3 @@ fun Others_Profile_FF_Buttons(
 
     }
 }
-
-
-

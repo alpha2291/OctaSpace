@@ -35,8 +35,6 @@ fun SplashScreen(navHostController: NavHostController, extras: Bundle?)
 
     var gooooo = remember { mutableStateOf(false) }
 
-
-
     LaunchedEffect(key1 = true) {
         Animated = true
         delay(3000)

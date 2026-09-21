@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Start_Up
 
-//import androidx.compose.ui.draw.paint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
@@ -63,14 +62,11 @@ import com.toletspot.houseforrent.ui.theme.newPurpleGradient
 import com.toletspot.houseforrent.ui.theme.newPurpleGradientBorder
 import kotlinx.coroutines.launch
 
-
-
 data class OnboardingData(
     var image: Int,
     var text : String,
     var text2 : String,
 )
-
 
 @Composable
 fun Onboarding(navController: NavHostController) {
@@ -96,9 +92,7 @@ fun Onboarding(navController: NavHostController) {
         )
     )
 
-
     var allowPagerScroll = remember { mutableStateOf(true) }
-
 
     Column(
         modifier = Modifier
@@ -106,22 +100,16 @@ fun Onboarding(navController: NavHostController) {
             .background(Color.White)
     ) {
 
-        //-------------------------
-        // TOP IMAGE PAGER
-        //-------------------------
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(7f)
-                   , userScrollEnabled = allowPagerScroll.value     // 🔥 disable when zoomed
+                   , userScrollEnabled = allowPagerScroll.value
         ) { page ->
             OnboardingImagePage(pages[page], allowPagerScroll)
         }
 
-        //-------------------------
-        // PAGE TEXT
-        //-------------------------
         OnboardingTextSection(
             data = pages[pagerState.currentPage],
             modifier = Modifier.weight(2f),
@@ -130,18 +118,10 @@ fun Onboarding(navController: NavHostController) {
 
         constants.spacer(4)
 
-        //-------------------------
-        // INDICATOR (STATIC POSITION)
-        //-------------------------
         PageIndicator(pagerState.currentPage)
-
-
 
         Spacer(Modifier.height(12.dp))
 
-        //-------------------------
-        // BOTTOM BUTTONS (NEVER MOVE)
-        //-------------------------
         BottomButtons(
             page = pagerState.currentPage,
             modifier = Modifier.weight(2f),
@@ -150,8 +130,7 @@ fun Onboarding(navController: NavHostController) {
                     if (pagerState.currentPage < 2) {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     } else {
-                        // navigate to next screen
-                       // navController.navigate("home")
+
                     }
                 }
             },
@@ -164,7 +143,6 @@ fun Onboarding(navController: NavHostController) {
         Spacer(Modifier.height(18.dp))
     }
 }
-
 
 @Composable
 fun OnboardingImagePage(
@@ -186,10 +164,8 @@ fun OnboardingImagePage(
     }
 }
 
-
 @Composable
 fun OnboardingTextSection2(data: OnboardingData, modifier: Modifier = Modifier) {
-    println("ttttt--222---${data}")
 
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -214,7 +190,6 @@ fun OnboardingTextSection2(data: OnboardingData, modifier: Modifier = Modifier) 
         )
     }
 }
-
 
 @Composable
 fun OnboardingTextSection(
@@ -259,7 +234,6 @@ fun OnboardingTextSection(
     }
 }
 
-
 @Composable
 fun AnimatedTypingText(
     text: String,
@@ -281,14 +255,13 @@ fun AnimatedTypingText(
         fontWeight = fontWeight,
         textAlign = textAlign,
         modifier = modifier.graphicsLayer {
-            val scale = 0.9f + (progress * 0.1f)  // Slight scale pop effect
+            val scale = 0.9f + (progress * 0.1f)
             scaleX = scale
             scaleY = scale
             alpha = progress
         }
     )
 }
-
 
 @Composable
 fun PageIndicator2(currentPage: Int, totalPages: Int = 3) {
@@ -317,7 +290,6 @@ fun PageIndicator2(currentPage: Int, totalPages: Int = 3) {
         }
     }
 }
-
 
 @Composable
 fun PageIndicator(currentPage: Int, totalPages: Int = 3) {
@@ -353,7 +325,6 @@ fun PageIndicator(currentPage: Int, totalPages: Int = 3) {
     }
 }
 
-
 @Composable
 fun BottomButtons2(
     page: Int,
@@ -370,13 +341,12 @@ fun BottomButtons2(
                 .align(Alignment.BottomCenter)
                 .background(Color.Green)
                 .fillMaxWidth()
-//                .fillMaxHeight()
+
                 .padding(horizontal = 24.dp),
             contentAlignment = Alignment.BottomCenter
         )
         {
 
-            // LEFT SIDE (Skip)
             if (page != 2) {
                 Text(
                     text = "Skip",
@@ -387,10 +357,9 @@ fun BottomButtons2(
                     }
                 )
             } else {
-                //Spacer(modifier = Modifier.width(48.dp)) // keeps layout stable
+
             }
 
-            // RIGHT BUTTON
             Box(
                 modifier = Modifier
                     .align(if (page == 2) Alignment.Center else Alignment.CenterEnd)
@@ -409,7 +378,7 @@ fun BottomButtons2(
                         Image(
                             painter = painterResource(R.drawable.onboardinggooin),
                             contentDescription = "",
-//                        tint = Color.White,
+
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -429,7 +398,6 @@ fun BottomButtons(
     onSkip: () -> Unit,
 ) {
 
-    // Animate appearance of "Take Me In"
     val fadeIn by animateFloatAsState(
         targetValue = if (page == 2) 1f else 0f,
         animationSpec = tween(300, easing = FastOutSlowInEasing)
@@ -442,16 +410,15 @@ fun BottomButtons(
 
     Box(
         modifier = modifier
-            //.background(Color.Green)
+
             .padding(horizontal = 24.dp, vertical = 12.dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.BottomCenter
     ) {
 
-        // ---------- LEFT SIDE (Skip) ----------
         Box(
             modifier = Modifier
-                //.background(Color.Red)
+
                 .fillMaxWidth()
                 .wrapContentHeight(),
             contentAlignment = Alignment.CenterStart
@@ -464,7 +431,7 @@ fun BottomButtons(
                     modifier = Modifier.noRippleClickable { onSkip() }
                 )
             } else {
-                // Keep space stable but invisible
+
                 Text(
                     text = "Skip",
                     color = Color.Transparent,
@@ -473,7 +440,6 @@ fun BottomButtons(
             }
         }
 
-        // ---------- RIGHT SIDE BUTTON ----------
         Box(
             modifier = Modifier
                 .align(if (page == 2) Alignment.BottomCenter else Alignment.BottomEnd)
@@ -485,7 +451,6 @@ fun BottomButtons(
             contentAlignment = Alignment.Center
         ) {
 
-            // "Next"
             if (page != 2) {
                 Text(
                     text = "Next",
@@ -499,7 +464,6 @@ fun BottomButtons(
                 )
             }
 
-            // "Take Me In" + icon
             if (page == 2) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -527,202 +491,3 @@ fun BottomButtons(
         }
     }
 }
-
-
-
-
-
-/*
-@Composable
-fun OnboardingPage(page: Int, onNext: () -> Unit, data: OnboardingData, pagerState: PagerState, ) {
-
-
-    Column(modifier = Modifier
-        .fillMaxSize()
-        , verticalArrangement = Arrangement.SpaceBetween
-        , horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(6f)
-            , contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(data.image),
-                contentDescription = null,
-                contentScale = ContentScale.FillBounds, // fills nicely
-                modifier = Modifier.matchParentSize() // ensures it covers whole Box
-            )
-            //LottiAnimation2(page)
-        }
-
-        Column(
-            modifier = Modifier
-                .weight(3f)
-                .fillMaxWidth(.8f)
-            , verticalArrangement = Arrangement.Center
-            , horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            constants.spacer(4)
-
-            CommonText(
-                data.text,
-                Color(0xff323232),
-                20,
-                0
-            )
-
-            constants.spacer(4)
-
-            CommonText(
-                data.text2,
-                Color(0xff575757),
-                16,
-                1
-            )
-
-            constants.spacer(4)
-
-        }
-
-        constants.spacer(4)
-
-        /// page indicator
-        PageIndicator(pagerState = pagerState)
-
-        constants.spacer(4)
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-            , verticalAlignment = Alignment.CenterVertically
-            , horizontalArrangement = Arrangement.SpaceBetween
-        )
-        {
-            if (page != 2) {
-                CommonText(
-                    "Skip",
-                    Color(0xff575757),
-                    14,
-                    1
-                )
-
-
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .border(
-                            1.dp,
-                            Brush.linearGradient(newPurpleGradientBorder),
-                            RoundedCornerShape(6.dp)
-                        )
-                        .background(Brush.verticalGradient(newPurpleGradient))
-                        .noRippleClickable {
-                            onNext()
-                        }
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CommonText(
-                        "Next",
-                        Color.White,
-                        14,
-                        1
-                    )
-                }
-            }
-            else {
-                Row (
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(6.dp))
-                        .border(
-                            1.dp,
-                            Brush.linearGradient(newPurpleGradientBorder),
-                            RoundedCornerShape(6.dp)
-                        )
-                        .background(Brush.verticalGradient(newPurpleGradient))
-                        .noRippleClickable {
-                            onNext()
-                        }
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                    , horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    CommonText(
-                        "Take Me In",
-                        Color.White,
-                        14,
-                        1
-                    )
-
-                    Image(painter = painterResource(R.drawable.onboardinggooin) , "",
-                        modifier = Modifier.size(24.dp))
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
-fun PageIndicator(pagerState: PagerState) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        repeat(pagerState.pageCount) { index ->
-            val size = if (pagerState.currentPage == index) 10.dp else 6.dp
-            val color = if (pagerState.currentPage == index) newBlue else Color(0xFFBEBEBE)
-
-            Box(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .size(size)
-                    .clip(CircleShape)
-                    .background(color)
-            )
-        }
-    }
-}
-
-
-
-
-@Composable
-fun LottiAnimation2(isWhichAnimation : Int){
-
-
-    val loadAnimation =  when (isWhichAnimation){
-        0 -> R.raw.buyhome
-        1 -> R.raw.searchland
-        else -> R.raw.buildings
-    }
-
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(loadAnimation))
-
-    var visible by remember { mutableStateOf(true) }
-
-
-
-    Box(
-        modifier = Modifier
-        , contentAlignment = Alignment.Center
-    ){
-        LottieAnimation(
-            composition = composition,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-            , reverseOnRepeat = true,
-            iterations = LottieConstants.IterateForever
-        )
-
-    }
-}
-
-*/
-
-

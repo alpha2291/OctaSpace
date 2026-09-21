@@ -16,7 +16,6 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-
 sealed interface NetworkConnectionState {
     data object Available : NetworkConnectionState
     data object Unavailable : NetworkConnectionState
@@ -71,7 +70,6 @@ val Context.currentConnectivityState: NetworkConnectionState
         return getCurrentConnectivityState(connectivityManager)
     }
 
-
 @Composable
 fun rememberConnectivityState(): State<NetworkConnectionState> {
     val context = LocalContext.current
@@ -82,10 +80,6 @@ fun rememberConnectivityState(): State<NetworkConnectionState> {
         }
     }
 }
-
-
-
-
 
 @Composable
 fun OnClick1(): Boolean {
@@ -103,6 +97,5 @@ fun OnClick1(): Boolean {
 fun OnClick(): Boolean {
     val connectionState by rememberConnectivityState()
 
-    // ✅ Use == instead of ===
     return connectionState == NetworkConnectionState.Available
 }

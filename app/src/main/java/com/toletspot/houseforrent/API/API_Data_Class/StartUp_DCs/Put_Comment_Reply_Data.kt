@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -37,6 +36,3 @@ data class Put_Comment_Reply_Data(
     @SerialName("mention_username")
     val mention_username: String,
 )
-
-
-

@@ -1,26 +1,8 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-//
-//"user_id": 9,
-//"username": "user009",
-//"name": "nagappan",
-//"phone_num": "7708404774",
-//"whatsapp_num": "",
-//"email": "",
-//"profile_image": "",
-//"posts": 0,
-//"following": 0,
-//"followers": 0,
-//"isBlocked": 0,
-//"is_report": 0,
-//"others_page": 1,
-//"im_followed": 0,
-//"is_followed": 0,
-//"thumbnails": []
 @Serializable
 data class Put_Profile_search_Data(
     @SerialName("email")

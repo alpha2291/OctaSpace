@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -21,4 +20,3 @@ data class Get_Reels(
     @SerialName("nxtpage")
     val nxtpage: Int
 )
-

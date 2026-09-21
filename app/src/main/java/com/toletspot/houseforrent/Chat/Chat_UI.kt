@@ -115,145 +115,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-
-
-
 fun formatTime(timestamp: Long): String {
     return SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date(timestamp))
 }
-
-
-
-/*@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Msg_UserList(
-    propertyId: String,
-    sellerId: String,
-    loggedInUserId: String,
-    viewModel: BuyerListViewModel = viewModel(),
-    onBuyerClick: (User) -> Unit,
-    onLogout: () -> Unit,
-    onBack: () -> Unit
-) {
-    val buyers by viewModel.buyers.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-
-
-    LaunchedEffect(propertyId, sellerId, loggedInUserId) {
-        viewModel.loadBuyers(propertyId, sellerId, loggedInUserId)
-    }
-
-
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .fillMaxSize()
-    )
-    {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-            , verticalAlignment = Alignment.CenterVertically
-            , horizontalArrangement = Arrangement.Start
-        ) {
-            Backer(
-                modifier = Modifier,
-                onBackClick = {
-                    onBack()
-                }
-            )
-
-            constants.spacer(4)
-
-            var type =
-                when {
-                    constants.Enquiry_ViewModel.selected_Msg_Filter.value == "1 , 2" -> "Received Enquiries"
-                    constants.Enquiry_ViewModel.selected_Msg_Filter.value == "1" -> "Received Enquiry"
-                   else   -> "Self Enquiry"
-
-                }
-
-            Text(type,  color = newBlack,
-                fontSize = constants.textUnit(24),
-                fontFamily = constants.fontFamily(0))
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(9.5f)
-        ) {
-            if (isLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(10.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
-            else if (buyers.isEmpty()) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                    , verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    LottiAnimation(2)
-                }
-
-                */
-/*Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = rememberNotchHeightDp().value),
-                    contentAlignment = Alignment.Center
-                )
-                {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-                        Image(painter = painterResource(R.drawable.empty_messages) ,"")
-
-                        Spacer(Modifier.height(16.dp))
-
-                        Text(
-                            "",
-                            //style = MaterialTheme.typography.bodyLarge,
-                            color = newBlack,
-                            fontSize = constants.textUnit(16),
-                            fontFamily = constants.fontFamily(0)
-                        )
-
-                        Spacer(Modifier.height(8.dp))
-
-                        Text(
-                            "We’ll alert you when someone messages you.",
-                           // style = MaterialTheme.typography.bodyLarge,
-                            color = newBlack,
-                            fontSize = constants.textUnit(20),
-                            fontFamily = constants.fontFamily(1)
-                        )
-                    }
-                }*/
-/*
-            }
-            else {
-                LazyColumn() {
-                    items( buyers,
-                        key = { it.user.userId + "_" + it.user.isOnline }
-                    )
-                    { userWithUnread ->
-                        println("USER IMAGE -- ${userWithUnread.user.profileImage} -- ${buyers}")
-                        Msg_User_Item(userWithUnread ) { onBuyerClick(userWithUnread.user) }
-                    }
-                }
-            }
-        }
-    }
-}*/
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -267,21 +131,18 @@ fun Msg_UserList(
     onBack: () -> Unit
 ) {
 
-
     var network = rememberNetworkStatus()
 
     val buyers by viewModel.buyers.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    // 👇 Added state to handle 30-second timeout
     var showTimeoutError by remember { mutableStateOf(false) }
 
     LaunchedEffect(propertyId, sellerId, loggedInUserId) {
         viewModel.loadBuyers(propertyId, sellerId, loggedInUserId)
 
-        // Start 30-second timer
         showTimeoutError = false
-        delay(30_000) // 30 seconds
+        delay(30_000)
         if (buyers.isEmpty()) {
             showTimeoutError = true
         }
@@ -292,7 +153,7 @@ fun Msg_UserList(
             .padding(horizontal = 16.dp)
             .fillMaxSize()
     ) {
-        // 🔙 Header Row
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -303,12 +164,9 @@ fun Msg_UserList(
 
             Image(painter = painterResource(R.drawable.left_arrow) , "",
                 modifier = Modifier.noRippleClickable {
-                    //viewModel.onChatClosed()
+
                     onBack()
                 })
-            /*Backer(modifier = Modifier, onBackClick = {
-
-            })*/
 
             constants.spacer(4)
 
@@ -326,7 +184,6 @@ fun Msg_UserList(
             )
         }
 
-        // 🧱 Content section
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -383,7 +240,7 @@ fun Msg_UserList(
                 }
 
                 buyers.isEmpty() && !showTimeoutError -> {
-                    // Show your Lottie animation initially
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize(),
@@ -402,7 +259,7 @@ fun Msg_UserList(
                 }
 
                 buyers.isEmpty() && showTimeoutError -> {
-                    // After 30 seconds, show fallback message
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize(),
@@ -435,14 +292,12 @@ fun Msg_UserList(
                 }
 
                 else -> {
-                    println("USERSSSSSS -- ${buyers}")
-                    // 🧾 Show the list
+
                     LazyColumn {
                         items(
                             buyers,
                             key = { it.user.userId + "_" + it.user.isOnline }
                         ) { userWithUnread ->
-                            println("LAST MESSAGE -- ${userWithUnread.lastMessage}")
                             Msg_User_Item(userWithUnread) { onBuyerClick(userWithUnread.user) }
                         }
                     }
@@ -451,7 +306,6 @@ fun Msg_UserList(
         }
     }
 }
-
 
 @Composable
 fun Msg_User_Item(userWithUnread: UserWithUnread, onClick: () -> Unit) {
@@ -463,7 +317,7 @@ fun Msg_User_Item(userWithUnread: UserWithUnread, onClick: () -> Unit) {
                 modifier = Modifier
                     .size(if (forTab())56.dp else 40.dp)
                 , contentAlignment = Alignment.Center
-                //.background(Color.DarkGray)
+
             )
             {
                 Box(
@@ -497,9 +351,7 @@ fun Msg_User_Item(userWithUnread: UserWithUnread, onClick: () -> Unit) {
                                     fontFamily = constants.fontFamily(1),
                                     color = Color.Black
                                 )
-//                                Image(painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                                    contentDescription = "",modifier = Modifier
-//                                        .matchParentSize())
+
                             }
                         } else {
                             SubcomposeAsyncImageContent()
@@ -507,17 +359,6 @@ fun Msg_User_Item(userWithUnread: UserWithUnread, onClick: () -> Unit) {
                     }
                 }
 
-//                Box(
-//                    modifier = Modifier
-//                        .align(Alignment.BottomEnd)
-//                        .size(15.dp)
-//                        .clip(CircleShape)
-//                        .background(
-//                            if (userWithUnread.user.isOnline) Color(0xFF4CAF50) else Color.Gray,
-//                            CircleShape
-//                        )
-//                        .padding(start = 4.dp)
-//                )
             }
         },
         headlineContent = {
@@ -585,8 +426,6 @@ fun Msg_User_Item(userWithUnread: UserWithUnread, onClick: () -> Unit) {
     )
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Msg_ChatScreen(
@@ -602,13 +441,10 @@ fun Msg_ChatScreen(
     navController: NavHostController
 ) {
 
-
     var showDropdown by remember { mutableStateOf(false) }
-
 
     Log.d("PROFILE DETAILS 000 " , "${otherUserName} , ${otherUserProfile} ${otherUserLocation}")
     val network = rememberNetworkStatus()
-
 
     var focusManager = LocalFocusManager.current
 
@@ -617,7 +453,7 @@ fun Msg_ChatScreen(
 
     var isUserBlocked by remember { mutableStateOf(false) }
     var isBlockedByOtherUser by remember { mutableStateOf(false) }
-    var userDeleted by remember { mutableStateOf(false) } // 👈 New flag
+    var userDeleted by remember { mutableStateOf(false) }
     var input by remember { mutableStateOf("") }
     var selectedMessageForDelete by remember { mutableStateOf<ChatMessage?>(null) }
     var showBlockDialog by remember { mutableStateOf(false) }
@@ -629,7 +465,6 @@ fun Msg_ChatScreen(
 
     val listState = rememberLazyListState()
 
-    // ✅ Initialize chat and mark as active
     LaunchedEffect(Unit) {
         viewModel.initChat(currentUserId, otherUserId, propertyId, sellerId)
         viewModel.setChatActive(true)
@@ -638,9 +473,7 @@ fun Msg_ChatScreen(
         val chatId = FirebaseRepository.generateChatId(propertyId, sellerId, buyerId)
 
         FirebaseRepository.resetUnreadCount(chatId, currentUserId)
-        //FirebaseRepository.markMessagesAsSeen(chatId, currentUserId)
 
-        // ✅ Listen for block updates
         FirebaseRepository.getUsersReference()
             .child(currentUserId)
             .child("blocks")
@@ -663,16 +496,12 @@ fun Msg_ChatScreen(
                 override fun onCancelled(error: DatabaseError) {}
             })
 
-
-        println("BLOCKED -- ${isUserBlocked}")
-
-        // ✅ Listen if other user account is deleted
         FirebaseRepository.getUsersReference()
             .child(otherUserId)
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val user = snapshot.getValue(User::class.java)
-                    userDeleted = user == null || user.isAccountDeleted // ✅ true if user missing OR deleted
+                    userDeleted = user == null || user.isAccountDeleted
                 }
 
                 override fun onCancelled(error: DatabaseError) {}
@@ -681,14 +510,12 @@ fun Msg_ChatScreen(
 
     }
 
-    // ✅ Mark chat as closed when leaving
     DisposableEffect(Unit) {
         onDispose {
             viewModel.setChatActive(false)
         }
     }
 
-    // ✅ Auto-scroll to bottom when new messages arrive
     LaunchedEffect(messages.size) {
         if (sortedMessages.isNotEmpty()) {
             listState.animateScrollToItem(sortedMessages.lastIndex)
@@ -703,13 +530,9 @@ fun Msg_ChatScreen(
 
     Log.d("PROFILE DETAILS 6666" , "${data}")
 
-
     LaunchedEffect(Unit) {
         viewModel.initChat(currentUserId, otherUserId, propertyId, sellerId)
-//        val chatId = FirebaseRepository.generateChatId(propertyId, sellerId,
-//            if (currentUserId == sellerId) otherUserId else currentUserId
-//        )
-//        FirebaseRepository.setUserActiveInChat(chatId, currentUserId, true)
+
     }
 
     val chatId = FirebaseRepository.generateChatId(propertyId, sellerId,
@@ -720,7 +543,6 @@ fun Msg_ChatScreen(
 
         FirebaseRepository.setUserActiveInChatNew(chatId, currentUserId)
 
-        // ✅ CORRECT: receiver is CURRENT USER
         FirebaseRepository.observeMessagesAndMarkSeen(chatId, currentUserId)
 
         FirebaseRepository.resetUnreadCount(chatId, currentUserId)
@@ -731,9 +553,7 @@ fun Msg_ChatScreen(
         }
     }
 
-
     val context = LocalContext.current
-
 
     Scaffold(
         topBar = {
@@ -755,11 +575,6 @@ fun Msg_ChatScreen(
                             .noRippleClickable {
                                 onBack()
                             })
-//                Backer(
-//                    modifier = Modifier
-//                ) {
-//
-//                }
 
                     Spacer(modifier = Modifier.width(10.dp))
 
@@ -770,7 +585,6 @@ fun Msg_ChatScreen(
                                 if (ClickGuard.canClick()) {
 
                                     constants.Profile_ViewModel.clearSelectedUserProfile()
-
 
                                     constants.Profile_ViewModel.add_Selected_User_Name(
                                         data?.user_details?.first()?.username ?: "Profile"
@@ -795,8 +609,6 @@ fun Msg_ChatScreen(
                                     constants.Profile_ViewModel.clear_SearchList_FF()
                                     constants.API_Vm.totalPages_Profile_Posts = 1
 
-                                    //isLoadingChange.value = true
-
                                     navController.navigate(ProfileScreenFlow.Other_Profile_Structure.route)
                                 }
                             }
@@ -819,7 +631,7 @@ fun Msg_ChatScreen(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(newLightBlue)
-                                    //.padding(8.dp)
+
                                     , contentAlignment = Alignment.Center
                                 ){
                                     Text(
@@ -834,14 +646,13 @@ fun Msg_ChatScreen(
                             }
                         }
 
-
                         var isOnlineOtherUser = remember { mutableStateOf(false) }
                             FirebaseRepository.observeOtherUserOnlineStatus(otherUserId) { isOnline ->
                                 isOnlineOtherUser.value = isOnline
                         }
 
                         Box(modifier = Modifier
-                            //.padding(5.dp)
+
                             .align(Alignment.BottomEnd)
                             .clip(CircleShape)
                             .size(15.dp)
@@ -879,8 +690,6 @@ fun Msg_ChatScreen(
                     }
                 }
 
-                println("BLOBLLKKJKJKJKN -- $isUserBlocked")
-
                 if (!userDeleted && !isUserBlocked) {
                     ChatActionsRow(
                         context = context,
@@ -896,7 +705,7 @@ fun Msg_ChatScreen(
             }
         },
         bottomBar = {
-            // ✅ If user deleted → disable chat input
+
             if (userDeleted) {
                 Box(
                     modifier = Modifier
@@ -930,7 +739,6 @@ fun Msg_ChatScreen(
                             val chatId =
                                 FirebaseRepository.generateChatId(propertyId, sellerId, buyerId)
 
-
                             if (!isUserBlocked && input.isNotBlank()) {
 
                                 val messageText = input.trim()
@@ -941,7 +749,7 @@ fun Msg_ChatScreen(
                                     otherUserId,
                                     propertyId,
                                     sellerId,
-                                    //status = if (isActiveOuter.value) "seen" else "sent"
+
                                 )
 
                                 focusManager.clearFocus()
@@ -951,7 +759,6 @@ fun Msg_ChatScreen(
                                     otherUserId
                                 )
                                 { isActive ->
-                                    println("IS ACTIVE OR NOT -- ${isActive}")
 
                                     if (!isActive) {
                                         constants.API_Vm.send_chat_notification(
@@ -995,7 +802,7 @@ fun Msg_ChatScreen(
             {
                 when {
                     isUserBlocked -> {
-                        // 🔴 Show banner if user is blocked
+
                         Box(
                             modifier = Modifier
                                 .fillMaxHeight()
@@ -1051,9 +858,7 @@ fun Msg_ChatScreen(
                                                 currentUserId,
                                                 otherUserId
                                             )
-//                                            viewModel.unblockUserMessages(
-//                                                currentUserId
-//                                            )
+
                                             toast("Successfully Unblocked")
                                         }
                                     , contentAlignment = Alignment.Center
@@ -1065,73 +870,17 @@ fun Msg_ChatScreen(
                                     )
                                 }
 
-
                             }
-//                        Row(
-//                            modifier = Modifier.fillMaxWidth(),
-//                            horizontalArrangement = Arrangement.Center,
-//                            verticalAlignment = Alignment.CenterVertically
-//                        ) {
-////                        Icon(
-////                            Icons.Default.Close,
-////                            contentDescription = "Blocked",
-////                            tint = Color.Red,
-////                            modifier = Modifier.size(18.dp)
-////                        )
-//                            Spacer(Modifier.width(8.dp))
-//                            Text(
-//                                "You have blocked this user",
-//                                color = Color.Red,
-//                                style = MaterialTheme.typography.bodySmall
-//                            )
-//                        }
+
                         }
                     }
-                    /* userDeleted -> {
-                         // 🔴 Show banner if user is deleted
-                         Box(
-                             modifier = Modifier
-                                 .fillMaxWidth()
-                                 .height(100.dp)
-                                 .background(Color(0xFFFFF3E0))
-                                 .padding(16.dp)
-                         )
-                         {
-                             Box(
-                                 modifier = Modifier
-                                     .fillMaxWidth()
-                                     .background(Color(0xFFFFF3E0))
-                                     .padding(12.dp)
-                             ) {
-                                 Row(
-                                     modifier = Modifier.fillMaxWidth(),
-                                     horizontalArrangement = Arrangement.Center,
-                                     verticalAlignment = Alignment.CenterVertically
-                                 ) {
-                                     Image(
-                                        painter = painterResource(R.drawable.deactivated),
-                                         contentDescription = "User Deleted",
-                                         //tint = Color(0xFFFF6F00),
-                                         modifier = Modifier.size(18.dp)
-                                     )
-                                     Spacer(Modifier.width(8.dp))
-                                     Text(
-                                         "You can’t send messages. This user is no longer available.",
-                                         color = Color(0xFFBF360C),
-                                         style = MaterialTheme.typography.bodySmall,
-                                         fontWeight = FontWeight.Medium
-                                     )
-                                 }
-                             }
 
-                         }
-                     }*/
                     else -> {
-                        // ✅ Chat messages list
+
                         if (sortedMessages.isEmpty()){
                             Column(
                                 modifier = Modifier
-//                                .fillMaxWidth()
+
                                     .fillMaxSize()
                                     .background(newLightGray)
                                 , verticalArrangement = Arrangement.Center
@@ -1145,15 +894,6 @@ fun Msg_ChatScreen(
                                         .size(70.dp)
                                 )
 
-//                                Spacer(modifier = Modifier.height(16.dp))
-//
-//                                Text(
-//                                    text =  "Chat looks fresh!",
-//                                    color = newBlack,
-//                                    fontSize = constants.textUnit(16),
-//                                    fontFamily = constants.fontFamily(1)
-//                                )
-
                                 Spacer(modifier = Modifier.height(16.dp))
 
                                 Text(
@@ -1163,7 +903,6 @@ fun Msg_ChatScreen(
                                     fontSize = constants.textUnit(12),
                                     fontFamily = constants.fontFamily(2)
                                 )
-
 
                             }
                         }
@@ -1195,27 +934,18 @@ fun Msg_ChatScreen(
                                                         constants.Enquiry_ViewModel.set_EnquiryFlow(EnquiryFlow.CHAT)
                                                         constants.Enquiry_ViewModel.clear_MyleadsEnquiry()
                                                         constants.Enquiry_ViewModel.clear_SelfEnquiry()
-                                                        //reels_Show.value = true
-                                                        println("content[index]?.post_user --- ${data?.video_model}")
+
                                                         val postUser = data?.video_model
-                                                            //?.toPostUser()
 
                                                         if (postUser != null) {
-                                                            println("Mapped PostUser -> $postUser")
-
-//                                                            val videoJson =
-//                                                                Uri.encode(Json.encodeToString(postUser))
-//                                                            navController.navigate("${EnquiriesFlow.SingleVideoPlayerEnquiry.route}/$videoJson")
 
                                                             constants.Reels_ViewModel.clear_view_pro_Details()
-
 
                                                             navController.currentBackStackEntry
                                                                 ?.savedStateHandle
                                                                 ?.set("post_id", postUser.user_post_id)
 
                                                             navController.navigate(EnquiriesFlow.SingleVideoPlayerEnquiry.route)
-
 
                                                         } else {
                                                             Log.e(
@@ -1290,7 +1020,6 @@ fun Msg_ChatScreen(
                                                                 .fillMaxSize()
                                                                 .background(newLightBlue)
 
-                                                            //.padding(8.dp)
                                                             , contentAlignment = Alignment.Center
                                                         ) {
                                                             Image(painter = painterResource(R.drawable.emptypostsrento) , "")
@@ -1311,8 +1040,8 @@ fun Msg_ChatScreen(
                                     constants.spacer(8)
                                 }
                                 items(sortedMessages,
-                                    key = { msg -> msg.messageId.ifBlank { "${msg.senderId}_${msg.timestamp ?: msg.time}" } } // ✅ fallback key
-                                    //  key = { it.messageId }
+                                    key = { msg -> msg.messageId.ifBlank { "${msg.senderId}_${msg.timestamp ?: msg.time}" } }
+
                                 ) { message ->
                                     ChatBubble(
                                         msg = message,
@@ -1320,8 +1049,6 @@ fun Msg_ChatScreen(
                                         onLongPress = { selectedMessageForDelete = message }
                                     )
                                 }
-
-                                println("TYPING INDICATOR -- ${isUserBlocked} __ ${userDeleted} ---- ${isOtherTyping}")
 
                                 if (isOtherTyping && !isUserBlocked && !userDeleted) {
                                     item { TypingIndicator() }
@@ -1335,12 +1062,9 @@ fun Msg_ChatScreen(
             }
         } ,
         modifier = Modifier.fillMaxSize()
-            //.imePadding()
+
     )
 
-
-
-    // ✅ Delete dialog logic remains unchanged
     DeleteMessageDialog(
         message = selectedMessageForDelete,
         currentUserId = currentUserId,
@@ -1356,7 +1080,6 @@ fun Msg_ChatScreen(
         onDismiss = { selectedMessageForDelete = null }
     )
 
-    // ✅ Block/unblock dialog unchanged
     if (showBlockDialog) {
 
         Common_Popup(
@@ -1365,7 +1088,7 @@ fun Msg_ChatScreen(
                 .background(Color(0xffF7F0DC))
             , image = otherUserProfile ,
             userName = otherUserName,
-            icon = 0 /// or R.drawable
+            icon = 0
         )
         {
             Column (
@@ -1377,7 +1100,6 @@ fun Msg_ChatScreen(
             )
             {
 
-               // Spacer(modifier = Modifier.padding(2.dp))
                 constants.spacer(2)
 
                 Image(painter = painterResource(R.drawable.rentoprofileblock) , "",
@@ -1385,15 +1107,6 @@ fun Msg_ChatScreen(
                 )
 
                 constants.spacer(2)
-
-//                Text(
-//                    text = "${if (!isUserBlocked)"Block" else "Unblock"} ${otherUserName} ?",
-//                    color = newBlack,
-//                    fontSize = constants.textUnit(16),
-//                    fontFamily = constants.fontFamily(0)
-//                )
-
-                //constants.spacer(2)
 
                 Text(
                     text = "You’ve blocked this user. Unblock to continue the conversation.",
@@ -1441,49 +1154,44 @@ fun Msg_ChatScreen(
                                 ClickHelper.getInstance().clickOnce {
                                     if (ClickGuard.canClick()) {
                                         if (network.value == NetworkStatus.Online) {
-                                            println("BLOCKED API CALL HIT STATUS __ ${constants.Profile_ViewModel.get_Block_Status()} -${isUserBlocked}-- ")
 
                                             viewModel.clearSetTyping(currentUserId)
                                             constants.API_Vm.put_Block_User(
                                                 user_id = AppPreferences.getUserId(),
                                                 blocker_id = data?.user_details?.firstOrNull()?.user_id
                                                     ?: 0,
-                                                //profile_Content.value?.user_id ?: 0,
+
                                                 status = if (!isUserBlocked) 1 else 0
-                                                //if (profile_Content.value?.is_blocked == 0) "1" else "0"
+
                                             )
                                             { apiResultHandling ->
                                                 when (apiResultHandling) {
                                                     is API_Result_Handling.Error -> {
-                                                        //errror
+
                                                         toast("Something went wrong")
-                                                        //constants.Profile_ViewModel.change_Update_profile(false)
+
                                                     }
 
                                                     is API_Result_Handling.Deactivated -> {
-                                                        // resultCallback(5)
+
                                                     }
 
                                                     is API_Result_Handling.NoData -> {
-                                                        // no data
+
                                                     }
 
                                                     is API_Result_Handling.Loading -> {
-                                                        //loading
-                                                        // constants.Profile_ViewModel.change_Update_profile(true)
+
                                                     }
 
                                                     is API_Result_Handling.Success -> {
-
 
                                                         if (isUserBlocked) {
                                                             FirebaseRepository.unblockUser(
                                                                 currentUserId,
                                                                 otherUserId
                                                             )
-//                                                            viewModel.unblockUserMessages(
-//                                                                currentUserId
-//                                                            )
+
                                                             toast("Successfully Unblocked")
                                                         } else {
                                                             FirebaseRepository.blockUser(
@@ -1497,9 +1205,7 @@ fun Msg_ChatScreen(
                                                         }
 
                                                         showBlockDialog = false
-                                                        //constants.Profile_ViewModel.enable_Edit_Profile()
-                                                        //constants.Profile_ViewModel.change_Update_profile(false)
-                                                        //success
+
                                                     }
                                                 }
                                             }
@@ -1526,42 +1232,8 @@ fun Msg_ChatScreen(
             }
         }
 
-
-       /* AlertDialog(
-            onDismissRequest = { showBlockDialog = false },
-            title = { Text(if (isUserBlocked) "Unblock User?" else "Block User?") },
-            text = {
-                Text(
-                    if (isUserBlocked)
-                        "Unblock this user to send messages again?"
-                    else
-                        "Block this user? You won't be able to send messages."
-                )
-            },
-            confirmButton = {
-                Button(onClick = {
-                    if (isUserBlocked) {
-                        FirebaseRepository.unblockUser(currentUserId, otherUserId)
-                        viewModel.unblockUserMessages(currentUserId)
-                    } else {
-                        FirebaseRepository.blockUser(currentUserId, otherUserId)
-                        viewModel.blockUserMessages(currentUserId)
-                    }
-                    showBlockDialog = false
-                }) {
-                    Text(if (isUserBlocked) "Unblock" else "Block")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showBlockDialog = false }) {
-                    Text("Cancel")
-                }
-            }
-        )*/
     }
 }
-
-
 
 @Composable
 fun ChatActionsRow(
@@ -1579,7 +1251,7 @@ fun ChatActionsRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        // 📧 Email Icon
+
         Image(
             painter = painterResource(R.drawable.rentochatemail),
             contentDescription = "Send Email",
@@ -1601,7 +1273,6 @@ fun ChatActionsRow(
 
         constants.spacer(4)
 
-        // 📞 Call Icon
         Image(
             painter = painterResource(R.drawable.rentochatcall),
             contentDescription = "Call User",
@@ -1622,7 +1293,6 @@ fun ChatActionsRow(
 
         constants.spacer(4)
 
-        // ⋮ More Icon with Dropdown
         Box {
             Image(
                 painter = painterResource(R.drawable.rentochatmore),
@@ -1653,13 +1323,7 @@ fun ChatActionsRow(
                     },
                     onClick = {
                         onBlockClick()
-//                        if (isUserBlocked) {
-//                            FirebaseRepository.unblockUser(currentUserId, otherUserId)
-//                            viewModel.unblockUserMessages(currentUserId)
-//                        } else {
-//                            FirebaseRepository.blockUser(currentUserId, otherUserId)
-//                            viewModel.blockUserMessages(currentUserId)
-//                        }
+
                         showDropdown = false
                     }
                 )
@@ -1676,7 +1340,6 @@ fun ChatActionsRow(
         }
     }
 }
-
 
 @Composable
 fun ChatBubble(
@@ -1705,15 +1368,13 @@ fun ChatBubble(
                     .clip(RoundedCornerShape(topStart = 16.dp , topEnd = 16.dp , bottomEnd = if(isCurrentUser)0.dp else 16.dp, bottomStart = if(isCurrentUser)16.dp else 0.dp))
                     .background(  when {
                     msg.deletedForEveryone -> Brush.verticalGradient(listOf(Color.White , Color.White))
-                        //Color(0xFFF0F0F0)
+
                     isCurrentUser -> Brush.verticalGradient(newPurpleGradient)
-                        //Color(0xffD4AF37)
+
                     else -> Brush.verticalGradient(listOf(Color(0xffEBEBEB).copy(.5f) , Color(0xffEBEBEB).copy(.5f)))
-                        //Color(0xffEBEBEB).copy(.5f)
-                    //Color(0xFFE3F2FD)
-                    //0xFFF5F5F5)
+
                 })
-                //shape = RoundedCornerShape(topStart = 16.dp , topEnd = 16.dp , bottomEnd = if(isCurrentUser)0.dp else 16.dp, bottomStart = if(isCurrentUser)16.dp else 0.dp)
+
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
                     Text(
@@ -1752,89 +1413,45 @@ fun ChatBubble(
     }
 }
 
-
-
 @Composable
 fun MessageStatusTick(status: String?) {
     when (status) {
         "sent" -> {
-            // single gray tick
+
             Image(painter = painterResource(R.drawable.chat_single_gray_tick) ,""
             , modifier = Modifier.size(16.dp))
-//            Icon(
-//                imageVector = Icons.Default.Done,
-//                contentDescription = "Sent",
-//                tint = Color.Gray,
-//                modifier = Modifier.size(16.dp)
-//            )
+
         }
 
         "delivered" -> {
-            // double gray tick
+
             Image(painter = painterResource(R.drawable.chat_double_gray_tick) ,""
                 , modifier = Modifier.size(16.dp))
-//            Row(
-//                horizontalArrangement = Arrangement.spacedBy((-6).dp)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Done,
-//                    contentDescription = "Delivered",
-//                    tint = Color.Gray,
-//                    modifier = Modifier.size(16.dp)
-//                )
-//                Icon(
-//                    imageVector = Icons.Default.Done,
-//                    contentDescription = "Delivered",
-//                    tint = Color.Gray,
-//                    modifier = Modifier.size(16.dp)
-//                )
-//            }
+
         }
 
         "seen" -> {
-            // double blue tick
+
             Image(painter = painterResource(R.drawable.chat_double_blue_tick) ,""
                 , colorFilter = ColorFilter.tint(newBlue)
                 , modifier = Modifier.size(16.dp))
-//            Row(
-//                horizontalArrangement = Arrangement.spacedBy((-6).dp)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Done,
-//                    contentDescription = "Seen",
-//                    tint = Color(0xFF2196F3),
-//                    modifier = Modifier.size(16.dp)
-//                )
-//                Icon(
-//                    imageVector = Icons.Default.Done,
-//                    contentDescription = "Seen",
-//                    tint = Color(0xFF2196F3),
-//                    modifier = Modifier.size(16.dp)
-//                )
-//            }
+
         }
 
         "blocked" -> {
-            // no tick for deleted messages
+
             Image(painter = painterResource(R.drawable.chat_single_gray_tick) ,""
                 , modifier = Modifier.size(16.dp))
         }
 
         else -> {
-            // fallback: single gray tick
+
             Image(painter = painterResource(R.drawable.chat_single_gray_tick) ,""
                 , modifier = Modifier.size(16.dp))
-//            Icon(
-//                imageVector = Icons.Default.Done,
-//                contentDescription = "Sent",
-//                tint = Color.Gray,
-//                modifier = Modifier.size(16.dp)
-//            )
+
         }
     }
 }
-
-
 
 @Composable
 fun TypingIndicatorold() {
@@ -1865,7 +1482,7 @@ fun TypingIndicator() {
     val transition = rememberInfiniteTransition(label = "typing")
 
     val colors = listOf(
-        newBlue, // New Blue
+        newBlue,
         newGray,
         Color.LightGray
     )
@@ -1910,9 +1527,6 @@ fun TypingIndicator() {
     }
 }
 
-
-
-
 @Composable
 fun ChatInputBar(
     input: String,
@@ -1952,21 +1566,9 @@ fun ChatInputBar(
                     onSend()
                 }
         )
-//        Button(
-//            onClick = onSend,
-//            enabled = input.isNotBlank() && enabled,
-//            modifier = Modifier
-//                .size(48.dp)
-//                .padding(bottom = 4.dp),
-//            shape = CircleShape,
-//            contentPadding = PaddingValues(0.dp)
-//        ) {
-//            //Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send", modifier = Modifier.size(20.dp))
-//        }
+
     }
 }
-
-
 
 @Composable
 fun DeleteMessageDialog(
@@ -2064,38 +1666,14 @@ fun DeleteMessageDialog(
                         0)
                 }
 
-
-         /*       Button(onClick = {
-                    onDelete("me")
-                    onDismiss()
-                }) {
-                    Text("Delete for Me")
-                }
-                if (isSender && withinFiveMinutes) {
-                    Spacer(Modifier.height(8.dp))
-                    Button(
-                        onClick = {
-                            onDelete("everyone")
-                            onDismiss()
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5252))
-                    ) {
-                        Text("Delete for Everyone")
-                    }
-                }*/
             }
         },
         dismissButton = {
-//            TextButton(onClick = onDismiss) {
-//                Text("Cancel")
-//            }
+
         }
         , containerColor = Color.White
     )
 }
-
-
-
 
 @Composable
 fun ChatAppNavigation(
@@ -2108,7 +1686,6 @@ fun ChatAppNavigation(
 
     var selectedBuyer by remember { mutableStateOf<User?>(null) }
 
-    // ✅ Presence tracking
     LaunchedEffect(loggedInUserId) {
         if (loggedInUserId.isNotBlank()) {
             FirebasePresence.startListening(loggedInUserId)
@@ -2124,89 +1701,6 @@ fun ChatAppNavigation(
     }
 
     when (currentScreen) {
-        // ============================================================
-        // LOGIN SCREEN
-        // ============================================================
-//        "login" -> LoginScreen { userId ->
-//            onUserLoggedIn(userId)
-//            loggedInUserId = userId
-//            currentScreen = "enquiry"
-//        }
 
-        // ============================================================
-        // ENQUIRY SCREEN (create users/property or skip)
-        // ============================================================
-//        "enquiry" -> EnquirySetupScreen(
-//            onContinue = { propId, sellId ->
-//                selectedPropertyId = propId
-//                selectedSellerId = sellId
-//                currentScreen = "propertySelect"
-//            },
-//            onSkip = {
-//                // ✅ Skip creating anything and go directly to next screen
-//                currentScreen = "propertySelect"
-//            },
-//            onLogout = {
-//                FirebasePresence.setOfflineNow(loggedInUserId)
-//                loggedInUserId = ""
-//                currentScreen = "login"
-//            }
-//        )
-
-        // ============================================================
-        // PROPERTY SELECTION SCREEN
-        // ============================================================
-//        "propertySelect" -> PropertySetupScreen { propId, sellId ->
-////            FirebaseRepository.getTotalUnreadCountForProperty(
-////                propertyId = propId,
-////                currentUserId = sellId
-////            ) { totalUnread ->
-////                Log.d("UnreadCount", "Total unread messages: $totalUnread")
-////            }
-//            selectedPropertyId = propId
-//            selectedSellerId = sellId
-//            currentScreen = "buyersList"
-//
-//
-//        }
-
-        // ============================================================
-        // BUYERS LIST SCREEN
-        // ============================================================
-//        "buyersList" -> Msg_UserList(
-//            propertyId = selectedPropertyId,
-//            sellerId = selectedSellerId,
-//            loggedInUserId = loggedInUserId,
-//            onBuyerClick = { user ->
-//                selectedBuyer = user
-//                currentScreen = "chat"
-//            },
-//            onLogout = {
-//                FirebasePresence.setOfflineNow(loggedInUserId)
-//                loggedInUserId = ""
-//                currentScreen = "login"
-//            }
-//        )
-
-        // ============================================================
-        // CHAT SCREEN
-        // ============================================================
-//        "chat" -> selectedBuyer?.let {
-//            Msg_ChatScreen(
-//                currentUserId = loggedInUserId,
-//                otherUserId = it.userId,
-//                otherUserLocation = "${it.city} , ${it.state}",
-//                otherUserName = it.name,
-//                otherUserProfile = it.profileImage,
-//                propertyId = selectedPropertyId,
-//                sellerId = selectedSellerId,
-//                onBack = {
-//                    currentScreen = "buyersList"
-//                    selectedBuyer = null
-//
-//                },
-//            )
-//        }
     }
 }
-

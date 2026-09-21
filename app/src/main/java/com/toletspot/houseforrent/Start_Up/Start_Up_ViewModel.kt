@@ -15,23 +15,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-
 enum class UserCredintialState{
     NONE,
     LOGIN,
     REGISTER
 }
 
-
-
 class Start_Up_ViewModel : ViewModel(){
 
-
     fun clearAllData_STVM() {
-        // Reset login/signup state
+
         _isLoginOrSignVerify.value = 0
 
-        // Reset location dropdowns
         _selectedCountry.value = "Select Country"
         _expandedCountry.value = false
         _selectedState.value = "Select State"
@@ -41,14 +36,11 @@ class Start_Up_ViewModel : ViewModel(){
         _searchCity.value = ""
         _showFullCityList.value = false
 
-        // Reset search query
         searchQuery.value = ""
         showFullList.value = false
 
-        // Reset location denied switch
         _locationDeniedSwitch.value = true
 
-        // Clear user input fields
         phoneNumber = ""
         WaNumber = ""
         countryCode = "+91"
@@ -56,24 +48,19 @@ class Start_Up_ViewModel : ViewModel(){
         otp = ""
         email = ""
 
-        // Clear user interests
         _user_Interests.value = emptyList()
         _selectedCategoryIds.value = emptyList()
         _user_Interests_Selection_List.value = emptyList()
 
-        // Reset GPS and location dialogs
         _showGpsDialog.value = false
         _showLocationSettings.value = false
         _getCurrrentLocation_View.value = false
 
-        // Clear OTP data
         _OTP_response.value = ""
         _error_OTP.value = false
 
-        // Reset country code selection
         _country_Code_Selected.value = "+91"
 
-        // Clear location data
         _latitude.value = ""
         _longitude.value = ""
         _country.value = ""
@@ -81,25 +68,17 @@ class Start_Up_ViewModel : ViewModel(){
         _city.value = ""
         _pincode.value = ""
 
-        println("🧹 Start_Up_ViewModel cleared successfully")
     }
 
-
-    /// rento
-
     var currentCredintialState = mutableStateOf(UserCredintialState.LOGIN)
-
-
 
     private var  _selectedCountryVm = MutableStateFlow<Country?>(null)
 
     var selectedCountryVm : StateFlow<Country?> = _selectedCountryVm.asStateFlow()
 
-
     fun add_selectedCountry(data : Country){
         _selectedCountryVm.value = data
     }
-
 
     fun reset_selectedCountry(){
         _selectedCountryVm.value = Country(
@@ -118,8 +97,6 @@ class Start_Up_ViewModel : ViewModel(){
         _isLoginOrSignVerify.value = value
     }
 
-    //var pincode by mutableStateOf("")
-
     val stateList = listOf(
         "Tamil Nadu", "Kerala", "Karnataka", "Assam", "Jammu", "Meghalaya",
         "Maharashtra", "Uttar Pradesh", "Gujarat", "Rajasthan"
@@ -134,8 +111,6 @@ class Start_Up_ViewModel : ViewModel(){
         "India" , "America" , "China" , "Korea" , "Japan" , "SwitzerLand"
     )
 
-    // Selected Country
-
     private val _selectedCountry = MutableStateFlow("Select Country")
     val selectedCountry: StateFlow<String> = _selectedCountry
 
@@ -143,7 +118,6 @@ class Start_Up_ViewModel : ViewModel(){
         _selectedState.value = value
     }
 
-    // State dropdown expanded
     private val _expandedCountry = MutableStateFlow(false)
     val expandedCountry: StateFlow<Boolean> = _expandedCountry
 
@@ -151,7 +125,6 @@ class Start_Up_ViewModel : ViewModel(){
         _expandedCountry.value = value
     }
 
-    // Selected State
     private val _selectedState = MutableStateFlow("Select State")
     val selectedState: StateFlow<String> = _selectedState
 
@@ -159,15 +132,12 @@ class Start_Up_ViewModel : ViewModel(){
         _selectedState.value = value
     }
 
-    // State dropdown expanded
     private val _expandedState = MutableStateFlow(false)
     val expandedState: StateFlow<Boolean> = _expandedState
 
     fun setExpandedState(value: Boolean) {
         _expandedState.value = value
     }
-
-    // Selected City
 
     private val _expandedCity = MutableStateFlow(false)
     val expandedCity: StateFlow<Boolean> = _expandedCity
@@ -197,7 +167,6 @@ class Start_Up_ViewModel : ViewModel(){
         _selectedCity.value = city
     }
 
-    // If needed elsewhere:
     fun clearCitySearch() {
         _searchCity.value = ""
         _selectedCity.value = ""
@@ -205,24 +174,17 @@ class Start_Up_ViewModel : ViewModel(){
 
     val searchQuery = MutableStateFlow("")
 
-
     val showFullList = MutableStateFlow(false)
 
     fun setSearchQuery(query: String) { searchQuery.value = query }
     fun setShowFullList(show: Boolean) { showFullList.value = show }
 
-
-
-
-    // location switch expanded
     private val _locationDeniedSwitch = MutableStateFlow(true)
     val locationDenied: StateFlow<Boolean> = _locationDeniedSwitch
 
     fun setLocationDenied(value: Boolean) {
         _locationDeniedSwitch.value = value
     }
-
-
 
     var _isLoginOrSign = mutableStateListOf(
         Start_Up_DataClass(
@@ -239,9 +201,7 @@ class Start_Up_ViewModel : ViewModel(){
 
     )
 
-
     var phoneNumber by  mutableStateOf("")
-
 
     var WaNumber by  mutableStateOf("")
     var countryCode by  mutableStateOf("+91")
@@ -251,22 +211,18 @@ class Start_Up_ViewModel : ViewModel(){
     var otp by mutableStateOf("")
     var email by mutableStateOf("")
 
-
     private val _user_Interests = MutableStateFlow<List<Get_Interest_Data>>(emptyList())
     val user_Interests: StateFlow<List<Get_Interest_Data>> = _user_Interests.asStateFlow()
-
 
     fun clear_Interests(){
         _user_Interests.value = emptyList()
     }
 
-    // ✅ new state for selected category IDs
     private val _selectedCategoryIds = MutableStateFlow<List<Int>>(emptyList())
     val selectedCategoryIds: StateFlow<List<Int>> = _selectedCategoryIds.asStateFlow()
 
     fun setInterests(interests: List<Get_Interest_Data>) {
         interests.forEachIndexed { i, item ->
-            println("Index=$i, ID=${item.land_type_id}, Name=${item.name}, Selected=${item.is_Selected}")
         }
         _user_Interests.value = interests
         updateSelectedIds()
@@ -289,8 +245,6 @@ class Start_Up_ViewModel : ViewModel(){
         }
     }
 
-
-
     fun toggleInterestSelectionold(categoryId: Int) {
         _user_Interests.value = _user_Interests.value.map { item ->
             if (item.land_categorie_id == categoryId) {
@@ -309,14 +263,12 @@ class Start_Up_ViewModel : ViewModel(){
         updateSelectedIds()
     }
 
-    // helper to update selected IDs
     fun updateSelectedIds() {
         _selectedCategoryIds.value = _user_Interests.value
             .filter { it.is_Selected }
-            .map { it.land_categorie_id } // make sure your Get_Interest_Data has categoryId: Int
+            .map { it.land_categorie_id }
     }
 
-    // In your ViewModel
     fun toggleInterestSelection(categoryId: Int) {
         _user_Interests.update { currentList ->
             currentList.map { category ->
@@ -338,10 +290,6 @@ class Start_Up_ViewModel : ViewModel(){
             }
         }
     }
-
-
-
-
 
     val _country_Code_Handler = MutableStateFlow(
         listOf(
@@ -542,7 +490,6 @@ class Start_Up_ViewModel : ViewModel(){
         )
     )
 
-
     var country_Code_Handler : StateFlow<List<CountryCodeHandler_DC>> = _country_Code_Handler.asStateFlow()
 
     fun getLimitForCountryCode(
@@ -551,7 +498,7 @@ class Start_Up_ViewModel : ViewModel(){
     ): Int? {
         return countryList.find { it.country_Code == code }?.limit
     }
-    // In your Start_Up_ViewModel
+
     private val _showGpsDialog = MutableStateFlow(false)
     val showGpsDialog: StateFlow<Boolean> = _showGpsDialog
 
@@ -573,7 +520,6 @@ class Start_Up_ViewModel : ViewModel(){
         _getCurrrentLocation_View.update { value }
     }
 
-
     private var _OTP_response = MutableStateFlow<String> ("")
     var OTP_Response : StateFlow<String> = _OTP_response.asStateFlow()
 
@@ -584,7 +530,6 @@ class Start_Up_ViewModel : ViewModel(){
     fun get_OTP_Response(): String{
         return _OTP_response.value
     }
-
 
     private var _error_OTP = MutableStateFlow(false)
     var error_OTP : StateFlow<Boolean> = _error_OTP.asStateFlow()
@@ -597,8 +542,6 @@ class Start_Up_ViewModel : ViewModel(){
         _error_OTP.value = false
     }
 
-
-    // Holds selected indexes
     private val _user_Interests_Selection_List = MutableStateFlow<List<Int>>(emptyList())
     val user_Interests_Selected: StateFlow<List<Int>> = _user_Interests_Selection_List.asStateFlow()
 
@@ -606,19 +549,16 @@ class Start_Up_ViewModel : ViewModel(){
         val current = _user_Interests_Selection_List.value.toMutableList()
 
         if (current.contains(index)) {
-            current.remove(index)   // deselect
+            current.remove(index)
         } else {
-            current.add(index)      // select
+            current.add(index)
         }
 
         _user_Interests_Selection_List.value = current
     }
 
-
-
     private var _country_Code_Selected = MutableStateFlow<String>("+91")
     var country_Code_Selected : StateFlow<String> = _country_Code_Selected.asStateFlow()
-
 
     fun get_Country_Code():String{
         _country_Code_Selected.update { it }
@@ -629,7 +569,6 @@ class Start_Up_ViewModel : ViewModel(){
         _country_Code_Selected.update { code }
     }
 
-
     private var _latitude = MutableStateFlow<String>("")
     var latitude : StateFlow<String> = _latitude.asStateFlow()
 
@@ -637,14 +576,12 @@ class Start_Up_ViewModel : ViewModel(){
         _latitude.update { lat.toString() }
     }
 
-
     private var _longitude = MutableStateFlow<String>("")
     var longitude : StateFlow<String> = _longitude.asStateFlow()
 
     fun set_Longitude(long:Double){
         _longitude.update { long.toString() }
     }
-
 
     private var _country = MutableStateFlow<String>("")
     var country : StateFlow<String> = _country.asStateFlow()
@@ -660,7 +597,6 @@ class Start_Up_ViewModel : ViewModel(){
         _state.update { state }
     }
 
-
     private var _city = MutableStateFlow<String>("")
     var city : StateFlow<String> = _city.asStateFlow()
 
@@ -668,15 +604,12 @@ class Start_Up_ViewModel : ViewModel(){
         _city.update { city }
     }
 
-
     private var _pincode = MutableStateFlow<String>("")
     var pincode : StateFlow<String> = _pincode.asStateFlow()
 
     fun set_Pincode(city:String){
         _pincode.update { city }
     }
-
-
 
     fun Location_Manual_IsNotEmpty() : Boolean{
         if (_country.value.isNotEmpty() && _state.value.isNotEmpty() && _city.value.isNotEmpty() && _pincode.value.isNotEmpty() ){
@@ -686,8 +619,5 @@ class Start_Up_ViewModel : ViewModel(){
             return false
         }
     }
-
-
-
 
 }

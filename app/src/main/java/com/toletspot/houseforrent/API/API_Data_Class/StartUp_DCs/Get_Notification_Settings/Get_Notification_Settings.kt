@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs.Get_Notification_Settings
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

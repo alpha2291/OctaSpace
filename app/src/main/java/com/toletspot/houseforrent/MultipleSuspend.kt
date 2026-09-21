@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -23,11 +22,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.toletspot.houseforrent.ui.theme.newBlack
 import kotlinx.coroutines.delay
 
-// Fake models
 data class User(val id: Int, val name: String)
 data class Post(val id: Int, val content: String)
 
-// Fake suspend functions
 suspend fun fetchUser(): User {
     delay(2000)
     return User(1, "Alice")
@@ -46,7 +43,6 @@ suspend fun fetchNotificationsCount(): Int {
     return 5
 }
 
-// UI state
 data class DashboardUiState(
     val user: User? = null,
     val posts: List<Post> = emptyList(),
@@ -63,7 +59,7 @@ class DashboardViewModel : ViewModel() {
     fun loadDashboardData() {
         viewModelScope.launch {
             try {
-                // Run in parallel
+
                 val userDeferred = async { fetchUser() }
                 val postsDeferred = async { fetchPosts() }
                 val notificationsDeferred = async { fetchNotificationsCount() }
@@ -83,8 +79,6 @@ class DashboardViewModel : ViewModel() {
         }
     }
 }
-
-
 
 @Composable
 fun DashboardScreen(
@@ -124,9 +118,6 @@ fun DashboardScreen(
                     .padding(16.dp)
             ) {
 
-//                LottiAnimation(6)
-//                LottiAnimation(4)
-//                LottiAnimation(5)
                 Text(
                     text = "Hello, ${uiState.user?.name ?: "Guest"} 👋",
                     style = MaterialTheme.typography.headlineMedium

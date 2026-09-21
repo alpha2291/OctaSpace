@@ -94,7 +94,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
-
 @Composable
 fun trao(){
 
@@ -244,7 +243,6 @@ fun trao(){
         Chips_Items_DC("Separate for Men & Women"),
     )
 
-
     val openSides = (1..4).map { Chips_Items_DC("$it") }
 
     LazyColumn(
@@ -254,32 +252,19 @@ fun trao(){
     ) {
         item {
 
-           // PP_AgreementType(previouslyUsedFor)
             PP_Preferred_Tenants(previouslyUsedFor)
-            //PP_Available_From()
+
             PP_DepositAmount(previouslyUsedFor)
-            //PP_Rent()
-           // PP_LeaseAmount()
-//            PP_Lease_Duration(previouslyUsedFor)
+
             PP_Lock_in_Period(previouslyUsedFor)
             PP_Notice_Period(previouslyUsedFor)
-            //PP_Carpet_Built_SuperBuilt_Area()
-           // PP_Property_Name()
-//            PP_Select_Floor_Plan(data = floorPlans)
-//            PP_Area_Dimensions()
-//            PP_Property_Facing(data = facingOptions)
-//            PP_Floor_Details()
-//            PP_Property_Ownership(data = ownershipOptions)
-//            PP_Availability_Status(data = availabilityStatus)
+
             PP_No_Of_Bedrooms(data = bedroomOptions)
-//            PP_No_Of_Bathrooms(data = bathroomOptions)
-//            PP_No_Of_Balconies(data = balconyOptions)
+
             PP_Other_Rooms(data = otherRooms)
-//            PP_Furnishing_Status(data = furnishingStatus)
-//            PP_parking_available()
-//            PP_Amenities(data = amenities)
+
             PP_Property_Highlights(data = highlights)
-//            PP_Land_Area()
+
             PP_Land_Open_Sides(openSides)
             PP_Has_Boundary_Wall()
 
@@ -296,26 +281,19 @@ fun trao(){
             PP_UPS(data = upsOptions)
             PP_Fire_Safety_Measures(data = fireSafetyMeasures)
             PP_Lifts(data = lifts)
-            //PP_Office_Previously_Used_for(data = previouslyUsedFor)
+
             PP_Washroom_Details(data = washroomDetails)
 
-
-//            PP_Shop_facade()
             PP_Pantry_Size()
-            //PP_Is_Pre_leased_Pre_Rented()
+
             PP_Is_your_office_fire_NOC_Certified()
             PP_Occupancy_Certificate()
             PP_authority_property_Approved(data = listOf(Chips_Items_DC("Local") ))
-
-
-
 
         }
     }
 
 }
-
-
 
 data class Chips_Items_DC(
     var title : String,
@@ -457,35 +435,24 @@ fun PP_Select_Floor_Plan(
     }
 }
 
-
 @Composable
 fun PP_Carpet_Built_SuperBuilt_Area(isError: Boolean) {
 
     val areaMeasurements = constants.AREA_UNITS
-        //listOf("sq ft / ft²", "m²", "cm²", "sq yd")
-
-    /// carpet are
 
     var expanded by remember { mutableStateOf(false) }
     var value by remember { mutableStateOf("") }
 
-
-
     val add_builtup = remember { mutableStateOf(false) }
     val add_Super_builtup = remember { mutableStateOf(false) }
-
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var formStateCarper = remember { mutableStateOf(flowData.value?.property_Carpet_Area) }
 
-//    var selectedDimension by remember { mutableStateOf(areaMeasurements.first()) }
     var selectedDimension by remember { mutableStateOf(flowData.value?.carpet_area_unit) }
-
 
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
 
@@ -501,7 +468,6 @@ fun PP_Carpet_Built_SuperBuilt_Area(isError: Boolean) {
             , fontSize = constants.textUnit(16)
             , fontFamily = constants.fontFamily(1)
         )
-//        Text("Carpet Area", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -513,14 +479,14 @@ fun PP_Carpet_Built_SuperBuilt_Area(isError: Boolean) {
                 .border(1.dp, if (isError) Color.Red else newGray, RoundedCornerShape(8.dp))
         )
         {
-            // Numeric input
+
             TextField(
                 value = formStateCarper.value?: "",
                 onValueChange = { newValue ->
                     val filteredValue = newValue.filter { it.isDigit() }
                     val numericValue = filteredValue.toLongOrNull() ?: 0L
 
-                    if (numericValue <= 50_00_00_000) { // 50 crores in numeric form
+                    if (numericValue <= 50_00_00_000) {
                         formStateCarper.value = filteredValue
                         constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                             it.copy(property_Carpet_Area = filteredValue)
@@ -566,7 +532,6 @@ fun PP_Carpet_Built_SuperBuilt_Area(isError: Boolean) {
                 color = newGray
             )
 
-            // Dropdown for units
             Box(
                 modifier = Modifier
                     .weight(2f)
@@ -580,7 +545,7 @@ fun PP_Carpet_Built_SuperBuilt_Area(isError: Boolean) {
                         fontSize = constants.textUnit(12),
                         fontWeight = FontWeight.Bold
                     )
-                    //Spacer(modifier = Modifier.padding(2.dp))
+
                     Icon(
                         painter = painterResource(id = R.drawable.arrowdown),
                         contentDescription = null,
@@ -620,8 +585,6 @@ fun PP_Carpet_Built_SuperBuilt_Area(isError: Boolean) {
 
         Spacer(modifier = Modifier.padding(8.dp))
 
-        // built up area field
-
         Box (
             modifier = Modifier
                 .fillMaxWidth()
@@ -648,7 +611,6 @@ fun PP_Carpet_Built_SuperBuilt_Area(isError: Boolean) {
             }
         }
 
-
         Spacer(modifier = Modifier.height(8.dp))
 
         AnimatedVisibility(
@@ -660,8 +622,6 @@ fun PP_Carpet_Built_SuperBuilt_Area(isError: Boolean) {
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        // super built up area field
 
         Box  (
             modifier = Modifier
@@ -698,29 +658,20 @@ fun PP_Carpet_Built_SuperBuilt_Area(isError: Boolean) {
             PP_Super_Builtup_Area()
         }
 
-        println("MAIN COMPOSABLE CARPERT -- ${constants.PostProperty_ViewModel.selected_Options_Form4.value}")
-
     }
 }
-
-
-
 
 @Composable
 fun PP_Builtup_Area(){
 
     val areaMeasurements = constants.AREA_UNITS
-        //listOf("sq ft / ft²", "m²", "cm²", "sq yd")
 
-    /// built up area
     var expanded2 by remember { mutableStateOf(false) }
     var value2 by remember { mutableStateOf("") }
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var formStateBuilt = remember { mutableStateOf(flowData.value?.property_Builtup_Area) }
     var selectedDimension2 by remember { mutableStateOf(flowData.value?.built_up_area_unit) }
-//    var selectedDimension2 by remember { mutableStateOf(areaMeasurements.first()) }
-
 
     Column {
 
@@ -736,14 +687,14 @@ fun PP_Builtup_Area(){
                 .border(1.dp, newGray, RoundedCornerShape(8.dp))
         )
         {
-            // Numeric input
+
             TextField(
                 value = formStateBuilt.value ?: "",
                 onValueChange = { newValue ->
                     val filteredValue = newValue.filter { it.isDigit() }
                     val numericValue = filteredValue.toLongOrNull() ?: 0L
 
-                    if (numericValue <= 50_00_00_000) { // 50 crores in numeric form
+                    if (numericValue <= 50_00_00_000) {
                         formStateBuilt.value =  filteredValue
                         constants.PostProperty_ViewModel.update_Selected_Field_Form4 { it.copy(property_Builtup_Area = filteredValue) }
                     }
@@ -780,7 +731,6 @@ fun PP_Builtup_Area(){
                 color = newGray
             )
 
-            // Dropdown for units
             Box(
                 modifier = Modifier
                     .weight(2f)
@@ -827,27 +777,18 @@ fun PP_Builtup_Area(){
     }
 }
 
-
-
 @Composable
 fun PP_Super_Builtup_Area(){
 
     val areaMeasurements = constants.AREA_UNITS
-        //listOf("sq ft / ft²", "m²", "cm²", "sq yd")
 
-    /// built up area
-    // super built up area
     var expanded3 by remember { mutableStateOf(false) }
     var value3 by remember { mutableStateOf("") }
-//    var selectedDimension3 by remember { mutableStateOf(areaMeasurements.first()) }
-
-
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var formStateSuperBu = remember { mutableStateOf(flowData.value?.property_Super_Builtup_Area) }
 
     var selectedDimension3 by remember { mutableStateOf(flowData.value?.super_built_up_area_unit) }
-
 
     Column {
         Text("Super Built-up Area", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -862,14 +803,14 @@ fun PP_Super_Builtup_Area(){
                 .border(1.dp, newGray, RoundedCornerShape(8.dp))
         )
         {
-            // Numeric input
+
             TextField(
                 value = formStateSuperBu.value ?: "",
                 onValueChange = { newValue ->
                     val filteredValue = newValue.filter { it.isDigit() }
                     val numericValue = filteredValue.toLongOrNull() ?: 0L
 
-                    if (numericValue <= 50_00_00_000) { // 50 crores in numeric form
+                    if (numericValue <= 50_00_00_000) {
                         formStateSuperBu.value =  filteredValue
                         constants.PostProperty_ViewModel.update_Selected_Field_Form4 { it.copy(property_Super_Builtup_Area = filteredValue) }
                     }
@@ -906,7 +847,6 @@ fun PP_Super_Builtup_Area(){
                 color = newGray
             )
 
-            // Dropdown for units
             Box(
                 modifier = Modifier
                     .weight(2f)
@@ -953,49 +893,36 @@ fun PP_Super_Builtup_Area(){
     }
 }
 
-
 @Composable
 fun PP_Area_Dimensions() {
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var formStateLength = remember { mutableStateOf(flowData.value?.property_Area_Dimension_Length) }
     var formStateBreadth = remember { mutableStateOf(flowData.value?.property_Area_Dimension_Width) }
 
-
-
     val areaMeasurements = constants.AREA_UNITS
-        //listOf("sq ft / ft²", "m²", "cm²", "sq yd")
+
     var expanded by remember { mutableStateOf(false) }
     var selectedDimension by remember { mutableStateOf(flowData.value?.property_Area_Dimension_Length_Unit) }
-//    var selectedDimension by remember { mutableStateOf(areaMeasurements.first()) }
-
-
 
     val areaMeasurements2 = constants.AREA_UNITS
-        //listOf("sq ft / ft²", "m²", "cm²", "sq yd")
+
     var expanded2 by remember { mutableStateOf(false) }
     var selectedDimension2 by remember { mutableStateOf(flowData.value?.property_Area_Dimension_Width_Unit) }
-//    var selectedDimension2 by remember { mutableStateOf(areaMeasurements.first()) }
-
-
 
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text(
             buildAnnotatedString {
                 withStyle(style = SpanStyle(color = newBlack)) { append("Area Dimensions") }
-                //withStyle(style = SpanStyle(color = Color.Red)) { append("*") }
+
             },
             fontSize = constants.textUnit(16),
             fontFamily = constants.fontFamily(1)
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-
-        // Length field
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -1011,7 +938,7 @@ fun PP_Area_Dimensions() {
                     val filteredValue = newValue.filter { it.isDigit() }
                     val numericValue = filteredValue.toLongOrNull() ?: 0L
 
-                    if (numericValue <= 50_00_00_000) { // 50 crores in numeric form
+                    if (numericValue <= 50_00_00_000) {
                         formStateLength.value  = filteredValue
                         constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                             it.copy(property_Area_Dimension_Length = filteredValue)
@@ -1042,7 +969,6 @@ fun PP_Area_Dimensions() {
                     unfocusedTextColor = newBlack
                 ),
             )
-            // Numeric input
 
             VerticalDivider(
                 modifier = Modifier
@@ -1050,12 +976,11 @@ fun PP_Area_Dimensions() {
                 color = newGray
             )
 
-            // Dropdown for units
             Box(
                 modifier = Modifier
                     .weight(2f)
                     .noRippleClickable{ expanded = true }
-                   // .padding(horizontal = 2.dp)
+
                 , contentAlignment = Alignment.Center
             )
             {
@@ -1100,7 +1025,6 @@ fun PP_Area_Dimensions() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Breadth field
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -1115,7 +1039,7 @@ fun PP_Area_Dimensions() {
                     val filteredValue = newValue.filter { it.isDigit() }
                     val numericValue = filteredValue.toLongOrNull() ?: 0L
 
-                    if (numericValue <= 50_00_00_000) { // 50 crores in numeric form
+                    if (numericValue <= 50_00_00_000) {
                         formStateBreadth.value = filteredValue
                         constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                             it.copy(property_Area_Dimension_Width = filteredValue)
@@ -1145,7 +1069,6 @@ fun PP_Area_Dimensions() {
                     unfocusedTextColor = newBlack
                 ),
             )
-            // Numeric input
 
             VerticalDivider(
                 modifier = Modifier
@@ -1153,12 +1076,11 @@ fun PP_Area_Dimensions() {
                 color = newGray
             )
 
-            // Dropdown for units
             Box(
                 modifier = Modifier
                     .weight(2f)
                     .noRippleClickable{ expanded2 = true }
-                    //.padding(horizontal = 2.dp)
+
                 , contentAlignment = Alignment.Center
             )
             {
@@ -1201,8 +1123,6 @@ fun PP_Area_Dimensions() {
 
     }
 }
-
-
 
 @Composable
 fun PP_Property_Facing(
@@ -1261,8 +1181,6 @@ fun PP_Property_Facing(
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PP_Floor_Details(
@@ -1272,12 +1190,8 @@ fun PP_Floor_Details(
     var formStateFloorDetails = remember { mutableStateOf(flowData.value?.property_Floor_Det_Total) }
     var formStateFloorDetailsWhich = remember { mutableStateOf(flowData.value?.property_Floor_Det_Which) }
 
-
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text(
@@ -1311,7 +1225,7 @@ fun PP_Floor_Details(
                             it.copy(property_Floor_Det_Total = formStateFloorDetails.value ?: "")
                         }
                         }
-                   // }
+
                 },
                 placeholder = { Text("Enter Total Floors") },
                         keyboardOptions = KeyboardOptions(
@@ -1360,12 +1274,11 @@ fun PP_Floor_Details(
                         val filteredValue = newValue.filter { it.isDigit() }
                         val numericValue = filteredValue.toLongOrNull() ?: 0L
 
-                        //if (numericValue <= 50_00_00_000) { // 50 crores in numeric form
                             formStateFloorDetailsWhich.value = filteredValue
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_Floor_Det_Which = formStateFloorDetailsWhich.value ?: "")
                             }
-                       // }
+
                     },
                     readOnly = true,
                     placeholder = { Text("Select floor") },
@@ -1408,25 +1321,16 @@ fun PP_Floor_Details(
     }
 }
 
-
-
-
-
 @Composable
 fun PP_Parking_available(isError: Boolean) {
 
-
-
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var leaseamount = remember { mutableStateOf(flowData.value?.property_Parking) }
-
-
 
     val options = listOf("Yes", "No")
     var selectedOption by remember { mutableStateOf<String?>(leaseamount.value) }
 
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
-
 
     LaunchedEffect(Unit) {
         if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1) {
@@ -1495,20 +1399,16 @@ fun PP_Parking_available(isError: Boolean) {
     }
 }
 
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PP_Amenities(data: List<Chips_Items_DC>, isError: Boolean) {
 
     var expanded by remember { mutableStateOf(false) }
-    val visibleCount = 6 // items to show initially
+    val visibleCount = 6
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
 
-    // Restore selections whenever flowData or onDraft changes
     LaunchedEffect(flowData.value?.property_Amenities) {
         val selectedTitles = flowData.value?.property_Amenities ?: onDraft.property_Amenities ?: emptyList()
 
@@ -1537,7 +1437,7 @@ fun PP_Amenities(data: List<Chips_Items_DC>, isError: Boolean) {
         Spacer(modifier = Modifier.height(8.dp))
 
         FlowRow(modifier = Modifier.fillMaxWidth()) {
-            // Decide which items to show
+
             val itemsToShow = if (expanded) data else data.take(visibleCount)
 
             itemsToShow.forEachIndexed { index, item ->
@@ -1574,7 +1474,6 @@ fun PP_Amenities(data: List<Chips_Items_DC>, isError: Boolean) {
                 }
             }
 
-            // Show View More / View Less if there are more than visibleCount items
             if (data.size > visibleCount) {
                 Box(
                     modifier = Modifier
@@ -1604,18 +1503,14 @@ fun PP_Amenities(data: List<Chips_Items_DC>, isError: Boolean) {
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PP_Suitable_Business_Type(data:List<Chips_Items_DC>){
-
 
     var manual_add by remember { mutableStateOf(false) }
     var manual_add_No by remember { mutableStateOf("") }
 
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
-
 
     LaunchedEffect(Unit) {
         if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1) {
@@ -1626,7 +1521,6 @@ fun PP_Suitable_Business_Type(data:List<Chips_Items_DC>){
             }
         }
     }
-
 
     Column {
         Text("Suitable Business Type", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -1671,7 +1565,6 @@ fun PP_Suitable_Business_Type(data:List<Chips_Items_DC>){
                 Spacer(modifier = Modifier.padding(8.dp))
             }
 
-
             Box(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
@@ -1695,31 +1588,18 @@ fun PP_Suitable_Business_Type(data:List<Chips_Items_DC>){
                         color =  newBlack,
                         fontSize = constants.textUnit(14),
                         fontFamily = constants.fontFamily(2) )
-//                    Row(
-//                        verticalAlignment = Alignment.CenterVertically
-//                    ) {
-//                        Text(
-//                            text = manual_add_No,
-//                            fontSize = constants.textUnit(14),
-//                            //fontWeight = FontWeight.Bold
-//                        )
-//                        Spacer(modifier = Modifier.width(4.dp))
-//
-//                        Icon(painter = painterResource(R.drawable.arrowdown) ,"",
-//                            modifier = Modifier.size(14.dp))
-//                    }
+
                 }
 
             }
         }
     }
 
-
     if (manual_add) {
         ModalBottomSheet(
             onDismissRequest = {
                 manual_add = false
-               // manual_add_No = ""
+
             }
             , containerColor = newWhite
             , sheetGesturesEnabled = false
@@ -1731,7 +1611,6 @@ fun PP_Suitable_Business_Type(data:List<Chips_Items_DC>){
                     .padding(horizontal = 16.dp))
 
                 Spacer(modifier = Modifier.padding(8.dp))
-
 
                 FlowRow (
                     modifier = Modifier
@@ -1753,7 +1632,6 @@ fun PP_Suitable_Business_Type(data:List<Chips_Items_DC>){
                                             it.copy(property_Suitable_Business_Type = selected)
                                         }
 
-                                        println("DATA ADDING -- ${constants.PostProperty_ViewModel.selected_Options_Form4.value}")
                                     }
                                     .padding(horizontal = 16.dp , vertical = 8.dp)
                                 , contentAlignment = Alignment.Center
@@ -1767,7 +1645,6 @@ fun PP_Suitable_Business_Type(data:List<Chips_Items_DC>){
                             Spacer(modifier = Modifier.padding(8.dp))
                         }
                     }
-
 
                 Spacer(modifier = Modifier.padding(8.dp))
 
@@ -1794,7 +1671,6 @@ fun PP_Suitable_Business_Type(data:List<Chips_Items_DC>){
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PP_Property_Highlights(data: List<Chips_Items_DC>) {
@@ -1805,7 +1681,6 @@ fun PP_Property_Highlights(data: List<Chips_Items_DC>) {
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
 
-    // Fix: Restore selections when flowData changes
     LaunchedEffect(flowData.value?.property_Highlights) {
         val selectedTitles = flowData.value?.property_Highlights ?: onDraft.property_Highlights ?: emptyList()
 
@@ -1845,12 +1720,10 @@ fun PP_Property_Highlights(data: List<Chips_Items_DC>) {
 
                             val selected = data.filter { it.isSelected.value }.map { it.title }
 
-                            // Fix: Update property_Highlights, not property_Amenities
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_Highlights = selected)
                             }
 
-                            println("DATA ADDING HIGHLIGHT-- ${constants.PostProperty_ViewModel.selected_Options_Form4.value}")
                         }
                         .padding(8.dp),
                     contentAlignment = Alignment.Center
@@ -1906,7 +1779,6 @@ fun PP_Property_Highlights(data: List<Chips_Items_DC>) {
                                         it.copy(property_Highlights = selected)
                                     }
 
-                                    println("DATA ADDING -- ${constants.PostProperty_ViewModel.selected_Options_Form4.value}")
                                 }
                                 .padding(horizontal = 16.dp, vertical = 8.dp),
                             contentAlignment = Alignment.Center
@@ -1950,7 +1822,6 @@ fun PP_Other_Rooms(data: List<Chips_Items_DC>) {
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
 
-    // Fix: Restore selections when flowData changes
     LaunchedEffect(flowData.value?.property_Other_Rooms) {
         val selectedTitles = flowData.value?.property_Other_Rooms ?: onDraft.property_Other_Rooms ?: emptyList()
 
@@ -2012,7 +1883,6 @@ fun PP_Furnishing_Status(data: List<Chips_Items_DC>, isError: Boolean) {
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
 
-    // Fix: Restore selection when flowData changes
     LaunchedEffect(flowData.value?.property_Furnished) {
         val selectedTitle = flowData.value?.property_Furnished ?: onDraft.property_Furnished
 
@@ -2054,8 +1924,8 @@ fun PP_Furnishing_Status(data: List<Chips_Items_DC>, isError: Boolean) {
                             if (isError) errorBorderBrush() else if (item.isSelected.value) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable {
-                            data.forEach { it.isSelected.value = false } // unselect all
-                            item.isSelected.value = true // select clicked one
+                            data.forEach { it.isSelected.value = false }
+                            item.isSelected.value = true
 
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_Furnished = item.title)
@@ -2088,16 +1958,6 @@ fun PP_Preferred_Tenants(data: List<Chips_Items_DC>) {
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
 
-    // Fix: Restore selections when flowData changes (now supporting multiple selections)
-//    LaunchedEffect(flowData.value?.property_preferred_tenants) {
-//        val selectedTitles = flowData.value?.property_preferred_tenants ?: onDraft.property_preferred_tenants ?: emptyList()
-//
-//        println("ONSelction -- ${data} -- ${selectedTitles} -- ${flowData.value?.property_preferred_tenants}")
-//        data.forEach { chip ->
-//            chip.isSelected.value = chip.title in selectedTitles
-//        }
-//    }
-
     LaunchedEffect(flowData.value?.property_preferred_tenants) {
         val selectedTitles = (flowData.value?.property_preferred_tenants ?: onDraft.property_preferred_tenants ?: emptyList())
             .flatMap {
@@ -2105,13 +1965,8 @@ fun PP_Preferred_Tenants(data: List<Chips_Items_DC>) {
             }
             .map { it.trim() }
 
-
-        println("ONSelction -- $data -- $selectedTitles")
-
-        println("----- Selection Compare Debug -----")
         selectedTitles.forEach { apiValue ->
             data.forEach { chip ->
-                println("Compare '${chip.title}' == '$apiValue' --> ${chip.title == apiValue}")
             }
         }
 
@@ -2119,10 +1974,6 @@ fun PP_Preferred_Tenants(data: List<Chips_Items_DC>) {
             chip.isSelected.value = chip.title in selectedTitles
         }
     }
-
-
-
-
 
     Column {
         Text("Preferred Tenants", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -2146,14 +1997,6 @@ fun PP_Preferred_Tenants(data: List<Chips_Items_DC>) {
                              if (item.isSelected.value) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable {
-//                            item.isSelected.value = !item.isSelected.value
-//
-//                            val selected = data.filter { it.isSelected.value }.map { it.title }
-//
-//                            // Update ViewModel with multiple selections
-//                            constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-//                                it.copy(property_preferred_tenants = selected)
-//                            }
 
                             item.isSelected.value = !item.isSelected.value
 
@@ -2161,7 +2004,6 @@ fun PP_Preferred_Tenants(data: List<Chips_Items_DC>) {
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_preferred_tenants = selected)
                             }
-
 
                         }
                         .padding(8.dp),
@@ -2179,32 +2021,21 @@ fun PP_Preferred_Tenants(data: List<Chips_Items_DC>) {
     }
 }
 
-
 @Composable
 fun PP_Land_Area(isError: Boolean){
 
     val areaMeasurements = constants.AREA_UNITS
-        //listOf("m²", "sq ft", "sq yd", "acre", "hectare")
-
-    /// area
 
     var expanded by remember { mutableStateOf(false) }
-//    var selectedDimension by remember { mutableStateOf(areaMeasurements.first()) }
+
     var value by remember { mutableStateOf("") }
-
-
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var formStateSuperBu = remember { mutableStateOf(flowData.value?.property_Land_Area) }
     var selectedDimension by remember { mutableStateOf(flowData.value?.property_area_unit) }
 
-
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
-
 
     Column {
         Text(
@@ -2219,7 +2050,6 @@ fun PP_Land_Area(isError: Boolean){
             , fontSize = constants.textUnit(16)
             , fontFamily = constants.fontFamily(1)
         )
-       // Text("Property Area", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -2231,13 +2061,12 @@ fun PP_Land_Area(isError: Boolean){
                 .border(1.dp, if (isError) Color.Red else newGray, RoundedCornerShape(8.dp))
         )
         {
-            // Numeric input
+
             TextField(
                 value = formStateSuperBu.value ?: ""
                 ,onValueChange = { newValue ->
                     val filteredValue = newValue.filter { it.isDigit() }
 
-                    // if (numericValue <= 50_00_00_000) { // 50 crores in numeric form
                     formStateSuperBu.value =  filteredValue
                     constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                         it.copy(property_Land_Area = filteredValue)
@@ -2276,7 +2105,6 @@ fun PP_Land_Area(isError: Boolean){
                 color = newGray
             )
 
-            // Dropdown for units
             Box(
                 modifier = Modifier
                     .weight(2f)
@@ -2309,10 +2137,7 @@ fun PP_Land_Area(isError: Boolean){
                             text = { Text(unit) },
                             onClick = {
                                 selectedDimension = unit
-                               // areaMeasurements.forEach { it.isSelected.value = false } // unselect all
-                               // item.isSelected.value = true // select clicked one
 
-// 🔹 Update ViewModel with only one selected
                                 constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                     it.copy(property_area_unit = unit)
                                 }
@@ -2330,27 +2155,10 @@ fun PP_Land_Area(isError: Boolean){
     }
 }
 
-
-//val selected = data.filter { it.isSelected.value }.map { it.title }
-//
-//constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-//    it.copy(property_No_Of_OpenSides = selected)
-//}
-
-
-//data.forEach { it.isSelected.value = false } // unselect all
-//item.isSelected.value = true // select clicked one
-//
-//// 🔹 Update ViewModel with only one selected
-//constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-//    it.copy(property_No_of_Baths = item.title)
-//}
-
 @Composable
 fun PP_Land_Open_Sides(data:List<Chips_Items_DC>){
 
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
-
 
     LaunchedEffect(Unit) {
         if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1) {
@@ -2386,10 +2194,9 @@ fun PP_Land_Open_Sides(data:List<Chips_Items_DC>){
                         ).noRippleClickable{
                             item.isSelected.value = !item.isSelected.value
 
-                            data.forEach { it.isSelected.value = false } // unselect all
-                            item.isSelected.value = true // select clicked one
+                            data.forEach { it.isSelected.value = false }
+                            item.isSelected.value = true
 
-                            // 🔹 Update ViewModel with only one selected
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_No_Of_OpenSides = item.title)
                             }
@@ -2410,16 +2217,12 @@ fun PP_Land_Open_Sides(data:List<Chips_Items_DC>){
     }
 }
 
-
-
-
 @Composable
 fun PP_Has_Boundary_Wall() {
     val options = listOf("Yes", "No")
     var selectedOption by remember { mutableStateOf<String?>(null) }
 
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
-
 
     LaunchedEffect(Unit) {
         if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1) {
@@ -2453,7 +2256,6 @@ fun PP_Has_Boundary_Wall() {
                         onClick = {
                             selectedOption = option
 
-                            // 🔹 Update ViewModel with only one selected
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_Boundary_Wall = option)
                             }
@@ -2474,9 +2276,6 @@ fun PP_Has_Boundary_Wall() {
     }
 }
 
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PP_No_Of_Bathrooms(data: List<Chips_Items_DC>, isError: Boolean) {
@@ -2487,44 +2286,35 @@ fun PP_No_Of_Bathrooms(data: List<Chips_Items_DC>, isError: Boolean) {
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
 
-    // Restore selection state when navigating back
     LaunchedEffect(flowData.value?.property_No_of_Baths) {
         val selectedValue = flowData.value?.property_No_of_Baths ?: onDraft.property_No_of_Baths
 
-        println("ONSelction -- $data -- $selectedValue")
-
-        println("----- Selection Compare Debug NO OF baths-----")
         selectedValue.forEach { apiValue ->
             data.forEach { chip ->
-                println("Compare '${chip.title}' == '$apiValue' --> ${chip.title == apiValue.toString()}")
             }
         }
 
         if (selectedValue != null) {
-            // Check if the value exists in the predefined chips
+
             val matchingChip = data.find { it.title == selectedValue }
 
             if (matchingChip != null) {
-                // It's a predefined option, select it
+
                 data.forEach { it.isSelected.value = false }
                 matchingChip.isSelected.value = true
             } else {
-                // It's a custom value, deselect all chips
+
                 data.forEach { it.isSelected.value = false }
             }
         }
     }
 
-    // Get the current selected value (either from chip or custom)
     val selectedFromChip = data.find { it.isSelected.value }?.title
     val customValue = flowData.value?.property_No_of_Baths
     val displayValue = if (selectedFromChip != null) null else customValue
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text(
@@ -2559,8 +2349,8 @@ fun PP_No_Of_Bathrooms(data: List<Chips_Items_DC>, isError: Boolean) {
                             if (isError) errorBorderBrush() else if (item.isSelected.value) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable {
-                            data.forEach { it.isSelected.value = false } // unselect all
-                            item.isSelected.value = true // select clicked one
+                            data.forEach { it.isSelected.value = false }
+                            item.isSelected.value = true
 
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_No_of_Baths = item.title)
@@ -2694,7 +2484,7 @@ fun PP_No_Of_Bathrooms(data: List<Chips_Items_DC>, isError: Boolean) {
                             .background(newBlue, RoundedCornerShape(8.dp))
                             .noRippleClickable {
                                 if (manual_add_No.isNotEmpty()) {
-                                    // Deselect all chips when custom value is added
+
                                     data.forEach { it.isSelected.value = false }
 
                                     constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
@@ -2723,36 +2513,30 @@ fun PP_No_Of_Balconies(data: List<Chips_Items_DC>, isError: Boolean) {
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
 
-    // Restore selection state when navigating back
     LaunchedEffect(flowData.value?.property_No_of_Balconies) {
-        println("NOOFBALCONIES --${flowData.value?.property_No_of_Balconies} ")
         val selectedValue = flowData.value?.property_No_of_Balconies ?: onDraft.property_No_of_Balconies
 
         if (selectedValue != null) {
-            // Check if the value exists in the predefined chips
+
             val matchingChip = data.find { it.title == selectedValue }
 
             if (matchingChip != null) {
-                // It's a predefined option, select it
+
                 data.forEach { it.isSelected.value = false }
                 matchingChip.isSelected.value = true
             } else {
-                // It's a custom value, deselect all chips
+
                 data.forEach { it.isSelected.value = false }
             }
         }
     }
 
-    // Get the current selected value (either from chip or custom)
     val selectedFromChip = data.find { it.isSelected.value }?.title
     val customValue = flowData.value?.property_No_of_Balconies
     val displayValue = if (selectedFromChip != null) null else customValue
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text(
@@ -2787,8 +2571,8 @@ fun PP_No_Of_Balconies(data: List<Chips_Items_DC>, isError: Boolean) {
                             if (isError) errorBorderBrush() else if (item.isSelected.value) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable {
-                            data.forEach { it.isSelected.value = false } // unselect all
-                            item.isSelected.value = true // select clicked one
+                            data.forEach { it.isSelected.value = false }
+                            item.isSelected.value = true
 
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_No_of_Balconies = item.title)
@@ -2922,7 +2706,7 @@ fun PP_No_Of_Balconies(data: List<Chips_Items_DC>, isError: Boolean) {
                             .background(newBlue, RoundedCornerShape(8.dp))
                             .noRippleClickable {
                                 if (manual_add_No.isNotEmpty()) {
-                                    // Deselect all chips when custom value is added
+
                                     data.forEach { it.isSelected.value = false }
 
                                     constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
@@ -2940,7 +2724,6 @@ fun PP_No_Of_Balconies(data: List<Chips_Items_DC>, isError: Boolean) {
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -2971,11 +2754,8 @@ fun PP_No_of_Meeting_rooms(data: List<Chips_Items_DC>) {
     val customValue = flowData.value?.property_No_Of_Meeting_Rooms
     val displayValue = if (selectedFromChip != null) null else customValue
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text("No. of Meeting rooms", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -3097,12 +2877,9 @@ fun PP_No_of_Meeting_rooms(data: List<Chips_Items_DC>) {
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PP_No_Of_Bedrooms(data:List<Chips_Items_DC>){
-
 
     var manual_add by remember { mutableStateOf(false) }
     var manual_add_No by remember { mutableStateOf("") }
@@ -3110,12 +2887,8 @@ fun PP_No_Of_Bedrooms(data:List<Chips_Items_DC>){
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var formStateSuperBu = remember { mutableStateOf(flowData.value?.property_No_of_Beds) }
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
-
 
     Column {
         Text("No. of Bedrooms", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -3141,11 +2914,10 @@ fun PP_No_Of_Bedrooms(data:List<Chips_Items_DC>){
                            if (item.isSelected.value) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable{
-                            //item.isSelected.value = !item.isSelected.value
-                            data.forEach { it.isSelected.value = false } // unselect all
-                            item.isSelected.value = true // select clicked one
 
-                            // 🔹 Update ViewModel with only one selected
+                            data.forEach { it.isSelected.value = false }
+                            item.isSelected.value = true
+
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_No_of_Beds = item.title)
                             }
@@ -3184,7 +2956,7 @@ fun PP_No_Of_Bedrooms(data:List<Chips_Items_DC>){
                             text = formStateSuperBu.value ?: "",
                             fontSize = constants.textUnit(14),
                             color = Color.White
-                            //fontWeight = FontWeight.Bold
+
                         )
                         Spacer(modifier = Modifier.width(4.dp))
 
@@ -3199,7 +2971,6 @@ fun PP_No_Of_Bedrooms(data:List<Chips_Items_DC>){
             }
         }
     }
-
 
     if (manual_add) {
         ModalBottomSheet(
@@ -3230,7 +3001,6 @@ fun PP_No_Of_Bedrooms(data:List<Chips_Items_DC>){
                             if (newValue.length <= 3) {
                                 val filteredValue = newValue.filter { it.isDigit() }
 
-                                // if (numericValue <= 50_00_00_000) { // 50 crores in numeric form
                                 formStateSuperBu.value = filteredValue
                             }
 
@@ -3286,11 +3056,6 @@ fun PP_No_Of_Bedrooms(data:List<Chips_Items_DC>){
     }
 }
 
-
-///////// commmercial
-
-////// newww
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PP_No_of_Staircases(data: List<Chips_Items_DC>) {
@@ -3320,11 +3085,8 @@ fun PP_No_of_Staircases(data: List<Chips_Items_DC>) {
     val customValue = flowData.value?.property_No_Of_Stairs
     val displayValue = if (selectedFromChip != null) null else customValue
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text("No. of Staircases", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -3506,11 +3268,8 @@ fun PP_Conference_Room(data: List<Chips_Items_DC>) {
     val customValue = flowData.value?.property_Conference_Room
     val displayValue = if (selectedFromChip != null) null else customValue
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text("Conference Room", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -3692,11 +3451,8 @@ fun PP_Min_No_of_Seats(data: List<Chips_Items_DC>) {
     val customValue = flowData.value?.property_Min_No_Of_Seats
     val displayValue = if (selectedFromChip != null) null else customValue
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text("Min. No. of Seats", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -3878,11 +3634,8 @@ fun PP_Max_No_of_Seats(data: List<Chips_Items_DC>) {
     val customValue = flowData.value?.property_Max_No_Of_Seats
     val displayValue = if (selectedFromChip != null) null else customValue
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text("Max. No. of Seats", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -4035,8 +3788,6 @@ fun PP_Max_No_of_Seats(data: List<Chips_Items_DC>) {
     }
 }
 
-// PART 1: PP_No_of_Cabins through PP_Washroom_Details
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PP_No_of_Cabins(data: List<Chips_Items_DC>) {
@@ -4066,11 +3817,8 @@ fun PP_No_of_Cabins(data: List<Chips_Items_DC>) {
     val customValue = flowData.value?.property_No_Of_Cabins
     val displayValue = if (selectedFromChip != null) null else customValue
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text("No. of Cabins", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -4779,35 +4527,21 @@ fun PP_Washroom_Details(data: List<Chips_Items_DC>) {
     }
 }
 
-
-///// neww end
-
-
-
 @Composable
 fun PP_Pantry_Size(){
 
     val areaMeasurements = constants.AREA_UNITS
-        //listOf("m²", "sq ft", "sq yd", "acre", "hectare")
-
-    /// area
 
     var expanded by remember { mutableStateOf(false) }
-//    var selectedDimension by remember { mutableStateOf(areaMeasurements.first()) }
-    var value by remember { mutableStateOf("") }
 
+    var value by remember { mutableStateOf("") }
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var formStateSuperBu = remember { mutableStateOf(flowData.value?.property_Pantry_Size) }
     var selectedDimension by remember { mutableStateOf(flowData.value?.pantry_size_unit) }
 
-
-
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text("Pantry Size", fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -4822,13 +4556,12 @@ fun PP_Pantry_Size(){
                 .border(1.dp, newGray, RoundedCornerShape(8.dp))
         )
         {
-            // Numeric input
+
             TextField(
                 value = formStateSuperBu.value ?:""
                 ,onValueChange = { newValue ->
                     val filteredValue = newValue.filter { it.isDigit() }
 
-                    // if (numericValue <= 50_00_00_000) { // 50 crores in numeric form
                     formStateSuperBu.value = filteredValue
 
                 },
@@ -4864,7 +4597,6 @@ fun PP_Pantry_Size(){
                 color = newGray
             )
 
-            // Dropdown for units
             Box(
                 modifier = Modifier
                     .weight(2f)
@@ -4914,41 +4646,25 @@ fun PP_Pantry_Size(){
     }
 }
 
-
-
-
-
 @Composable
 fun PP_Shop_facade(isError: Boolean){
 
     val areaMeasurements = constants.AREA_UNITS
-        //listOf("m", "cm", "ft", "in", "yd")
-
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var value = remember { mutableStateOf(flowData.value?.property_Facade_Height) }
     var value2 = remember { mutableStateOf(flowData.value?.property_Facade_Width) }
 
-
-    /// area dimension length
-
     var expanded by remember { mutableStateOf(false) }
-//    var selectedDimension by remember { mutableStateOf(areaMeasurements.first()) }
-    var selectedDimension2 by remember { mutableStateOf(flowData.value?.facade_height_unit) }
-    //var value by remember { mutableStateOf("") }
 
-    // area dimension width
+    var selectedDimension2 by remember { mutableStateOf(flowData.value?.facade_height_unit) }
 
     var expanded2 by remember { mutableStateOf(false) }
-//    var selectedDimension2 by remember { mutableStateOf(areaMeasurements.first()) }
+
     var selectedDimension by remember { mutableStateOf(flowData.value?.facade_width_unit) }
-
-
 
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text(
@@ -4963,7 +4679,6 @@ fun PP_Shop_facade(isError: Boolean){
             , fontSize = constants.textUnit(16)
             , fontFamily = constants.fontFamily(1)
         )
-       // Text("Shop facade" , fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -4979,7 +4694,7 @@ fun PP_Shop_facade(isError: Boolean){
                 .border(1.dp, if (isError) Color.Red else newGray, RoundedCornerShape(8.dp))
         )
         {
-            // Numeric input
+
             TextField(
                 value = value.value ?: "",
                 onValueChange = {
@@ -5018,7 +4733,6 @@ fun PP_Shop_facade(isError: Boolean){
                 color = newGray
             )
 
-            // Dropdown for units
             Box(
                 modifier = Modifier
                     .weight(2f)
@@ -5077,7 +4791,7 @@ fun PP_Shop_facade(isError: Boolean){
                 .border(1.dp, if (isError) Color.Red else newGray, RoundedCornerShape(8.dp))
         )
         {
-            // Numeric input
+
             TextField(
                 value = value2.value ?: "",
                 onValueChange = {
@@ -5116,7 +4830,6 @@ fun PP_Shop_facade(isError: Boolean){
                 color = newGray
             )
 
-            // Dropdown for units
             Box(
                 modifier = Modifier
                     .weight(2f)
@@ -5165,24 +4878,8 @@ fun PP_Shop_facade(isError: Boolean){
     }
 }
 
-
-
-
 @Composable
 fun PP_authority_property_Approved(data:List<Chips_Items_DC>){
-
-//    val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
-
-
-//    LaunchedEffect(Unit) {
-//        if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1) {
-//            val selectedTitles = onDraft.property_Authority_Approved
-//
-//            data.forEach { chip ->
-//                chip.isSelected.value = chip.title in selectedTitles
-//            }
-//        }
-//    }
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
@@ -5226,13 +4923,10 @@ fun PP_authority_property_Approved(data:List<Chips_Items_DC>){
                              if (isSelected) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable{
-                            //item.isSelected.value = !item.isSelected.value
 
+                            data.forEach { it.isSelected.value = false }
+                            item.isSelected.value = true
 
-                            data.forEach { it.isSelected.value = false } // unselect all
-                            item.isSelected.value = true // select clicked one
-
-                            // 🔹 Update ViewModel with only one selected
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_Authority_Approved = item.title)
                             }
@@ -5250,12 +4944,6 @@ fun PP_authority_property_Approved(data:List<Chips_Items_DC>){
         }
     }
 }
-
-
-/// Reental app
-
-
-
 
 @Composable
 fun PP_Available_From(isError: Boolean){
@@ -5277,8 +4965,6 @@ fun PP_Available_From(isError: Boolean){
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarPickerWithBox(isError: Boolean) {
@@ -5290,7 +4976,6 @@ fun CalendarPickerWithBox(isError: Boolean) {
 
     val selectedDateFromVm = flowData.value?.property_availability_from
 
-    // Parse the date from ViewModel
     val parsedDate = remember(selectedDateFromVm) {
         if (!selectedDateFromVm.isNullOrBlank()) {
             runCatching {
@@ -5299,7 +4984,6 @@ fun CalendarPickerWithBox(isError: Boolean) {
         } else null
     }
 
-    // Display text for the button
     val displayText = parsedDate?.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) ?: "Select Date"
 
     ExposedDropdownMenuBox(
@@ -5332,7 +5016,7 @@ fun CalendarPickerWithBox(isError: Boolean) {
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .width(380.dp)
-                .wrapContentHeight(),  // Increased height
+                .wrapContentHeight(),
             containerColor = Color.White
         ) {
             Column(
@@ -5368,7 +5052,7 @@ fun Calender_View(
     onCancel: () -> Unit,
     onSet: (Int, Int, Int) -> Unit
 ) {
-    // Use selectedDate if available, otherwise use currentDate
+
     val initialDate = selectedDate ?: currentDate
 
     var selectedDay by remember { mutableIntStateOf(initialDate.dayOfMonth) }
@@ -5379,29 +5063,25 @@ fun Calender_View(
     val maxYear = maxDate.year
     val yearCount = maxYear - minYear + 1
 
-    // Calculate allowed months based on selected year
     val minMonth = if (selectedYear == currentDate.year) currentDate.monthValue else 1
     val maxMonth = if (selectedYear == maxDate.year) maxDate.monthValue else 12
     val allowedMonths = (maxMonth - minMonth + 1).coerceAtLeast(1)
 
-    // Clamp month when year changes
     LaunchedEffect(selectedYear) {
         if (selectedMonth < minMonth) selectedMonth = minMonth
         if (selectedMonth > maxMonth) selectedMonth = maxMonth
     }
 
-    // Clamp day when month changes and validate against maxDate
     val maxDayInMonth = YearMonth.of(selectedYear, selectedMonth).lengthOfMonth()
     LaunchedEffect(selectedMonth, selectedYear) {
-        // First clamp to month length
+
         if (selectedDay > maxDayInMonth) {
             selectedDay = maxDayInMonth
         }
 
-        // Then check if the date exceeds maxDate
         val currentSelectedDate = LocalDate.of(selectedYear, selectedMonth, selectedDay)
         if (currentSelectedDate.isAfter(maxDate)) {
-            // Set to the last valid day
+
             val lastValidDate = if (selectedYear == maxDate.year && selectedMonth == maxDate.monthValue) {
                 maxDate.dayOfMonth
             } else {
@@ -5410,7 +5090,6 @@ fun Calender_View(
             selectedDay = lastValidDate.coerceAtMost(maxDayInMonth)
         }
 
-        // Also check if date is before currentDate
         if (currentSelectedDate.isBefore(currentDate)) {
             selectedDay = currentDate.dayOfMonth
             selectedMonth = currentDate.monthValue
@@ -5423,29 +5102,28 @@ fun Calender_View(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Pager Section with explicit height
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)  // Fixed height instead of weight
+                .height(250.dp)
                 .border(2.dp, newGray, RoundedCornerShape(8.dp))
                 .padding(16.dp)
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(210.dp),  // Match the pager height
+                    .height(210.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Calculate max day based on current selections
+
                 val calculatedMaxDay = if (selectedYear == maxDate.year && selectedMonth == maxDate.monthValue) {
                     maxDate.dayOfMonth
                 } else {
                     YearMonth.of(selectedYear, selectedMonth).lengthOfMonth()
                 }
 
-                // Force recomposition with key when dependencies change
                 key(selectedMonth, selectedYear, calculatedMaxDay) {
                     Days_Pager_View(
                         initialDay = selectedDay,
@@ -5566,7 +5244,6 @@ fun Days_Pager_View(
             }
         }
 
-        // Top divider
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
@@ -5576,7 +5253,6 @@ fun Days_Pager_View(
             thickness = 1.dp
         )
 
-        // Bottom divider
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
@@ -5633,7 +5309,6 @@ fun Months_Pager_View(
             }
         }
 
-        // Top divider
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
@@ -5643,7 +5318,6 @@ fun Months_Pager_View(
             thickness = 1.dp
         )
 
-        // Bottom divider
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
@@ -5695,7 +5369,6 @@ fun YearsPager_View(
             }
         }
 
-        // Top divider
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
@@ -5705,7 +5378,6 @@ fun YearsPager_View(
             thickness = 1.dp
         )
 
-        // Bottom divider
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
@@ -5716,475 +5388,12 @@ fun YearsPager_View(
         )
     }
 }
-
-
-/*@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CalendarPickerWithBox(isError: Boolean) {
-
-
-    val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
-    var leaseamount = remember { mutableStateOf(flowData.value?.property_availability_from) }
-
-
-    var expanded by remember { mutableStateOf(false) }
-     // var selectedDate by remember { mutableStateOf("Select Date") }
-
-    val today = LocalDate.now()
-    val maxDate = today.plusMonths(3)
-
-    var selectedDate by remember { mutableStateOf("Select Date") }
-
-    val selectedDateFromVm = flowData.value?.property_availability_from
-
-    val parsedDate = remember(selectedDateFromVm) {
-        selectedDateFromVm?.let {
-            LocalDate.parse(it, DateTimeFormatter.ofPattern("dd-MM-yy"))
-        }
-    }
-
-
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
-    )
-    {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .border(1.dp, if (isError) Color.Red else  Color(0xffCECECE), RoundedCornerShape(6.dp))
-                .padding(horizontal = 12.dp)
-                .noRippleClickable {
-                    expanded = true
-                }
-            , verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            leaseamount.value?.ifEmpty { selectedDate }?.let { Text(it) }
-
-            Image(
-                painter = painterResource(R.drawable.postformcalenderpick),
-                contentDescription = "",
-                modifier = Modifier
-            )
-        }
-
-
-
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .width(380.dp)
-                .height(400.dp)      // IMPORTANT
-            , containerColor = Color.White
-        )
-        {
-            // Put your custom UI inside a Box with fixed size
-            Box(
-                modifier = Modifier
-                   // .background(newBlue)
-                   // .fillMaxSize()   // We already fixed size above
-            ) {
-                Card(
-                    modifier = Modifier
-                        //.fillMaxSize()
-                        .width(380.dp)
-                        .height(400.dp)
-                    ,shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    )
-                ) {
-                    Calender_View(
-                        currentDate = today,
-                        maxDate = maxDate,
-                        onCancel = { expanded = false },
-                        selectedDate = parsedDate,
-                        onSet = { day, month, year ->
-                            val formatted = LocalDate.of(year, month, day)
-                                .format(DateTimeFormatter.ofPattern("dd-MM-yy"))
-
-                            selectedDate = formatted
-                            expanded = false
-
-                            constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-                                it.copy(property_availability_from = formatted)
-                            }
-                        }
-                    )
-
-//                    Calender_View(
-//                        onCancel = { expanded = false },
-//                        onSet = { day, month, year ->
-//                            val months = listOf(
-//                                "January", "February", "March", "April", "May", "June",
-//                                "July", "August", "September", "October", "November", "December"
-//                            )
-//                            selectedDate = String.format("%02d %s %d", day, months[month - 1], year)
-//                            expanded = false
-//
-//                            // 🔹 Update ViewModel with only one selected
-//                            constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-//                                it.copy(property_availability_from = selectedDate)
-//                            }
-//                        }
-//                    )
-                }
-            }
-        }
-    }
-}*/
-
-
-
-/*@Composable
-fun Calender_View(
-    currentDate: LocalDate,
-    maxDate: LocalDate,
-    selectedDate: LocalDate?, // ✅ NEW
-    onCancel: () -> Unit,
-    onSet: (Int, Int, Int) -> Unit
-)
- {
-    var selectedDay by remember { mutableIntStateOf(currentDate.dayOfMonth) }
-    var selectedMonth by remember { mutableIntStateOf(currentDate.monthValue) }
-    var selectedYear by remember { mutableIntStateOf(currentDate.year) }
-
-    val allowedMonths = ChronoUnit.MONTHS.between(
-        YearMonth.from(currentDate),
-        YearMonth.from(maxDate)
-    ).toInt() + 1
-
-    val monthPagerState = rememberPagerState(
-        initialPage = currentDate.monthValue - 1,
-        pageCount = { allowedMonths }
-    )
-
-    val yearPagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { 1 }   // year can't change beyond today-year
-    )
-
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp)
-    ) {
-        // Pager Section
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .border(2.dp,newGray, RoundedCornerShape(8.dp))
-                .padding(horizontal = 16.dp, vertical = 20.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Days_Pager_View(
-                    initialDay = selectedDay - 1,
-                    onDaySelected = { selectedDay = it }
-                )
-                Months_Pager_View(
-                    initialMonth = selectedMonth - 1,
-                    onMonthSelected = { selectedMonth = it },
-                    monthsLimit = 3
-                )
-                YearsPager_View(
-                    initialYear = selectedYear,
-                    onYearSelected = { selectedYear = it }
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Buttons Row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        )
-        {
-            Button(
-                onClick = onCancel,
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFEEEEEE)
-                ),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = "Cancel",
-                    color = Color.Black,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(50.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(Brush.verticalGradient(newPurpleGradient))
-                    .border(1.dp , Brush.verticalGradient(newPurpleGradientBorder) ,RoundedCornerShape(4.dp) )
-                    .noRippleClickable {
-                        onSet(selectedDay, selectedMonth, selectedYear)
-                    }
-                , contentAlignment = Alignment.Center
-            ){
-                Text(
-                    text = "Set",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-
-        }
-
-        constants.spacer(6)
-    }
-}*/
-
-
-/*@Composable
-fun Days_Pager_View(
-    initialDay: Int = 4,
-    onDaySelected: (Int) -> Unit = {}
-) {
-    val pagerState = rememberPagerState(
-        initialPage = initialDay,
-        pageCount = { 31 }
-    )
-
-    LaunchedEffect(pagerState.settledPage) {
-        onDaySelected(pagerState.settledPage + 1)
-    }
-
-    Box(
-        modifier = Modifier
-            .width(70.dp)
-            .height(210.dp)  // Total height for 3 items
-    ) {
-        VerticalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxSize(),
-            //beyondBoundsPageCount = 1,
-            pageSize = PageSize.Fixed(70.dp),
-            contentPadding = PaddingValues(vertical = 70.dp)  // ADD THIS - centers current item
-        ) { page ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(70.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                val offsetFromCenter = (page - pagerState.currentPage).toFloat()
-                val alpha = 1f - (abs(offsetFromCenter) * 0.7f).coerceAtMost(0.8f)
-
-                Text(
-                    text = String.format("%02d", page + 1),
-                    color = Color.Black.copy(alpha = alpha),
-                    fontSize = constants.textUnit(if (abs(offsetFromCenter) < 0.5f) 16 else 14),
-                    fontWeight = if (abs(offsetFromCenter) < 0.5f) FontWeight.Bold else FontWeight.Normal
-                )
-            }
-        }
-
-        // Top border line - above center item
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .offset(y = (-35).dp),
-            color = newBlack,
-            thickness = 2.dp
-        )
-
-        // Bottom border line - below center item
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .offset(y = 35.dp),
-            color = newBlack,
-            thickness = 2.dp
-        )
-    }
-}
-
-@Composable
-fun Months_Pager_View(
-    monthsLimit: Int,
-    initialMonth: Int,
-    onMonthSelected: (Int) -> Unit
-) {
-    val months = listOf(
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    )
-
-    val pagerState = rememberPagerState(
-        initialPage = initialMonth - 1,
-        pageCount = { monthsLimit }
-    )
-
-    LaunchedEffect(pagerState.settledPage) {
-        onMonthSelected(pagerState.settledPage + 1)
-    }
-
-    Box(
-        modifier = Modifier
-            .width(70.dp)
-            .height(210.dp)  // Total height for 3 items
-    )
-    {
-        VerticalPager(
-            state = pagerState,
-            modifier = Modifier
-                .fillMaxSize(),
-            pageSize = PageSize.Fixed(70.dp),
-            contentPadding = PaddingValues(vertical = 70.dp)
-        ) { page ->
-            val offset = (page - pagerState.currentPage).toFloat()
-            val alpha = 1f - (abs(offset) * 0.7f).coerceAtMost(0.8f)
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(70.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    months[page],
-                    color = Color.Black.copy(alpha),
-                    fontSize = constants.textUnit(if (abs(offset) < 0.5f) 16 else 14),
-                    fontWeight = if (abs(offset) < 0.5f) FontWeight.Bold else FontWeight.Normal
-                )
-            }
-        }
-
-        // Top border line - above center item
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .offset(y = (-35).dp),
-            color = newBlack,
-            thickness = 2.dp
-        )
-
-        // Bottom border line - below center item
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .offset(y = 35.dp),
-            color = newBlack,
-            thickness = 2.dp
-        )
-    }
-
-
-}
-
-@Composable
-fun YearsPager_View(
-    initialYear: Int = 2025,
-    onYearSelected: (Int) -> Unit = {}
-) {
-    val currentYear = 2024
-    val initialPage = initialYear - currentYear
-
-    val pagerState = rememberPagerState(
-        initialPage = initialPage,
-        pageCount = { 1 }
-    )
-
-    LaunchedEffect(pagerState.settledPage) {
-        onYearSelected(currentYear + pagerState.settledPage)
-    }
-
-    Box(
-        modifier = Modifier
-            .width(70.dp)
-            .height(210.dp)  // Total height for 3 items
-    )
-    {
-        VerticalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxSize(),
-            //beyondBoundsPageCount = 1,
-            pageSize = PageSize.Fixed(70.dp),
-            contentPadding = PaddingValues(vertical = 70.dp)  // ADD THIS - centers current item
-        )
-        { page ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(70.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                val offsetFromCenter = (page - pagerState.currentPage).toFloat()
-                val alpha = 1f - (abs(offsetFromCenter) * 0.7f).coerceAtMost(0.8f)
-
-                Text(
-                    text = "${currentYear + page}",
-                    color = Color.Black.copy(alpha = alpha),
-                    fontSize = constants.textUnit(if (abs(offsetFromCenter) < 0.5f) 16 else 14),
-                    fontWeight = if (abs(offsetFromCenter) < 0.5f) FontWeight.Bold else FontWeight.Normal
-                )
-            }
-        }
-
-        // Top border line - above center item
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .offset(y = (-35).dp),
-            color = newBlack,
-            thickness = 2.dp
-        )
-
-        // Bottom border line - below center item
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .offset(y = 35.dp),
-            color = newBlack,
-            thickness = 2.dp
-        )
-    }
-}*/
-
-
 
 @Composable
 fun PP_AgreementType(data:List<Chips_Items_DC> , isError: Boolean){
 
-
-
-
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var leaseamount = remember { mutableStateOf(flowData.value?.property_for_rent_or_lease) }
-
-    println("DAta agreement type -- ${flowData.value}")
 
     Column {
         Text(
@@ -6223,11 +5432,9 @@ fun PP_AgreementType(data:List<Chips_Items_DC> , isError: Boolean){
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable{
 
+                            data.forEach { it.isSelected.value = false }
+                            item.isSelected.value = true
 
-                            data.forEach { it.isSelected.value = false } // unselect all
-                            item.isSelected.value = true // select clicked one
-
-                            // 🔹 Update ViewModel with only one selected
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_agreement_type = item.title)
                             }
@@ -6253,20 +5460,14 @@ fun PP_AgreementType(data:List<Chips_Items_DC> , isError: Boolean){
     }
 }
 
-
-
 @Composable
 fun PP_FoodPreference(data:List<Chips_Items_DC> , isError: Boolean){
-
-
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var leaseamount = remember { mutableStateOf(flowData.value?.property_for_rent_or_lease) }
 
-
     Column {
         Text(
-
 
                     buildAnnotatedString {
                 withStyle(style = SpanStyle(color = newBlack)) {
@@ -6287,7 +5488,6 @@ fun PP_FoodPreference(data:List<Chips_Items_DC> , isError: Boolean){
         {
             data.forEachIndexed { index , item ->
 
-
                 val isSelected = flowData.value?.property_food_preferences == item.title
 
                 Box(
@@ -6304,22 +5504,10 @@ fun PP_FoodPreference(data:List<Chips_Items_DC> , isError: Boolean){
                             RoundedCornerShape(4.dp)
                         )
                         .noRippleClickable{
-                            //item.isSelected.value = !item.isSelected.value
 
+                            data.forEach { it.isSelected.value = false }
+                            item.isSelected.value = true
 
-//                            data.forEach { it.isSelected.value = false } // unselect all
-//                            item.isSelected.value = true // select clicked one
-//
-//                            // 🔹 Update ViewModel with only one selected
-//                            constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-//                                it.copy(property_food_preferences = item.title)
-//                            }
-
-                            //item.isSelected.value = !item.isSelected.value
-                            data.forEach { it.isSelected.value = false } // unselect all
-                            item.isSelected.value = true // select clicked one
-
-                            // 🔹 Update ViewModel with only one selected
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_food_preferences = item.title)
                             }
@@ -6345,16 +5533,11 @@ fun PP_FoodPreference(data:List<Chips_Items_DC> , isError: Boolean){
     }
 }
 
-
-
 @Composable
 fun PP_Is_this_property_for_Rent_or_Lease(data:List<Chips_Items_DC>){
 
-
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var leaseamount = remember { mutableStateOf(flowData.value?.property_for_rent_or_lease) }
-
-
 
     Column {
         Text("Is this property for Rent or Lease?" , fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -6382,20 +5565,10 @@ fun PP_Is_this_property_for_Rent_or_Lease(data:List<Chips_Items_DC>){
                              if (isSelected) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable{
-                            //item.isSelected.value = !item.isSelected.value
-
-                            //item.isSelected.value = !item.isSelected.value
-//                            data.forEach { it.isSelected.value = false } // unselect all
-//                            item.isSelected.value = true // select clicked one
-//
-//                            // 🔹 Update ViewModel with only one selected
-
 
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_for_rent_or_lease = item.title)
                             }
-
-                            println("DATA REN OR LEASE CLIKED -- ${constants.PostProperty_ViewModel.selected_Options_Form4.value}")
 
                         }
                         .padding(horizontal = 8.dp, vertical = 8.dp)
@@ -6412,22 +5585,16 @@ fun PP_Is_this_property_for_Rent_or_Lease(data:List<Chips_Items_DC>){
     }
 }
 
-
-
 @Composable
 fun PP_PetsAllowed(isError: Boolean) {
 
-
-
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var leaseamount = remember { mutableStateOf(flowData.value?.property_pets_allowed) }
-
 
     val options = listOf("Yes", "No")
     var selectedOption by remember { mutableStateOf<String?>(leaseamount.value) }
 
     val onDraft = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
-
 
     LaunchedEffect(Unit) {
         if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1) {
@@ -6439,7 +5606,6 @@ fun PP_PetsAllowed(isError: Boolean) {
 
     Column {
         Text(
-
 
                     buildAnnotatedString {
                 withStyle(style = SpanStyle(color = newBlack)) {
@@ -6461,7 +5627,7 @@ fun PP_PetsAllowed(isError: Boolean) {
         )
         {
             options.forEach { option ->
-                //val isSelected = flowData.value?.property_pets_allowed == option
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -6499,14 +5665,11 @@ fun PP_PetsAllowed(isError: Boolean) {
     }
 }
 
-
 @Composable
 fun PP_Property_Condition(data:List<Chips_Items_DC>){
 
-
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
     var leaseamount = remember { mutableStateOf(flowData.value?.property_condition) }
-
 
     Column {
         Text("Property Condition" , fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
@@ -6534,17 +5697,13 @@ fun PP_Property_Condition(data:List<Chips_Items_DC>){
                              if (isSelected) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable{
-                            //item.isSelected.value = !item.isSelected.value
 
+                            data.forEach { it.isSelected.value = false }
+                            item.isSelected.value = true
 
-                            data.forEach { it.isSelected.value = false } // unselect all
-                            item.isSelected.value = true // select clicked one
-
-                            // 🔹 Update ViewModel with only one selected
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(property_condition = item.title)
                             }
-
 
                         }
                         .padding(8.dp)
@@ -6561,8 +5720,6 @@ fun PP_Property_Condition(data:List<Chips_Items_DC>){
     }
 }
 
-
-
 @Composable
 fun PP_Rent(isError: Boolean) {
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsState()
@@ -6571,17 +5728,13 @@ fun PP_Rent(isError: Boolean) {
     var rent by remember { mutableStateOf("") }
     var rentNego by remember { mutableStateOf(false) }
 
-    // Initialize from flow or draft
     LaunchedEffect(flowData.value?.rent, flowData.value?.rent_negotiable) {
         rent = flowData.value?.rent ?: onDraft.rent ?: ""
         rentNego = flowData.value?.rent_negotiable ?: onDraft.rent_negotiable ?: false
     }
 
-
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
 
     Column {
         Text(
@@ -6688,7 +5841,6 @@ fun PP_DepositAmount(data: List<Chips_Items_DC>) {
     var depositInput by remember { mutableStateOf("") }
     var depositAmount by remember { mutableStateOf("") }
 
-    // Initialize state from flow or draft
     LaunchedEffect(
         flowData.value?.deposit_amount_month_of_rents_type,
         flowData.value?.deposit_amount_month_of_rents,
@@ -6720,12 +5872,8 @@ fun PP_DepositAmount(data: List<Chips_Items_DC>) {
 
     val selectedValue = flowData.value?.deposit_amount_month_of_rents_type
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
-
 
     Column {
         Text(
@@ -6767,15 +5915,12 @@ fun PP_DepositAmount(data: List<Chips_Items_DC>) {
                              if (isSelected) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable {
-//                            data.forEach { it.isSelected.value = false }
-//                            item.isSelected.value = true
 
                             targetState = when {
                                 index == data.size - 1 -> 1
                                 index == 1 -> 2
                                 else -> 0
                             }
-
 
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(deposit_amount_month_of_rents_type = item.title)
@@ -6952,12 +6097,8 @@ fun PP_Duration_of_Agreement(data: List<Chips_Items_DC>) {
 
     val selectedValue = flowData.value?.duration_of_agreement_type
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
-
 
     Column {
         Text(
@@ -6984,9 +6125,7 @@ fun PP_Duration_of_Agreement(data: List<Chips_Items_DC>) {
                              if (isSelected) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable {
-//                            data.forEach { it.isSelected.value = false }
-//                            item.isSelected.value = true
-//
+
                             targetState = if (index == data.size - 1) 1 else 0
 
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
@@ -7098,12 +6237,8 @@ fun PP_Lock_in_Period(data: List<Chips_Items_DC>) {
 
     val selectedValue = flowData.value?.lock_in_period_type
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
-
 
     Column {
         Text(
@@ -7130,8 +6265,6 @@ fun PP_Lock_in_Period(data: List<Chips_Items_DC>) {
                              if (isSelected) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable {
-//                            data.forEach { it.isSelected.value = false }
-//                            item.isSelected.value = true
 
                             targetState = if (index == data.size - 1) 1 else 0
 
@@ -7231,7 +6364,6 @@ fun PP_Notice_Period(data: List<Chips_Items_DC>) {
 
     val selectedValue = flowData.value?.notice_period
 
-
     Column {
         Text(
             "Notice Period",
@@ -7292,11 +6424,8 @@ fun PP_LeaseAmount(isError: Boolean) {
         leaseNego = flowData.value?.lease_negotiable ?: onDraft.lease_negotiable ?: false
     }
 
-
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     Column {
         Text(
@@ -7392,7 +6521,6 @@ fun PP_LeaseAmount(isError: Boolean) {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PP_Lease_Duration(data: List<Chips_Items_DC> , isError: Boolean) {
@@ -7421,22 +6549,12 @@ fun PP_Lease_Duration(data: List<Chips_Items_DC> , isError: Boolean) {
     val customValue = flowData.value?.lease_duration_in_years
     val displayValue = if (selectedFromChip != null) null else customValue
 
-
     val selectedValue = flowData.value?.lease_duration_in_years_type
-
 
     var focusManager = LocalFocusManager.current
     var keyboardController = LocalSoftwareKeyboardController.current
 
-
-
-
     Column {
-//        Text(
-//            "Lease Duration in Years",
-//            fontSize = constants.textUnit(16),
-//            fontFamily = constants.fontFamily(1)
-//        )
 
         Text(
             buildAnnotatedString {
@@ -7470,8 +6588,6 @@ fun PP_Lease_Duration(data: List<Chips_Items_DC> , isError: Boolean) {
                              if (isSelected) borderBrush() else defaultBorderBrush(),
                             RoundedCornerShape(4.dp)
                         ).noRippleClickable {
-//                            data.forEach { it.isSelected.value = false }
-//                            item.isSelected.value = true
 
                             constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
                                 it.copy(lease_duration_in_years_type = item.title)
@@ -7532,7 +6648,6 @@ fun PP_Lease_Duration(data: List<Chips_Items_DC> , isError: Boolean) {
                 }
             }
         }
-
 
         constants.spacer(4)
 

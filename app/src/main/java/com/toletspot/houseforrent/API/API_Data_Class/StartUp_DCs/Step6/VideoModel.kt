@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs.Step6
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

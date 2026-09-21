@@ -86,8 +86,6 @@ import com.toletspot.houseforrent.ui.theme.newLightBlue
 import com.toletspot.houseforrent.ui.theme.newLightGray
 import com.toletspot.houseforrent.ui.theme.newWhite
 
-
-
 fun selectedModifier(): Modifier {
    return Modifier
         .background(newLightBlue)
@@ -100,9 +98,6 @@ fun unSelectedModifier(): Modifier{
         .background(Color.White)
         .border(1.dp , Color(0xff575757) , RoundedCornerShape(4.dp))
 }
-
-
-
 
 @Composable
 fun Search_Filter_Sort(navController: NavHostController) {
@@ -120,7 +115,6 @@ fun Search_Filter_Sort(navController: NavHostController) {
 
     var retry by remember { mutableStateOf(0) }
 
-
     DisposableEffect(Unit ,retry) {
         constants.Search_ViewModel.clear_sort_filter_Data()
         constants.API_Vm.get_Filter_Sort_Search_Fields(
@@ -133,7 +127,7 @@ fun Search_Filter_Sort(navController: NavHostController) {
                     api_State = 1
                 }
                 is API_Result_Handling.Deactivated -> {
-                   // resultCallback(5)
+
                 }
                 is API_Result_Handling.NoData -> {
                     api_State = 3
@@ -144,12 +138,9 @@ fun Search_Filter_Sort(navController: NavHostController) {
                 is API_Result_Handling.Success -> {
                     api_State = 2
                     val options = constants.Search_ViewModel.activate_Search_Options()
-                    println("DFGHJHFCXCVGHJHCV --- $options")
 
-                    // ✅ update full list
                     constants.Search_ViewModel.update_Search_Main_Options(options)
 
-                    println("sort filter data ---- fill ${filter_Options_List.value}")
                 }
             }
         }
@@ -157,13 +148,10 @@ fun Search_Filter_Sort(navController: NavHostController) {
         onDispose {  }
     }
 
-
-
     val selected_SF = constants.Search_ViewModel.selected_Sort_Filter_Fields.collectAsState()
 
     val filterCount by constants.Search_ViewModel.selected_Categories_Count.collectAsState()
 
-    // ✅ Backup filter state when screen opens
     DisposableEffect(Unit) {
         constants.Search_ViewModel.backupCurrentFilterState()
 
@@ -171,7 +159,6 @@ fun Search_Filter_Sort(navController: NavHostController) {
             constants.Search_ViewModel.clearBackup()
         }
     }
-
 
     Column (
         modifier = Modifier
@@ -189,7 +176,6 @@ fun Search_Filter_Sort(navController: NavHostController) {
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
 
-                // heading
                 Row (
                     modifier = Modifier
                         .fillMaxWidth()
@@ -209,28 +195,14 @@ fun Search_Filter_Sort(navController: NavHostController) {
                             .noRippleClickable{
                                 ClickHelper.getInstance().clickOnce {
                                     val activeOptions = filter_Options_List.value.filter { it.onSelected == true }
-                                    println("ACTIVE OPTIONS ARE THERE -- ${activeOptions}")
-//
-//                                    if (filterCount != 0) {
-//                                        constants.API_Vm.isLoading_PS_FF = true
-//                                        constants.API_Vm.totalPages_PS_FF = 1
-//                                        constants.Search_ViewModel.total_SearchResults_Counts.value = 0
-//                                       // constants.Search_ViewModel.apply_FS()
-//                                        navController.navigateUp()
-//                                    } else {
+
                                         constants.API_Vm.isLoading_PS_FF = true
                                         constants.API_Vm.totalPages_PS_FF = 1
-                                    // ✅ Restore the backup state (cancel changes)
+
                                     constants.Search_ViewModel.restoreBackupFilterState()
 
-                                    // ✅ Don't reset loading/pagination since we're just canceling
-                                    // constants.API_Vm.isLoading_PS_FF = true
-                                    // constants.API_Vm.totalPages_PS_FF = 1
-
                                     navController.navigateUp()
-//                                        constants.Search_ViewModel.not_Apply_FS()
-//                                        navController.navigateUp()
-//                                    }
+
                                 }
                             }
                         , contentAlignment = Alignment.Center
@@ -248,7 +220,7 @@ fun Search_Filter_Sort(navController: NavHostController) {
                         ){
                             LottiAnimation(2)
                         }
-                        //CircularProgressIndicator()
+
                     }
                     1 -> {
                         Box (
@@ -276,13 +248,12 @@ fun Search_Filter_Sort(navController: NavHostController) {
                                     .fillMaxHeight()
                             )
                             {
-                                ///filter options
+
                                 Column(
                                     modifier = Modifier
-                                        //.weight(4f)
+
                                         .fillMaxHeight()
-                                        //.clip(RoundedCornerShape(topEnd = 8.dp))
-                                        //.border(1.dp , newGray , RoundedCornerShape(topEnd = 8.dp))
+
                                         .background(Color.White)
                                 )
                                 {
@@ -298,7 +269,7 @@ fun Search_Filter_Sort(navController: NavHostController) {
                                                 3 -> selected_SF.value?.budget_from?.isNotEmpty() == true || selected_SF.value?.budget_to?.isNotEmpty() == true
                                                 4 -> selected_SF.value?.posted_by?.isNotEmpty()
                                                 5 -> selected_SF.value?.floor_plan?.isNotEmpty()
-//                                                6 -> selected_SF.value?.availability_status?.isNotEmpty()
+
                                                 7 -> selected_SF.value?.furnishing_status?.isNotEmpty()
                                                 8 -> selected_SF.value?.ownership?.isNotEmpty()
                                                 9 -> selected_SF.value?.parking_available?.isNotEmpty()
@@ -322,8 +293,6 @@ fun Search_Filter_Sort(navController: NavHostController) {
                                                 else -> false
                                             }
 
-                                            println("TEST THE PROPERTY TYPE -- ${hasSelections} --- ${selected_SF.value?.land_type_id != 0}")
-
                                             Box(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
@@ -338,7 +307,7 @@ fun Search_Filter_Sort(navController: NavHostController) {
                                                     }
                                                 , contentAlignment = Alignment.CenterStart
                                             ){
-                                                /// if anything selected show this box
+
                                                 if (hasSelections == true) {
                                                     Box(
                                                         modifier = Modifier
@@ -358,15 +327,13 @@ fun Search_Filter_Sort(navController: NavHostController) {
                                                 )
                                             }
 
-
-                                           // Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(newGray))
                                         }
                                     }
                                 }
 
                                 Box(
                                     modifier = Modifier
-                                        //.align(Alignment.TopCenter)
+
                                         .height(1.dp)
                                         .fillMaxWidth()
                                         .background(newBlack)
@@ -382,27 +349,22 @@ fun Search_Filter_Sort(navController: NavHostController) {
 
                             }
 
-
-                            //sort options
                             Column(
                                 modifier = Modifier
                                     .weight(6f)
                                     .padding(horizontal = 14.dp)
-                                //.background(Color.Blue)
+
                             )
                             {
                                 AnimatedContent (
                                     targetState = selected_Filter_Id.value
                                     , transitionSpec = {
                                         scaleIn() togetherWith scaleOut()
-                                        // togetherWith ExitTransition.None
+
                                     }
                                 )
                                 {
                                         targetState ->
-
-
-                                    println("SELECTED SOR IDS -- ${selected_Filter_Id.value} -- ${option_List.value?.sort_by} -- ${selected_SF}")
 
                                     when(targetState) {
                                         0 -> F_SortBy_SortOptions(option_List.value?.sort_by ?: emptyList() ,selected_SF)
@@ -411,13 +373,13 @@ fun Search_Filter_Sort(navController: NavHostController) {
                                         3 -> F_Budget_SortOptions(selected_SF)
                                         4 -> F_PostedBy_SortOptions(option_List.value?.posted_by ?: emptyList(),selected_SF)
                                         5 -> F_FloorPlan_SortOptions(option_List.value?.floor_plan ?: emptyList(),selected_SF)
-//                                        6 -> F_AvailabilityStatus_SortOptions(option_List.value?.availability_status ?: emptyList(),selected_SF)
+
                                         7 -> F_FurnishingStatus_SortOptions(option_List.value?.furnishing_status ?: emptyList(),selected_SF)
-//                                        8 -> F_Ownership_SortOptions(option_List.value?.ownership ?: emptyList(),selected_SF)
+
                                         9 -> F_Parking_SortOptions(option_List.value?.parking_available ?: emptyList(),selected_SF)
                                         10 -> F_OpenSides_SortOptions(option_List.value?.open_sides ?: emptyList(),selected_SF)
                                         11 -> F_Floor_Preferences_SortOptions(option_List.value?.floor_preferences ?: emptyList(),selected_SF)
-//                                        12 -> F_Business_Types_SortOptions(option_List.value?.business_type ?: emptyList(),selected_SF)
+
                                         13 -> F_Authority_Approved_SortOptions(option_List.value?.approved ?: emptyList(),selected_SF)
                                         14 -> F_Property_Facing_SortOptions(option_List.value?.property_facing ?: emptyList(),selected_SF)
                                         15 -> F_Amenities_SortOptions(option_List.value?.amenities ?: emptyList(),selected_SF)
@@ -435,8 +397,6 @@ fun Search_Filter_Sort(navController: NavHostController) {
 
                                     }
 
-
-
                                 }
                             }
                         }
@@ -444,7 +404,7 @@ fun Search_Filter_Sort(navController: NavHostController) {
                     3 -> {
                         Column(
                             modifier = Modifier
-                               // .padding(bottom = 48.dp)
+
                                 .fillMaxSize()
                                 .padding(horizontal = 16.dp),
                             verticalArrangement = Arrangement.Center,
@@ -512,7 +472,6 @@ fun Search_Filter_Sort(navController: NavHostController) {
                                     .background(newBlue)
                                     .noRippleClickable{
                                         ClickHelper.getInstance().clickOnce {
-                                            println("FILTER COUNT -- ${filterCount}")
                                             if (filterCount != 0) {
                                                 constants.Search_ViewModel.clear_Search_Results()
 
@@ -521,7 +480,6 @@ fun Search_Filter_Sort(navController: NavHostController) {
                                                 constants.Search_ViewModel.total_SearchResults_Counts.value = 0
                                                 constants.Search_ViewModel.apply_FS()
 
-                                                // ✅ Clear backup after successful apply
                                                 constants.Search_ViewModel.clearBackup()
                                                 navController.navigateUp()
                                             } else {
@@ -560,14 +518,11 @@ fun Search_Filter_Sort(navController: NavHostController) {
     }
 }
 
-
-
 @Composable
 fun F_SortBy_SortOptions(
     options_List: List<String>,
     selected_SF: State<Sort_Filter_Field_DC?>
 ){
-
 
     Column {
         Text("Sort By"
@@ -582,7 +537,7 @@ fun F_SortBy_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if ((selected_SF.value?.short_by?:0) - 1 == index) selectedModifier() else unSelectedModifier())
-                    //.background(if ((selected_SF.value?.short_by?:0) - 1 == index)newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             constants.Search_ViewModel.update_Search_SF {
@@ -590,7 +545,7 @@ fun F_SortBy_SortOptions(
                             }
                         }
                     }
-                    //.border(1.dp , Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp , vertical = 6.dp)
                 , contentAlignment = Alignment.Center
             ){
@@ -601,9 +556,6 @@ fun F_SortBy_SortOptions(
         }
     }
 }
-
-
-
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -626,20 +578,20 @@ fun F_FloorPlan_SortOptions(
         )
         {
             options_List.forEach { option ->
-                // Use selected_SF.value instead of ViewModel function
+
                 val isSelected = selected_SF.value?.floor_plan?.contains(option) == true
 
                 Box(
                     modifier = Modifier
                         .wrapContentSize()
                         .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                        //.background(if (isSelected) newBlue else Color.White)
+
                         .noRippleClickable{
                             ClickHelper.getInstance().clickOnce {
                                 constants.Search_ViewModel.toggle_String_Field("floor_plan", option)
                             }
                         }
-                       // .border(1.dp, Color(0xffB8B8B8))
+
                         .padding(horizontal = 16.dp, vertical = 6.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -674,7 +626,7 @@ fun F_PropertyType_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             propertyType.id?.let {
@@ -682,7 +634,7 @@ fun F_PropertyType_SortOptions(
                             }
                         }
                     }
-                   // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -722,7 +674,7 @@ fun F_PostedBy_SortOptions(
                     modifier = Modifier
                         .wrapContentSize()
                         .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                        //.background(if (isSelected) newBlue else Color.White)
+
                         .noRippleClickable{
                             ClickHelper.getInstance().clickOnce {
                                 postedBy.id?.let {
@@ -730,7 +682,7 @@ fun F_PostedBy_SortOptions(
                                 }
                             }
                         }
-                       // .border(1.dp, Color(0xffB8B8B8))
+
                         .padding(horizontal = 16.dp, vertical = 6.dp),
                     contentAlignment = Alignment.Center
                 ){
@@ -746,184 +698,6 @@ fun F_PostedBy_SortOptions(
     }
 }
 
-/*@Composable
-fun F_AvailabilityStatus_SortOptions(
-    options_List: List<String>,
-    selected_SF: State<Sort_Filter_Field_DC?>
-){
-    Column {
-        Text("Availability Status", color = newBlack , fontSize = constants.textUnit(18) , fontFamily = constants.fontFamily(2))
-
-        Spacer(modifier = Modifier.padding(12.dp))
-
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ){
-            options_List.forEach { option ->
-                val isSelected = selected_SF.value?.availability_status?.contains(option) == true
-
-                Box(
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                        //.background(if (isSelected) newBlue else Color.White)
-                        .noRippleClickable{
-                            ClickHelper.getInstance().clickOnce {
-                                constants.Search_ViewModel.toggle_String_Field(
-                                    "availability_status",
-                                    option
-                                )
-                            }
-                        }
-                        //.border(1.dp, Color(0xffB8B8B8))
-                        .padding(horizontal = 16.dp, vertical = 6.dp),
-                    contentAlignment = Alignment.Center
-                ){
-                    Text(
-                        option,
-                        fontSize = constants.textUnit(14),
-                        color = newBlack
-                    )
-                }
-            }
-        }
-    }
-}*/
-
-
-/*
-@Composable
-fun F_Budget_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
-    val staticValueRange = 50_000f..100_000_000f
-
-
-    //100_000_000f // Full fixed range
-
-    //constants.Search_ViewModel.minRangeRefs.value = sliderRange.start.toInt().toString()
-    //constants.Search_ViewModel.maxRangeRefs.value = sliderRange.endInclusive.toInt().toString()
-
-
-//    var selectedRange by remember(selected_SF.value) {
-//        val start = selected_SF.value?.budget_from?.toFloatOrNull() ?: constants.Search_ViewModel.minRangeRefs.value.toFloat()
-//        //staticValueRange.start
-//        val end = selected_SF.value?.budget_to?.toFloatOrNull() ?: constants.Search_ViewModel.maxRangeRefs.value.toFloat()
-//        //staticValueRange.endInclusive
-//        mutableStateOf(start..end)
-//    }
-//
-//    var minInput by remember { mutableStateOf(selectedRange.start.toInt().toString()) }
-//    var maxInput by remember { mutableStateOf(selectedRange.endInclusive.toInt().toString()) }
-
-    // Observe the shared ViewModel range refs
-    val minRangeFromVM by constants.Search_ViewModel.minRangeRefs
-    val maxRangeFromVM by constants.Search_ViewModel.maxRangeRefs
-
-    var minInput = minRangeFromVM.toFloatOrNull() ?: staticValueRange.start
-    var maxInput = maxRangeFromVM.toFloatOrNull() ?: staticValueRange.endInclusive
-
-    var selectedRange by remember(minInput, maxInput) {
-        mutableStateOf(minInput..maxInput)
-    }
-
-    Column {
-        Text(
-            "Budget (₹)",
-            color = newBlack,
-            fontSize = constants.textUnit(18),
-            fontFamily = constants.fontFamily(2)
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(88.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            BudgetInputField(
-                label = "min",
-                value = minInput.toString(),
-                onValueChange = {
-                    minInput = it.toFloat()
-                    val newMin = it.toFloatOrNull()
-                    if (newMin != null && newMin <= selectedRange.endInclusive) {
-                        selectedRange = newMin..selectedRange.endInclusive
-                        constants.Search_ViewModel.update_Search_SF {
-                            it.copy(budget_from = minInput.toString())
-                        }
-                    }
-                }
-            )
-
-            Spacer(modifier = Modifier.padding(2.dp))
-
-            BudgetInputField(
-                label = "max",
-                value = maxInput.toString(),
-                onValueChange = {
-                    maxInput = it.toFloat()
-                    val newMax = it.toFloatOrNull()
-                    if (newMax != null && newMax >= selectedRange.start) {
-                        selectedRange = selectedRange.start..newMax
-                        constants.Search_ViewModel.update_Search_SF {
-                            it.copy(budget_to = maxInput.toString())
-                        }
-                    }
-                }
-            )
-        }
-
-        Spacer(Modifier.height(16.dp))
-
-        // ✅ Replaced CustomRangeSliderExact with native RangeSlider
-        val minGap = 5000f // minimum difference between min and max
-
-        RangeSlider(
-            value = selectedRange,
-            onValueChange = { newRange ->
-                var start = newRange.start
-                var end = newRange.endInclusive
-
-                // Enforce min difference
-                if (end - start < minGap) {
-                    if (start != selectedRange.start) start = end - minGap
-                    else end = start + minGap
-                }
-
-                selectedRange = start.coerceIn(staticValueRange.start, staticValueRange.endInclusive - minGap)..
-                        end.coerceIn(staticValueRange.start + minGap, staticValueRange.endInclusive)
-
-                minInput = selectedRange.start
-                maxInput = selectedRange.endInclusive
-
-                constants.Search_ViewModel.update_Search_SF {
-                    it.copy(
-                        budget_from = selectedRange.start.toInt().toString(),
-                        budget_to = selectedRange.endInclusive.toInt().toString()
-                    )
-                }
-            },
-            valueRange = staticValueRange,
-            steps = 1000,
-            modifier = Modifier.fillMaxWidth(),
-            colors = SliderDefaults.colors(
-                thumbColor = newBlue
-                , activeTrackColor = newBlue
-                , inactiveTrackColor = newLightGray
-                , disabledActiveTrackColor = newBlue
-                , activeTickColor = newBlue
-            ),
-           // trackHeight = 3.dp
-        )
-    }
-}
-*/
-
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BudgetInputField(
@@ -934,11 +708,9 @@ fun BudgetInputField(
     selected_SF: State<Sort_Filter_Field_DC?>
 ) {
 
-
     val unitsList = listOf("sq.ft" , "m" , "feet" , "hectar" )
 
     val selectedUnit = selected_SF.value?.property_area_unit
-    println("jhgfdrsaesdfghvb -- $selectedUnit")
 
     Column(
         modifier = Modifier
@@ -974,9 +746,8 @@ fun BudgetInputField(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(.6f)
-//                    .width(if (forTab()) 160.dp else 100.dp)
-            )
 
+            )
 
             ExposedDropdownMenuBox(
                 expanded = expanded.value,
@@ -1030,7 +801,7 @@ fun BudgetInputField(
                                     constants.Search_ViewModel.set_String_Field("property_area_unit", option)
                                     expanded.value = false
                                 }
-                                // Trigger your sorting logic here
+
                             }
                         )
                     }
@@ -1040,7 +811,6 @@ fun BudgetInputField(
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1087,12 +857,7 @@ fun BudgetSelectorSF(
     }
 
     Column {
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
 
-            // ======================== MIN FIELD ============================
             ExposedDropdownMenuBox(
                 expanded = minExpanded.value,
                 onExpandedChange = { }
@@ -1193,7 +958,6 @@ fun BudgetSelectorSF(
 
         constants.spacer(8)
 
-            // ======================== MAX FIELD ============================
             ExposedDropdownMenuBox(
                 expanded = maxExpanded.value,
                 onExpandedChange = { }
@@ -1292,29 +1056,23 @@ fun BudgetSelectorSF(
                     }
                 }
             }
-        //}
 
-        // ERROR TEXTS
         AnimatedVisibility(visible = isError) {
             Text("Max should be >= Min", color = Color.Red)
         }
     }
 }
 
-
 @Composable
 fun F_Budget_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
     val staticValueRange = 1_000f..10_000_000f
 
-    // Observe ViewModel range values
     val minRangeFromVM by constants.Search_ViewModel.minRangeRefs
     val maxRangeFromVM by constants.Search_ViewModel.maxRangeRefs
 
-    // Local states as Strings for clean display
     var minInput by remember { mutableStateOf(minRangeFromVM) }
     var maxInput by remember { mutableStateOf(maxRangeFromVM) }
 
-    // Convert string inputs to floats for RangeSlider
     val minValue = minInput.toFloat() ?: staticValueRange.start
     val maxValue = maxInput.toFloat() ?: staticValueRange.endInclusive
 
@@ -1322,10 +1080,8 @@ fun F_Budget_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
         mutableStateOf(minValue..maxValue)
     }
 
-
     var expanded1 = remember { mutableStateOf(false) }
     var expanded2 = remember { mutableStateOf(false) }
-
 
     Column {
         Text(
@@ -1335,36 +1091,6 @@ fun F_Budget_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
             fontFamily = constants.fontFamily(0)
         )
 
-//        Column (
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(88.dp),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
-            // --- MIN Input ---
-//            BudgetInputField(
-//                label = "Min",
-//                value = minInput,
-//                onValueChange = { input ->
-//                    // Allow only numbers
-//                    if (input.all { it.isDigit() } || input.isEmpty()) {
-//                        minInput = input
-//                        val newMin = input.toFloatOrNull()
-//                        if (newMin != null && newMin <= selectedRange.endInclusive) {
-//                            selectedRange = newMin..selectedRange.endInclusive
-//                            constants.Search_ViewModel.update_Search_SF {
-//                                it.copy(budget_from = input)
-//                            }
-//                            constants.Search_ViewModel.minRangeRefs.value = input
-//                        }
-//                    }
-//                }
-//                , expanded = expanded1,
-//                selected_SF = selected_SF
-//
-//            )
-
         BudgetSelectorSF(
             minBudget = remember { mutableStateOf(2000L) },
             maxBudget = remember { mutableStateOf(1_000_0000L) }
@@ -1372,75 +1098,10 @@ fun F_Budget_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
 
         constants.spacer(4)
 
-            // --- MAX Input ---
-//            BudgetInputField(
-//                label = "Max",
-//                value = maxInput,
-//                onValueChange = { input ->
-//                    if (input.all { it.isDigit() } || input.isEmpty()) {
-//                        maxInput = input
-//                        val newMax = input.toFloatOrNull()
-//                        if (newMax != null && newMax >= selectedRange.start) {
-//                            selectedRange = selectedRange.start..newMax
-//                            constants.Search_ViewModel.update_Search_SF {
-//                                it.copy(budget_to = input)
-//                            }
-//                            constants.Search_ViewModel.maxRangeRefs.value = input
-//                        }
-//                    }
-//                }
-//                , expanded = expanded2,
-//                selected_SF = selected_SF
-//            )
-//        }
-
         Spacer(Modifier.height(16.dp))
-//
-//        val minGap = 5000f // minimum difference between min and max
-//
-//        RangeSlider(
-//            value = selectedRange,
-//            onValueChange = { newRange ->
-//                var start = newRange.start
-//                var end = newRange.endInclusive
-//
-//                // Enforce min difference
-//                if (end - start < minGap) {
-//                    if (start != selectedRange.start) start = end - minGap
-//                    else end = start + minGap
-//                }
-//
-//                selectedRange = start.coerceIn(staticValueRange.start, staticValueRange.endInclusive - minGap)..
-//                        end.coerceIn(staticValueRange.start + minGap, staticValueRange.endInclusive)
-//
-//                // Update text inputs & VM
-//                minInput = selectedRange.start.toInt().toString()
-//                maxInput = selectedRange.endInclusive.toInt().toString()
-//
-//                constants.Search_ViewModel.update_Search_SF {
-//                    it.copy(
-//                        budget_from = minInput,
-//                        budget_to = maxInput
-//                    )
-//                }
-//                constants.Search_ViewModel.minRangeRefs.value = minInput
-//                constants.Search_ViewModel.maxRangeRefs.value = maxInput
-//            },
-//            valueRange = staticValueRange,
-//            steps = 1000,
-//            modifier = Modifier.fillMaxWidth(),
-//            colors = SliderDefaults.colors(
-//                thumbColor = newBlue,
-//                activeTrackColor = newBlue,
-//                inactiveTrackColor = newLightGray,
-//                disabledActiveTrackColor = newBlue,
-//                activeTickColor = newBlue
-//            )
-//        )
+
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1461,10 +1122,8 @@ fun F_Property_Area_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
     var expanded by remember { mutableStateOf(false) }
     var selectedUnit = remember { mutableStateOf(selected_SF.value?.property_area_unit?.ifEmpty { "sq" }) }
 
-
     var expanded1 = remember { mutableStateOf(false) }
     var expanded2 = remember { mutableStateOf(false) }
-
 
     Column {
         Row(
@@ -1482,70 +1141,8 @@ fun F_Property_Area_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
                 modifier = Modifier.weight(1f)
             )
 
-            /*ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = !expanded },
-                modifier = Modifier
-                    .width(if (forTab()) 90.dp else 60.dp)
-                    //.wrapContentSize()
-            )
-            {
-                Box(
-                    modifier = Modifier
-                        .menuAnchor()
-                        .wrapContentSize()
-                        .background(newWhite)
-                        .border(1.dp, Color(0xffE8E8E8))
-                        .padding(8.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = selectedUnit.value ?: "",
-                            fontSize = constants.textUnit(14),
-                            color = newBlack
-                        )
-
-                        Image(
-                            painter = painterResource(R.drawable.arrowdown),
-                            contentDescription = "Dropdown Arrow",
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
-
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                    containerColor = newWhite
-                ) {
-                    units_of_Measurements.forEach { unit ->
-                        DropdownMenuItem(
-                            text = { Text(unit) },
-                            onClick = {
-                                selectedUnit.value = unit
-                                constants.Search_ViewModel.update_Search_SF {
-                                    it.copy(property_area_unit = unit)
-                                }
-                                expanded = false
-                            },
-                            colors = MenuDefaults.itemColors(textColor = newBlack)
-                        )
-                    }
-                }
-            }*/
         }
 
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(88.dp),
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.SpaceBetween
-//        ) {
             BudgetInputField(
                 label = "Min",
                 value = minInput,
@@ -1581,50 +1178,10 @@ fun F_Property_Area_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
                 expanded = expanded1,
                 selected_SF = selected_SF
             )
-//        }
 
         Spacer(Modifier.height(16.dp))
 
-        // ✅ Replaced CustomRangeSliderExact with RangeSlider
-        val minGap = 5f // area minimum difference
-
-
-       /* RangeSlider(
-            value = selectedRange,
-            onValueChange = { newRange ->
-                var start = newRange.start
-                var end = newRange.endInclusive
-
-                if (end - start < minGap) {
-                    if (start != selectedRange.start) start = end - minGap
-                    else end = start + minGap
-                }
-
-                selectedRange = start.coerceIn(staticValueRange.start, staticValueRange.endInclusive - minGap)..
-                        end.coerceIn(staticValueRange.start + minGap, staticValueRange.endInclusive)
-
-                minInput = selectedRange.start.toInt().toString()
-                maxInput = selectedRange.endInclusive.toInt().toString()
-
-                constants.Search_ViewModel.update_Search_SF {
-                    it.copy(
-                        property_area_from = selectedRange.start.toInt().toString(),
-                        property_area_to = selectedRange.endInclusive.toInt().toString()
-                    )
-                }
-            },
-            valueRange = staticValueRange,
-            steps = 100,
-            modifier = Modifier.fillMaxWidth(),
-            colors = SliderDefaults.colors(
-                thumbColor = newBlue
-                , activeTrackColor = newBlue
-                , inactiveTrackColor = newLightGray
-                , disabledActiveTrackColor = newBlue
-                , activeTickColor = newBlue
-            ),
-           // trackHeight = 3.dp
-        )*/
+        val minGap = 5f
 
         RangeSlider(
             value = selectedRange,
@@ -1646,10 +1203,10 @@ fun F_Property_Area_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
                 }
             },
             valueRange = 1000f..100000f,
-            steps = 98, // (100000 - 1000) / stepSize
+            steps = 98,
             modifier = Modifier
                 .height(260.dp)
-                .rotate(-90f), // 🔥 makes slider vertical
+                .rotate(-90f),
             colors = SliderDefaults.colors(
                 thumbColor = Color.Black,
                 activeTrackColor = Color.Black,
@@ -1662,14 +1219,6 @@ fun F_Property_Area_SortOptions(selected_SF: State<Sort_Filter_Field_DC?>) {
     }
 }
 
-
-
-
-
-
-
-
-// String-based multi-select options
 @Composable
 fun F_FurnishingStatus_SortOptions(
     options_List: List<String>,
@@ -1689,7 +1238,7 @@ fun F_FurnishingStatus_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             constants.Search_ViewModel.toggle_String_Field(
@@ -1698,7 +1247,7 @@ fun F_FurnishingStatus_SortOptions(
                             )
                         }
                     }
-                   // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -1729,13 +1278,13 @@ fun F_Ownership_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                   // .background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             constants.Search_ViewModel.toggle_String_Field("ownership", option)
                         }
                     }
-                    //.border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -1770,7 +1319,7 @@ fun F_Parking_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    // .background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             constants.Search_ViewModel.toggle_String_Field(
@@ -1779,7 +1328,7 @@ fun F_Parking_SortOptions(
                             )
                         }
                     }
-                    // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -1791,24 +1340,6 @@ fun F_Parking_SortOptions(
             }
             Spacer(modifier = Modifier.padding(8.dp))
 
-           /* Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ){
-                RadioButton(
-                    selected = isSelected,
-                    onClick = {
-                        constants.Search_ViewModel.toggle_String_Field("parking_available", option)
-                    }
-                )
-                Text(
-                    option,
-                    fontSize = constants.textUnit(14),
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            Spacer(modifier = Modifier.padding(8.dp))*/
         }
     }
 }
@@ -1833,7 +1364,7 @@ fun F_OpenSides_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                   // .background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             constants.Search_ViewModel.toggle_String_Field(
@@ -1842,7 +1373,7 @@ fun F_OpenSides_SortOptions(
                             )
                         }
                     }
-                   // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -1876,7 +1407,7 @@ fun F_Floor_Preferences_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             floorPref.id?.let {
@@ -1884,7 +1415,7 @@ fun F_Floor_Preferences_SortOptions(
                             }
                         }
                     }
-                   // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -1915,13 +1446,13 @@ fun F_Business_Types_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             constants.Search_ViewModel.toggle_String_Field("business_type", option)
                         }
                     }
-                    //.border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -1955,7 +1486,7 @@ fun F_Authority_Approved_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             constants.Search_ViewModel.toggle_String_Field(
@@ -1964,7 +1495,7 @@ fun F_Authority_Approved_SortOptions(
                             )
                         }
                     }
-                   // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -1998,7 +1529,7 @@ fun F_Property_Facing_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         ClickHelper.getInstance().clickOnce {
                             constants.Search_ViewModel.toggle_String_Field(
@@ -2007,7 +1538,7 @@ fun F_Property_Facing_SortOptions(
                             )
                         }
                     }
-                    //.border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -2043,7 +1574,7 @@ fun F_Amenities_SortOptions(
                         modifier = Modifier
                             .wrapContentSize()
                             .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                           // .background(if (isSelected) newBlue else Color.White)
+
                             .noRippleClickable{
                                 ClickHelper.getInstance().clickOnce {
                                     constants.Search_ViewModel.toggle_String_Field(
@@ -2052,7 +1583,7 @@ fun F_Amenities_SortOptions(
                                     )
                                 }
                             }
-                            //.border(1.dp, Color(0xffB8B8B8))
+
                             .padding(horizontal = 16.dp, vertical = 6.dp),
                         contentAlignment = Alignment.Center
                     ) {
@@ -2088,11 +1619,11 @@ fun F_Property_Highights_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         constants.Search_ViewModel.toggle_String_Field("property_highlights", option)
                     }
-                   // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -2106,9 +1637,6 @@ fun F_Property_Highights_SortOptions(
         }
     }
 }
-
-
-///////
 
 @Composable
 fun F_Rent_Type_SortOptions(
@@ -2129,11 +1657,11 @@ fun F_Rent_Type_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         constants.Search_ViewModel.toggle_String_Field("rent_type", option)
                     }
-                    // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -2147,8 +1675,6 @@ fun F_Rent_Type_SortOptions(
         }
     }
 }
-
-
 
 @Composable
 fun F_Posted_Date_SortOptions(
@@ -2169,12 +1695,11 @@ fun F_Posted_Date_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
-                        println("12345678987654321 -- ${option.id}")
                         constants.Search_ViewModel.toggle_Int_Field("posted_date", option.id)
                     }
-                    // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -2188,8 +1713,6 @@ fun F_Posted_Date_SortOptions(
         }
     }
 }
-
-
 
 @Composable
 fun F_Available_From_SortOptions(
@@ -2210,11 +1733,11 @@ fun F_Available_From_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         constants.Search_ViewModel.toggle_Int_Field("available_from", option.id)
                     }
-                    // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -2228,8 +1751,6 @@ fun F_Available_From_SortOptions(
         }
     }
 }
-
-
 
 @Composable
 fun F_Available_For_SortOptions(
@@ -2250,11 +1771,11 @@ fun F_Available_For_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         constants.Search_ViewModel.toggle_String_Field("available_for", option)
                     }
-                    // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -2268,8 +1789,6 @@ fun F_Available_For_SortOptions(
         }
     }
 }
-
-
 
 @Composable
 fun F_BedRooms_SortOptions(
@@ -2290,11 +1809,11 @@ fun F_BedRooms_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         constants.Search_ViewModel.toggle_String_Field("bedrooms", option)
                     }
-                    // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -2308,8 +1827,6 @@ fun F_BedRooms_SortOptions(
         }
     }
 }
-
-
 
 @Composable
 fun F_FoodPreference_SortOptions(
@@ -2330,11 +1847,11 @@ fun F_FoodPreference_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         constants.Search_ViewModel.toggle_String_Field("food_preference", option)
                     }
-                    // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -2348,8 +1865,6 @@ fun F_FoodPreference_SortOptions(
         }
     }
 }
-
-
 
 @Composable
 fun F_Pet_Allowed_SortOptions(
@@ -2370,11 +1885,11 @@ fun F_Pet_Allowed_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         constants.Search_ViewModel.toggle_String_Field("pets_allowed", option)
                     }
-                    // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){
@@ -2389,7 +1904,6 @@ fun F_Pet_Allowed_SortOptions(
     }
 }
 
-
 @Composable
 fun F_With_Photos_SortOptions(
     selected_SF: State<Sort_Filter_Field_DC?>
@@ -2403,7 +1917,6 @@ fun F_With_Photos_SortOptions(
         )
         Spacer(modifier = Modifier.height(12.dp))
 
-        // compute from state (recomposes when state changes)
         val isSelected = selected_SF.value?.with_photos == "1"
 
         Row(
@@ -2421,14 +1934,11 @@ fun F_With_Photos_SortOptions(
             Switch(
                 checked = isSelected,
                 onCheckedChange = { checked ->
-                    // Use the new checked state (checked) — NOT the old isSelected
+
                     val newValue = if (checked) "1" else "0"
 
-                    // Only call the setter for single-value fields
                     constants.Search_ViewModel.set_String_Field("with_photos", newValue)
 
-                    // If you really want a toggle helper, implement it in the ViewModel
-                    // otherwise set_String_Field is correct for single-value fields.
                 },
                 colors = SwitchDefaults.colors(
                     checkedTrackColor = Color(0xffE8E9E9),
@@ -2444,9 +1954,6 @@ fun F_With_Photos_SortOptions(
         Spacer(modifier = Modifier.height(8.dp))
     }
 }
-
-
-
 
 @Composable
 fun F_Agreement_Type_SortOptions(
@@ -2467,11 +1974,11 @@ fun F_Agreement_Type_SortOptions(
                 modifier = Modifier
                     .wrapContentSize()
                     .then(if (isSelected) selectedModifier() else unSelectedModifier())
-                    //.background(if (isSelected) newBlue else Color.White)
+
                     .noRippleClickable{
                         constants.Search_ViewModel.toggle_String_Field("agreement_type", option)
                     }
-                    // .border(1.dp, Color(0xffB8B8B8))
+
                     .padding(horizontal = 16.dp, vertical = 6.dp),
                 contentAlignment = Alignment.Center
             ){

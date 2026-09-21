@@ -111,19 +111,12 @@ import com.toletspot.houseforrent.ui.theme.newPurpleGradientBorder
 import com.toletspot.houseforrent.ui.theme.newWhite
 import kotlinx.coroutines.delay
 
-
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_ViewModel) {
 
-
-
-//
-
-   // CRITICAL FIX: Use the viewModel parameter consistently
    val isSignUp = viewModel.isLoginOrSignVerify.collectAsStateWithLifecycle()
-
 
    var notchPadding = rememberNotchHeightDp()
    val context = LocalContext.current
@@ -135,8 +128,6 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
    val focusManager = LocalFocusManager.current
 
    var keyboardController = LocalSoftwareKeyboardController.current
-
-
 
    LaunchedEffect(isSignUp.value) {
       Log.d("AuthState", "State changed: ${isSignUp.value}")
@@ -168,7 +159,7 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                    .align(Alignment.TopStart)
                    .padding(top = if (forTab()) 16.dp else notchPadding.value, start = 16.dp),
                onBackClick = {
-                  // FIX: Use viewModel parameter
+
                   viewModel.otp = ""
                   viewModel.phoneNumber = ""
                   viewModel.updateLoginState(0)
@@ -266,7 +257,6 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
          }
       }
 
-      // FIX: Keep LazyColumn but remove the key parameter and nested AnimatedContent
       LazyColumn(
          modifier = Modifier
              .fillMaxWidth()
@@ -277,11 +267,9 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
          horizontalAlignment = Alignment.CenterHorizontally
       )
       {
-         println("IS SWITCHING --- ${isSignUp.value}")
 
-         // FIX: Remove key parameter from item - this was causing recomposition issues
          item {
-            // Use the state value directly without another AnimatedContent wrapper
+
             Box(
                modifier = Modifier
                    .padding(top = if (forTab()) 56.dp else 0.dp)
@@ -310,10 +298,7 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                                  }
                                  is API_Result_Handling.Deactivated -> {
 
-                                    //resultCallback(5)
-                                    println("jehdvbcejhdbvhuefbvijker")
                                     constants.Common_H_ViewModel.changeStatus(false)
-
 
                                     when {
                                        apiResultHandling.code == "2" ->   deactivated = true
@@ -331,15 +316,14 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                                  }
                                  is API_Result_Handling.Success -> {
                                     constants.Common_H_ViewModel.changeStatus(false)
-                                    // FIX: Use viewModel parameter
+
                                     keyboardController?.hide()
                                     viewModel.updateLoginState(2)
                                     viewModel.is_Error_OTP_Reset()
                                     reactivate = false
-                                   // toast(AppPreferences.get_User_Verify_Otp())
+
                                     viewModel.otp = ""
 
-                                    //AppPreferences.save_User_Verify_Otp("")
                                  }
                               }
                            }
@@ -358,7 +342,7 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                         focusManager.clearFocus()
                         AppPreferences.save_User_Verify_Otp("")
                         if (network.value == NetworkStatus.Online) {
-//                           register_API_Call(resultCallback = {})
+
                            constants.API_Vm.user_Register(
                               name = viewModel.userName,
                               phone_num = viewModel.phoneNumber,
@@ -370,34 +354,31 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                            { apiResultHandling ->
                               when (apiResultHandling) {
                                  is API_Result_Handling.Loading -> {
-                                    //state = true
-                                    // resultCallback(2)
+
                                     constants.Common_H_ViewModel.changeStatus(true)
                                  }
                                  is API_Result_Handling.Deactivated -> {
-                                    // resultCallback(5)
+
                                  }
 
                                  is API_Result_Handling.NoData -> {
-                                    //state = false
+
                                     constants.Common_H_ViewModel.changeStatus(false)
                                     toast("Something went wrong , No Records found")
                                  }
 
                                  is API_Result_Handling.Error -> {
-                                    //state = false
-                                    //resultCallback(1)
+
                                     constants.Common_H_ViewModel.changeStatus(false)
                                     toast(apiResultHandling.message)
                                  }
 
                                  is API_Result_Handling.Success -> {
-                                    //state = false
-                                    //  resultCallback(0)
+
                                     constants.Common_H_ViewModel.changeStatus(false)
-                                   // toast(AppPreferences.get_User_Verify_Otp())
+
                                     viewModel.updateLoginState(2)
-                                    //AppPreferences.save_User_Verify_Otp("")
+
                                  }
                               }
                            }
@@ -415,7 +396,6 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                         keyboardController?.hide()
                         focusManager.clearFocus()
                         if (network.value == NetworkStatus.Online) {
-//                           verify_Otp_API_Call(navController)
 
                            constants.API_Vm.verify_OTP(
                                user_id = AppPreferences.getUserId(),
@@ -423,7 +403,7 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                                whatsapp_num = "",
                                email = "",
                                otp = viewModel.otp,
-                               //AppPreferences.get_User_Verify_Otp(),
+
                                phone_num_cc = viewModel.get_Country_Code(),
                                whatsapp_num_cc = "",
                                device_id = getDeviceId(constants.activity),
@@ -433,31 +413,31 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                            { apiResultHandling ->
                               when (apiResultHandling) {
                                  is API_Result_Handling.Loading -> {
-                                    //state = true
+
                                     constants.Common_H_ViewModel.change_Verify_Status(true)
                                  }
                                  is API_Result_Handling.Deactivated -> {
-                                    // resultCallback(5)
+
                                  }
 
                                  is API_Result_Handling.NoData -> {
-                                    //state = false
+
                                     constants.Common_H_ViewModel.change_Verify_Status(false)
                                     toast("Something went wrong , No Records found")
                                  }
 
                                  is API_Result_Handling.Error -> {
-                                    //state = false
+
                                     constants.Common_H_ViewModel.change_Verify_Status(false)
                                     toast(apiResultHandling.message)
                                  }
 
                                  is API_Result_Handling.Success -> {
-                                    //state = false
+
                                     constants.Common_H_ViewModel.change_Verify_Status(false)
                                     toast("Success , verified")
                                     if (AppPreferences.get_Interest_Completed() == 0 || AppPreferences.get_Location_Received() == 0){
-                                       // UserCredentialsScreenFlow.UserInterests.route
+
                                        AppPreferences.save_Verify_Complete(1)
                                        navController.navigate(UserCredentialsScreenFlow.UserInterests.route)
                                     }
@@ -472,7 +452,7 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                                  }
                               }
                            }
-                           //}
+
                         } else {
                            toast("It Seems your are offline !!.Refresh again")
                         }
@@ -499,13 +479,13 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
             , verticalArrangement = Arrangement.spacedBy(8.dp)
             , horizontalAlignment = Alignment.CenterHorizontally
          ){
-            //constants.spacer(2)
+
             Text("Account Restricted"
                , color = Color.Black
                , fontSize = constants.textUnit(16)
                , fontFamily = constants.fontFamily(0)
             )
-           // constants.spacer(2)
+
             Text("Your account has been reported multiple times for violating our community standards. Your account has been temporarily restricted. You can appeal this decision if you believe it was a mistake."
                , color = Color(0xff484848)
                , fontSize = constants.textUnit(12)
@@ -547,7 +527,6 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
       }
    )
 
-
    Common_Popup(
       visible = reactivate,
       modifier = Modifier.background(Color(0xffFCEDEC)),
@@ -561,13 +540,12 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
             , horizontalAlignment = Alignment.CenterHorizontally
          ){
 
-           // constants.spacer(2)
             Text("Account Deletion in Progress"
                , color = Color.Black
                , fontSize = constants.textUnit(16)
                , fontFamily = constants.fontFamily(0)
             )
-           // constants.spacer(2)
+
             Text("You requested to delete your account. It’s still within the 30-day deletion period. If you log in now, your deletion request will be canceled, and your account will stay active."
                , color = Color(0xff484848)
                , fontSize = constants.textUnit(12)
@@ -584,7 +562,6 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                    .noRippleClickable {
                        ClickHelper.getInstance().clickOnce {
                            if (ClickGuard.canClick()) {
-                               //navController.navigate(UserCredentialsScreenFlow.Justify.route)
 
                                constants.API_Vm.Put_account_Activate_Deactivate(
                                    user_id = AppPreferences.getUserId(),
@@ -595,7 +572,6 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                                { aPI_Result_Handling ->
                                    when (aPI_Result_Handling) {
                                        is API_Result_Handling.Error -> {
-                                           println("failure")
                                            toast("Something Went Wrong")
                                        }
 
@@ -621,8 +597,7 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                                                    }
 
                                                    is API_Result_Handling.Deactivated -> {
-                                                       //resultCallback(5)
-                                                       println("jehdvbcejhdbvhuefbvijker")
+
                                                        constants.Common_H_ViewModel.changeStatus(
                                                            false
                                                        )
@@ -648,13 +623,12 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
                                                        constants.Common_H_ViewModel.changeStatus(
                                                            false
                                                        )
-                                                       // FIX: Use viewModel parameter
+
                                                        viewModel.updateLoginState(2)
                                                        viewModel.is_Error_OTP_Reset()
-                                                       // toast(AppPreferences.get_User_Verify_Otp())
+
                                                        viewModel.otp = ""
 
-                                                       //AppPreferences.save_User_Verify_Otp("")
                                                    }
                                                }
                                            }
@@ -690,8 +664,6 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
          }
       }
    )
-
-
 
    Common_Popup(
       visible = appeal_Sueccessful,
@@ -736,7 +708,6 @@ fun User_Credentialsls(navController: NavHostController, viewModel: Start_Up_Vie
 
 }
 
-
 @Composable
 fun Login_Content(
    onLoginClicked: () -> Unit,
@@ -749,7 +720,6 @@ fun Login_Content(
 
    val countryCodes = constants.Start_Up_ViewModel.country_Code_Handler.collectAsState()
 
-   // Find the selected country info
    val selectedCountry = countryCodes.value.find {
       it.country_Code == viewModel.countryCode
    }
@@ -762,7 +732,7 @@ fun Login_Content(
           .fillMaxSize(),
       verticalArrangement = Arrangement.spacedBy(8.dp)
    ) {
-      
+
       spacer(20)
 
       Text(
@@ -794,7 +764,6 @@ fun Login_Content(
          modifier = Modifier.padding(horizontal = 16.dp)
       )
 
-      // ✅ Error message is controlled from Login_Content
       PhoneNumberInput(
          phoneNumber = viewModel.phoneNumber,
          onPhoneNumberChange = { viewModel.phoneNumber = it },
@@ -815,7 +784,7 @@ fun Login_Content(
              .height(56.dp)
              .clickable(enabled = !status.value) {
                  ClickHelper.getInstance().clickOnce {
-                     // ✅ Validate only when button clicked
+
                      if (viewModel.phoneNumber.length != expectedLimit) {
                          showError = true
                      } else {
@@ -855,7 +824,6 @@ fun Login_Content(
    }
 }
 
-
 @Composable
 fun SignUp_Content(
    onSignClicked: () -> Unit,
@@ -866,10 +834,8 @@ fun SignUp_Content(
    val status = constants.Common_H_ViewModel.status.collectAsState()
    var showError by remember { mutableStateOf(false) }
 
-   // Get all country codes and limits
    val countryCodes = constants.Start_Up_ViewModel.country_Code_Handler.collectAsState()
 
-   // Identify selected country details
    val selectedCountry = countryCodes.value.find {
       it.country_Code == viewModel.countryCode
    }
@@ -888,7 +854,6 @@ fun SignUp_Content(
    ) {
       spacer(16)
 
-      // Title
       Text(
          viewModel._isLoginOrSign.last().title,
          textAlign = TextAlign.Center,
@@ -898,7 +863,6 @@ fun SignUp_Content(
          modifier = Modifier.align(Alignment.CenterHorizontally)
       )
 
-      // Description
       Text(
          viewModel._isLoginOrSign.last().description,
          textAlign = TextAlign.Center,
@@ -911,7 +875,6 @@ fun SignUp_Content(
 
      spacer(8)
 
-      // Username label
       Text(
          viewModel._isLoginOrSign.last().user_Name,
          textAlign = TextAlign.Start,
@@ -920,7 +883,6 @@ fun SignUp_Content(
          modifier = Modifier.padding(horizontal = 16.dp)
       )
 
-      // Username input
       TextField(
          value = viewModel.userName,
          onValueChange = {
@@ -954,7 +916,6 @@ fun SignUp_Content(
 
      spacer(8)
 
-      // Phone label
       Text(
          viewModel._isLoginOrSign.last().cont_No,
          textAlign = TextAlign.Start,
@@ -963,7 +924,6 @@ fun SignUp_Content(
          modifier = Modifier.padding(horizontal = 16.dp)
       )
 
-      // ✅ Phone input (error controlled from here)
       PhoneNumberInput(
          phoneNumber = viewModel.phoneNumber,
          onPhoneNumberChange = { viewModel.phoneNumber = it },
@@ -978,7 +938,6 @@ fun SignUp_Content(
 
      spacer(8)
 
-      // ✅ Sign Up Button
       Box(
          modifier = Modifier
              .fillMaxWidth(.9f)
@@ -1024,7 +983,6 @@ fun SignUp_Content(
 
       Spacer(modifier = Modifier.fillMaxHeight(.1f))
 
-      // Switch to login
       LoginSwitchText(
          onLoginClick = {
             viewModel.userName = ""
@@ -1035,7 +993,6 @@ fun SignUp_Content(
       )
    }
 }
-
 
 @Composable
 fun Verify_Content(
@@ -1083,13 +1040,11 @@ fun Verify_Content(
          onOtpChange = {
             viewModel.otp = it
 
-            println("OTP GETTER - ${viewModel.get_OTP_Response()}")
          },
          modifier = Modifier.align(Alignment.CenterHorizontally),
          isError = isError.value
       )
 
-    // spacer(8)
       spacer(8)
 
       Row(
@@ -1134,7 +1089,7 @@ fun Verify_Content(
          resendOTP = {
             AppPreferences.save_User_Verify_Otp("")
             if (network.value == NetworkStatus.Online) {
-//                           register_API_Call(resultCallback = {})
+
                constants.API_Vm.user_Login(
                   phone_num = viewModel.phoneNumber,
                   phone_num_cc = viewModel.get_Country_Code(),
@@ -1145,32 +1100,28 @@ fun Verify_Content(
                { apiResultHandling ->
                   when (apiResultHandling) {
                      is API_Result_Handling.Loading -> {
-                        //state = true
-                        // resultCallback(2)
+
                         isResend_Loading.value = true
                      }
 
                      is API_Result_Handling.Deactivated -> {
-                        //resultCallback(5)
+
                      }
 
                      is API_Result_Handling.NoData -> {
-                        //state = false
+
                         constants.Common_H_ViewModel.changeStatus(false)
                         toast("Something went wrong , No Records found")
                      }
 
                      is API_Result_Handling.Error -> {
-                        //state = false
-                        //resultCallback(1)
+
                         toast("Resend OTP Failed to Initiate!")
                      }
 
                      is API_Result_Handling.Success -> {
-                        //state = false
-                        //  resultCallback(0)
+
                         isResend_Loading.value = false
-                        println("TIMER RESEND")
                         viewModel.is_Error_OTP_Reset()
                         viewModel.otp = ""
                         time.restart()
@@ -1218,38 +1169,32 @@ fun Verify_Content(
    }
 }
 
-
-
 @Composable
 fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewModel){
 
     var index = remember { mutableStateOf(0) }
 
-
     var deactivated = remember { mutableStateOf(false) }
     var reactivate = remember { mutableStateOf(false) }
     var appeal_Sueccessful by remember { mutableStateOf(false) }
 
-
     var selectedCountry = constants.Start_Up_ViewModel.selectedCountryVm.collectAsState()
-
 
     LaunchedEffect(Unit) {
         viewModel.reset_selectedCountry()
     }
 
-
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xffFCFCFC))
-            .graphicsLayer { clip = false }, // ✅ allow overflow
+            .graphicsLayer { clip = false },
         contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .background(Color.White)
-                //.fillMaxSize()
+
                 .zIndex(1f)
             , verticalArrangement = Arrangement.Center
             , horizontalAlignment = Alignment.CenterHorizontally
@@ -1260,18 +1205,15 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
 
             spacer(8)
 
-           // Text("Rental App")
-
             AnimatedContent(
                 targetState = index.value,
                 modifier = Modifier
                     .background(Color.White)
                     .graphicsLayer { clip = false },
                 transitionSpec = {
-                    // ✅ Change direction based on where you're navigating
+
                     if (index.value <= 1) {
 
-                        // Backward animation (Verify → Signup → Login)
                         slideInHorizontally(
                             initialOffsetX = { fullWidth -> -fullWidth }
                         ) + fadeIn(animationSpec = tween(300)) togetherWith
@@ -1280,7 +1222,7 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
                                 ) + fadeOut(animationSpec = tween(300))
 
                     } else {
-                        // Forward animation (Login → Signup → Verify)
+
                         slideInHorizontally(
                             initialOffsetX = { fullWidth -> fullWidth }
                         ) + fadeIn(animationSpec = tween(300)) togetherWith
@@ -1293,10 +1235,8 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
                 label = "Card Slide Animation"
             ) { targetIndex ->
 
-                // Wait for exit animation before showing new content
-                // (prevents both contents showing at the same time)
                 LaunchedEffect(targetIndex) {
-                    delay(200) // small delay before content renders
+                    delay(200)
                 }
 
                 val rotation by animateFloatAsState(
@@ -1325,8 +1265,7 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
                         colors = CardDefaults.cardColors(containerColor = Color.White),
                         elevation = CardDefaults.elevatedCardElevation(20.dp)
                     ) {
-//                        LazyColumn() {
-//                            item {
+
                                 when (targetIndex) {
                                     0 -> Login_Rento(
                                         index,
@@ -1344,8 +1283,7 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
 
                                     2 -> Verify_Rento(index, viewModel, navController)
                                 }
-//                            }
-//                        }
+
                     }
                 }
             }
@@ -1362,7 +1300,6 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
                 .fillMaxWidth()
         )
     }
-
 
     Common_Popup(
         visible = deactivated.value,
@@ -1432,14 +1369,12 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
         }
     )
 
-
-
     Common_Popup(
         visible = reactivate.value,
         modifier = Modifier.background(Color(0xffFCEDEC)),
         image = "",
         icon = 0,
-            //R.drawable.deactivated,
+
         userName = "",
         content = {
             Column (
@@ -1455,13 +1390,12 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
 
                 spacer(2)
 
-                // constants.spacer(2)
                 Text("Account Reactivation"
                     , color = Color.Black
                     , fontSize = constants.textUnit(16)
                     , fontFamily = constants.fontFamily(0)
                 )
-                // constants.spacer(2)
+
                 Text("You've asked to delete your account, which is still in the 30-day period. Logging in now will cancel your request and keep your account active."
                     , color = Color(0xff484848)
                     , fontSize = constants.textUnit(12)
@@ -1480,7 +1414,6 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
                         .noRippleClickable {
                             ClickHelper.getInstance().clickOnce {
                                 if (ClickGuard.canClick()) {
-                                    //navController.navigate(UserCredentialsScreenFlow.Justify.route)
 
                                     constants.API_Vm.Put_account_Activate_Deactivate(
                                         user_id = AppPreferences.getUserId(),
@@ -1491,7 +1424,6 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
                                     { aPI_Result_Handling ->
                                         when (aPI_Result_Handling) {
                                             is API_Result_Handling.Error -> {
-                                                println("failure")
                                                 toast("Something Went Wrong")
                                             }
 
@@ -1517,8 +1449,7 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
                                                         }
 
                                                         is API_Result_Handling.Deactivated -> {
-                                                            //resultCallback(5)
-                                                            println("jehdvbcejhdbvhuefbvijker")
+
                                                             constants.Common_H_ViewModel.changeStatus(
                                                                 false
                                                             )
@@ -1544,15 +1475,14 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
                                                             constants.Common_H_ViewModel.changeStatus(
                                                                 false
                                                             )
-                                                            // FIX: Use viewModel parameter
+
                                                             AppPreferences.save_User_Verify_Otp("")
                                                             index.value = 2
                                                             viewModel.updateLoginState(2)
                                                             viewModel.is_Error_OTP_Reset()
-                                                            // toast(AppPreferences.get_User_Verify_Otp())
+
                                                             viewModel.otp = ""
 
-                                                            //AppPreferences.save_User_Verify_Otp("")
                                                         }
                                                     }
                                                 }
@@ -1590,8 +1520,6 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
             }
         }
     )
-
-
 
     Common_Popup(
         visible = appeal_Sueccessful,
@@ -1640,7 +1568,6 @@ fun User_Credentials(navController: NavHostController, viewModel: Start_Up_ViewM
     )
 }
 
-
 @Composable
 fun Login_Rento(
     index: MutableState<Int>,
@@ -1650,7 +1577,6 @@ fun Login_Rento(
     reactivate: MutableState<Boolean>,
 ) {
 
-
     var errorInput = remember { mutableStateOf(false) }
 
     var network = rememberNetworkStatus()
@@ -1658,17 +1584,13 @@ fun Login_Rento(
 
     var keyboardController = LocalSoftwareKeyboardController.current
 
-
     val status = constants.Common_H_ViewModel.status.collectAsState()
-
 
     var country = viewModel.selectedCountryVm.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.reset_selectedCountry()
     }
-
-
 
     LazyColumn(
         modifier = Modifier
@@ -1680,7 +1602,7 @@ fun Login_Rento(
         item {
 
             Column(
-                modifier = Modifier.imePadding(),   // ✅ KEY LINE,
+                modifier = Modifier.imePadding(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 spacer(8)
@@ -1711,16 +1633,13 @@ fun Login_Rento(
 
                 spacer(4)
 
-//            Text("Mobile number")
                 CommonText(
                     "Mobile number", newBlack, 14, 1
                 )
 
                 NumberInput_Rento(errorInput, viewModel)
 
-
                 spacer(4)
-
 
                 Box(
                     modifier = Modifier
@@ -1747,10 +1666,7 @@ fun Login_Rento(
 
                                             is API_Result_Handling.Deactivated -> {
 
-                                                //resultCallback(5)
-                                                println("jehdvbcejhdbvhuefbvijker")
                                                 constants.Common_H_ViewModel.changeStatus(false)
-
 
                                                 when {
                                                     apiResultHandling.code == "2" -> deactivated.value =
@@ -1776,19 +1692,17 @@ fun Login_Rento(
 
                                             is API_Result_Handling.Success -> {
                                                 constants.Common_H_ViewModel.changeStatus(false)
-                                                // FIX: Use viewModel parameter
+
                                                 keyboardController?.hide()
-                                                //viewModel.updateLoginState(2)
 
                                                 index.value = 2
                                                 viewModel.is_Error_OTP_Reset()
                                                 reactivate.value = false
                                                 constants.Start_Up_ViewModel.currentCredintialState.value =
                                                     UserCredintialState.LOGIN
-                                                //toast(AppPreferences.get_User_Verify_Otp())
+
                                                 viewModel.otp = ""
 
-                                                //AppPreferences.save_User_Verify_Otp("")
                                             }
                                         }
                                     }
@@ -1822,7 +1736,6 @@ fun Login_Rento(
 
                 }
 
-
                 spacer(4)
 
                 SignSwitchText(
@@ -1846,7 +1759,6 @@ fun Login_Rento(
     }
 }
 
-
 @Composable
 fun SignUp_Rento(
     index: MutableState<Int>,
@@ -1862,9 +1774,7 @@ fun SignUp_Rento(
 
     val status = constants.Common_H_ViewModel.status.collectAsState()
 
-
     var country = viewModel.selectedCountryVm.collectAsState()
-
 
     var errorName = remember { mutableStateOf(false) }
 
@@ -1880,7 +1790,7 @@ fun SignUp_Rento(
             Column(
                 modifier = Modifier.imePadding()
                     .background(Color.White)
-//                    .padding(horizontal = 16.dp)
+
                 , verticalArrangement = Arrangement.spacedBy(12.dp)
             )
             {
@@ -1917,8 +1827,6 @@ fun SignUp_Rento(
                     "Fullname", newBlack, 14, 1
                 )
 
-                //NumberInput_Rento(viewModel , errorInput)
-
                 Column() {
                     TextField(
                         value = viewModel.userName,
@@ -1929,9 +1837,9 @@ fun SignUp_Rento(
                                 .replace(
                                     Regex("[^A-Za-z_ ]"),
                                     ""
-                                ) // ❌ remove special chars except _
-                                .replace(Regex("\\s+"), " ")       // collapse multiple spaces
-                                .trimStart()                       // prevent leading space
+                                )
+                                .replace(Regex("\\s+"), " ")
+                                .trimStart()
 
                             if (filtered.length <= 30) {
                                 viewModel.userName = filtered
@@ -1959,7 +1867,6 @@ fun SignUp_Rento(
                         )
                     )
 
-
                     if (errorName.value) {
                         Row(
                             modifier = Modifier
@@ -1982,7 +1889,6 @@ fun SignUp_Rento(
                     }
                 }
 
-
                 spacer(4)
 
                 CommonText(
@@ -1991,9 +1897,7 @@ fun SignUp_Rento(
 
                 NumberInput_Rento(errorInput, viewModel)
 
-
                 spacer(4)
-
 
                 Box(
                     modifier = Modifier
@@ -2015,7 +1919,6 @@ fun SignUp_Rento(
                                     errorInput.value = true
                                 }
 
-
                                 viewModel.userName.isEmpty() -> {
                                     errorName.value = true
                                 }
@@ -2023,7 +1926,7 @@ fun SignUp_Rento(
                                 else -> {
                                     AppPreferences.save_User_Verify_Otp("")
                                     if (network.value == NetworkStatus.Online) {
-//                           register_API_Call(resultCallback = {})
+
                                         constants.API_Vm.user_Register(
                                             name = viewModel.userName,
                                             phone_num = viewModel.phoneNumber,
@@ -2035,38 +1938,34 @@ fun SignUp_Rento(
                                         { apiResultHandling ->
                                             when (apiResultHandling) {
                                                 is API_Result_Handling.Loading -> {
-                                                    //state = true
-                                                    // resultCallback(2)
+
                                                     constants.Common_H_ViewModel.changeStatus(true)
                                                 }
 
                                                 is API_Result_Handling.Deactivated -> {
-                                                    // resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.NoData -> {
-                                                    //state = false
+
                                                     constants.Common_H_ViewModel.changeStatus(false)
                                                     toast("Something went wrong , No Records found")
                                                 }
 
                                                 is API_Result_Handling.Error -> {
-                                                    //state = false
-                                                    //resultCallback(1)
+
                                                     constants.Common_H_ViewModel.changeStatus(false)
                                                     toast(apiResultHandling.message)
                                                 }
 
                                                 is API_Result_Handling.Success -> {
-                                                    //state = false
-                                                    //  resultCallback(0)
+
                                                     constants.Common_H_ViewModel.changeStatus(false)
-                                                    //toast(AppPreferences.get_User_Verify_Otp())
+
                                                     constants.Start_Up_ViewModel.currentCredintialState.value =
                                                         UserCredintialState.REGISTER
                                                     index.value = 2
-                                                    //viewModel.updateLoginState(2)
-                                                    //AppPreferences.save_User_Verify_Otp("")
+
                                                 }
                                             }
                                         }
@@ -2097,7 +1996,6 @@ fun SignUp_Rento(
 
                 }
 
-
                 spacer(4)
 
                 LoginSwitchText(
@@ -2108,7 +2006,7 @@ fun SignUp_Rento(
                         viewModel.phoneNumber = ""
                         constants.Start_Up_ViewModel.phoneNumber = ""
                         index.value = 0
-                        //viewModel.updateLoginState(1)
+
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
@@ -2121,8 +2019,6 @@ fun SignUp_Rento(
     }
 }
 
-
-
 @Composable
 fun Verify_Rento(
     index: MutableState<Int>,
@@ -2130,23 +2026,16 @@ fun Verify_Rento(
     navController: NavHostController
 ) {
 
-
     val time = rememberCountdownTimer(180)
-
-//    var otpError = remember { mutableStateOf(false) }
 
     var network = rememberNetworkStatus()
     val focusManager = LocalFocusManager.current
 
     var keyboardController = LocalSoftwareKeyboardController.current
 
-
-
     var selectedCountryData = viewModel.selectedCountryVm.collectAsState()
 
-    //println("SELECTE COUNTRY DATA on verify -- ${ selectedCountryData.value}")
     val otpError = viewModel.error_OTP.collectAsState()
-
 
     LazyColumn(
         modifier = Modifier
@@ -2157,13 +2046,10 @@ fun Verify_Rento(
     {
         item {
 
-
             Column(
                 modifier = Modifier
                     .imePadding()
-//                    .padding(horizontal = 16.dp)
-//                    .fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)
-//        , horizontalAlignment = Align
+
             )
             {
 
@@ -2208,7 +2094,6 @@ fun Verify_Rento(
 
                 spacer(4)
 
-
                 OTP_TF_6(
                     otp = viewModel.otp,
                     onOtpChange = {
@@ -2228,7 +2113,7 @@ fun Verify_Rento(
                             painter = painterResource(R.drawable.errorinforento),
                             "",
                             modifier = Modifier.size(14.dp),
-//                    colorFilter = ColorFilter.tint(Color.Red)
+
                         )
 
                         constants.spacer(4)
@@ -2259,7 +2144,6 @@ fun Verify_Rento(
                                 AppPreferences.save_User_Verify_Otp("")
                                 viewModel.otp = ""
                                 if (network.value == NetworkStatus.Online) {
-//                           register_API_Call(resultCallback = {})
 
                                     if (constants.Start_Up_ViewModel.currentCredintialState.value == UserCredintialState.LOGIN) {
                                         constants.API_Vm.user_Login(
@@ -2273,33 +2157,26 @@ fun Verify_Rento(
                                         { apiResultHandling ->
                                             when (apiResultHandling) {
                                                 is API_Result_Handling.Loading -> {
-                                                    //state = true
-                                                    // resultCallback(2)
-                                                    //isResend_Loading.value = true
+
                                                 }
 
                                                 is API_Result_Handling.Deactivated -> {
-                                                    //resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.NoData -> {
-                                                    //state = false
+
                                                     constants.Common_H_ViewModel.changeStatus(false)
                                                     toast("Something went wrong , No Records found")
                                                 }
 
                                                 is API_Result_Handling.Error -> {
-                                                    //state = false
-                                                    //resultCallback(1)
+
                                                     toast("Resend OTP Failed to Initiate!")
                                                 }
 
                                                 is API_Result_Handling.Success -> {
-                                                    //state = false
-                                                    //  resultCallback(0)
-                                                    //isResend_Loading.value = false
-                                                    println("TIMER RESEND")
-                                                    //toast(AppPreferences.get_User_Verify_Otp())
+
                                                     viewModel.is_Error_OTP_Reset()
                                                     viewModel.otp = ""
                                                     time.restart()
@@ -2319,37 +2196,32 @@ fun Verify_Rento(
                                         { apiResultHandling ->
                                             when (apiResultHandling) {
                                                 is API_Result_Handling.Loading -> {
-                                                    //state = true
-                                                    // resultCallback(2)
+
                                                     constants.Common_H_ViewModel.changeStatus(true)
                                                 }
 
                                                 is API_Result_Handling.Deactivated -> {
-                                                    // resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.NoData -> {
-                                                    //state = false
+
                                                     constants.Common_H_ViewModel.changeStatus(false)
                                                     toast("Something went wrong , No Records found")
                                                 }
 
                                                 is API_Result_Handling.Error -> {
-                                                    //state = false
-                                                    //resultCallback(1)
+
                                                     constants.Common_H_ViewModel.changeStatus(false)
                                                     toast(apiResultHandling.message)
                                                 }
 
                                                 is API_Result_Handling.Success -> {
-                                                    //state = false
-                                                    //  resultCallback(0)
-                                                   // toast(AppPreferences.get_User_Verify_Otp())
+
                                                     viewModel.is_Error_OTP_Reset()
                                                     viewModel.otp = ""
                                                     time.restart()
-                                                    //viewModel.updateLoginState(2)
-                                                    //AppPreferences.save_User_Verify_Otp("")
+
                                                 }
                                             }
                                         }
@@ -2362,7 +2234,6 @@ fun Verify_Rento(
                     )
                 }
 
-
                 spacer(4)
 
                 Box(
@@ -2371,12 +2242,10 @@ fun Verify_Rento(
                         .fillMaxWidth()
                         .height(56.dp)
                         .noRippleClickable {
-                            // index.value = 0
 
                             keyboardController?.hide()
                             focusManager.clearFocus()
                             if (network.value == NetworkStatus.Online) {
-//                           verify_Otp_API_Call(navController)
 
                                 constants.API_Vm.verify_OTP(
                                     user_id = AppPreferences.getUserId(),
@@ -2384,7 +2253,7 @@ fun Verify_Rento(
                                     whatsapp_num = "",
                                     email = "",
                                     otp = viewModel.otp,
-                                    //AppPreferences.get_User_Verify_Otp(),
+
                                     phone_num_cc = selectedCountryData.value?.dial_code ?: "",
                                     whatsapp_num_cc = "",
                                     device_id = getDeviceId(constants.activity),
@@ -2394,22 +2263,22 @@ fun Verify_Rento(
                                 { apiResultHandling ->
                                     when (apiResultHandling) {
                                         is API_Result_Handling.Loading -> {
-                                            //state = true
+
                                             constants.Common_H_ViewModel.change_Verify_Status(true)
                                         }
 
                                         is API_Result_Handling.Deactivated -> {
-                                            // resultCallback(5)
+
                                         }
 
                                         is API_Result_Handling.NoData -> {
-                                            //state = false
+
                                             constants.Common_H_ViewModel.change_Verify_Status(false)
                                             toast("Something went wrong , No Records found")
                                         }
 
                                         is API_Result_Handling.Error -> {
-                                            //state = false
+
                                             viewModel.is_Error_OTP()
 
                                             constants.Common_H_ViewModel.change_Verify_Status(false)
@@ -2420,10 +2289,9 @@ fun Verify_Rento(
                                         is API_Result_Handling.Success -> {
                                             constants.Start_Up_ViewModel.currentCredintialState.value =
                                                 UserCredintialState.NONE
-                                            //state = false
+
                                             constants.Common_H_ViewModel.change_Verify_Status(false)
                                             viewModel.is_Error_OTP_Reset()
-
 
                                             selectedCountryData.value?.let {
                                                 AppPreferences.saveCountry(
@@ -2435,14 +2303,9 @@ fun Verify_Rento(
 
                                             AppPreferences.save_ph_number(viewModel.phoneNumber)
 
-                                            println("SELECTED COUNTRY DATA --${selectedCountryData.value}---  ")
-
-
-
-
                                             toast("Success , verified")
                                             if (AppPreferences.get_Interest_Completed() == 0 || AppPreferences.get_Location_Received() == 0) {
-                                                // UserCredentialsScreenFlow.UserInterests.route
+
                                                 AppPreferences.save_Verify_Complete(1)
                                                 navController.navigate(UserCredentialsScreenFlow.UserInterests.route)
                                             } else {
@@ -2456,7 +2319,7 @@ fun Verify_Rento(
                                         }
                                     }
                                 }
-                                //}
+
                             } else {
                                 toast("It Seems your are offline !!.Refresh again")
                             }
@@ -2487,8 +2350,6 @@ fun Verify_Rento(
     }
 }
 
-
-
 @Composable
 fun  NumberInput_Rento(
     errorInput: MutableState<Boolean>
@@ -2496,21 +2357,14 @@ fun  NumberInput_Rento(
     ,isChecked : MutableState<Boolean> = mutableStateOf(false)
 ) {
 
-
-
-
     var showSheet by remember { mutableStateOf(false) }
-
-
 
     var selectedCountry = viewModel.selectedCountryVm.collectAsState()
 
     val context = LocalContext.current
 
-
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-
 
     Column() {
         TextField(
@@ -2534,9 +2388,7 @@ fun  NumberInput_Rento(
                     3
                     )
             }
-//        , prefix = {
-//            Text(selectedCountry?.dial_code ?:"")
-//        }
+
             , singleLine = true
             , leadingIcon = {
                 Row(
@@ -2550,18 +2402,11 @@ fun  NumberInput_Rento(
                 ) {
                     spacer(4)
 
-//                    Box(
-//                        modifier = Modifier
-//                            .size(25.dp)
-//                            .clip(CircleShape)
-//                            .background(Color.White)
-//                        , contentAlignment = Alignment.Center
-//                    ) {
                         Text(
                             text = selectedCountry.value?.emoji ?: "",
                             fontSize = 20.sp,
                         )
-//                    }
+
                     spacer(4)
 
                     Image(painter = painterResource(R.drawable.arrowdown), "")
@@ -2607,8 +2452,6 @@ fun  NumberInput_Rento(
                     modifier = Modifier.size(14.dp)
                 )
 
-//                Text("Enter valid mobile number")
-
                 constants.spacer(4)
 
                 CommonText("Enter valid mobile number" , Color.Red,12 ,3)
@@ -2622,13 +2465,11 @@ fun  NumberInput_Rento(
         showSheet = showSheet,
         onDismiss = { showSheet = false },
         onSelect = {
-            println("SELECTED COUNTRY -- ${it}")
             viewModel.add_selectedCountry(it) },
         viewModel
     )
 
 }
-
 
 @Composable
 fun CommonText(
@@ -2646,5 +2487,3 @@ fun CommonText(
         modifier = modifier
     )
 }
-
-

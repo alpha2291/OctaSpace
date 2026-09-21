@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Home_Screen.PostProperty_Module
 
-
 import com.toletspot.houseforrent.R
 import android.graphics.Bitmap
 import android.location.Geocoder
@@ -168,7 +167,6 @@ import java.util.Locale
 import kotlin.collections.forEach
 import kotlin.reflect.full.memberProperties
 
-
 var limitGoingIn = mutableStateOf(false)
 
 var onSomething = mutableStateOf(0)
@@ -176,16 +174,9 @@ var next_Active_Fields = mutableStateListOf<Int>()
 var next_Active_Fields5 = mutableStateListOf<Int>()
 var next_Active_Fields6 = mutableStateListOf<Int>()
 
-
-
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_ViewModel) {
-
-
 
     val apiError = remember { mutableStateOf(false) }
 
@@ -196,12 +187,10 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
 
     val current_Form = constants.PostProperty_ViewModel.postPropertyFormPage.collectAsState()
 
-
     val isLoading = constants.PostProperty_ViewModel.status_PFs.collectAsState()
 
     val draft_State = constants.PostProperty_ViewModel.save_Draft_PP_State.collectAsStateWithLifecycle()
 
-    /// post flow form draft
     var draft_from_Draft by remember { mutableStateOf(false) }
     var repost_Draft by remember { mutableStateOf(false) }
     val Flow_From_Which by constants.PostProperty_ViewModel.which_Post_Forms_Flow.collectAsState()
@@ -211,7 +200,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
     val pin_Lat_Long  = constants.PostProperty_ViewModel.pinned_Lat_Long.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
-
 
     val form1_Selected = constants.PostProperty_ViewModel.first_Form_selected_PP.collectAsState()
 
@@ -250,9 +238,8 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                                         viewModel.toggleshowBABars(true)
                                         viewModel.toggleshowTABars(true)
                                         AppPreferences.save_Post_Id(0)
-                                        //navController.navigateUp()
+
                                     } else {
-                                        println("FLOW FROM WHICH ___ ${Flow_From_Which}")
                                         if (Flow_From_Which == 1) {
                                             draft_from_Draft = true
                                         } else {
@@ -266,10 +253,8 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
 
                                     }
 
-                                    //navController.navigate(PostPropertyFlow.Common_Screen.route)
                                 } else {
-                                    // constants.PostProperty_ViewModel.onPreviousPPForm()
-                                    println("FLOW FROM WHICH ___ ${Flow_From_Which}")
+
                                     if (Flow_From_Which == 1) {
                                         draft_from_Draft = true
                                     } else {
@@ -296,33 +281,29 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                 {
                         var previousPage by remember { mutableStateOf(current_Form.value) }
 
-
-
                     AnimatedContent(
                         targetState = current_Form.value,
                         transitionSpec = {
                             if (targetState > previousPage) {
-                                // Moving forward
+
                                 slideInHorizontally(animationSpec = tween(600)) { it } togetherWith
                                         ExitTransition.None
                             } else {
-                                // Moving backward
+
                                 slideInHorizontally(animationSpec = tween(600)) { -it } togetherWith
                                         ExitTransition.None
                             }
                         }
                     ) { targetState ->
-                        previousPage = targetState // update previous page
+                        previousPage = targetState
 
                         when (targetState) {
                             0 -> {
-                                println("FIRST FORM TIMESS INN")
                                 key("form_0") {
                                     PP_First_Form(isLoading)
                                 }
                             }
                             1 -> {
-                                println("SECOND FORM TIMES INNN")
                                 key("form_1") {
                                     PP_Second_Form(isLoading)
                                 }
@@ -334,9 +315,7 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                             }
                             3 -> {
                                 key("form_3") {
-                                    println("MULTIPLE TIMES INNNNN OUT ")
                                     PP_Fourth_Form(apiError)
-                                    println("MULTIPLE TIMES INNNNN INSIDE ")
                                 }
                             }
                             4 -> {
@@ -352,14 +331,10 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                             6 -> {
                                 key("form_5") {
                                     PP_Seventh_Form(onHover)
-                                    //PP_Sixth_Form(isLoading)
+
                                 }
                             }
-//                            7 -> {
-//                                key("form_6") {
-//                                    //PreviewScreen(navController)
-//                                }
-//                            }
+
                         }
                     }
                 }
@@ -372,7 +347,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                         .fillMaxWidth()
                         .weight(1f), contentAlignment = Alignment.Center
                 ) {
-                    println("CURRENT FORM NUMBER--- ${current_Form.value}")
                     PP_Forms_Next_Clicker(current_Form, isLoading, navController, apiError)
                 }
             }
@@ -387,11 +361,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
             onHover.value = false
         })
     }
-
-
-
-
-
 
     if (constants.PostProperty_ViewModel.emptyMediaUploadBtm.value) {
         ModalBottomSheet(
@@ -471,7 +440,7 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
         Column (
             modifier = Modifier
                 .wrapContentHeight()
-                //.padding(top = 16.dp)
+
             , horizontalAlignment = Alignment.CenterHorizontally
             , verticalArrangement = Arrangement.Center
         )
@@ -485,15 +454,7 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                     .size(62.dp))
 
             constants.spacer(6)
-//
-//            Text(
-//                "Save this in Draft?",
-//                color = newBlack,
-//                fontSize = constants.textUnit(16),
-//                fontFamily = constants.fontFamily(0)
-//            )
 
-            //constants.spacer(2)
             Text(
                 "Save your progress as a draft before exiting?",
                 color = newBlack,
@@ -610,7 +571,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
         }
     }
 
-
     Common_Popup(
         visible = draft_from_Draft,
         modifier = Modifier.background(Color(0xffF7F0DC))
@@ -621,26 +581,18 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
         Column (
             modifier = Modifier
                 .wrapContentHeight()
-               // .background(Color.Red)
-                //.padding(top = 16.dp)
+
             , horizontalAlignment = Alignment.CenterHorizontally
             , verticalArrangement = Arrangement.spacedBy(12.dp)
         )
         {
 
             constants.spacer(2)
-//            Text(
-//                "Save changes to draft?",
-//                color = newBlack,
-//                fontSize = constants.textUnit(16),
-//                fontFamily = constants.fontFamily(0)
-//            )
 
             Image(painter = painterResource(R.drawable.posting_draft) , "",
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .size(62.dp))
-
 
             constants.spacer(2)
             Text(
@@ -653,7 +605,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                , lineHeight = 24.sp
             )
 
-//            Spacer(modifier = Modifier.padding(8.dp))
             constants.spacer(4)
 
             Column(
@@ -709,10 +660,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                                                     it.copy(draft = current_Form.value + 1)
                                                 }
 
-                                                println("APP POST BID  -- ${AppPreferences.get_Post_Id()}")
-
-
-
                                                 val requestBody =
                                                     constants.PostProperty_ViewModel.buildUploadRequestBody()
 
@@ -721,35 +668,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                                                     navController = navController,
                                                     "1",
                                                     onComplete = {
-                                                        println("On COmplete Draft model preview 1")
-                                                        /* get_Form_Publish_API_CALL { result ->
-                                                            when (result) {
-                                                                0 -> {}
-                                                                1 -> {}
-                                                                2 -> {}
-                                                                3 -> {
-                                                                    constants.Profile_ViewModel.set_From_Repost(
-                                                                        0
-                                                                    )
-                                                                    constants.PostProperty_ViewModel.set_Post_Form_Flow(
-                                                                        -1
-                                                                    )
-                                                                    constants.Common_H_ViewModel.selectedBABTab(0)
-
-                                                                    constants.PostProperty_ViewModel.setPostFlow(PostFlow.NONE)
-
-                                                                    constants.PostProperty_ViewModel.clear_Selected_Fields_Form4()
-
-
-                                                                    constants.URL_COMPLETED.clear()
-                                                                    constants.PostProperty_ViewModel.clear_Media()
-
-                                                                    navController.navigate(
-                                                                        PostPropertyFlow.Common_Screen.route
-                                                                    )
-                                                                }
-                                                            }
-                                                        }*/
 
                                                         loadState.value = false
                                                         constants.Profile_ViewModel.set_From_Repost(
@@ -776,44 +694,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                                                     }
                                                 )
 
-                                                /* put_Draft_New_Flow_API_CALL { result ->
-                                                    when (result) {
-                                                        0 -> {
-                                                            // fail
-                                                            loadState.value = false
-                                                            println("failllll")
-                                                        }
-
-                                                        1 -> {
-                                                            scope.launch(Dispatchers.Main) {
-                                                                // sucvcess
-                                                                println("sucesssssss")
-                                                                loadState.value = false
-                                                                constants.Profile_ViewModel.set_From_Repost(
-                                                                    1
-                                                                )
-                                                                constants.PostProperty_ViewModel.set_Post_Form_Flow(
-                                                                    1
-                                                                )
-
-                                                                constants.PostProperty_ViewModel.change_Status_PFs(
-                                                                    false
-                                                                )
-
-
-
-                                                                navController.navigateUp()
-                                                            }
-                                                            //navController.navigate(PostPropertyFlow.ViewPropertyStructure.route)
-
-                                                        }
-
-                                                        2 -> {}
-                                                        3 -> {
-                                                            loadState.value = true
-                                                        }
-                                                    }
-                                                }*/
                                             }
                                         }
                                     }
@@ -835,7 +715,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                         }
                     }
                 }
-
 
                 Spacer(modifier = Modifier.padding(8.dp))
 
@@ -871,36 +750,21 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
         Column (
             modifier = Modifier
                 .wrapContentHeight()
-            // .background(Color.Red)
-            //.padding(top = 16.dp)
+
             , horizontalAlignment = Alignment.CenterHorizontally
             , verticalArrangement = Arrangement.spacedBy(12.dp)
         )
         {
-           //constants.spacer(2)
-//            Text(
-//                "Save this in Draft?",
-//                color = newBlack,
-//                fontSize = constants.textUnit(16),
-//                fontFamily = constants.fontFamily(0)
-//            )
 
             constants.spacer(2)
-//            Text(
-//                "Save changes to draft?",
-//                color = newBlack,
-//                fontSize = constants.textUnit(16),
-//                fontFamily = constants.fontFamily(0)
-//            )
 
             Image(painter = painterResource(R.drawable.posting_draft) , "",
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .size(62.dp))
 
-
             constants.spacer(2)
-           // constants.spacer(2)
+
             Text(
                 "You have not completed this. Would you like to save it as a draft?",
                 color = newBlack,
@@ -910,7 +774,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                 , modifier = Modifier.padding(horizontal =if (forTab()) 46.dp else 36.dp)
                , lineHeight = 24.sp
             )
-
 
             constants.spacer(2)
 
@@ -934,9 +797,7 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                             .width(if (forTab()) 142.dp else 121.dp)
                             .background(Color(0xffE8E8E8))
                             .noRippleClickable {
-                                println("#$%^&*()*&^%$%^&*")
                                 repost_Draft = false
-                                println("#wdcjwdcjkvjk -- ${repost_Draft}")
                             }
                         , contentAlignment = Alignment.Center
                     ){
@@ -968,55 +829,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                                                     it.copy(draft = current_Form.value)
                                                 }
 
-                                                /*put_Draft_New_Flow_API_CALL { result ->
-                                                    when (result) {
-                                                        0 -> {
-                                                            // fail
-                                                            loadState.value = false
-                                                            println("failllll")
-                                                        }
-
-                                                        1 -> {
-                                                            scope.launch(Dispatchers.Main) {
-                                                                // sucvcess
-                                                                println("sucesssssss")
-                                                                loadState.value = false
-
-                                                                constants.Profile_ViewModel.set_From_Repost(
-                                                                    0
-                                                                )
-                                                                if(constants.Profile_ViewModel.from_SoldOuts.value == true){
-                                                                    constants.PostProperty_ViewModel.set_Post_Form_Flow(
-                                                                        -1
-                                                                    )
-                                                                }else {
-                                                                    constants.PostProperty_ViewModel.set_Post_Form_Flow(
-                                                                        1
-                                                                    )
-                                                                }
-
-
-                                                                constants.PostProperty_ViewModel.change_Status_PFs(
-                                                                    false
-                                                                )
-
-
-                                                                AppPreferences.save_Post_Id(0)
-
-
-
-                                                                navController.navigateUp()
-                                                            }
-                                                            //navController.navigate(PostPropertyFlow.ViewPropertyStructure.route)
-
-                                                        }
-
-                                                        2 -> {}
-                                                        3 -> {
-                                                            loadState.value = true
-                                                        }
-                                                    }
-                                                }*/
                                             }
                                         }
                                     }
@@ -1049,7 +861,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                         .padding(vertical = 8.dp)
                         .noRippleClickable {
 
-
                             constants.Profile_ViewModel.set_Open_False()
                             constants.Profile_ViewModel.onSet_Settings_Click(-1)
                             viewModel.selectedBABTab(0)
@@ -1069,33 +880,12 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                                 }
                             }
 
-//                            constants.API_Vm.delete_Post_SM_Drafts(
-//                                user_id = AppPreferences.getUserId(),
-//                                select_all = 0,
-//                                user_post_id = AppPreferences.get_Post_Id().toString(),
-//                            ) { aPI_Result_Handling ->
-//                                when (aPI_Result_Handling) {
-//                                    is API_Result_Handling.Loading -> {}
-//                                    is API_Result_Handling.NoData -> {}
-//                                    is API_Result_Handling.Error -> {}
-//                                    is API_Result_Handling.Deactivated -> {
-//                                        //resultCallback(5)
-//                                    }
-//                                    is API_Result_Handling.Success -> {
-//
-//                                        AppPreferences.save_Post_Id(0)
-//                                        navController.navigateUp()
-//
-//                                    }
-//                                }
-//                            }
                         }
                 )
             }
             constants.spacer(2)
         }
     }
-
 
     if (show_Map_view.value){
         val placesClient = Places.createClient(context)
@@ -1111,11 +901,10 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
                 viewModel.toggleshowBABars(true)
                 viewModel.toggleshowTABars(true)
                 AppPreferences.save_Post_Id(0)
-                //navController.navigateUp()
+
             }
             else
             {
-                println("FLOW FROM WHICH ___ ${Flow_From_Which}")
                 if (Flow_From_Which == 1){
                     draft_from_Draft = true
                 }
@@ -1131,11 +920,9 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
 
             }
 
-            //navController.navigate(PostPropertyFlow.Common_Screen.route)
         } else
         {
-            // constants.PostProperty_ViewModel.onPreviousPPForm()
-            println("FLOW FROM WHICH ___ ${Flow_From_Which}")
+
             if (Flow_From_Which == 1){
                 draft_from_Draft = true
             }
@@ -1150,8 +937,6 @@ fun Post_Property_Forms(navController: NavHostController, viewModel: Common_H_Vi
         }
     }
 }
-
-
 
 @Composable
 fun PP_First_Form(isLoading: State<Boolean>) {
@@ -1207,9 +992,6 @@ fun PP_First_Form(isLoading: State<Boolean>) {
 
             var imageContent_selected = if (index == 0) R.drawable.ownerselectedrento else R.drawable.brokerselectedrento
 
-
-            println("ISLOADING __ ${isLoading}")
-
             ListItem(
                 headlineContent = {
                     Text(
@@ -1228,7 +1010,7 @@ fun PP_First_Form(isLoading: State<Boolean>) {
                             ,""
                             , modifier = Modifier
                                 .size(24.dp)
-                            //, colorFilter = ColorFilter.tint(if (selected_Option.value == index) newBlue else newGray)
+
                         )
                     }
                     else {
@@ -1237,7 +1019,7 @@ fun PP_First_Form(isLoading: State<Boolean>) {
                             ,""
                             , modifier = Modifier
                                 .size(24.dp)
-                          //  , colorFilter = ColorFilter.tint(if (selected_Option.value == index) newBlue else newGray)
+
                         )
                     }
                 },
@@ -1247,7 +1029,7 @@ fun PP_First_Form(isLoading: State<Boolean>) {
                     .then(
                         if (errorState) {
                             Modifier
-                                //.background(Color.White)
+
                                 .border(
                                     1.dp,
                                     Brush.verticalGradient(newRedGradienBorder),
@@ -1255,7 +1037,7 @@ fun PP_First_Form(isLoading: State<Boolean>) {
                                 )
                         } else {
                             Modifier
-                                //.background(if (selected_Option.value == index) Color(0xffF7F0DC) else Color.White)
+
                                 .border(
                                     1.dp,
                                     if (selected_Option.value == index) newBlue else newGray,
@@ -1263,14 +1045,12 @@ fun PP_First_Form(isLoading: State<Boolean>) {
                                 )
                         }
                     )
-                    //.padding(vertical = 8.dp)
+
                     .noRippleClickable {
-                        println("ISLOADING __ONLICK ${isLoading}")
                         if (!isLoading.value) {
                             constants.PostProperty_ViewModel.set1formError(false)
                             constants.PostProperty_ViewModel.first_Form_selected_PP(index)
                             constants.PostProperty_ViewModel.select_User_Type_1PF(index)
-                            println("USERTYPE PF1 -- ${constants.PostProperty_ViewModel.selected_User_Type_1PF.value}")
                         }
                     }
                 , colors = ListItemColors(
@@ -1312,43 +1092,28 @@ fun PP_First_Form(isLoading: State<Boolean>) {
     }
 }
 
-
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PP_Second_Form(isLoading: State<Boolean>) {
 
-
-
-    println("ON REPOST COMING INTO -- ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}")
     var network = rememberNetworkStatus()
-
-
-
 
     var onSelected_ProType = constants.PostProperty_ViewModel.onSelected_ProType.collectAsStateWithLifecycle()
 
-
-    println("ON COMPODABLE IDD-- ${onSelected_ProType.value}")
     val errorState by constants.PostProperty_ViewModel.form2Error.collectAsState()
 
-
-    //val selected_Land_Main = constants.PostProperty_ViewModel.selected_Land_Cat_Id.collectAsStateWithLifecycle()
     val selected_LandSubType = constants.PostProperty_ViewModel.pp_Form2_LandSubTypes_Selected.collectAsStateWithLifecycle()
-
 
     val changes_Not_Allowed = remember { mutableStateOf(false) }
 
-
     LaunchedEffect(Unit , onSelected_ProType.value ) {
-        //if (isConnected.value) {
+
             get_Land_Categories_PF2_API_Call { result ->
                 when (result) {
                     0 -> {
-                        println("Failure")
                     }
 
                     1 -> {
-                        println("Success 12345678 form 22")
                     }
                 }
             }
@@ -1356,25 +1121,17 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
 
     val isLoadingSub = constants.PostProperty_ViewModel.status_Land_Types.collectAsState()
 
-
     val residential_Options_List = constants.PostProperty_ViewModel.pp_SecondForm_OptionsList.collectAsState()
 
     val postFlow = constants.PostProperty_ViewModel.postFlow.collectAsState()
 
-    println("Step 2 SSCREEN-- ${ onSelected_ProType}@@@${constants.PostProperty_ViewModel.selected_Land_Cat_Id} ###${constants.PostProperty_ViewModel.selected_Land_Type_PF2.value}--- ${residential_Options_List.value}")
-
-
-
     if (constants.PostProperty_ViewModel.get_Post_Form_Flow() == 2) {
         LaunchedEffect(onSelected_ProType, selected_LandSubType.value) {
-            println("REFRESHING 2###${onSelected_ProType}  *** ${selected_LandSubType.value}  ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.first} --- ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.second}")
             if (onSelected_ProType.value  != constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.first || selected_LandSubType.value != constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.second) {
                 changes_Not_Allowed.value = true
             }
         }
     }
-
-
 
     Column (
         modifier = Modifier
@@ -1441,12 +1198,7 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
             )
         )
 
-
         propertyTypes.forEachIndexed {  index , item ->
-        //repeat(propertyTypes.size){
-
-
-
 
             ListItem(
                 headlineContent = {
@@ -1481,20 +1233,17 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                     .clip(RoundedCornerShape(8.dp))
                     .noRippleClickable {
                         if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA){
-                            /// click not allowed
+
                         }
                         else {
                             if (!isLoading.value) {
-
 
                                 constants.PostProperty_ViewModel.set_onSelected_ProType(item.id)
                                 constants.PostProperty_ViewModel.set2formError(false)
                                 constants.PostProperty_ViewModel.select_Land_Type(item.id)
 
                                 constants.PostProperty_ViewModel.LandSubType_Selected_Click(-1)
-                                println("ISLOADING ONLCICKwewew__${propertyTypes[index].id} ${item.id}****** --- $onSelected_ProType")
                             }
-                            println("ISLOADING ONLCICK_${propertyTypes[index].id}_ ${isLoading}--- $onSelected_ProType")
                         }
 
                     }
@@ -1551,7 +1300,7 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                 visible = onSelected_ProType.value == item.id ,
                 enter = slideInVertically(
                     initialOffsetY = { it },
-                   // animationSpec = tween(durationMillis = 100, easing = LinearOutSlowInEasing)
+
                 )
                 , exit = ExitTransition.None
                 , modifier = Modifier.padding(bottom = 16.dp)
@@ -1580,7 +1329,7 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                             .wrapContentSize()
                                             .noRippleClickable(enabled = !isLoadingSub.value && !isLoading.value) {
                                                 if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA){
-                                                    /// click not allowed
+
                                                 }
                                                 else {
 
@@ -1594,18 +1343,16 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                                         option.land_categorie_id
                                                     )
 
-                                                    /// new one using id
                                                     constants.PostProperty_ViewModel.LandSubType_Selected_Click(
                                                         option.land_categorie_id
                                                     )
-                                                    println("QWERTY _-Resi ${constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id()}")
                                                 }
                                             }
                                             .clip(RoundedCornerShape(4.dp))
                                             .background(
                                                 if (
                                                     selected_LandSubType.value == option.land_categorie_id
-                                                //option.on_Selected
+
                                                 )
                                                 {
                                                     if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA)
@@ -1620,13 +1367,13 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                             .border(
                                                 1.dp, if (
                                                     selected_LandSubType.value == option.land_categorie_id
-                                                //option.on_Selected
+
                                                 ) {
                                                     if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA)
                                                         rentoDarkGray
                                                     else
                                                         newBlue
-                                                    // newBlue
+
                                                 } else {
                                                     newGray
                                                 }, RoundedCornerShape(4.dp)
@@ -1637,20 +1384,9 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                         Text(
                                             option.name,
                                             color =
-//                                                if (
-//                                                selected_LandSubType.value == option.land_categorie_id
-//                                                //option.on_Selected
-//                                                ) {
-//                                                if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA)
-//                                                    rentoDarkGray
-//                                                else
-//                                                    newBlue
-//                                                //newBlue
-//                                            }
-//                                            else
-//                                            {
+
                                                     newBlack
-//                                                              }
+
                                             , fontSize = constants.textUnit(14),
                                             fontFamily = constants.fontFamily(2),
                                             modifier = Modifier
@@ -1677,7 +1413,7 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                             .wrapContentSize()
                                             .noRippleClickable(enabled = !isLoadingSub.value && !isLoading.value) {
                                                 if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA){
-                                                    /// click not allowed
+
                                                 }
                                                 else {
                                                     constants.PostProperty_ViewModel.set2formError(
@@ -1690,19 +1426,17 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                                         option.land_categorie_id
                                                     )
 
-                                                    /// new one using id
                                                     constants.PostProperty_ViewModel.LandSubType_Selected_Click(
                                                         option.land_categorie_id
                                                     )
 
-                                                    println("QWERTY _-Commercial ${constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id()}")
                                                 }
                                             }
                                             .clip(RoundedCornerShape(4.dp))
                                             .background(
                                                 if (
                                                     selected_LandSubType.value == option.land_categorie_id
-                                                //option.on_Selected
+
                                                 ) {
                                                     if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA)
                                                         rentoLightGray
@@ -1716,13 +1450,13 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                             .border(
                                                 1.dp, if (
                                                     selected_LandSubType.value == option.land_categorie_id
-                                                //option.on_Selected
+
                                                 ) {
                                                     if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA)
                                                         rentoDarkGray
                                                     else
                                                         newBlue
-                                                    // newBlue
+
                                                 } else {
                                                     newGray
                                                 }, RoundedCornerShape(4.dp)
@@ -1733,19 +1467,9 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                         Text(
                                             option.name,
                                             color =
-//                                                if (
-//                                                selected_LandSubType.value == option.land_categorie_id
-//                                            //option.on_Selected
-//                                            ) {
-//                                                if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA)
-//                                                    rentoDarkGray
-//                                                else
-//                                                    newBlue
-////                                                newBlue
-//                                            }
-//                                            else {
+
                                                 newBlack
-//                                                           }
+
                                             , fontSize = constants.textUnit(14),
                                             fontFamily = constants.fontFamily(2),
                                             modifier = Modifier
@@ -1773,7 +1497,7 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                             .wrapContentSize()
                                             .noRippleClickable(enabled = !isLoadingSub.value && !isLoading.value) {
                                                 if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA){
-                                                    /// click not allowed
+
                                                 }
                                                 else {
                                                     constants.PostProperty_ViewModel.set2formError(
@@ -1786,18 +1510,16 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                                         option.land_categorie_id
                                                     )
 
-                                                    /// new one using id
                                                     constants.PostProperty_ViewModel.LandSubType_Selected_Click(
                                                         option.land_categorie_id
                                                     )
-                                                    println("QWERTY _-Agri ${constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id()}")
                                                 }
                                             }
                                             .clip(RoundedCornerShape(4.dp))
                                             .background(
                                                 if (
                                                     selected_LandSubType.value == option.land_categorie_id
-                                                //option.on_Selected
+
                                                 ) {
                                                     if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA)
                                                         rentoLightGray
@@ -1811,13 +1533,13 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                             .border(
                                                 1.dp, if (
                                                     selected_LandSubType.value == option.land_categorie_id
-                                                //option.on_Selected
+
                                                 ) {
                                                     if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA)
                                                         rentoDarkGray
                                                     else
                                                         newBlue
-//                                                    newBlue
+
                                                 }
                                                 else {
                                                     newGray
@@ -1829,19 +1551,9 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                                         Text(
                                             option.name,
                                             color =
-//                                                if (
-//                                                selected_LandSubType.value == option.land_categorie_id
-//                                            //option.on_Selected
-//                                            ) {
-//                                                if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA)
-//                                                    rentoDarkGray
-//                                                else
-//                                                    newBlue
-////                                                newBlue
-//                                            }
-//                                            else {
+
                                                 newBlack
-//                                                           }
+
                                             , fontSize = constants.textUnit(14),
                                             fontFamily = constants.fontFamily(2),
                                             modifier = Modifier
@@ -1893,7 +1605,6 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.Start
             ){
-//                Image(painter = painterResource(R.drawable.chnages_not_allowed) , "")
 
                 CommonText("Trying to Change Property Type?",
                     newBlack,
@@ -1927,23 +1638,15 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
 
                         Box(
                             modifier = Modifier
-                                //.fillMaxWidth(.9f)
+
                                 .weight(4f)
                                 .fillMaxHeight(.6f)
                                 .background(Color(0xffE8E8E8))
                                 .noRippleClickable {
-                                    println(
-                                        "TYPE CHANGE -ONE- ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.first} -- ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.second} -##$$#$-" +
-                                                "--- ${constants.PostProperty_ViewModel.get_Land_Type()} --- ${constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id()} --- ${constants.PostProperty_ViewModel.get_LandSubType_Selected_Click()}"
-                                    )
                                     constants.PostProperty_ViewModel.select_Land_Type(constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.first)
                                     constants.PostProperty_ViewModel.select_Land_Cat_Id(constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.second)
                                     constants.PostProperty_ViewModel.LandSubType_Selected_Click(
                                         constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.second
-                                    )
-                                    println(
-                                        "TYPE CHANGE -Two- ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.first} -- ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.second} -##$$#$-" +
-                                                "--- ${constants.PostProperty_ViewModel.get_Land_Type()} --- ${constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id()} --- ${constants.PostProperty_ViewModel.get_LandSubType_Selected_Click()}"
                                     )
 
                                     changes_Not_Allowed.value = false
@@ -1956,7 +1659,7 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
                         Spacer(modifier = Modifier.weight(1.8f))
                         Box(
                             modifier = Modifier
-                                //.fillMaxWidth(.9f)
+
                                 .weight(4f)
                                 .fillMaxHeight(.6f)
                                 .clip(RoundedCornerShape(4.dp))
@@ -1966,15 +1669,12 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
 
                                     if (network.value == NetworkStatus.Online) {
                                         if (constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id() != -1) {
-                                            println("2nd FORM _ CLICKER _ ${constants.PostProperty_ViewModel.selected_Land_Cat_Id.value}")
                                             post_Form_2_API_Call { result ->
                                                 when (result) {
                                                     0 -> {
-                                                        println("FAILURE")
                                                     }
 
                                                     1 -> {
-                                                        println("SUCCESS")
 
                                                         constants.PostProperty_ViewModel.clear_Selected_Fields_Form4()
 
@@ -2026,22 +1726,15 @@ fun PP_Second_Form(isLoading: State<Boolean>) {
     }
 }
 
-
 @Composable
 fun PP_Third_Form(isLoading: State<Boolean>, show_Map_view: MutableState<Boolean>) {
-
 
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
 
-
-
-    //val pincode = constants.Start_Up_ViewModel.pincode.collectAsState()
     val context = LocalContext.current
     val placesClient = Places.createClient(context)
-
-
 
     Column {
         Row(
@@ -2088,10 +1781,8 @@ fun PP_Third_Form(isLoading: State<Boolean>, show_Map_view: MutableState<Boolean
 
 }
 
-
 @Composable
 fun PP_Sixth_Form(isLoading: State<Boolean>) {
-
 
     val budget_Price = constants.PostProperty_ViewModel.budget_Price_PF5.collectAsState()
     val price_Negotiation = constants.PostProperty_ViewModel.price_Negotiation_PF5.collectAsState()
@@ -2149,7 +1840,6 @@ fun PP_Sixth_Form(isLoading: State<Boolean>) {
         }
 
         Spacer(modifier = Modifier.padding(8.dp))
-
 
         Row (
             modifier = Modifier
@@ -2224,8 +1914,6 @@ fun PP_Sixth_Form(isLoading: State<Boolean>) {
     }
 }
 
-
-
 @Composable
 fun StepHeader() {
     Row(
@@ -2268,18 +1956,6 @@ fun StepHeader() {
         fontFamily = constants.fontFamily(1)
     )
 
-//    Spacer(modifier = Modifier.padding(4.dp))
-//
-//    Text(
-//        buildAnnotatedString {
-//            withStyle(SpanStyle(color = newBlack)) { append("Upload Video / Photos ") }
-//            withStyle(SpanStyle(color = Color.Red)) { append("* ") }
-//            withStyle(SpanStyle(color = Color(0xff666666))) { append("(minimum 3 photos)") }
-//        },
-//        fontSize = constants.textUnit(16),
-//        fontFamily = constants.fontFamily(1)
-//    )
-
     Spacer(modifier = Modifier.padding(8.dp))
 
     Text(
@@ -2290,7 +1966,6 @@ fun StepHeader() {
         , textAlign = TextAlign.Start
     )
 }
-
 
 @Composable
 fun UploadBox(
@@ -2304,7 +1979,7 @@ fun UploadBox(
         modifier = Modifier
             .fillMaxWidth()
             .height(190.dp)
-            .dashedBorder( // you have your helper; otherwise implement custom
+            .dashedBorder(
                 strokeWidth = 2.dp,
                 dashLength = 10.dp,
                 gapLength = 5.dp,
@@ -2314,8 +1989,6 @@ fun UploadBox(
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            // upload graphic
-            //Text("Upload Photo / Video", fontSize = 16.sp)
 
             Image(painter = painterResource(R.drawable.mediauploadicon) , ""
                 , modifier = Modifier.size(46.dp)
@@ -2342,10 +2015,6 @@ fun UploadBox(
                         14,
                         0)
                 }
-//                Button(
-//                    onClick = onPickImage,
-//                    enabled = canAddPhotos
-//                ) { Text("Upload Photo") }
 
                 constants.spacer(8)
 
@@ -2371,31 +2040,18 @@ fun UploadBox(
                         0)
                 }
 
-//                Button(
-//                    onClick = onPickVideo,
-//                    enabled = canAddVideos
-//                ) { Text("Upload Video") }
             }
 
             Spacer(Modifier.height(8.dp))
-//            Text("Images: ${mediaItems.count { !it.isVideo }} / 10 — Videos: ${mediaItems.count { it.isVideo }} / 5", fontSize = 12.sp)
+
         }
     }
 }
-
-
-
-
-
-
 
 data class PhotoHeadingItem(
     val title: String,
     val isSelected: MutableState<Boolean> = mutableStateOf(false)
 )
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -2413,7 +2069,6 @@ fun PP_Seventh_Form(
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val headingDropDown = remember { mutableStateOf(false) }
 
-    // image/video pickers
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments()
     ) { uris ->
@@ -2431,20 +2086,12 @@ fun PP_Seventh_Form(
 
     var apiState = remember { mutableStateOf(0) }
 
-
     Column(modifier = Modifier.fillMaxSize()) {
-        // Header
+
         StepHeader()
 
         Spacer(Modifier.height(16.dp))
 
-//        UploadBox(
-//            mediaItems = mediaItems,
-//            canAddPhotos = mediaItems.count { !it.isVideo } < 10,
-//            canAddVideos = mediaItems.count { it.isVideo } < 5,
-//            onPickImage = { imagePickerLauncher.launch(arrayOf("image/*")) },
-//            onPickVideo = { videoPickerLauncher.launch(arrayOf("video/*")) }
-//        )
         UploadBox(
             mediaItems = mediaItems,
             canAddPhotos = mediaItems.count { !it.isVideo } < 10,
@@ -2467,10 +2114,7 @@ fun PP_Seventh_Form(
             }
         )
 
-
         Spacer(Modifier.height(16.dp))
-
-        println("Heer crash find -- ${mediaItems}")
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -2504,7 +2148,7 @@ fun PP_Seventh_Form(
                         else {
                             getVideoThumbnailString(context , media.uploadedUrl?:"")
                         }
-                        // if you have a blocking thumbnail function, better to call in LaunchedEffect and store elsewhere
+
                     }
                     VideoItem(
                         index = index,
@@ -2526,7 +2170,6 @@ fun PP_Seventh_Form(
         SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.CenterHorizontally))
     }
 
-    // bottom sheet heading selection (api driven)
     if (headingDropDown.value) {
 
         if (headingItems.isEmpty()) {
@@ -2535,31 +2178,29 @@ fun PP_Seventh_Form(
                 { apiResultHandling ->
                     when (apiResultHandling) {
                         is API_Result_Handling.Loading -> {
-                            //constants.Common_H_ViewModel.changeStatus(true)
 
-                            //resultCallback(2)
                             apiState.value = 0
                         }
 
                         is API_Result_Handling.NoData -> {
-                            //constants.Common_H_ViewModel.changeStatus(false)
+
                             apiState.value = 3
                         }
 
                         is API_Result_Handling.Error -> {
-                            // constants.Common_H_ViewModel.changeStatus(false)
+
                             apiState.value = 2
-                            // resultCallback(1)
+
                         }
 
                         is API_Result_Handling.Success -> {
-                            //constants.Common_H_ViewModel.changeStatus(false)
+
                             apiState.value = 1
-                            // resultCallback(0)
+
                         }
 
                         is API_Result_Handling.Deactivated -> {
-                            // resultCallback(5)
+
                             apiState.value = 4
                         }
                     }
@@ -2587,47 +2228,9 @@ fun PP_Seventh_Form(
                 }
 
                 1 -> {
-                  /*  Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                        , horizontalAlignment = Alignment.Start
-                        , verticalArrangement = Arrangement.spacedBy(8.dp)
-                    )
-                    {
-
-                        headingItems.forEach { item ->
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-
-                                Text(item.title, fontSize = constants.textUnit(16))
-
-                                RadioButton(
-                                    selected = selectedMediaId?.let { id ->
-                                        constants.PostProperty_ViewModel.mediaList.value
-                                            .find { it.id == id }?.heading == item.title
-                                    } ?: false,
-                                    onClick = {
-                                        selectedMediaId?.let { id ->
-                                            constants.PostProperty_ViewModel.updateHeading(id, item.title)
-                                        }
-                                        headingDropDown.value = false
-                                    }
-                                )
-                            }
-
-
-                            constants.spacer(8)
-                        }
-
-                    }*/
 
                     val headings = if (headingItems.isEmpty()) {
-                        // fallback to local defaults if api not loaded yet
+
                         listOf("Kitchen", "Bedroom", "Floor Plan", "Balcony", "Building", "Bathroom", " Entrance" , "Property Layout" )
                     } else headingItems.map { it.title }
 
@@ -2659,7 +2262,7 @@ fun PP_Seventh_Form(
                     constants.spacer(8)
                 }
                 2 -> {
-                    /// error
+
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -2669,7 +2272,7 @@ fun PP_Seventh_Form(
                     }
                 }
                 3 -> {
-                    // empty
+
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -2683,15 +2286,12 @@ fun PP_Seventh_Form(
     }
 
     if (onHover.value) {
-       // val mediaItems by constants.PostProperty_ViewModel.mediaList.collectAsState()
 
         UserMediaPreview(mediaList = mediaItems, onClose = {
             onHover.value = false
         })
     }
 }
-
-
 
 @Composable
 fun VideoItem(
@@ -2714,7 +2314,7 @@ fun VideoItem(
             .size(172.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.LightGray)) {
-           // val imageModel = media.uploadedUrl ?: media.localUri
+
             AsyncImage(
                 model = thumbnail,
                 contentDescription = null,
@@ -2726,7 +2326,6 @@ fun VideoItem(
                 contentScale = ContentScale.Crop
             )
 
-            // Show video icon overlay
             Icon(painter = painterResource(id = R.drawable.play_arrow), contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -2788,7 +2387,6 @@ fun VideoItem(
     }
 }
 
-
 @Composable
 fun PhotoItem(
     index: Int,
@@ -2823,7 +2421,7 @@ fun PhotoItem(
             )
 
             if (media.isUploading) {
-                // overlay progress
+
                 Box(
                     Modifier
                         .matchParentSize()
@@ -2885,8 +2483,6 @@ fun PhotoItem(
     }
 }
 
-
-
 @Composable
 fun UserMediaPreview(
     mediaList: List<UploadPropertyMedia>,
@@ -2898,7 +2494,6 @@ fun UserMediaPreview(
     val pagerState = rememberPagerState(pageCount = { mediaList.size })
     val listState = rememberLazyListState()
 
-    // Map of ExoPlayers
     val playerMap = remember(mediaList) {
         mediaList.mapIndexedNotNull { index, media ->
             if (media.isVideo) {
@@ -2940,7 +2535,6 @@ fun UserMediaPreview(
             )
         }
 
-        // Main HorizontalPager
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -2957,7 +2551,6 @@ fun UserMediaPreview(
                     val exoPlayer = playerMap[page]!!
                     PlayerSurface(player = exoPlayer, modifier = Modifier.fillMaxSize())
 
-                    // Play/pause overlay
                     var isPlaying by remember { mutableStateOf(false) }
                     LaunchedEffect(pagerState.currentPage) {
                         playerMap.forEach { (idx, player) ->
@@ -2996,11 +2589,8 @@ fun UserMediaPreview(
             }
         }
 
-//        Spacer(modifier = Modifier.height(8.dp))
-
         constants.spacer(16)
 
-        // Indicator
         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
             repeat(mediaList.size) { index ->
                 Box(
@@ -3013,11 +2603,8 @@ fun UserMediaPreview(
             }
         }
 
-//        Spacer(modifier = Modifier.height(8.dp))
-
         constants.spacer(16)
 
-        // Thumbnails LazyRow
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
@@ -3062,7 +2649,6 @@ fun UserMediaPreview(
         }
     }
 
-    // Scroll thumbnail LazyRow to center current page
     LaunchedEffect(pagerState.currentPage) {
         playerMap.forEach { (idx, player) ->
             if (idx == pagerState.currentPage) {
@@ -3071,16 +2657,13 @@ fun UserMediaPreview(
             } else {
                 player.playWhenReady = false
                 player.pause()
-                player.seekTo(0) // reset to start
+                player.seekTo(0)
             }
         }
 
-        // Scroll thumbnail LazyRow
         listState.animateScrollToItem(pagerState.currentPage)
     }
 
-
-    // Release players
     DisposableEffect(Unit) {
         onDispose {
             playerMap.values.forEach { it.release() }
@@ -3092,21 +2675,14 @@ fun UserMediaPreview(
     }
 }
 
-
-
-
-
-
 @Composable
 fun PP_Fourth_Form(apiError: MutableState<Boolean>) {
 
     println("TYPE CHANGE -Threee- ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.first} -- ${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.second} -##$$#$-" +
             "--- ${constants.PostProperty_ViewModel.get_Land_Type()} --- ${constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id()} --- ${constants.PostProperty_ViewModel.get_LandSubType_Selected_Click()}")
 
-
     val field_Data = constants.PostProperty_ViewModel.postFormCommon.collectAsStateWithLifecycle()
-   // val field_Data_Com = constants.PostProperty_ViewModel.pp_form_Commercial_Fields.collectAsStateWithLifecycle()
-   // val field_Data_Agri = constants.PostProperty_ViewModel.pp_form_Agriculture_Fields.collectAsStateWithLifecycle()
+
     val api_Type = constants.PostProperty_ViewModel.selected_Land_Type_PF2.collectAsStateWithLifecycle()
     val errors = constants.PostProperty_ViewModel.errors4.collectAsState()
     val selectedLandCatId = constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id()
@@ -3118,15 +2694,12 @@ fun PP_Fourth_Form(apiError: MutableState<Boolean>) {
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(selectedLandCatId) {
-        println("FOURTH FORM--- $selectedLandCatId, API Type: ${api_Type.value} -${apiError}- ${state}")
     }
 
-    // Main API call effect
     LaunchedEffect(api_Type.value, selectedLandCatId, retry) {
         if (selectedLandCatId != -1 && !apiCallMade.value) {
             apiCallMade.value = true
             state.value = 0
-            println("Starting API call for type: ${api_Type.value}, landCatId: $selectedLandCatId")
 
             when (api_Type.value) {
                 1 -> {
@@ -3136,24 +2709,19 @@ fun PP_Fourth_Form(apiError: MutableState<Boolean>) {
                         when (apiResultHandling) {
                             is API_Result_Handling.Loading -> {
                                 state.value = 0
-                                println("Residential API: Loading")
                             }
                             is API_Result_Handling.Deactivated -> {
-                                println("Residential API: Deactivated")
                             }
                             is API_Result_Handling.Error -> {
                                 state.value = 1
                                 apiCallMade.value = false
-                                println("Residential API: Error")
                             }
                             is API_Result_Handling.Success -> {
                                 state.value = 2
-                                println("Residential API: Success, Fields: ${field_Data.value}")
                             }
                             is API_Result_Handling.NoData -> {
                                 state.value = 1
                                 apiCallMade.value = false
-                                println("Residential API: No Data")
                             }
                         }
                     }
@@ -3165,24 +2733,19 @@ fun PP_Fourth_Form(apiError: MutableState<Boolean>) {
                         when (apiResultHandling) {
                             is API_Result_Handling.Loading -> {
                                 state.value = 0
-                                println("Commercial API: Loading")
                             }
                             is API_Result_Handling.Deactivated -> {
-                                println("Commercial API: Deactivated")
                             }
                             is API_Result_Handling.Error -> {
                                 state.value = 1
                                 apiCallMade.value = false
-                                println("Commercial API: Error")
                             }
                             is API_Result_Handling.Success -> {
                                 state.value = 2
-                                println("Commercial API: Success, Fields: ${field_Data.value}")
                             }
                             is API_Result_Handling.NoData -> {
                                 state.value = 1
                                 apiCallMade.value = false
-                                println("Commercial API: No Data")
                             }
                         }
                     }
@@ -3194,24 +2757,19 @@ fun PP_Fourth_Form(apiError: MutableState<Boolean>) {
                         when (apiResultHandling) {
                             is API_Result_Handling.Loading -> {
                                 state.value = 0
-                                println("Agriculture API: Loading")
                             }
                             is API_Result_Handling.Deactivated -> {
-                                println("Agriculture API: Deactivated")
                             }
                             is API_Result_Handling.Error -> {
                                 state.value = 1
                                 apiCallMade.value = false
-                                println("Agriculture API: Error")
                             }
                             is API_Result_Handling.Success -> {
                                 state.value = 2
-                                println("Agriculture API: Success, Fields: ${field_Data.value}")
                             }
                             is API_Result_Handling.NoData -> {
                                 state.value = 1
                                 apiCallMade.value = false
-                                println("Agriculture API: No Data")
                             }
                         }
                     }
@@ -3220,7 +2778,6 @@ fun PP_Fourth_Form(apiError: MutableState<Boolean>) {
         }
     }
 
-    // Update active fields when data changes
     LaunchedEffect(field_Data.value) {
         next_Active_Fields.clear()
         next_Active_Fields5.clear()
@@ -3231,7 +2788,6 @@ fun PP_Fourth_Form(apiError: MutableState<Boolean>) {
                 next_Active_Fields.addAll(constants.PostProperty_ViewModel.getActiveFieldsResidential4(field_Data.value))
                 next_Active_Fields5.addAll(constants.PostProperty_ViewModel.getActiveFieldsResidential5(field_Data.value?.step_5?.firstOrNull()))
                 next_Active_Fields6.addAll(constants.PostProperty_ViewModel.getActiveFieldsResidential6(field_Data.value?.step_6?.firstOrNull()))
-                println("Residential Fields Active: ${next_Active_Fields.size}")
             }
             2 -> {
 
@@ -3239,15 +2795,12 @@ fun PP_Fourth_Form(apiError: MutableState<Boolean>) {
                 next_Active_Fields5.addAll(constants.PostProperty_ViewModel.getActiveFieldsCommercial5(field_Data.value?.step_5?.firstOrNull()))
                 next_Active_Fields6.addAll(constants.PostProperty_ViewModel.getActiveFieldsCommercial6(field_Data.value?.step_6?.firstOrNull()))
 
-                println("Commercial Fields Active: ${next_Active_Fields.size} -- ${next_Active_Fields5}")
             }
             3 -> {
                 next_Active_Fields.addAll(constants.PostProperty_ViewModel.getActiveFieldsAgriculture4(field_Data.value))
                 next_Active_Fields5.addAll(constants.PostProperty_ViewModel.getActiveFieldsAgriculture5(field_Data.value?.step_5?.firstOrNull()))
                 next_Active_Fields6.addAll(constants.PostProperty_ViewModel.getActiveFieldsAgriculture6(field_Data.value?.step_6?.firstOrNull()))
 
-//                next_Active_Fields.addAll(constants.PostProperty_ViewModel.getActiveFieldsAgriculture4(field_Data.value))
-                println("Agriculture Fields Active: ${next_Active_Fields.size}")
             }
         }
     }
@@ -3327,56 +2880,38 @@ fun PP_Fourth_Form(apiError: MutableState<Boolean>) {
                 item {
                     when (api_Type.value) {
                         1 -> {
-//                            next_Active_Fields.addAll(constants.PostProperty_ViewModel.getActiveFieldsResidential(field_Data.value))
-                            println("Residential Fields Active: ${next_Active_Fields.size}")
+
                             Form4_Residential_Content(field_Data, errors)
                         }
                         2 -> {
-//                            next_Active_Fields.addAll(constants.PostProperty_ViewModel.getActiveFieldsCommercial(field_Data.value))
-                            println("Commercial Fields Active: ${next_Active_Fields.size}")
+
                             Form4_Commercial_Content(field_Data, errors)
                         }
                         3 -> {
-//                            next_Active_Fields.addAll(constants.PostProperty_ViewModel.getActiveFieldsAgriculture(field_Data.value))
-                            println("Agriculture Fields Active: ${next_Active_Fields.size}")
+
                             Form4_Agriculture_Content(field_Data, errors)
                         }
                     }
                 }
 
-//                item {
-//                    Form4_Residential_Content(field_Data, errors)
-//                }
-//
-//                item {
-//                    Form4_Commercial_Content(field_Data, errors)
-//                }
-//
-//                item {
-//                    Form4_Agriculture_Content(field_Data, errors)
-//                }
             }
         }
     }
 }
 
-
-
 @Composable
 fun Form4_Residential_Content(
-//    field_Data: State<PostProperty_Stepfour_Residential_Data?>,
+
     field_Data: State<PostFormCommonPropertyData?>,
     errors: State<Map<Int, Boolean>>
 ) {
 
-    println("FORM $4 --- ${field_Data.value}")
     Column() {
         if(field_Data.value?.Property_Name?.isNotEmpty() == true){
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Property_Name(is_Error = errors.value[0] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
 
         if (field_Data.value?.Select_Floor_Plane?.first()?.isNotEmpty() == true){
             val floorPlans: List<Chips_Items_DC> = field_Data.value?.Select_Floor_Plane
@@ -3387,21 +2922,15 @@ fun Form4_Residential_Content(
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
-
         if(field_Data.value?.Carpet_Area?.isNotEmpty() == true){
             PP_Carpet_Built_SuperBuilt_Area(isError = errors.value[2] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
-
         if(field_Data.value?.Area_Dimensions?.isNotEmpty() == true){
             PP_Area_Dimensions()
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
 
         if(field_Data.value?.Property_Facing?.first()?.isNotEmpty() == true){
 
@@ -3413,13 +2942,10 @@ fun Form4_Residential_Content(
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
-
         if(field_Data.value?.Floor_Details?.isNotEmpty() == true){
             PP_Floor_Details(isError = errors.value[4] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
 
         if(field_Data.value?.Preferred_Tenants?.isNotEmpty() == true){
 
@@ -3431,7 +2957,6 @@ fun Form4_Residential_Content(
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
         if(field_Data.value?.Available_From?.isNotEmpty() == true){
             PP_Available_From( isError = errors.value[5] == true)
             Spacer(modifier = Modifier.padding(8.dp))
@@ -3440,27 +2965,18 @@ fun Form4_Residential_Content(
     }
 }
 
-
-
 @Composable
 fun Form4_Commercial_Content(
-//    field_Data_Com: State<Post_Property_Stepfour_Commercial_Data?>
+
     field_Data_Com: State<PostFormCommonPropertyData?>
     , errors: State<Map<Int, Boolean>>)
 {
 
-
-
-
-
     if(field_Data_Com.value?.Property_Name?.isNotEmpty() == true){
-//        val errors = constants.PostProperty_ViewModel.errors.collectAsState()
 
         PP_Property_Name(is_Error = errors.value[0] == true)
         Spacer(modifier = Modifier.padding(8.dp))
     }
-
-
 
     if(field_Data_Com.value?.Carpet_Area?.isNotEmpty() == true){
 
@@ -3468,14 +2984,11 @@ fun Form4_Commercial_Content(
         Spacer(modifier = Modifier.padding(8.dp))
     }
 
-
     if(field_Data_Com.value?.Shop_Facade?.firstOrNull()?.Facade_Width?.isNotEmpty() == true && field_Data_Com.value?.Shop_Facade?.firstOrNull()?.Facade_Height?.isNotEmpty() == true){
 
         PP_Shop_facade(isError = errors.value[6] == true)
         Spacer(modifier = Modifier.padding(8.dp))
     }
-
-
 
     if(field_Data_Com.value?.Property_Facing?.first()?.isNotEmpty() == true){
 
@@ -3487,64 +3000,29 @@ fun Form4_Commercial_Content(
         Spacer(modifier = Modifier.padding(8.dp))
     }
 
-
-
     if(field_Data_Com.value?.Floor_Details?.isNotEmpty() == true){
         PP_Floor_Details(isError = errors.value[4] == true)
         Spacer(modifier = Modifier.padding(8.dp))
     }
-
-
 
     if(field_Data_Com.value?.Available_From?.isNotEmpty() == true){
         PP_Available_From(isError =  errors.value[5] == true)
         Spacer(modifier = Modifier.padding(8.dp))
     }
 
-
-
-//    if(field_Data_Com.value?.property_ownership?.first()?.isNotEmpty() == true){
-//
-//        val propertyOwnership: List<Chips_Items_DC> = field_Data_Com.value?.property_ownership
-//            ?.map { Chips_Items_DC(title = it) }
-//            ?: emptyList()
-//
-//        PP_Property_Ownership(data = propertyOwnership, isError = errors.value[7] == true)
-//        Spacer(modifier = Modifier.padding(8.dp))
-//    }
-
-
-
-//    if(field_Data_Com.value?.availability_status?.first()?.isNotEmpty() == true){
-//
-//        val availabilityStatus: List<Chips_Items_DC> = field_Data_Com.value?.availability_status
-//            ?.map { Chips_Items_DC(title = it) }
-//            ?: emptyList()
-//
-//        PP_Availability_Status(data = availabilityStatus, isError = errors.value[8] == true)
-//        Spacer(modifier = Modifier.padding(8.dp))
-//    }
-
-
 }
-
-
 
 @Composable
 fun Form4_Agriculture_Content(
-//    field_Data_Agri: State<Post_Property_Stepfour_Agriculture_Data?>
+
     field_Data_Agri: State<PostFormCommonPropertyData?>
     ,errors: State<Map<Int, Boolean>>)  {
 
-
     if(field_Data_Agri.value?.Property_Name?.isNotEmpty() == true){
-
 
         PP_Property_Name(is_Error = errors.value[0] == true)
         Spacer(modifier = Modifier.padding(8.dp))
     }
-
-
 
     if(field_Data_Agri.value?.Property_Area?.isNotEmpty() == true){
 
@@ -3552,35 +3030,17 @@ fun Form4_Agriculture_Content(
         Spacer(modifier = Modifier.padding(8.dp))
     }
 
-
-
-//    if(field_Data_Agri.value?.Select_Floor_Plane?.first()?.isNotEmpty() == true){
-//
-//        val select_floor_plane: List<Chips_Items_DC> = field_Data_Agri.value?.Select_Floor_Plane
-//            ?.map { Chips_Items_DC(title = it) }
-//            ?: emptyList()
-//
-//
-//        PP_Select_Floor_Plan(data = select_floor_plane, isError = errors.value[2] == true)
-//        Spacer(modifier = Modifier.padding(8.dp))
-//    }
-
-
     if(field_Data_Agri.value?.Carpet_Area?.isNotEmpty() == true){
 
         PP_Carpet_Built_SuperBuilt_Area(isError =  errors.value[2] == true)
         Spacer(modifier = Modifier.padding(8.dp))
     }
 
-
-
     if(field_Data_Agri.value?.Area_Dimensions?.isNotEmpty() == true){
 
         PP_Area_Dimensions()
         Spacer(modifier = Modifier.padding(8.dp))
     }
-
-
 
     if(field_Data_Agri.value?.Property_Facing?.first()?.isNotEmpty() == true){
 
@@ -3591,8 +3051,6 @@ fun Form4_Agriculture_Content(
         PP_Property_Facing(data = property_facing, isError = errors.value[3] == true)
         Spacer(modifier = Modifier.padding(8.dp))
     }
-
-
 
     if(field_Data_Agri.value?.Floor_Details?.isNotEmpty() == true){
 
@@ -3605,45 +3063,15 @@ fun Form4_Agriculture_Content(
         Spacer(modifier = Modifier.padding(8.dp))
     }
 
-
-//    if(field_Data_Agri.value?.property_ownership?.first()?.isNotEmpty() == true){
-//
-//        val property_ownership: List<Chips_Items_DC> = field_Data_Agri.value?.property_ownership
-//            ?.map { Chips_Items_DC(title = it) }
-//            ?: emptyList()
-//
-//        PP_Property_Ownership(data = property_ownership, isError = errors.value[7] == true)
-//        Spacer(modifier = Modifier.padding(8.dp))
-//    }
-
-
-//    if(field_Data_Agri.value?.availability_status?.first()?.isNotEmpty() == true){
-//
-//        val availability_status: List<Chips_Items_DC> = field_Data_Agri.value?.availability_status
-//            ?.map { Chips_Items_DC(title = it) }
-//            ?: emptyList()
-//
-//        PP_Availability_Status(data = availability_status, isError = errors.value[8] == true)
-//        Spacer(modifier = Modifier.padding(8.dp))
-//    }
-
-
 }
-
-
 
 @Composable
 fun PP_Fifth_Form() {
 
-
-
-
-    //// FORM flow
     val postFlow = constants.PostProperty_ViewModel.postFlow.collectAsState()
 
     val field_Data = constants.PostProperty_ViewModel.postFormCommon.collectAsStateWithLifecycle()
-    // val field_Data_Com = constants.PostProperty_ViewModel.pp_form_Commercial_Fields.collectAsStateWithLifecycle()
-    // val field_Data_Agri = constants.PostProperty_ViewModel.pp_form_Agriculture_Fields.collectAsStateWithLifecycle()
+
     val api_Type = constants.PostProperty_ViewModel.selected_Land_Type_PF2.collectAsStateWithLifecycle()
     val errors = constants.PostProperty_ViewModel.errors4.collectAsState()
     val selectedLandCatId = constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id()
@@ -3654,18 +3082,14 @@ fun PP_Fifth_Form() {
     var retry by remember { mutableStateOf(0) }
     val scope = rememberCoroutineScope()
 
-
     if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.DRAFT || postFlow.value == PostFlow.REQUESTMEDIA) {
         LaunchedEffect(selectedLandCatId) {
-            println("FOURTH FORM--- $selectedLandCatId, API Type: ${api_Type.value} -$- ${state}")
         }
 
-        // Main API call effect
         LaunchedEffect(api_Type.value, selectedLandCatId, retry) {
             if (selectedLandCatId != -1 && !apiCallMade.value) {
                 apiCallMade.value = true
                 state.value = 0
-                println("Starting API call for type: ${api_Type.value}, landCatId: $selectedLandCatId")
 
                 when (api_Type.value) {
                     1 -> {
@@ -3675,28 +3099,23 @@ fun PP_Fifth_Form() {
                             when (apiResultHandling) {
                                 is API_Result_Handling.Loading -> {
                                     state.value = 0
-                                    println("Residential API: Loading")
                                 }
 
                                 is API_Result_Handling.Deactivated -> {
-                                    println("Residential API: Deactivated")
                                 }
 
                                 is API_Result_Handling.Error -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Residential API: Error")
                                 }
 
                                 is API_Result_Handling.Success -> {
                                     state.value = 2
-                                    println("Residential API: Success, Fields: ${field_Data.value}")
                                 }
 
                                 is API_Result_Handling.NoData -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Residential API: No Data")
                                 }
                             }
                         }
@@ -3709,28 +3128,23 @@ fun PP_Fifth_Form() {
                             when (apiResultHandling) {
                                 is API_Result_Handling.Loading -> {
                                     state.value = 0
-                                    println("Commercial API: Loading")
                                 }
 
                                 is API_Result_Handling.Deactivated -> {
-                                    println("Commercial API: Deactivated")
                                 }
 
                                 is API_Result_Handling.Error -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Commercial API: Error")
                                 }
 
                                 is API_Result_Handling.Success -> {
                                     state.value = 2
-                                    println("Commercial API: Success, Fields: ${field_Data.value}")
                                 }
 
                                 is API_Result_Handling.NoData -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Commercial API: No Data")
                                 }
                             }
                         }
@@ -3743,28 +3157,23 @@ fun PP_Fifth_Form() {
                             when (apiResultHandling) {
                                 is API_Result_Handling.Loading -> {
                                     state.value = 0
-                                    println("Agriculture API: Loading")
                                 }
 
                                 is API_Result_Handling.Deactivated -> {
-                                    println("Agriculture API: Deactivated")
                                 }
 
                                 is API_Result_Handling.Error -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Agriculture API: Error")
                                 }
 
                                 is API_Result_Handling.Success -> {
                                     state.value = 2
-                                    println("Agriculture API: Success, Fields: ${field_Data.value}")
                                 }
 
                                 is API_Result_Handling.NoData -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Agriculture API: No Data")
                                 }
                             }
                         }
@@ -3773,7 +3182,6 @@ fun PP_Fifth_Form() {
             }
         }
 
-        // Update active fields when data changes
         LaunchedEffect(field_Data.value) {
             next_Active_Fields.clear()
             next_Active_Fields5.clear()
@@ -3796,7 +3204,6 @@ fun PP_Fifth_Form() {
                             field_Data.value?.step_6?.firstOrNull()
                         )
                     )
-                    println("Residential Fields Active: ${next_Active_Fields.size}")
                 }
 
                 2 -> {
@@ -3817,7 +3224,6 @@ fun PP_Fifth_Form() {
                         )
                     )
 
-                    println("Commercial Fields Active: ${next_Active_Fields.size} -- ${next_Active_Fields5}")
                 }
 
                 3 -> {
@@ -3837,33 +3243,17 @@ fun PP_Fifth_Form() {
                         )
                     )
 
-//                next_Active_Fields.addAll(constants.PostProperty_ViewModel.getActiveFieldsAgriculture4(field_Data.value))
-                    println("Agriculture Fields Active: ${next_Active_Fields.size}")
                 }
             }
         }
 
     }
 
-
-
-
-
-//
-//    val api_Type = constants.PostProperty_ViewModel.selected_Land_Type_PF2.collectAsStateWithLifecycle()
-//
-//
-//    val field_Data = constants.PostProperty_ViewModel.postFormCommon.collectAsStateWithLifecycle()
-//
-//    val errors = constants.PostProperty_ViewModel.errors5.collectAsState()
-
-    println("FIELD DATA COMING -- ${field_Data.value}")
-
     when {
         state.value == 0 -> CircularProgressIndicator()
 
         state.value == 1 -> {
-          //  apiError.value = true
+
             Box (
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -3875,7 +3265,6 @@ fun PP_Fifth_Form() {
             }
         }
 
-
         state.value == 2 -> {
             LazyColumn()
             {
@@ -3883,13 +3272,13 @@ fun PP_Fifth_Form() {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                        // .background(newLightGray)
+
                         , horizontalAlignment = Alignment.Start
                     )
                     {
                         Row(
                             modifier = Modifier
-                                // .align(Alignment.Start)
+
                                 .wrapContentSize()
                                 .clip(RoundedCornerShape(4.dp))
                                 .background(Color(0XFFF4F4F4))
@@ -3925,7 +3314,6 @@ fun PP_Fifth_Form() {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-
                     when(api_Type.value){
                         1 -> {
                             Form5_Residential_Content(field_Data ,errors )
@@ -3938,527 +3326,59 @@ fun PP_Fifth_Form() {
                         }
                     }
 
-                    //residential
-//                    if (field_Data.value?.step5?.first()?.no_of_Bathrooms?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val no_of_bedrooms: List<Chips_Items_DC> =
-//                            field_Data.value?.optional?.first()?.no_of_bedrooms
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_No_Of_Bedrooms(no_of_bedrooms)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-
-//
-//
-////                    if (field_Data.value?.step5?.first()?.no?.first()
-////                            ?.isNotEmpty() == true
-////                    ) {
-////                        val no_of_open_sides: List<Chips_Items_DC> =
-////                            field_Data.value?.optional?.first()?.no_of_open_sides
-////                                ?.map { Chips_Items_DC(title = it) }
-////                                ?: emptyList()
-////
-////                        PP_Land_Open_Sides(no_of_open_sides)
-////                        Spacer(modifier = Modifier.padding(8.dp))
-////                    }
-//
-//
-////                    if (field_Data.value?.optional?.first()?.is?.isNotEmpty() == true) {
-////
-////                        PP_Has_Boundary_Wall()
-////                        Spacer(modifier = Modifier.padding(8.dp))
-////                    }
-//
-//
-//                    //// Commercial
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.no_of_cabins?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val no_of_cabins: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.no_of_cabins
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_No_of_Cabins(no_of_cabins)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.no_of_meeting_rooms?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val no_of_meeting_rooms: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.no_of_meeting_rooms
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_No_of_Meeting_rooms(no_of_meeting_rooms)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.min_no_of_seats?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val min_no_of_seats: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.min_no_of_seats
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Min_No_of_Seats(min_no_of_seats)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.max_no_of_seats?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val max_no_of_seats: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.max_no_of_seats
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Max_No_of_Seats(max_no_of_seats)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.conference_room?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val conference_room: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.conference_room
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Conference_Room(conference_room)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.no_of_staircases?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val no_of_staircases: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.no_of_staircases
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_No_of_Staircases(no_of_staircases)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.reception_area?.first()
-//                            ?.isNullOrEmpty() == false
-//                    ) {
-//                        val reception_area: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.reception_area
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Reception_Area(reception_area)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.pantry?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val pantry: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.pantry
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Pantry(pantry)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.pantry_size?.isNotEmpty() == true) {
-//
-//                        PP_Pantry_Size()
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.central_ac?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val central_ac: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.central_ac
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Central_AC(central_ac)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.oxygen_duct?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val oxygen_duct: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.oxygen_duct
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Oxygen_Duct(oxygen_duct)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.ups?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val ups: List<Chips_Items_DC> = field_Data_Com.value?.optional?.first()?.ups
-//                            ?.map { Chips_Items_DC(title = it) }
-//                            ?: emptyList()
-//
-//                        PP_UPS(ups)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.furnishing_status?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val furnishing_status: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.furnishing_status
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Furnishing_Status(furnishing_status)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.fire_safety_measures?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val fire_safety_measures: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.fire_safety_measures
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Fire_Safety_Measures(fire_safety_measures)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.lifts?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val lifts: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.lifts
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Lifts(lifts)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.parking_available?.isNotEmpty() == true) {
-//
-//                        PP_Parking_Available()
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-////                    if (field_Data_Com.value?.optional?.first()?.is_it_Pre_leased_pre_rented?.isNotEmpty() == true) {
-////
-////                        PP_Is_Pre_leased_Pre_Rented()
-////                        Spacer(modifier = Modifier.padding(8.dp))
-////                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.is_your_office_fire_noc_certified?.isNotEmpty() == true) {
-//
-//                        PP_Is_your_office_fire_NOC_Certified()
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.occupancy_certificate?.isNotEmpty() == true) {
-//
-//                        PP_Occupancy_Certificate()
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-////                    if (field_Data_Com.value?.optional?.first()?.office_previously_used_for?.first()
-////                            ?.isNotEmpty() == true
-////                    ) {
-////                        val office_previously_used_for: List<Chips_Items_DC> =
-////                            field_Data_Com.value?.optional?.first()?.office_previously_used_for
-////                                ?.map { Chips_Items_DC(title = it) }
-////                                ?: emptyList()
-////
-////                        PP_Office_Previously_Used_for(office_previously_used_for)
-////                        Spacer(modifier = Modifier.padding(8.dp))
-////                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.amenities?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val amenities: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.amenities
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Amenities(amenities)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.property_highlights?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val property_highlights: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.property_highlights
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Property_Highlights(property_highlights)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Com.value?.optional?.first()?.washroom_details?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val washroom_details: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.washroom_details
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Washroom_Details(washroom_details)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.suitable_business_type?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val suitable_business_type: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.suitable_business_type
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Suitable_Business_Type(suitable_business_type)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Com.value?.optional?.first()?.which_authority_the_property_is_approved_by?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val which_authority_the_property_is_approved_by: List<Chips_Items_DC> =
-//                            field_Data_Com.value?.optional?.first()?.which_authority_the_property_is_approved_by
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_authority_property_Approved(which_authority_the_property_is_approved_by)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    ///// agriculture
-//
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.no_of_bedrooms?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val no_of_bedrooms: List<Chips_Items_DC> =
-//                            field_Data_Agri.value?.optional?.first()?.no_of_bedrooms
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_No_Of_Bedrooms(no_of_bedrooms)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.no_of_bathrooms?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val no_of_bathrooms: List<Chips_Items_DC> =
-//                            field_Data_Agri.value?.optional?.first()?.no_of_bathrooms
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_No_Of_Bathrooms(no_of_bathrooms)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.no_of_balconies?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val no_of_balconies: List<Chips_Items_DC> =
-//                            field_Data_Agri.value?.optional?.first()?.no_of_balconies
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_No_Of_Balconies(no_of_balconies)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.other_rooms?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val other_rooms: List<Chips_Items_DC> =
-//                            field_Data_Agri.value?.optional?.first()?.other_rooms
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Other_Rooms(other_rooms)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.furnishing_status?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val furnishing_status: List<Chips_Items_DC> =
-//                            field_Data_Agri.value?.optional?.first()?.furnishing_status
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Furnishing_Status(furnishing_status)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.parking_available?.isNotEmpty() == true) {
-//
-//
-//                        PP_Parking_Available()
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.amenities?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val amenities: List<Chips_Items_DC> =
-//                            field_Data_Agri.value?.optional?.first()?.amenities
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Amenities(amenities)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.property_highlights?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val property_highlights: List<Chips_Items_DC> =
-//                            field_Data_Agri.value?.optional?.first()?.property_highlights
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Property_Highlights(property_highlights)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.does_your_property_authority_approved?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val does_your_property_authority_approved: List<Chips_Items_DC> =
-//                            field_Data_Agri.value?.optional?.first()?.does_your_property_authority_approved
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_authority_property_Approved(does_your_property_authority_approved)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.no_of_open_sides?.first()
-//                            ?.isNotEmpty() == true
-//                    ) {
-//                        val no_of_open_sides: List<Chips_Items_DC> =
-//                            field_Data_Agri.value?.optional?.first()?.no_of_open_sides
-//                                ?.map { Chips_Items_DC(title = it) }
-//                                ?: emptyList()
-//
-//                        PP_Land_Open_Sides(no_of_open_sides)
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-//                    if (field_Data_Agri.value?.optional?.first()?.is_boundary_wall_around_property?.isNotEmpty() == true) {
-//
-//
-//                        PP_Has_Boundary_Wall()
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//                    }
-//
-
                 }
             }
         }
     }
 }
 
-
 @Composable
 fun Form5_Residential_Content(
-//    field_Data: State<PostProperty_Stepfour_Residential_Data?>,
+
     field_Data: State<PostFormCommonPropertyData?>,
     errors: State<Map<Int, Boolean>>
 ) {
     Column() {
 
-        /// Agreement Type
         if(field_Data.value?.step_5?.firstOrNull()?.Agreement_Type?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data.value?.step_5?.firstOrNull()?.Agreement_Type
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_AgreementType(agreementType , isError = errors.value[0] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
-        /// no of bathrooms
         if(field_Data.value?.step_5?.firstOrNull()?.No_of_Bathrooms?.isNotEmpty() == true){
 
             val data: List<Chips_Items_DC> = field_Data.value?.step_5?.firstOrNull()?.No_of_Bathrooms
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_No_Of_Bathrooms(data , isError = errors.value[1] == true )
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
-        /// no of balconies
         if(field_Data.value?.step_5?.firstOrNull()?.No_of_Balconies?.isNotEmpty() == true){
 
             val data: List<Chips_Items_DC> = field_Data.value?.step_5?.firstOrNull()?.No_of_Balconies
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_No_Of_Balconies(data, isError = errors.value[2] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        /// food prefrence
 
         if(field_Data.value?.step_5?.firstOrNull()?.Food_Preferences?.isNotEmpty() == true){
 
             val data: List<Chips_Items_DC> = field_Data.value?.step_5?.firstOrNull()?.Food_Preferences
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_FoodPreference(data, isError = errors.value[3] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        /// pets allowed
 
         if(field_Data.value?.step_5?.firstOrNull()?.Pets_Allowed?.isNotEmpty() == true){
 
@@ -4466,73 +3386,58 @@ fun Form5_Residential_Content(
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
-        /// parking available
-
-        println("fieldata form 5 --- ${field_Data.value?.step_5}")
         if(field_Data.value?.step_5?.firstOrNull()?.Parking_Available?.isNotEmpty() == true){
 
             PP_Parking_available( isError = errors.value[6] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
-        /// other rooms
-
         if(field_Data.value?.step_5?.firstOrNull()?.Other_Rooms?.isNotEmpty() == true){
 
             val data: List<Chips_Items_DC> = field_Data.value?.step_5?.firstOrNull()?.Other_Rooms
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Other_Rooms(data)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        /// furnishing status
 
         if(field_Data.value?.step_5?.firstOrNull()?.Furnishing_Status?.isNotEmpty() == true){
 
             val data: List<Chips_Items_DC> = field_Data.value?.step_5?.firstOrNull()?.Furnishing_Status
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Furnishing_Status(data, isError = errors.value[5] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        /// amenities
 
         if(field_Data.value?.step_5?.firstOrNull()?.Amenities?.isNotEmpty() == true){
 
             val data: List<Chips_Items_DC> = field_Data.value?.step_5?.firstOrNull()?.Amenities
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Amenities(data, isError = errors.value[7] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        /// property highlishts
 
         if(field_Data.value?.step_5?.firstOrNull()?.Property_Highlights?.isNotEmpty() == true){
 
             val data: List<Chips_Items_DC> = field_Data.value?.step_5?.firstOrNull()?.Property_Highlights
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Property_Highlights(data)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        /// reception area
 
         if(field_Data.value?.step_5?.firstOrNull()?.Reception_Area?.firstOrNull()?.isNotEmpty() == true){
 
             val data: List<Chips_Items_DC> = field_Data.value?.step_5?.firstOrNull()?.Reception_Area
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Reception_Area(data)
             Spacer(modifier = Modifier.padding(8.dp))
         }
@@ -4540,291 +3445,227 @@ fun Form5_Residential_Content(
     }
 }
 
-
 @Composable
 fun Form5_Commercial_Content123(
     field_Data_Com: State<PostFormCommonPropertyData?>
     ,errors: State<Map<Int, Boolean>>)
 {
 
-
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsStateWithLifecycle()
 
-
-
     Column {
-
-//         property condition
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Property_Condition ?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Property_Condition
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Property_Condition(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
-//         no of baths
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Bathrooms?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Bathrooms
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_No_Of_Bathrooms(agreementType , isError = errors.value[1] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-//         no of staircases
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Staircases?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Staircases
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_No_of_Staircases(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
         if ( flowData.value?.property_condition == "Ready to Use"){
 
-//         conference room
-
             if(field_Data_Com.value?.step_5?.firstOrNull()?.Conference_Room?.isNotEmpty() == true){
 
                 val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Conference_Room
                     ?.map { Chips_Items_DC(title = it) }
                     ?: emptyList()
-                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                 PP_Conference_Room(agreementType)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
-
-
-//         max no of seats
 
             if(field_Data_Com.value?.step_5?.firstOrNull()?.Max_No_of_Seats?.isNotEmpty() == true){
 
                 val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Max_No_of_Seats
                     ?.map { Chips_Items_DC(title = it) }
                     ?: emptyList()
-                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                 PP_Max_No_of_Seats(agreementType)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
-
-
-//         min no of seats
 
             if(field_Data_Com.value?.step_5?.firstOrNull()?.Min_No_of_Seats?.isNotEmpty() == true){
 
                 val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Min_No_of_Seats
                     ?.map { Chips_Items_DC(title = it) }
                     ?: emptyList()
-                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                 PP_Min_No_of_Seats(agreementType)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
-
-//         no of meeting rooms
 
             if(field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Meeting_Rooms?.isNotEmpty() == true){
 
                 val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Meeting_Rooms
                     ?.map { Chips_Items_DC(title = it) }
                     ?: emptyList()
-                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                 PP_No_of_Meeting_rooms(agreementType)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
-
-//         no of cabins
 
             if(field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Cabins?.isNotEmpty() == true){
 
                 val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Cabins
                     ?.map { Chips_Items_DC(title = it) }
                     ?: emptyList()
-                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                 PP_No_of_Cabins(agreementType)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
 
         }
 
-
-//         reception area
-
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Reception_Area?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Reception_Area
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Reception_Area(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-//         pantry
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Pantry?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Pantry
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Pantry(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
-//         pantry size
-
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Pantry_Size?.isNotEmpty() == true){
 
-
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
             PP_Pantry_Size()
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
-//        central ac
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Central_AC?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Central_AC
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Central_AC(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-//        oxygen duct
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Oxygen_Duct?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Oxygen_Duct
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Oxygen_Duct(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-//        ups
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.UPS?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.UPS
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_UPS(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
-//        lifts
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Lifts?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Lifts
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Lifts(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
-//        fire safety measures
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Fire_Safety_Measures?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Fire_Safety_Measures
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Fire_Safety_Measures(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
-//        furnishing status
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Furnishing_Status?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Furnishing_Status
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Furnishing_Status(agreementType , isError = errors.value[5] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-
-//        noc certified
-
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Is_your_office_fire_NOC_Certified?.isNotEmpty() == true){
 
-
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
             PP_Is_your_office_fire_NOC_Certified()
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-//        occupancy certified
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Occupancy_Certificate?.isNotEmpty() == true){
 
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
             PP_Occupancy_Certificate()
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-//        amentities
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Amenities?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Amenities
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Amenities(agreementType ,isError = errors.value[7] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-//        property highlights
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Property_Highlights?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Property_Highlights
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Property_Highlights(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-//        suitable bisuness type
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Suitable_Business_Type?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Suitable_Business_Type
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Suitable_Business_Type(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
 
     }
 }
@@ -4837,7 +3678,6 @@ fun Form5_Commercial_Content(
 
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsStateWithLifecycle()
 
-    // ✅ KEY FIX: Remember each list separately to prevent shared state
     val propertyConditionList = remember(field_Data_Com.value?.step_5?.firstOrNull()?.Property_Condition) {
         field_Data_Com.value?.step_5?.firstOrNull()?.Property_Condition
             ?.map { Chips_Items_DC(title = it) }
@@ -4849,7 +3689,6 @@ fun Form5_Commercial_Content(
             ?.map { Chips_Items_DC(title = it) }
             ?: emptyList()
     }
-
 
     val staircasesList = remember(field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Staircases) {
         field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Staircases
@@ -4955,19 +3794,16 @@ fun Form5_Commercial_Content(
 
     Column {
 
-        // property condition
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Property_Condition?.isNotEmpty() == true) {
             PP_Property_Condition(propertyConditionList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // no of baths
         if (field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Bathrooms?.isNotEmpty() == true) {
             PP_No_Of_Bathrooms(bathroomsList, isError = errors.value[1] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // no of staircases
         if (field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Staircases?.isNotEmpty() == true) {
             PP_No_of_Staircases(staircasesList)
             Spacer(modifier = Modifier.padding(8.dp))
@@ -4975,129 +3811,108 @@ fun Form5_Commercial_Content(
 
         if (flowData.value?.property_condition == "Ready to Use") {
 
-            // conference room
             if (field_Data_Com.value?.step_5?.firstOrNull()?.Conference_Room?.isNotEmpty() == true) {
                 PP_Conference_Room(conferenceRoomList)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
 
-            // max no of seats
             if (field_Data_Com.value?.step_5?.firstOrNull()?.Max_No_of_Seats?.isNotEmpty() == true) {
                 PP_Max_No_of_Seats(maxSeatsList)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
 
-            // min no of seats
             if (field_Data_Com.value?.step_5?.firstOrNull()?.Min_No_of_Seats?.isNotEmpty() == true) {
                 PP_Min_No_of_Seats(minSeatsList)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
 
-            // no of meeting rooms
             if (field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Meeting_Rooms?.isNotEmpty() == true) {
                 PP_No_of_Meeting_rooms(meetingRoomsList)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
 
-            // no of cabins
             if (field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Cabins?.isNotEmpty() == true) {
                 PP_No_of_Cabins(cabinsList)
                 Spacer(modifier = Modifier.padding(8.dp))
             }
         }
 
-        // reception area
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Reception_Area?.isNotEmpty() == true) {
             PP_Reception_Area(receptionAreaList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // pantry
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Pantry?.isNotEmpty() == true) {
             PP_Pantry(pantryList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // pantry size
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Pantry_Size?.isNotEmpty() == true) {
             PP_Pantry_Size()
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // central ac
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Central_AC?.isNotEmpty() == true) {
             PP_Central_AC(centralACList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // oxygen duct
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Oxygen_Duct?.isNotEmpty() == true) {
             PP_Oxygen_Duct(oxygenDuctList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // ups
         if (field_Data_Com.value?.step_5?.firstOrNull()?.UPS?.isNotEmpty() == true) {
             PP_UPS(upsList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // lifts
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Lifts?.isNotEmpty() == true) {
             PP_Lifts(liftsList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // fire safety measures
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Fire_Safety_Measures?.isNotEmpty() == true) {
             PP_Fire_Safety_Measures(fireSafetyList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // furnishing status
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Furnishing_Status?.isNotEmpty() == true) {
             PP_Furnishing_Status(furnishingStatusList, isError = errors.value[5] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // parking available status
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Parking_Available?.isNotEmpty() == true) {
             PP_Parking_available( isError = errors.value[5] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // noc certified
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Is_your_office_fire_NOC_Certified?.isNotEmpty() == true) {
             PP_Is_your_office_fire_NOC_Certified()
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // occupancy certified
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Occupancy_Certificate?.isNotEmpty() == true) {
             PP_Occupancy_Certificate()
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // amenities
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Amenities?.isNotEmpty() == true) {
             PP_Amenities(amenitiesList, isError = errors.value[7] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // property highlights
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Property_Highlights?.isNotEmpty() == true) {
             PP_Property_Highlights(propertyHighlightsList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // suitable business type
         if (field_Data_Com.value?.step_5?.firstOrNull()?.Suitable_Business_Type?.firstOrNull()?.isNotEmpty() == true) {
             PP_Suitable_Business_Type(suitableBusinessList)
             Spacer(modifier = Modifier.padding(8.dp))
         }
     }
 }
-
 
 @Composable
 fun Form5_Agriculture_Content(
@@ -5106,112 +3921,88 @@ fun Form5_Agriculture_Content(
 ){
     Column {
 
-        // property condition
-
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Agreement_Type?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Agreement_Type
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_AgreementType(agreementType , isError = errors.value[0] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
-
-        // no of baths
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Bathrooms?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Bathrooms
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_No_Of_Bathrooms(agreementType , errors.value[1] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
-        // no of bedroom
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Bedrooms?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Bedrooms
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_No_Of_Bedrooms(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        // no of balconies
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Balconies?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.No_of_Balconies
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_No_Of_Balconies(agreementType , isError = errors.value[2] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
 
-        // pets allowed
-
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Pets_Allowed?.isNotEmpty() == true){
 
-
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
             PP_PetsAllowed(isError = errors.value[4] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-
-        // other rooms
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Agreement_Type?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Agreement_Type
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Other_Rooms(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        // furnishing status
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Furnishing_Status?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Furnishing_Status
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Furnishing_Status(agreementType , isError = errors.value[5] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        // amenities
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Amenities?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Amenities
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Amenities(agreementType , isError = errors.value[7] == true)
             Spacer(modifier = Modifier.padding(8.dp))
         }
-
-        // property highloights
 
         if(field_Data_Com.value?.step_5?.firstOrNull()?.Property_Highlights?.isNotEmpty() == true){
 
             val agreementType: List<Chips_Items_DC> = field_Data_Com.value?.step_5?.firstOrNull()?.Property_Highlights
                 ?.map { Chips_Items_DC(title = it) }
                 ?: emptyList()
-            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
             PP_Property_Highlights(agreementType)
             Spacer(modifier = Modifier.padding(8.dp))
         }
@@ -5219,17 +4010,14 @@ fun Form5_Agriculture_Content(
     }
 }
 
-
 @Composable
 fun Form6_Common(
 ) {
 
-    //// FORM flow
     val postFlow = constants.PostProperty_ViewModel.postFlow.collectAsState()
 
     val field_Data = constants.PostProperty_ViewModel.postFormCommon.collectAsStateWithLifecycle()
-    // val field_Data_Com = constants.PostProperty_ViewModel.pp_form_Commercial_Fields.collectAsStateWithLifecycle()
-    // val field_Data_Agri = constants.PostProperty_ViewModel.pp_form_Agriculture_Fields.collectAsStateWithLifecycle()
+
     val api_Type = constants.PostProperty_ViewModel.selected_Land_Type_PF2.collectAsStateWithLifecycle()
     val errors = constants.PostProperty_ViewModel.errors6.collectAsState()
     val selectedLandCatId = constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id()
@@ -5240,18 +4028,14 @@ fun Form6_Common(
     var retry by remember { mutableStateOf(0) }
     val scope = rememberCoroutineScope()
 
-
     if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.DRAFT) {
         LaunchedEffect(selectedLandCatId) {
-            println("FOURTH FORM--- $selectedLandCatId, API Type: ${api_Type.value} -$- ${state}")
         }
 
-        // Main API call effect
         LaunchedEffect(api_Type.value, selectedLandCatId, retry) {
             if (selectedLandCatId != -1 && !apiCallMade.value) {
                 apiCallMade.value = true
                 state.value = 0
-                println("Starting API call for type: ${api_Type.value}, landCatId: $selectedLandCatId")
 
                 when (api_Type.value) {
                     1 -> {
@@ -5261,28 +4045,23 @@ fun Form6_Common(
                             when (apiResultHandling) {
                                 is API_Result_Handling.Loading -> {
                                     state.value = 0
-                                    println("Residential API: Loading")
                                 }
 
                                 is API_Result_Handling.Deactivated -> {
-                                    println("Residential API: Deactivated")
                                 }
 
                                 is API_Result_Handling.Error -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Residential API: Error")
                                 }
 
                                 is API_Result_Handling.Success -> {
                                     state.value = 2
-                                    println("Residential API: Success, Fields: ${field_Data.value}")
                                 }
 
                                 is API_Result_Handling.NoData -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Residential API: No Data")
                                 }
                             }
                         }
@@ -5295,28 +4074,23 @@ fun Form6_Common(
                             when (apiResultHandling) {
                                 is API_Result_Handling.Loading -> {
                                     state.value = 0
-                                    println("Commercial API: Loading")
                                 }
 
                                 is API_Result_Handling.Deactivated -> {
-                                    println("Commercial API: Deactivated")
                                 }
 
                                 is API_Result_Handling.Error -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Commercial API: Error")
                                 }
 
                                 is API_Result_Handling.Success -> {
                                     state.value = 2
-                                    println("Commercial API: Success, Fields: ${field_Data.value}")
                                 }
 
                                 is API_Result_Handling.NoData -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Commercial API: No Data")
                                 }
                             }
                         }
@@ -5329,28 +4103,23 @@ fun Form6_Common(
                             when (apiResultHandling) {
                                 is API_Result_Handling.Loading -> {
                                     state.value = 0
-                                    println("Agriculture API: Loading")
                                 }
 
                                 is API_Result_Handling.Deactivated -> {
-                                    println("Agriculture API: Deactivated")
                                 }
 
                                 is API_Result_Handling.Error -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Agriculture API: Error")
                                 }
 
                                 is API_Result_Handling.Success -> {
                                     state.value = 2
-                                    println("Agriculture API: Success, Fields: ${field_Data.value}")
                                 }
 
                                 is API_Result_Handling.NoData -> {
                                     state.value = 1
                                     apiCallMade.value = false
-                                    println("Agriculture API: No Data")
                                 }
                             }
                         }
@@ -5359,7 +4128,6 @@ fun Form6_Common(
             }
         }
 
-        // Update active fields when data changes
         LaunchedEffect(field_Data.value) {
             next_Active_Fields.clear()
             next_Active_Fields5.clear()
@@ -5382,7 +4150,6 @@ fun Form6_Common(
                             field_Data.value?.step_6?.firstOrNull()
                         )
                     )
-                    println("Residential Fields Active: ${next_Active_Fields.size}")
                 }
 
                 2 -> {
@@ -5403,7 +4170,6 @@ fun Form6_Common(
                         )
                     )
 
-                    println("Commercial Fields Active: ${next_Active_Fields.size} -- ${next_Active_Fields5}")
                 }
 
                 3 -> {
@@ -5423,38 +4189,19 @@ fun Form6_Common(
                         )
                     )
 
-//                next_Active_Fields.addAll(constants.PostProperty_ViewModel.getActiveFieldsAgriculture4(field_Data.value))
-                    println("Agriculture Fields Active: ${next_Active_Fields.size}")
                 }
             }
         }
 
     }
 
-
-//    val field_Data = constants.PostProperty_ViewModel.postFormCommon.collectAsStateWithLifecycle()
-//
-//    val errors = constants.PostProperty_ViewModel.errors6.collectAsState()
-
-
-//    val field_Data = when (api_Type.value) {
-//        1 -> constants.PostProperty_ViewModel.pp_form_Residential_Fields.collectAsStateWithLifecycle().value
-//        2 -> constants.PostProperty_ViewModel.pp_form_Commercial_Fields.collectAsStateWithLifecycle().value
-//        else -> constants.PostProperty_ViewModel.pp_form_Agriculture_Fields.collectAsStateWithLifecycle().value
-//    }
-
-
-
-
     val flowData = constants.PostProperty_ViewModel.selected_Options_Form4.collectAsStateWithLifecycle()
-
-
 
     when {
         state.value == 0 -> CircularProgressIndicator()
 
         state.value == 1 -> {
-            //  apiError.value = true
+
             Box (
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -5465,7 +4212,6 @@ fun Form6_Common(
                 })
             }
         }
-
 
         state.value == 2 -> {
             LazyColumn (
@@ -5518,27 +4264,18 @@ fun Form6_Common(
                 item {
                     Column() {
 
-
-                        /// is rent or lease
                         if (field_Data.value?.step_6?.firstOrNull()?.Is_this_property_for_rent_or_Lease?.isNotEmpty() == true) {
 
                             val agreementType: List<Chips_Items_DC> = field_Data.value?.step_6?.firstOrNull()?.Is_this_property_for_rent_or_Lease
                                 ?.map { Chips_Items_DC(title = it) }
                                 ?: emptyList()
-                            //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                             PP_Is_this_property_for_Rent_or_Lease(agreementType)
                             Spacer(modifier = Modifier.padding(8.dp))
                         }
 
-                        println("is RENt or Lease -- ${flowData.value?.property_for_rent_or_lease}")
-
                         if (flowData.value?.property_for_rent_or_lease?.isEmpty() == true || flowData.value?.property_for_rent_or_lease == "Rent")
                         {
-                            /// if rent
-
-
-
-                            //// rent
 
                             if (field_Data.value?.step_6?.firstOrNull()?.Rent?.firstOrNull()?.Rent?.isNotEmpty() == true) {
 
@@ -5546,21 +4283,16 @@ fun Form6_Common(
                                 Spacer(modifier = Modifier.padding(8.dp))
                             }
 
-
-                            //// DepositAmount
-
                             if (field_Data.value?.step_6?.firstOrNull()?.Rent?.firstOrNull()?.Deposit_Amount_month_of_rents?.isNotEmpty() == true) {
 
                                 val data: List<Chips_Items_DC> =
                                     field_Data.value?.step_6?.firstOrNull()?.Rent?.firstOrNull()?.Deposit_Amount_month_of_rents
                                         ?.map { Chips_Items_DC(title = it) }
                                         ?: emptyList()
-                                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                                 PP_DepositAmount(data)
                                 Spacer(modifier = Modifier.padding(8.dp))
                             }
-
-                            //// duration of agreement
 
                             if (field_Data.value?.step_6?.firstOrNull()?.Rent?.firstOrNull()?.Duration_of_Agreement?.isNotEmpty() == true) {
 
@@ -5568,13 +4300,10 @@ fun Form6_Common(
                                     field_Data.value?.step_6?.firstOrNull()?.Rent?.firstOrNull()?.Duration_of_Agreement
                                         ?.map { Chips_Items_DC(title = it) }
                                         ?: emptyList()
-                                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                                 PP_Duration_of_Agreement(data)
                                 Spacer(modifier = Modifier.padding(8.dp))
                             }
-
-
-                            //// lock in period
 
                             if (field_Data.value?.step_6?.firstOrNull()?.Rent?.firstOrNull()?.Lock_in_Period?.isNotEmpty() == true) {
 
@@ -5582,13 +4311,10 @@ fun Form6_Common(
                                     field_Data.value?.step_6?.firstOrNull()?.Rent?.firstOrNull()?.Lock_in_Period
                                         ?.map { Chips_Items_DC(title = it) }
                                         ?: emptyList()
-                                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                                 PP_Lock_in_Period(data)
                                 Spacer(modifier = Modifier.padding(8.dp))
                             }
-
-
-                            //// notice period
 
                             if (field_Data.value?.step_6?.firstOrNull()?.Rent?.firstOrNull()?.Notice_Period?.firstOrNull()?.isNotEmpty() == true) {
 
@@ -5596,18 +4322,13 @@ fun Form6_Common(
                                     field_Data.value?.step_6?.firstOrNull()?.Rent?.firstOrNull()?.Notice_Period
                                         ?.map { Chips_Items_DC(title = it) }
                                         ?: emptyList()
-                                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                                 PP_Notice_Period(data)
                                 Spacer(modifier = Modifier.padding(8.dp))
                             }
 
                         }
                         else {
-
-
-                            ////  if lease
-
-                            // lease duratoin
 
                             if (field_Data.value?.step_6?.firstOrNull()?.Lease?.firstOrNull()?.Lease_Duration_in_Years?.isNotEmpty() == true) {
 
@@ -5616,13 +4337,11 @@ fun Form6_Common(
                                         ?.dropLast(1)
                                         ?.map { Chips_Items_DC(title = it) }
                                         ?: emptyList()
-                                //val errors = constants.PostProperty_ViewModel.errors.collectAsState()
+
                                 PP_Lease_Duration(data , isError = errors.value[2] == true)
 
                                 Spacer(modifier = Modifier.padding(8.dp))
                             }
-
-                            // lease amount
 
                             if (field_Data.value?.step_6?.firstOrNull()?.Lease?.firstOrNull()?.Lease_Duration_in_Years?.isNotEmpty() == true) {
 
@@ -5640,18 +4359,14 @@ fun Form6_Common(
     }
 }
 
-
-
 @Composable
 fun PreviewScreen(navController: NavHostController) {
-
 
     val previewdata by constants.PostProperty_ViewModel.previewForm.collectAsState()
 
    var postFlow = constants.PostProperty_ViewModel.postFlow.collectAsState()
 
     val context = LocalContext.current
-
 
     var scope = rememberCoroutineScope()
 
@@ -5687,7 +4402,6 @@ fun PreviewScreen(navController: NavHostController) {
 
         }
 
-
         constants.spacer(8)
 
         LazyColumn(
@@ -5698,7 +4412,7 @@ fun PreviewScreen(navController: NavHostController) {
             , verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                /// video , images animate part
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -5716,8 +4430,6 @@ fun PreviewScreen(navController: NavHostController) {
                             prepare()
                             playWhenReady = true
                         } }
-
-
 
                         PlayerSurface(
                             player = player,
@@ -5755,11 +4467,9 @@ fun PreviewScreen(navController: NavHostController) {
                 }
                 }
 
-
             }
 
             item {
-                /// main details part
 
                 Box(
                     modifier = Modifier
@@ -5817,9 +4527,6 @@ fun PreviewScreen(navController: NavHostController) {
 
                                 constants.spacer(8)
 
-//                                CommonText(
-//                                    "posted Need ago", Color(0xff969696), 12, 3
-//                                )
                             }
                         }
                         , supportingContent = {
@@ -5926,15 +4633,6 @@ fun PreviewScreen(navController: NavHostController) {
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                 ) {
-                    ///sub details part
-
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .weight(5f)
-//                            .background(Color.Blue)
-//                        , contentAlignment = Alignment.Center
-//                    ){
 
                     previewdata?.let {
                         Property_Preview_Table(it)
@@ -5948,12 +4646,9 @@ fun PreviewScreen(navController: NavHostController) {
 
                     constants.spacer(16)
 
-
-//                    }
                 }
             }
         }
-
 
         Column() {
             HorizontalDivider()
@@ -6010,7 +4705,6 @@ fun PreviewScreen(navController: NavHostController) {
                         RoundedCornerShape(4.dp)
                     )
                     .noRippleClickable {
-                        println("POST FLOW -- ${postFlow.value}")
                         scope.launch {
                         if (postFlow.value == PostFlow.DRAFT) {
 
@@ -6026,7 +4720,6 @@ fun PreviewScreen(navController: NavHostController) {
                                     navController = navController,
                                     "1",
                                     onComplete = {
-                                        println("On COmplete Draft model preview 1")
                                         get_Form_Publish_API_CALL { result ->
                                             when (result) {
                                                 0 -> {}
@@ -6046,7 +4739,6 @@ fun PreviewScreen(navController: NavHostController) {
                                                     )
 
                                                     constants.PostProperty_ViewModel.clear_Selected_Fields_Form4()
-
 
                                                     constants.URL_COMPLETED.clear()
                                                     constants.PostProperty_ViewModel.clear_Media()
@@ -6109,28 +4801,23 @@ fun PreviewScreen(navController: NavHostController) {
 
         }
 
-
-
     }
 }
-
 
 @Composable
 fun AnimatedImageSlider(
     imageList: List<Image>,
     modifier: Modifier = Modifier,
-    durationMillis: Int = 3000,      // animation speed
-    delayMillis: Long = 2000L        // time before next slide
+    durationMillis: Int = 3000,
+    delayMillis: Long = 2000L
 ) {
     var currentIndex by remember { mutableStateOf(0) }
 
-    // Infinite auto-slide
     LaunchedEffect(currentIndex) {
         delay(delayMillis)
         currentIndex = (currentIndex + 1) % imageList.size
     }
 
-    // Animated transition
     val transition = updateTransition(targetState = currentIndex, label = "imageTransition")
 
     val alpha by transition.animateFloat(
@@ -6139,11 +4826,11 @@ fun AnimatedImageSlider(
 
     val scale by transition.animateFloat(
         transitionSpec = { tween(durationMillis) }, label = "scale"
-    ) { 1.05f } // small zoom
+    ) { 1.05f }
 
     val rotation by transition.animateFloat(
         transitionSpec = { tween(durationMillis) }, label = "rotation"
-    ) { 1.5f } // slight rotation
+    ) { 1.5f }
 
     Box(
         modifier = modifier
@@ -6168,13 +4855,12 @@ fun AnimatedImageSlider(
     }
 }
 
-
 fun mapPropertyFieldsRento2(
     property: FormPreviewRento,
     ignoreFields: Set<String> = emptySet()
 ): List<Pair<String, String>> {
     return FormPreviewRento::class.memberProperties
-        .filterNot { it.name in ignoreFields } // skip ignored fields
+        .filterNot { it.name in ignoreFields }
         .mapNotNull { prop ->
             val value = prop.get(property)
             when (value) {
@@ -6202,7 +4888,6 @@ fun mapPropertyFieldsRento(
         }
     }
 
-    // ---------- AREA DIMENSION ----------
     if (
         !ignoreFields.contains("area_length") &&
         !ignoreFields.contains("area_width")
@@ -6220,7 +4905,6 @@ fun mapPropertyFieldsRento(
         }
     }
 
-    // ---------- FACADE DIMENSION ----------
     if (
         !ignoreFields.contains("facade_height") &&
         !ignoreFields.contains("facade_width")
@@ -6238,13 +4922,10 @@ fun mapPropertyFieldsRento(
         }
     }
 
-    // ---------- FLOOR PLAN ----------
     add("Floor Plan", property.bhk_type)
 
-    // ---------- PROPERTY TYPE ----------
     add("Property Type", property.is_this_property_for_rent_or_lease)
 
-    // ---------- AREA FIELDS WITH UNITS ----------
     property.carpet_area?.takeIf { it.isNotBlank() }?.let {
         add("Carpet Area", "$it ${property.carpet_area_unit}")
     }
@@ -6257,7 +4938,6 @@ fun mapPropertyFieldsRento(
         add("Super Built-up Area", "$it ${property.super_built_up_area_unit}")
     }
 
-    // ---------- GENERIC FALLBACK (REFLECTION) ----------
     FormPreviewRento::class.memberProperties
         .filterNot {
             it.name in ignoreFields ||
@@ -6312,7 +4992,6 @@ fun mapPropertyFieldsRento(
     return result
 }
 
-
 @Composable
 fun Property_Preview_Table(property: FormPreviewRento) {
 
@@ -6330,7 +5009,7 @@ fun Property_Preview_Table(property: FormPreviewRento) {
         "property_highlights", "fire_safety_measures",
         "pincode","draft","facade_height_unit", "landTypeText","landCategoryText",
         "is_sold"
-        //"area_length_unit" ,"area_width_unit"
+
         ,"built_up_area_unit"
         ,"carpet_area_unit"
         ,"deposit_amount_month_of_rents_type",
@@ -6339,12 +5018,8 @@ fun Property_Preview_Table(property: FormPreviewRento) {
         "post_type","property_area_unit","rent_negotiable"
         ,"super_built_up_area_unit" ,"images","video","status","U_ID", "address" ,
 
-        //"agreement_type",
-        //   "area_length" ,
-        //  "area_width",
-        // "bhk_type",
         "food_preferences"
-        // "is_this_property_for_rent_or_lease"
+
         ,"notice_period",
         "pets_allowed",
         "preferred_tenants",
@@ -6354,17 +5029,14 @@ fun Property_Preview_Table(property: FormPreviewRento) {
         "account_status",
         "is_sold"
 
-        // "lease_duration_in_years"
-
     )
     val fields = mapPropertyFieldsRento(property, ignoreFields)
-
 
     Column(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            // .padding(horizontal = 16.dp)
+
             .clip(RoundedCornerShape(8.dp))
             .border(1.dp, Color(0xffE8E8E8), RoundedCornerShape(8.dp))
             .background(newWhite)
@@ -6420,13 +5092,9 @@ fun Property_Preview_Table(property: FormPreviewRento) {
     }
 }
 
-
-
 @Composable
 fun Property_Preview_FlowRow_Rento(property: FormPreviewRento) {
-    println("DATA COMING -- ${property}")
 
-    // Define sections with their data
     val sections = listOf(
         Section(
             title = "Washroom Details",
@@ -6440,10 +5108,7 @@ fun Property_Preview_FlowRow_Rento(property: FormPreviewRento) {
             title = "Other Rooms",
             items = property.other_rooms?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
         ),
-//        Section(
-//            title = "Office Previously Used for",
-//            items = property.office_previously_used_for?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-//        ),
+
         Section(
             title = "Fire Safety Measures",
             items = property.fire_safety_measures?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
@@ -6461,7 +5126,7 @@ fun Property_Preview_FlowRow_Rento(property: FormPreviewRento) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-        //.padding(16.dp)
+
         ,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -6476,7 +5141,6 @@ fun Property_Preview_FlowRow_Rento(property: FormPreviewRento) {
     }
 }
 
-
 @Composable
 fun PropertySection_Rento(
     title: String,
@@ -6486,7 +5150,7 @@ fun PropertySection_Rento(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Section Title
+
         Text(
             text = title,
             color = Color.Black,
@@ -6494,7 +5158,6 @@ fun PropertySection_Rento(
             fontFamily = constants.fontFamily(1)
         )
 
-        // Tags in FlowRow
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -6519,827 +5182,3 @@ fun PropertySection_Rento(
         }
     }
 }
-
-
-
-
-
-
-
-
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun PP_Seventh_Formold(onHover: MutableState<Boolean> , hoveredMedia: MutableState<UploadPropertyMedia?>)  {
-//
-//    val context = LocalContext.current
-//
-//    val snackbarHostState = remember { SnackbarHostState() }
-//    val coroutineScope = rememberCoroutineScope()
-//
-//    val mediaItems by constants.PostProperty_ViewModel.mediaList.collectAsState()
-//
-//    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-//
-//
-//    println("MEDIAITEMSS lIST DAATA CHERCK -- ${mediaItems}")
-//
-//    val imagePickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.OpenMultipleDocuments()
-//    ) { uris: List<Uri> ->
-//        URL_COMPLETED.clear()
-//        handleSelectedImages(context, uris , snackbarHostState , coroutineScope)
-//    }
-//
-//    val videoPickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.OpenDocument()
-//    ) { uri: Uri? ->
-//        uri?.let {
-//            URL_COMPLETED.clear()
-//            handleSelectedVideo(context, it , snackbarHostState , coroutineScope)
-//        }
-//    }
-//
-//
-//
-//    var headingDropDown = remember { mutableStateOf(false) }
-//
-//
-//    var apiState = remember { mutableStateOf(0) }
-//
-//
-//    val headingItems = constants.PostProperty_ViewModel.headingItems.collectAsState()
-//
-//    val selectedHeading = constants.PostProperty_ViewModel.getSelectedHeading()
-//
-//
-//    var selectedTab by remember { mutableStateOf(0) }
-//
-//    val imageItems = mediaItems.filter { !it.isVideo }
-//
-//    val videoItems = mediaItems.filter { it.isVideo }
-//
-//
-//
-//
-//
-//
-//    Box {
-//        Column {
-//            Row(
-//                modifier = Modifier
-//                    .align(Alignment.Start)
-//                    .wrapContentSize()
-//                    .clip(RoundedCornerShape(4.dp))
-//                    .background(Color(0XFFF4F4F4))
-//                    .padding(horizontal = 8.dp, vertical = 4.dp),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.Start
-//            )
-//            {
-//                Text(
-//                    "Step 7",
-//                    color = newBlue,
-//                    fontSize = constants.textUnit(12),
-//                    fontFamily = constants.fontFamily(0)
-//                )
-//                Text(
-//                    "/7",
-//                    color = Color(0xff666666),
-//                    fontSize = constants.textUnit(12),
-//                    fontFamily = constants.fontFamily(0)
-//                )
-//            }
-//
-//            Spacer(modifier = Modifier.padding(4.dp))
-//
-//            Text(
-//                "Add photos / videos of property",
-//                color = newBlack,
-//                fontSize = constants.textUnit(24),
-//                fontFamily = constants.fontFamily(0),
-//                modifier = Modifier
-//                    .align(Alignment.Start)
-//            )
-//
-//
-//            Text(
-//                buildAnnotatedString {
-//                    withStyle(style = SpanStyle(color = newBlack)) {
-//                        append("Upload Video / Photos ")
-//                    }
-//                    withStyle(style = SpanStyle(color = Color.Red)) {
-//                        append("* ")
-//                    }
-//                    withStyle(style = SpanStyle(color = Color(0xff666666))) {
-//                        append("(minimum 5 photos)")
-//                    }
-//                },
-//                fontSize = constants.textUnit(16),
-//                fontFamily = constants.fontFamily(1),
-//            )
-//
-//            constants.spacer(2)
-//
-//
-//            Text(
-//                "upload video max of 10mb and photo max of 2mb. Supported formats mp4, png, jpeg .",
-//                color = Color(0xff666666),
-//                fontSize = constants.textUnit(12),
-//                fontFamily = constants.fontFamily(2),
-//                modifier = Modifier
-//                    .align(Alignment.Start)
-//            )
-//
-//            constants.spacer(2)
-//
-//
-//            val hasVideo = mediaItems.any { it.isVideo }
-//            val hasPhotos = mediaItems.any { !it.isVideo }
-//            val maxImagesReached = mediaItems.count { !it.isVideo } >= 10
-//
-//
-//            Spacer(modifier = Modifier.padding(8.dp))
-//
-//            constants.spacer(2)
-//
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .fillMaxHeight(.4f)
-//                    .dashedBorder(
-//                        strokeWidth = 2.dp,
-//                        dashLength = 10.dp,
-//                        gapLength = 5.dp,
-//                        color = newBlue,
-//                        cornerRadius = 16.dp
-//                    ), contentAlignment = Alignment.Center
-//            )
-//            {
-//                Column(
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                )
-//                {
-//                    SubcomposeAsyncImage(
-//                        model = R.drawable.upload_button, "",
-//                        modifier = Modifier
-//                            .size(if (forTab())48.dp else 38.dp)
-//                    )
-//                    Spacer(modifier = Modifier.padding(8.dp))
-//                    Row {
-//                        // Upload Photo Button
-//                        Box(
-//                            modifier = Modifier
-//                                .height(if (forTab())48.dp else 32.dp)
-//                                .width(if (forTab()) 128.dp else 104.dp)
-//                                .clip(RoundedCornerShape(4.dp))
-//                                .background(Color.White)
-//                                .noRippleClickable{
-//
-//                                    if (!hasVideo && !maxImagesReached)
-//                                        imagePickerLauncher.launch(arrayOf("image/*"))
-//                                    else if (hasVideo)
-//                                        coroutineScope.launch {
-//                                            snackbarHostState.showSnackbar("Please remove the uploaded video to add photos")
-//                                        }
-//                                    else
-//                                        coroutineScope.launch {
-//                                            snackbarHostState.showSnackbar("Maximum 10 images can be uploaded")
-//                                        }
-//                                }
-//                                .border(
-//                                    1.dp,
-//                                    if (hasVideo || maxImagesReached) newGray else newBlue,
-//                                    RoundedCornerShape(4.dp)
-//                                ),
-//                            contentAlignment = Alignment.Center
-//                        ) {
-//                            Text(
-//                                "Upload Photo",
-//                                color = if (hasVideo || maxImagesReached) Color.Gray else newBlue,
-//                                fontSize = constants.textUnit(14),
-//                                fontFamily = constants.fontFamily(2)
-//                            )
-//                        }
-//
-//                        Spacer(modifier = Modifier.padding(8.dp))
-//
-//                        // Upload Video Button
-//                        Box(
-//                            modifier = Modifier
-//                                .height(if (forTab())48.dp else 32.dp)
-//                                .width(if (forTab()) 128.dp else 104.dp)
-//                                .clip(RoundedCornerShape(4.dp))
-//                                .background(if (hasPhotos || hasVideo) Color(0xFFE0E0E0) else newBlue)
-//                                .noRippleClickable{
-//
-//                                    if (!hasPhotos && !hasVideo)
-//                                        videoPickerLauncher.launch(arrayOf("video/*"))
-//                                    else if (hasPhotos)
-//                                        coroutineScope.launch {
-//                                            snackbarHostState.showSnackbar("Please remove the uploaded photos to add video")
-//                                        }
-//                                    else
-//                                        coroutineScope.launch {
-//                                            snackbarHostState.showSnackbar("Maximum 1 video can be uploaded")
-//                                        }
-//
-//                                },
-//                            contentAlignment = Alignment.Center
-//                        ) {
-//                            Text(
-//                                "Upload Video",
-//                                color = if (hasPhotos) Color.Gray else Color.White,
-//                                fontSize = constants.textUnit(14),
-//                                fontFamily = constants.fontFamily(2)
-//                            )
-//                        }
-//                    }
-//
-//                }
-//            }
-//
-//
-//            Spacer(modifier = Modifier.padding(16.dp))
-//
-//
-//            TabRow(
-//                selectedTabIndex = selectedTab,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-//                Tab(
-//                    selected = selectedTab == 0,
-//                    onClick = { selectedTab = 0 },
-//                    text = { Text("Images (${imageItems.size})") }
-//                )
-//                Tab(
-//                    selected = selectedTab == 1,
-//                    onClick = { selectedTab = 1 },
-//                    text = { Text("Videos (${videoItems.size})") }
-//                )
-//            }
-//
-//            val defaultHeadings = listOf(
-//                "Exterior",
-//                "Living Room",
-//                "Bedroom",
-//                "Kitchen",
-//                "Bathroom",
-//                "Balcony",
-//                "Floor Plan"
-//            )
-//
-//
-//            val itemsToShow = if (selectedTab == 0) imageItems else videoItems
-//
-//            val coverId by constants.PostProperty_ViewModel.coverPhotoId.collectAsState()
-//
-//
-//            LazyVerticalGrid(
-//                columns = GridCells.Fixed(3),
-//                verticalArrangement = Arrangement.spacedBy(8.dp),
-//                horizontalArrangement = Arrangement.spacedBy(8.dp)
-//            ) {
-//                items(itemsToShow.size) { index ->
-//                    val media = itemsToShow[index]
-//                    val heading = defaultHeadings[index % defaultHeadings.size]
-//
-//                    if (selectedTab == 0) {
-//                        PhotoItem(
-//                            media = media,
-//                            isCover = coverId == media.uri.toString(),
-//                            onCoverSelect = {
-//                                constants.PostProperty_ViewModel.setCoverPhoto(media.uri.toString())
-//                            },
-//                            onClick = {}
-//                        )
-//                    } else {
-//                        VideoItem(
-//                            media = media,
-//                            heading = heading,
-//                            headingDropDown = headingDropDown,
-//                            onClick = {
-//                                hoveredMedia.value = media
-//                                onHover.value = true
-//                            }
-//                        )
-//                    }
-//                }
-//            }
-//
-//
-//
-//
-//            /*  LazyRow(
-//                  modifier = Modifier.fillMaxWidth(),
-//                  horizontalArrangement = Arrangement.spacedBy(8.dp)
-//              )
-//              {
-//                  items(mediaItems.size) { index ->
-//                      val media = mediaItems[index]
-//
-//                      var thumbnailBitmap by remember { mutableStateOf<Bitmap?>(null) }
-//
-//                      LaunchedEffect(media.uri) {
-//                          thumbnailBitmap = getVideoThumbnail(context, media.uri)
-//                      }
-//
-//                      Box(
-//                          modifier = Modifier
-//                              .size(108.dp)
-//                              .clip(RoundedCornerShape(8.dp))
-//                              .background(Color.LightGray)
-//                      )
-//                      {
-//
-//                          if (media.isVideo) {
-//                              // Show a video icon or thumbnail (simplified)
-//                              val thumbnailBitmap by remember(media.uri) {
-//                                  mutableStateOf(getVideoThumbnail(context, media.uri))
-//                              }
-//
-//                              if (thumbnailBitmap != null) {
-//                                  Image(
-//                                      bitmap = thumbnailBitmap!!.asImageBitmap(),
-//                                      contentDescription = "Video thumbnail",
-//                                      contentScale = ContentScale.Crop,
-//                                      modifier = Modifier
-//                                          .fillMaxSize()
-//                                          .noRippleClickable{
-//                                              constants.toggleOnHoverEnable(true)
-//                                              hoveredMedia.value = media
-//                                              onHover.value = true
-//                                          }
-//                                  )
-//                              } else {
-//                                  Box(
-//                                      modifier = Modifier.fillMaxSize(),
-//                                      contentAlignment = Alignment.Center
-//                                  ) {
-//                                      Icon(
-//                                          painter = painterResource(R.drawable.play_arrow),
-//                                          contentDescription = "Video",
-//                                          tint = Color.White
-//                                      )
-//                                  }
-//                              }
-//
-//                          } else {
-//                              //Column {
-//                              SubcomposeAsyncImage(
-//                                  model = media.uri,
-//                                  contentDescription = "Image",
-//                                  contentScale = ContentScale.FillBounds,
-//                                  modifier = Modifier
-//                                      .fillMaxSize()
-//                                      .noRippleClickable{
-//                                          hoveredMedia.value = media
-//                                          onHover.value = true
-//                                      }
-//                              )
-//  //                            SubcomposeAsyncImage(
-//  //                                model = constants.URL_COMPLETED.value,
-//  //                                contentDescription = "Image",
-//  //                                contentScale = ContentScale.FillBounds,
-//  //                                modifier = Modifier
-//  //                                    .fillMaxSize()
-//  //                                    .noRippleClickable{
-//  //                                        hoveredMedia.value = media
-//  //                                        onHover.value = true
-//  //                                    }
-//  //                            )
-//                             // }
-//                          }
-//
-//                          // Delete button
-//                          Box(
-//                              modifier = Modifier
-//                                  .padding(4.dp)
-//                                  .align(Alignment.TopEnd)
-//                                  .size(24.dp)
-//                                  .clip(CircleShape)
-//                                  .background(Color.White)
-//                                  .noRippleClickable{
-//                                      constants.PostProperty_ViewModel.removeMediaAt(index)
-//                                  },
-//                              contentAlignment = Alignment.Center
-//                          ) {
-//                              SubcomposeAsyncImage(
-//                                  model = R.drawable.reelsdelete,
-//                                  "",
-//                                  colorFilter = ColorFilter.tint(Color.Red),
-//                                  modifier = Modifier.size(12.dp)
-//                              )
-//                          }
-//                      }
-//
-//                      photoItem(media ,)
-//                  }
-//              }*/
-//
-//            Spacer(modifier = Modifier.weight(1f))
-//
-//            SnackbarHost(
-//                hostState = snackbarHostState,
-//                modifier = Modifier
-//                    .align(Alignment.CenterHorizontally),
-//                snackbar = { data ->
-//                    Snackbar(
-//                        containerColor = newWhite, // 👈 set background color
-//                        contentColor = Color.Black, // 👈 set text/icon
-//                        modifier = Modifier
-//                            .padding(8.dp)
-//                            .border(1.dp, Color.Red, shape = RoundedCornerShape(4.dp)),
-//                        shape = RoundedCornerShape(4.dp)
-//                    ) {
-//                        Text(text = data.visuals.message)
-//                    }
-//                }
-//            )
-//        }
-//    }
-//
-//
-//
-//    if (headingDropDown.value) {
-//
-//
-//        LaunchedEffect(Unit) {
-//            constants.API_Vm.getPhotoHeadings()
-//            { apiResultHandling ->
-//                when (apiResultHandling) {
-//                    is API_Result_Handling.Loading -> {
-//                        //constants.Common_H_ViewModel.changeStatus(true)
-//
-//                        //resultCallback(2)
-//                        apiState.value = 0
-//                    }
-//
-//                    is API_Result_Handling.NoData -> {
-//                        //constants.Common_H_ViewModel.changeStatus(false)
-//                        apiState.value = 3
-//                    }
-//
-//                    is API_Result_Handling.Error -> {
-//                        // constants.Common_H_ViewModel.changeStatus(false)
-//                        apiState.value = 2
-//                        // resultCallback(1)
-//                    }
-//
-//                    is API_Result_Handling.Success -> {
-//                        //constants.Common_H_ViewModel.changeStatus(false)
-//                        apiState.value = 1
-//                        // resultCallback(0)
-//                    }
-//
-//                    is API_Result_Handling.Deactivated -> {
-//                        // resultCallback(5)
-//                        apiState.value = 4
-//                    }
-//                }
-//            }
-//        }
-//
-//
-//        ModalBottomSheet(
-//            sheetState = bottomSheetState
-//            , onDismissRequest = {
-//                headingDropDown.value = false
-//            }
-//            , containerColor = Color.White
-//        ) {
-//            LazyColumn (
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(horizontal = 8.dp)
-//            ) {
-//                item {
-//                    when (apiState.value) {
-//                        0 -> {
-//                            Box(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .height(600.dp)
-//                                , contentAlignment = Alignment.Center
-//                            ) {
-//                                CircularProgressIndicator()
-//                            }
-//                        }
-//
-//                        1 -> {
-//                            Column(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                , horizontalAlignment = Alignment.Start
-//                            ) {
-//                                CommonText(
-//                                    "What is this photo about?"
-//                                    , newBlack
-//                                    ,18
-//                                    ,1
-//                                )
-//
-//
-//                                headingItems.value.forEach { item ->
-//                                    Row(
-//                                        modifier = Modifier.fillMaxWidth(),
-//                                        verticalAlignment = Alignment.CenterVertically
-//                                        , horizontalArrangement = Arrangement.SpaceBetween
-//                                    ) {
-//
-//                                        Text(item.title, fontSize = constants.textUnit(16), fontFamily = constants.fontFamily(1))
-//
-//                                        RadioButton(
-//                                            selected = item.isSelected.value,
-//                                            onClick = {
-//                                                constants.PostProperty_ViewModel.updateMediaHeading(selectedMediaId, heading)
-//                                                headingDropDown.value = false
-//                                                constants.PostProperty_ViewModel.selectSingleHeading(item.title)
-//                                            }
-//                                        )
-//
-//                                    }
-//                                }
-//
-//
-//                            }
-//                        }
-//                        2 -> {
-//                            /// error
-//                            Box(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .height(600.dp), contentAlignment = Alignment.Center
-//                            ) {
-//                                Text("Something went wrong")
-//                            }
-//                        }
-//                        3 -> {
-//                            // empty
-//                            Box(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .height(600.dp), contentAlignment = Alignment.Center
-//                            ) {
-//                                Text("No Data Available")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-//
-
-//
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun PP_Seventh_Form333(
-//    onHover: MutableState<Boolean>,
-//    hoveredMedia: MutableState<UploadPropertyMedia?>
-//) {
-//
-//    val context = LocalContext.current
-//    val scope = rememberCoroutineScope()
-//    val snackbarHostState = remember { SnackbarHostState() }
-//
-//    val mediaItems by constants.PostProperty_ViewModel.mediaList.collectAsState()
-//    val headingItems by constants.PostProperty_ViewModel.headingItems.collectAsState()
-//    val coverId by constants.PostProperty_ViewModel.coverPhotoId.collectAsState()
-//
-//    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-//    val headingDropDown = remember { mutableStateOf(false) }
-//
-//    // Upload Launchers
-//    val imagePickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.OpenMultipleDocuments()
-//    ) { uris ->
-//        URL_COMPLETED.clear()
-//        handleSelectedImages(context, uris, snackbarHostState, scope)
-//    }
-//
-//    val videoPickerLauncher = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.OpenDocument()
-//    ) { uri ->
-//        uri?.let {
-//            URL_COMPLETED.clear()
-//            handleSelectedVideo(context, it, snackbarHostState, scope)
-//        }
-//    }
-//
-//    var selectedMediaId by remember { mutableStateOf<String?>(null) }
-//
-//
-//
-//    Column(modifier = Modifier.fillMaxSize()) {
-//
-//        StepHeader()
-//
-//        Spacer(Modifier.padding(16.dp))
-//
-//        UploadBox(
-//            mediaItems = mediaItems,
-//            onPickImage = { imagePickerLauncher.launch(arrayOf("image/*")) },
-//            onPickVideo = { videoPickerLauncher.launch(arrayOf("video/*")) }
-//        )
-//
-//
-//        Spacer(Modifier.padding(16.dp))
-//
-//
-//        val itemsToShow = mediaItems
-//
-//        LazyVerticalGrid(
-//            columns = GridCells.Fixed(2),
-//            verticalArrangement = Arrangement.spacedBy(8.dp),
-//            horizontalArrangement = Arrangement.spacedBy(8.dp)
-//            , modifier = Modifier
-//                .padding(horizontal = 8.dp)
-//        ) {
-//            items(itemsToShow.size) { index ->
-//                val media = itemsToShow[index]
-//
-//
-//                if (!media.isVideo) {
-//                    PhotoItem(
-//                        index = index,
-//                        media = media,
-//                        // onClickHeading = { selectedMediaId = media.id; headingDropDown.value = true },
-//                        onClickHeading = { selectedMediaId = media.id; headingDropDown.value = true },
-//
-//                        onCoverSelected = { constants.PostProperty_ViewModel.setCoverPhoto(media.id) },
-//                        onDelete = { constants.PostProperty_ViewModel.deleteMedia(media.id) }
-//                    )
-//
-//                } else {
-//                    VideoItem(
-//                        index = index,
-//                        media = media,
-//                        thumbnail = getVideoThumbnail(context, media.uri),
-//                        onClickHeading = { selectedMediaId = media.id; headingDropDown.value = true },
-//                        onDelete = { constants.PostProperty_ViewModel.deleteMedia(media.id) }
-//                    )
-//
-//                }
-//
-//
-//            }
-//
-//        }
-//
-//
-//
-//        Spacer(Modifier.weight(1f))
-//
-//        SnackbarHost(
-//            hostState = snackbarHostState,
-//            modifier = Modifier.align(Alignment.CenterHorizontally)
-//        )
-//    }
-//
-//
-//
-//
-//
-//    var apiState = remember { mutableStateOf(0) }
-//
-//
-//
-//    // PHOTO HEADING SELECTION BOTTOM SHEET
-//    if (headingDropDown.value) {
-//
-//        if (headingItems.isEmpty()) {
-//            LaunchedEffect(Unit) {
-//                constants.API_Vm.getPhotoHeadings()
-//                { apiResultHandling ->
-//                    when (apiResultHandling) {
-//                        is API_Result_Handling.Loading -> {
-//                            //constants.Common_H_ViewModel.changeStatus(true)
-//
-//                            //resultCallback(2)
-//                            apiState.value = 0
-//                        }
-//
-//                        is API_Result_Handling.NoData -> {
-//                            //constants.Common_H_ViewModel.changeStatus(false)
-//                            apiState.value = 3
-//                        }
-//
-//                        is API_Result_Handling.Error -> {
-//                            // constants.Common_H_ViewModel.changeStatus(false)
-//                            apiState.value = 2
-//                            // resultCallback(1)
-//                        }
-//
-//                        is API_Result_Handling.Success -> {
-//                            //constants.Common_H_ViewModel.changeStatus(false)
-//                            apiState.value = 1
-//                            // resultCallback(0)
-//                        }
-//
-//                        is API_Result_Handling.Deactivated -> {
-//                            // resultCallback(5)
-//                            apiState.value = 4
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        ModalBottomSheet(
-//            sheetState = bottomSheetState,
-//            onDismissRequest = {
-//                headingDropDown.value = false
-//            }
-//        ) {
-//            Text(
-//                "What is this photo about?",
-//                fontSize = constants.textUnit(18),
-//                fontFamily = constants.fontFamily(1),
-//                modifier = Modifier.padding(16.dp)
-//            )
-//
-//            constants.spacer(8)
-//
-//            when (apiState.value) {
-//                0 -> {
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .height(600.dp)
-//                        , contentAlignment = Alignment.Center
-//                    ) {
-//                        CircularProgressIndicator()
-//                    }
-//                }
-//
-//                1 -> {
-//                    Column(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                        , horizontalAlignment = Alignment.Start
-//                        , verticalArrangement = Arrangement.spacedBy(8.dp)
-//                    ) {
-//
-//                        headingItems.forEach { item ->
-//
-//                            Row(
-//                                modifier = Modifier
-//                                    .fillMaxWidth(),
-//                                verticalAlignment = Alignment.CenterVertically,
-//                                horizontalArrangement = Arrangement.SpaceBetween
-//                            ) {
-//
-//                                Text(item.title, fontSize = constants.textUnit(16))
-//
-//                                RadioButton(
-//                                    selected = selectedMediaId?.let { id ->
-//                                        constants.PostProperty_ViewModel.mediaList.value
-//                                            .find { it.id == id }?.heading == item.title
-//                                    } ?: false,
-//                                    onClick = {
-//                                        selectedMediaId?.let { id ->
-//                                            constants.PostProperty_ViewModel.updateHeading(id, item.title)
-//                                        }
-//                                        headingDropDown.value = false
-//                                    }
-//                                )
-//                            }
-//
-//
-//                            constants.spacer(8)
-//                        }
-//
-//                    }
-//                }
-//                2 -> {
-//                    /// error
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .height(600.dp), contentAlignment = Alignment.Center
-//                    ) {
-//                        Text("Something went wrong")
-//                    }
-//                }
-//                3 -> {
-//                    // empty
-//                    Box(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .height(600.dp), contentAlignment = Alignment.Center
-//                    ) {
-//                        Text("No Data Available")
-//                    }
-//                }
-//            }
-//
-//
-//
-//            Spacer(Modifier.height(32.dp))
-//        }
-//    }
-//}
-
-

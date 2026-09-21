@@ -75,27 +75,22 @@ class sharedHelper {
         return sharedPreferences!!.getBoolean(Key, false)
     }
 
-
-    //saving list in Shared Preference
     fun setLists(list:ArrayList<String>, context: Context,arrayName : String){
         sharedPreferences = context.getSharedPreferences("Cache", Context.MODE_PRIVATE)
         editor = sharedPreferences!!.edit()
         val gson = Gson()
-        val json = gson.toJson(list)//converting list to Json
+        val json = gson.toJson(list)
         editor!!.putString(arrayName,json)
         editor!!.commit()
     }
 
-    //getting the list from shared preference
     fun getList(context: Context,arrayName : String):ArrayList<String>{
         sharedPreferences = context.getSharedPreferences("Cache", Context.MODE_PRIVATE)
         val gson = Gson()
         val json = sharedPreferences!!.getString(arrayName,null)
-        val type = object : TypeToken<ArrayList<String>>(){}.type//converting the json to list
-        return gson.fromJson(json,type)//returning the list
+        val type = object : TypeToken<ArrayList<String>>(){}.type
+        return gson.fromJson(json,type)
     }
-
-
 
     fun putInt_noti(context: Context, Key: String?, Value: Int?) {
         try {

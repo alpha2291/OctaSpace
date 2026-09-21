@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs.ChatMainList
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -31,4 +30,3 @@ data class UserDetail(
     @SerialName("whatsapp_num_cc")
     val whatsapp_num_cc: String
 )
-

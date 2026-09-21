@@ -15,7 +15,6 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-
 class BuyerListViewModel : ViewModel() {
 
     private val _buyers = MutableStateFlow<List<UserWithUnread>>(emptyList())
@@ -91,9 +90,8 @@ class BuyerListViewModel : ViewModel() {
                 updateUserInChatList(user)
             }
 
-
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                // ✅ Check again before parsing
+
                 val value = snapshot.value
                 if (value !is Map<*, *>) {
                     Log.w("BuyerListVM", "⚠️ Skipping invalid user node (onChildChanged): ${snapshot.key}, value=$value")
@@ -126,8 +124,6 @@ class BuyerListViewModel : ViewModel() {
         _isLoading.value = false
     }
 
-
-
     private fun handleChatChange(chatSnap: DataSnapshot) {
         val chatId = chatSnap.key ?: return
         val chatProperty = chatSnap.child("propertyId").getValue(String::class.java)
@@ -145,14 +141,12 @@ class BuyerListViewModel : ViewModel() {
             ?: chatSnap.child("messages").children.lastOrNull()?.child("message")?.getValue(String::class.java)
             ?: ""
 
-        println("LAST MESSAGE VIEWMODEL -- ${lastMessageText}")
         val lastMessageTime = chatSnap.child("lastUpdated").getValue(Long::class.java)
             ?: getMessageTime(chatSnap.child("messages").children.lastOrNull())
 
         val unreadCount = chatSnap.child("unreadCount").child(currentUserId)
             .getValue(Int::class.java) ?: 0
 
-        // ✅ Get typing status only for the OTHER user
         val targetUserId = if (currentUserId == currentSellerId) chatBuyer!! else currentSellerId
         val isTyping = getTypingStatus(chatSnap, targetUserId)
 
@@ -261,10 +255,9 @@ class ChatViewModel : ViewModel() {
                 val wasOffline = !otherUserOnline
                 otherUserOnline = snapshot.getValue(Boolean::class.java) ?: false
 
-                // ✅ Only mark as delivered when user COMES ONLINE (not when already online)
                 if (wasOffline && otherUserOnline) {
                     Log.d("ChatVM", "✅ User $otherUserId came online, marking messages as delivered")
-                   // FirebaseRepository.markMessagesAsDelivered(chatId, otherUserId)
+
                     FirebaseRepository.markMessagesAsDelivered(chatId, otherUserId)
 
                 }
@@ -296,12 +289,9 @@ class ChatViewModel : ViewModel() {
                 val msgList = snapshot.child("messages").children.mapNotNull { msgSnap ->
                     val msg = msgSnap.getValue(ChatMessage::class.java) ?: return@mapNotNull null
 
-                    // Skip blocked messages
                     if (blockedUsers.contains(msg.senderId)) return@mapNotNull null
                     if (msg.blocked && msg.blockedFor == currentUserId) return@mapNotNull null
 
-
-                    // Skip messages deleted for this user
                     val isDeletedForUser = when (msg.deletedFor) {
                         is Map<*, *> -> (msg.deletedFor as Map<String, Boolean>)[currentUserId] ?: false
                         else -> false
@@ -313,7 +303,6 @@ class ChatViewModel : ViewModel() {
 
                 _messages.value = msgList
 
-                // ✅ CRITICAL: Only mark as seen if chat is OPEN and receiver is ONLINE
                 if (chatActive) {
                 }
 
@@ -329,7 +318,7 @@ class ChatViewModel : ViewModel() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val typingMap =
                     snapshot.getValue(object : GenericTypeIndicator<Map<String, Boolean>>() {}) ?: emptyMap()
-                //_isOtherTyping.value = typingMap[otherUserId] == true && otherUserOnline && chatActive
+
                 _isOtherTyping.value = typingMap[otherUserId] == true
 
             }
@@ -350,7 +339,6 @@ class ChatViewModel : ViewModel() {
         FirebaseRepository.clearUserActiveInChatNew(chatId, currentUserId)
     }
 
-
     fun setTyping(currentUserId: String, isTyping: Boolean) {
         if (blockedUsers.contains(otherUserId)) return
 
@@ -359,7 +347,7 @@ class ChatViewModel : ViewModel() {
         typingRef.setValue(isTyping)
 
         if (isTyping) {
-            // ✅ Auto-clear if app crashes / disconnects
+
             typingRef.onDisconnect().setValue(false)
         }
     }
@@ -372,14 +360,13 @@ class ChatViewModel : ViewModel() {
 
     }
 
-
     fun sendMessageold(
         messageText: String,
         currentUserId: String,
         otherUserId: String,
         propertyId: String,
         sellerId: String,
-       // status : String
+
     ) {
         if (messageText.isBlank() || blockedUsers.contains(otherUserId)) return
 
@@ -391,7 +378,7 @@ class ChatViewModel : ViewModel() {
             "message" to messageText,
             "senderId" to currentUserId,
             "receiverId" to otherUserId,
-            "status" to "sent",  // ✅ Always start with "sent"
+            "status" to "sent",
             "isDelivered" to false,
             "isRead" to false,
             "deletedForEveryone" to false,
@@ -415,12 +402,10 @@ class ChatViewModel : ViewModel() {
                 incrementUnread(otherUserId)
                 setTyping(currentUserId, false)
 
-                // ✅ Only mark as delivered IMMEDIATELY if receiver is online
-
                 FirebaseRepository.isOtherUserActive(chatId, otherUserId) { isOtherChatOpen ->
 
                     when {
-                        // ✅ Both users in chat → SEEN
+
                         otherUserOnline && isOtherChatOpen -> {
                             FirebaseRepository.updateMessageStatus(
                                 chatId = chatId,
@@ -431,7 +416,6 @@ class ChatViewModel : ViewModel() {
                             )
                         }
 
-                        // ✅ Online but chat not open → DELIVERED
                         otherUserOnline -> {
                             FirebaseRepository.updateMessageStatus(
                                 chatId = chatId,
@@ -442,21 +426,9 @@ class ChatViewModel : ViewModel() {
                             )
                         }
 
-                        // ❌ Offline → do nothing (stay SENT)
                     }
                 }
 
-
-//                if (otherUserOnline) {
-//                    Log.d("ChatVM", "✅ Receiver online, marking message as delivered immediately")
-//                    FirebaseRepository.updateMessageStatus(
-//                        chatId = chatId,
-//                        messageId = msgId,
-//                        status = "delivered",
-//                        isDelivered = true,
-//                        isRead = false
-//                    )
-//                }
             }
         }
     }
@@ -470,7 +442,6 @@ class ChatViewModel : ViewModel() {
     ) {
         if (messageText.isBlank()) return
 
-        // 🔥 CHECK: has receiver blocked sender?
         FirebaseRepository.getUsersReference()
             .child(otherUserId)
             .child("blocks")
@@ -489,7 +460,6 @@ class ChatViewModel : ViewModel() {
                     "senderId" to currentUserId,
                     "receiverId" to otherUserId,
 
-                    // 🔥 IMPORTANT
                     "blocked" to isBlockedByReceiver,
                     "blockedFor" to if (isBlockedByReceiver) otherUserId else "",
 
@@ -539,11 +509,9 @@ class ChatViewModel : ViewModel() {
                     "senderId" to currentUserId,
                     "receiverId" to otherUserId,
 
-                    // 🔒 BLOCK FLAGS
                     "blocked" to isBlockedByReceiver,
                     "blockedFor" to if (isBlockedByReceiver) otherUserId else "",
 
-                    // 🔒 STATUS
                     "status" to if (isBlockedByReceiver) "blocked" else "sent",
                     "isDelivered" to false,
                     "isRead" to false,
@@ -552,7 +520,6 @@ class ChatViewModel : ViewModel() {
                     "time" to ServerValue.TIMESTAMP
                 )
 
-                // 🔥 MULTI-PATH UPDATE (IMPORTANT)
                 val updates = hashMapOf<String, Any>(
                     "/messages/$msgId" to msg,
                     "/lastMessage" to messageText,
@@ -562,12 +529,9 @@ class ChatViewModel : ViewModel() {
 
                 chatNode.updateChildren(updates)
 
-
                 chatNode.child("messages").child(msgId).setValue(msg)
             }
     }
-
-
 
     private fun incrementUnread(receiverId: String) {
         chatNode.child("unreadCount").child(receiverId)
@@ -637,8 +601,6 @@ class ChatViewModel : ViewModel() {
         })
     }
 
-
-
     fun clearChatForMe(currentUserId: String) {
         chatNode.child("messages").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -647,7 +609,6 @@ class ChatViewModel : ViewModel() {
                 snapshot.children.forEach { msgSnap ->
                     val msg = msgSnap.getValue(ChatMessage::class.java) ?: return@forEach
 
-                    // Prepare the deletedFor map
                     val deletedMap = when (msg.deletedFor) {
                         is Map<*, *> -> (msg.deletedFor as Map<String, Boolean>).toMutableMap()
                         else -> mutableMapOf()
@@ -661,7 +622,7 @@ class ChatViewModel : ViewModel() {
                     chatNode.updateChildren(updates)
                         .addOnSuccessListener {
                             Log.d("ChatVM", "✅ Cleared chat for $currentUserId")
-                            _messages.value = emptyList() // immediately update UI
+                            _messages.value = emptyList()
                         }
                         .addOnFailureListener { e ->
                             Log.e("ChatVM", "❌ Failed to clear chat: ${e.message}")
@@ -672,8 +633,6 @@ class ChatViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
-
-
 
     override fun onCleared() {
         super.onCleared()
@@ -690,5 +649,3 @@ class ChatViewModel : ViewModel() {
         }
     }
 }
-
-

@@ -17,13 +17,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-
 class Common_H_ViewModel : ViewModel(){
 
     fun clearAllData_CVM() {
-        // Reset notification state
+
         notification_PostId = ""
-        // Reset bottom bar items to default unselected state
+
         BB_Items.clear()
         BB_Items.addAll(
             listOf(
@@ -65,40 +64,30 @@ class Common_H_ViewModel : ViewModel(){
             )
         )
 
-        // Clear comment list
         cmt_List.clear()
 
-        // Reset app bar visibility
         _showTABars.value = true
         _showBABars.value = true
 
-        // Reset bottom bar navigation
         tab_View.value = 0
         _Viewing_Screen_BB.value = 0
 
-        // Reset bottom sheets
         _reelsBtm_sheet.value = false
         _comment_btm_Sheet.value = false
 
-        // Reset status flags
         _status.value = false
         _verify_Status.value = false
         _like_Status.value = false
 
-        // Reset view property details mode
         view_Property_Details_Mode.value = 0
 
-        // Clear app notifications
         _appNotification.value = emptyList()
 
-        // Clear shared preferences (already in logOut but included for clarity)
-       // AppPreferences.saveUserId(-1)
         AppPreferences.save_UserToken("")
         AppPreferences.save_Interest_Completed(0)
         AppPreferences.save_Location_Received(0)
         AppPreferences.save_Post_Id(0)
 
-        println("🧹 Common_H_ViewModel cleared successfully")
     }
     var notification_PostId by mutableStateOf("")
 
@@ -140,14 +129,12 @@ class Common_H_ViewModel : ViewModel(){
         ),
     )
 
-
     fun toggleBottomBar(index: Int) {
         for (i in BB_Items.indices) {
             val current = BB_Items[i]
             BB_Items[i] = current.copy(onSelected = i == index)
         }
     }
-
 
     var cmt_List = mutableStateListOf(
         Comment_Item(
@@ -186,7 +173,6 @@ class Common_H_ViewModel : ViewModel(){
         )
     )
 
-    /// top app bar
     private val _showTABars = MutableStateFlow(true)
     var showTABars: StateFlow<Boolean> = _showTABars
 
@@ -194,8 +180,6 @@ class Common_H_ViewModel : ViewModel(){
         _showTABars.value = value
     }
 
-
-    // bottom bar
     private val _showBABars = MutableStateFlow(true)
     var showBABars: StateFlow<Boolean> = _showBABars
 
@@ -203,33 +187,24 @@ class Common_H_ViewModel : ViewModel(){
         _showBABars.value = value
     }
 
-    // bottom bar navigation
-
     var tab_View = mutableStateOf(0)
 
     fun selectedBABTab_new(index: Int) {
         tab_View.value = index
-        toggleBottomBar(index) // update the item selection states
+        toggleBottomBar(index)
     }
 
     private var _Viewing_Screen_BB = MutableStateFlow(0)
 
-    // ✅ Make sure this is PUBLIC (not private) and using asStateFlow()
     val Viewing_Screen_BB: StateFlow<Int> = _Viewing_Screen_BB.asStateFlow()
 
     fun selectedBABTab(index: Int) {
-        println("🔧🔧🔧 selectedBABTab called with index: $index")
-        println("   Before: _Viewing_Screen_BB.value = ${_Viewing_Screen_BB.value}")
 
         _Viewing_Screen_BB.value = index
-
-        println("   After: _Viewing_Screen_BB.value = ${_Viewing_Screen_BB.value}")
 
         toggleBottomBar(index)
     }
 
-
-    // reels options bottom sheet
     private val _reelsBtm_sheet = MutableStateFlow(false)
     var reelsBtm_sheet: StateFlow<Boolean> = _reelsBtm_sheet
 
@@ -237,8 +212,6 @@ class Common_H_ViewModel : ViewModel(){
         _reelsBtm_sheet.value = value
     }
 
-
-    /// comment btm sheet open / close
     private val _comment_btm_Sheet = MutableStateFlow<Boolean>(false)
     var comment_btm_Sheet : StateFlow<Boolean> = _comment_btm_Sheet.asStateFlow()
 
@@ -250,17 +223,12 @@ class Common_H_ViewModel : ViewModel(){
         _comment_btm_Sheet.value = false
     }
 
-
     private var _status = MutableStateFlow<Boolean>(false)
     var status : StateFlow<Boolean> = _status.asStateFlow()
 
     fun changeStatus(change : Boolean){
         _status.update { change }
     }
-
-
-
-
 
     private var _verify_Status = MutableStateFlow<Boolean>(false)
     var verify_Status : StateFlow<Boolean> = _verify_Status.asStateFlow()
@@ -276,29 +244,25 @@ class Common_H_ViewModel : ViewModel(){
         _like_Status.update { change }
     }
 
-
-
     fun logOut(){
-        //AppPreferences.saveUserId(-1)
+
         AppPreferences.save_UserToken("")
         AppPreferences.save_Interest_Completed(0)
         AppPreferences.save_Location_Received(0)
         AppPreferences.save_Post_Id(0)
     }
 
-
     var view_Property_Details_Mode = mutableStateOf(0)
 
     private val _appNotification = MutableStateFlow<List<App_Notification_Data>>(emptyList())
     val appNotification: StateFlow<List<App_Notification_Data>> = _appNotification.asStateFlow()
 
-
     fun set_App_Notification_Content(newReels: List<App_Notification_Data>) {
         newReels.forEachIndexed { i, item ->
-            //println("Index=$i, ID=${item.land_type_id}, Name=${item.name}, Selected=${item.is_Selected}")
+
         }
         _appNotification.value = newReels
-        //` updateSelectedIds()
+
     }
 
     fun removeActivatedNotification(id: Int) {
@@ -307,14 +271,12 @@ class Common_H_ViewModel : ViewModel(){
         }
     }
 
-
     fun clearAN_data(){
         _appNotification.value = emptyList()
     }
 
-
     fun updateImFollowedState_Notificationold(notificationId: Int, isFollowed: Int) {
-        val currentList = _appNotification.value.toList() // make sure we copy it
+        val currentList = _appNotification.value.toList()
 
         val updatedList = currentList.map { item ->
             if (item.notification_id == notificationId) {
@@ -326,8 +288,6 @@ class Common_H_ViewModel : ViewModel(){
 
         _appNotification.value = updatedList
     }
-
-
 
     fun updateImFollowedState_Notification(notificationId: Int, isFollowed: Int) {
         val currentList = _appNotification.value.toList()
@@ -349,14 +309,10 @@ class Common_H_ViewModel : ViewModel(){
         Log.d("NotificationUpdate", "Update complete. New list emitted.")
     }
 
-
-
-
 }
 
 private var _from_DeepLink_Property = MutableStateFlow(false)
 var from_DeepLink_Property : StateFlow<Boolean> = _from_DeepLink_Property.asStateFlow()
-
 
 fun set_FDLP_State(state : Boolean){
     _from_DeepLink_Property.value = state

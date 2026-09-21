@@ -3,7 +3,6 @@ package com.toletspot.houseforrent.Home_Screen.PostProperty_Module.CommonFormDat
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-
 @Serializable
 data class CommonPropertyResponse(
     @SerialName("result") val result: String? = null,
@@ -116,4 +115,3 @@ data class Rent(
     @SerialName("Lock_in_Period") val Lock_in_Period: List<String>? = null,
     @SerialName("Notice_Period") val Notice_Period: List<String>? = null
 )
-

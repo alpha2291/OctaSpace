@@ -1,8 +1,5 @@
 package com.toletspot.houseforrent
 
-
-
-
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
@@ -17,16 +14,14 @@ enum class NetworkStatus {
     WifiNoInternet,
     CellularWithInternet,
     CellularNoInternet,
-    Online, // New general online state
+    Online,
     Offline
 }
-
 
 class NetworkMonitor2(context: Context) {
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    // ✅ Initialize with the current real network status
     private val _status = MutableStateFlow(getInitialStatus(connectivityManager))
     val status = _status.asStateFlow()
 
@@ -51,21 +46,12 @@ class NetworkMonitor2(context: Context) {
         val isWifi = caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
         val isCellular = caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
 
-//        _status.value = when {
-//            isWifi && hasInternet -> NetworkStatus.WifiWithInternet
-//            isWifi && !hasInternet -> NetworkStatus.WifiNoInternet
-//            isCellular && hasInternet -> NetworkStatus.CellularWithInternet
-//            isCellular && !hasInternet -> NetworkStatus.CellularNoInternet
-//            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) -> NetworkStatus.Online
-//            else -> NetworkStatus.Offline
-//        }
         _status.value = when {
             (isWifi && hasInternet) || (isCellular && hasInternet) -> NetworkStatus.Online
             else -> NetworkStatus.Offline
         }
     }
 
-    // ✅ Added: Detect initial network status immediately
     private fun getInitialStatus(cm: ConnectivityManager): NetworkStatus {
         val network = cm.activeNetwork ?: return NetworkStatus.Offline
         val caps = cm.getNetworkCapabilities(network) ?: return NetworkStatus.Offline
@@ -92,7 +78,6 @@ class NetworkMonitor2(context: Context) {
         connectivityManager.unregisterNetworkCallback(callback)
     }
 }
-
 
 class NetworkMonitor1(context: Context) {
     private val connectivityManager =
@@ -122,14 +107,6 @@ class NetworkMonitor1(context: Context) {
         val isWifi = caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
         val isCellular = caps.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
 
-//        _status.value = when {
-//            isWifi && hasInternet -> NetworkStatus.WifiWithInternet
-//            isWifi && !hasInternet -> NetworkStatus.WifiNoInternet
-//            isCellular && hasInternet -> NetworkStatus.CellularWithInternet
-//            isCellular && !hasInternet -> NetworkStatus.CellularNoInternet
-//            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) -> NetworkStatus.Online // Any network with internet capability
-//            else -> NetworkStatus.Offline
-//        }
         _status.value = when {
             (isWifi && hasInternet) || (isCellular && hasInternet) -> NetworkStatus.Online
             else -> NetworkStatus.Offline
@@ -157,7 +134,6 @@ fun rememberNetworkStatus2(): State<NetworkStatus> {
         onDispose { monitor.unregister() }
     }
 
-    println("STATE OF CONNECTIVITY  $state")
     return remember {  derivedStateOf { state } }
 }
 
@@ -174,12 +150,10 @@ fun rememberNetworkStatus1(): State<NetworkStatus> {
     return state
 }
 
-
 class NetworkMonitor(context: Context) {
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    // Initialize with current network status
     private val _status = MutableStateFlow(getInitialStatus(connectivityManager))
     val status = _status.asStateFlow()
 
@@ -240,7 +214,6 @@ fun rememberNetworkStatus(): State<NetworkStatus> {
     val monitor = remember { NetworkMonitor(context) }
     val networkStatus by monitor.status.collectAsState()
 
-    // Register/unregister callback
     DisposableEffect(monitor) {
         monitor.register()
         onDispose { monitor.unregister() }

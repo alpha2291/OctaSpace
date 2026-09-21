@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.util.UUID
 
-
 data class Start_Up_DataClass(
     var title : String,
     var description : String,
@@ -28,14 +27,13 @@ data class ReelItem(
     val isLiked: Boolean = false
 )
 
-
 @Serializable
 data class Bottom_Bar_Items(
     var title : String,
     var unSelectedIcon : Int,
     var selectedIcon : Int = 0,
     var onSelected : Boolean,
-    val route: String // 👈 NEW
+    val route: String
 )
 
 data class Comment_Item(
@@ -47,7 +45,6 @@ data class Comment_Item(
     val like_Count: Int = 0,
     val other_Commments: List<Comment_Item> = emptyList()
 )
-
 
 data class Enquiry_Content(
     var isWhich: Int,
@@ -71,7 +68,6 @@ data class Custom_BottomSheetState(
     val isVisible: Boolean = false
 )
 
-
 data class Selected_Dates_Calender(
     var start_Date: LocalDate? = null,
     var end_Date: LocalDate? = null,
@@ -80,8 +76,6 @@ data class Selected_Dates_Calender(
 
     var timeStamp_End : String
 )
-
-//24.7
 
 data class Custom_PopUpState(
     val type : String = "",
@@ -103,16 +97,11 @@ data class Reels_Btm_Sheet_Options(
     var onClick  :()-> Unit = {}
 )
 
-//25.7
-
 data class Search_Main_Options(
     var id : Int,
     var title: String,
     var onSelected : Boolean = false
 )
-
-
-//29.7
 
 data class PostPro_Second_Form_Options_DC(
     var id : Int,
@@ -120,20 +109,17 @@ data class PostPro_Second_Form_Options_DC(
     var onSelected : Boolean
 )
 
-//31.7
 data class UploadPropertyMedia(
     val id: String = UUID.randomUUID().toString(),
-    val localUri: Uri? = null ,                    // local file URI (picked by user)
+    val localUri: Uri? = null ,
     val isVideo: Boolean = false,
-    val heading: String = "",             // assigned default or user chosen
-    val isCover: Boolean = false,         // only for images
-    val uploadedUrl: String? = null,      // S3 URL after upload
+    val heading: String = "",
+    val isCover: Boolean = false,
+    val uploadedUrl: String? = null,
     val isUploading: Boolean = true,
     val videoThumbail : String = "",
     val uploadProgress: Int = 0
 )
-
-
 
 data class ApiMediaItem(
     val url: String,
@@ -157,11 +143,6 @@ data class UploadPropertyMedia22(
     var isCover: Boolean = false
 )
 
-
-
-
-
-//1.8
 data class CountryCodeHandler_DC(
     val id : Int,
     val country_Name: String,
@@ -169,7 +150,6 @@ data class CountryCodeHandler_DC(
     val limit : Int
 )
 
-//4.8
 data class Common_DropDown2Options_DC(
     var icon: Int = 0,
     var title: String
@@ -193,7 +173,6 @@ data class NotInterested_Options_DC(
     var isSelected: Boolean
 )
 
-//5.8
 data class Profile_FF_DC(
     var id: Int,
     var title : String,
@@ -219,7 +198,7 @@ data class Profile_List_Back_Handler(
     val profiles: List<Int> = emptyList()
 
 )
-// Add this enum before the data class
+
 enum class ScreenType {
     PROFILE,
     FF_LIST
@@ -238,29 +217,23 @@ data class Profile_Handle_Back(
     val screenType: ScreenType = ScreenType.PROFILE
 )
 
-
 data class Settings_DC(
     var id: Int,
     var icon:Int,
     var title:String
 )
 
-//6.8
 data class Notication_Subs_DC(
     var id : Int,
     var title : String,
     var isSelected: Boolean
 )
 
-
-//8.8
 data class Search_Popular_Cities_DC(
     var id : Int,
     var title: String,
     var isSelected : Boolean
 )
-
-//11.8
 
 data class Chat_Property_Structure_DC(
     var id : Int,
@@ -287,20 +260,8 @@ data class Own_Profile_DC(
     var about_User: String,
     var num_of_Fwers : String = "200",
     var num_of_Fwing : String = "300",
-//    var isBlocked: Boolean = false,
+
 )
-
-//data class Profile_Content_DC(
-//    var id : Int,
-//    var user_type :Int,
-//    var profile_Image: String,
-//    var user_Name: String,
-//    var real_Name: String,
-//    var about_User : String,
-//    var num_of_Fwers :Int,
-//    var num_of_Fwing : Int
-//)
-
 
 data class Search_Result_Item(
     var id : Int,
@@ -320,8 +281,6 @@ data class Search_Result_Item(
     var isSaved : Boolean
 )
 
-
-// 26.9
 data class Flw_UnFlw_Content_DC(
     var user_Id :Int,
     var user_Name: String,
@@ -329,8 +288,6 @@ data class Flw_UnFlw_Content_DC(
     var status  : Int,
     var noti_Id : Int = 0
 )
-
-
 
 data class PP3_API_DC(
     var pincode : String,
@@ -340,7 +297,6 @@ data class PP3_API_DC(
     var locality : String,
 
 )
-
 
 data class PropertyType_Form2(
     val id: Int,
@@ -356,24 +312,16 @@ data class Selected_Options_Form4_DC(
 
     var property_Carpet_Area : String = "",
 
-
     var carpet_area_unit: String = "sq",
     var property_Builtup_Area : String = "",
     var built_up_area_unit : String = "sq",
     var property_Super_Builtup_Area : String = "",
     var super_built_up_area_unit : String = "sq",
 
-
     var property_Area_Dimension_Length : String = "",
     var property_Area_Dimension_Length_Unit : String = "sq",
     var property_Area_Dimension_Width : String = "",
     var property_Area_Dimension_Width_Unit : String = "sq",
-//    var area_width_unit : String = "",
-
-
-//    var property_Super_Builtup_Area_Unit : String = "sq",
-
-//    var area_width : String = "",
 
     var property_Facing : String = "",
 
@@ -394,20 +342,16 @@ data class Selected_Options_Form4_DC(
 
     var property_Floor_Plan_Bhk : String = "",
 
-
     var property_No_of_Beds : String = "",
     var property_No_of_Baths : String = "",
     var property_No_of_Balconies : String = "",
     var property_No_Of_OpenSides : String = "",
     var property_Other_Rooms : List<String> = emptyList(),
 
-
-
     var property_Facade_Height : String = "",
     var facade_height_unit : String = "",
     var property_Facade_Width : String = "",
     var facade_width_unit : String = "",
-
 
     var property_condition : String = "",
 
@@ -422,18 +366,15 @@ data class Selected_Options_Form4_DC(
 
     var property_Reception : String = "",
 
-
     var property_Pantry : String = "",
     var property_Pantry_Size : String = "",
     var pantry_size_unit : String = "sq ft",
-
 
     var property_Central_AC : String = "",
     var property_Oxygen_Duct : String = "",
     var property_UPS : String = "",
     var property_Fire_Safety : List<String> = emptyList(),
     var property_Lifts : String = "",
-
 
     var property_NOC_Certified : String = "",
     var property_Occupancy : String = "",
@@ -442,13 +383,8 @@ data class Selected_Options_Form4_DC(
 
     var property_Authority_Approved : String = "",
 
-
     var property_Suitable_Business_Type: List<String> = emptyList(),
     var draft : Int = 0,
-
-
-
-    // step 666666 rentoo
 
     var property_for_rent_or_lease : String = "",
     var rent: String = "",
@@ -461,38 +397,29 @@ data class Selected_Options_Form4_DC(
     var lock_in_period : String = "",
     var lock_in_period_type : String = "",
     var notice_period : String = "",
-//    var notice_period_type : String = "",
+
     var lease_duration_in_years : String = "",
     var lease_duration_in_years_type : String = "",
     var lease_amount : String = "",
     var lease_negotiable : Boolean = false
 
-//    var property_Leased_Rented : String = "",
-//    var property_Previously_Used_For : String = "",
-
-
-
     )
 
-
 data class All_Form_Handler(
-    // User
+
     var user_id: Int? = 0,
     var user_post_id: Int? = 0,
 
-    // Area dimensions
     var area_length: Int? = 0,
     var area_length_unit: String? = "",
     var area_width: Int? = 0,
     var area_width_unit: String? = "",
 
-    // Facade details
     var facade_width: Int? = 0,
     var facade_width_unit: String? = "",
     var facade_height: Int? = 0,
     var facade_height_unit: String? = "",
 
-    // Property details
     var property_facing: String? = "",
     var total_floor: Int? = 0,
     var property_floor_no: Int? = 0,
@@ -505,7 +432,6 @@ data class All_Form_Handler(
     var property_highlights: String? = "",
     var bhk_type: String? = "",
 
-    // Room details
     var no_of_bedrooms: Int? = 0,
     var no_of_bathrooms: Int? = 0,
     var no_of_balconies: Int? = 0,
@@ -518,7 +444,6 @@ data class All_Form_Handler(
     var conference_room: Int? = 0,
     var no_of_staircases: Int? = 0,
 
-    // Amenities
     var reception_area: String? = "",
     var pantry: String? = "",
     var pantry_size: Int? = 0,
@@ -529,7 +454,6 @@ data class All_Form_Handler(
     var fire_safety_measures: String? = "",
     var lifts: String? = "",
 
-    // Pre-lease details
     var is_it_pre_leased_pre_rented: String? = "",
     var noc_certified: String? = "",
     var occupancy_certificate: String? = "",
@@ -540,17 +464,14 @@ data class All_Form_Handler(
     var suitable_business_type: String? = "",
     var draft: String? = "",
 
-    // Preview and pricing
     var preview_model: String? = "",
     var price: String? = "",
     var price_negotiable: String? = "",
 
-    // Post type and media
     var post_type: Int? = 0,
     var video_url: String? = "",
     var image_urls: String? = "",
 
-    // Location details
     var latitude: Double? = 0.0,
     var longitude: Double? = 0.0,
     var property_name: String? = "",
@@ -563,32 +484,22 @@ data class All_Form_Handler(
     var super_built_up_area: Int? = 0,
     var super_built_up_area_unit: String? = "",
 
-    // Address
     var country: String? = "",
     var state: String? = "",
     var city: String? = "",
     var locality: String? = "",
     var pincode: String? = "",
 
-    // IDs
     var land_type_id: Int? = 0,
     var land_categorie_id: Int? = 0,
     var user_type: String? = ""
 )
-
-
-
-/// rental
 
 data class ImageNamingOptions(
     var id : Int = 0,
     var title : String = "",
     var isCover : Boolean = false
 )
-
-
-/// rentall
-
 
 data class RentalForm5(
     var property_for_rent_or_lease : String = "",
@@ -602,7 +513,7 @@ data class RentalForm5(
     var lock_in_period : String = "",
     var lock_in_period_type : String = "",
     var notice_period : String = "",
-//    var notice_period_type : String = "",
+
     var lease_duration_in_years : String = "",
     var lease_duration_in_years_type : String = "",
     var lease_amount : String = "",

@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Home_Screen.Search_Module.RentoSortFilterDC
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

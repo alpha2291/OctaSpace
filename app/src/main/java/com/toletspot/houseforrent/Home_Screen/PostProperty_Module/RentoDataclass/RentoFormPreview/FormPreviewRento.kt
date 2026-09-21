@@ -1,13 +1,10 @@
 package com.toletspot.houseforrent.Home_Screen.PostProperty_Module.RentoDataclass.RentoFormPreview
 
-
 import com.toletspot.houseforrent.Home_Screen.PostProperty_Module.RentoDataclass.RentoMediaDC.Image
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 import com.toletspot.houseforrent.Home_Screen.PostProperty_Module.RentoDataclass.RentoMediaDC.Video
-
-
 
 @Serializable
 data class FormPreviewRento(

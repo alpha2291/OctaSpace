@@ -1,9 +1,5 @@
 package com.toletspot.houseforrent
 
-
-//import androidx.compose.ui.Alignment
-
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -186,7 +182,6 @@ import com.toletspot.houseforrent.Start_Up.User_Credentials
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
-
 var isConnected = mutableStateOf(false)
 var dataEnforce = mutableStateOf(false)
 
@@ -196,17 +191,15 @@ class MainActivity : ComponentActivity() {
     val notiRequestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             isGranted: Boolean ->
         if (isGranted) {
-            dataEnforce.value = true // notification on
+            dataEnforce.value = true
         }
         else
         {
 
             dataEnforce.value = true
 
-
         }
     }
-
 
     companion object {
       init {
@@ -224,16 +217,11 @@ class MainActivity : ComponentActivity() {
 
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        // No need for enableEdgeToEdge() if you are manually handling system UI visibility
          enableEdgeToEdge()
-
-
-
 
         if (!Places.isInitialized()) {
             Places.initialize(applicationContext,  getString(R.string.maps_api_key))
@@ -241,26 +229,8 @@ class MainActivity : ComponentActivity() {
 
         val placesClient = Places.createClient(this)
 
-
-
-
-
         setContent {
             LandSalesTheme {
-
-
-
-
-
-//                constants.activity = this
-//                constants.Start_Up_ViewModel = Start_Up_ViewModel()
-//                constants.Common_H_ViewModel = Common_H_ViewModel()
-//                constants.Reels_ViewModel = Reels_ViewModel()
-//                constants.Enquiry_ViewModel = Enquiry_ViewModel()
-//                constants.Search_ViewModel = Search_ViewModel()
-//                constants.PostProperty_ViewModel = PostProperty_ViewModel()
-//                constants.Profile_ViewModel = Profile_ViewModel()
-//                constants.API_Vm = API_ViewModel()
 
                 activity = this
 
@@ -273,13 +243,7 @@ class MainActivity : ComponentActivity() {
                 constants.Profile_ViewModel = ViewModelProvider(this)[Profile_ViewModel::class.java]
                 constants.API_Vm = API_ViewModel()
 
-
-
                 isConnected.value = OnClick()
-
-                //var loggedInUserId by remember { mutableStateOf(AppPreferences.getUserId().toString()) }
-
-                // Observe process lifecycle
 
                 DisposableEffect(Unit) {
                     val observer = LifecycleEventObserver { _, event ->
@@ -291,7 +255,6 @@ class MainActivity : ComponentActivity() {
                             }
 
                             Lifecycle.Event.ON_STOP -> {
-                                println("ON BACKGROUND APP GOES")
                                 if (AppPreferences.getUserId() != -1 || AppPreferences.getUserId() != 0) {
                                     FirebasePresence.setOfflineNow(AppPreferences.getUserId().toString())
                                 }
@@ -309,28 +272,16 @@ class MainActivity : ComponentActivity() {
 
                 FirebasePresence.startListening(AppPreferences.getUserId().toString())
 
-
-
-                //DashboardScreen()
-
                 setSystemUIVisibility(true , this)
-//                val token = getDeviceToken(onTokenReceived = { token ->
-//                    println("token --- $token")
-//                })
-
-//              deviceToken =  getDeviceToken()
 
                 getDeviceToken { token ->
                     if (token?.isNotEmpty() == true) {
                         deviceToken = token
-                        println("✅ Device token received: $token")
                     } else {
-                        println("❌ Failed to get token")
                     }
                 }
 
                 var id = getDeviceId(this)
-                println("DEVICE ID __ ${id} ")
 
                 fun extractDeepLinkParams(uri: Uri?): Map<String, String>? {
                     uri ?: return null
@@ -339,7 +290,6 @@ class MainActivity : ComponentActivity() {
                     val segments = uri.pathSegments
                     DeepLinkImageUrl.value = uri.toString()
 
-                    // Expecting something like: [ "profile", "1234" ] or [ "property", "1234" ]
                     if (segments.isNotEmpty()) {
                         val type = segments.getOrNull(0) ?: ""
                         val id = segments.getOrNull(1) ?: ""
@@ -350,12 +300,10 @@ class MainActivity : ComponentActivity() {
 
                     }
 
-
                     return null
                 }
 
                 val deepliknUrl = extractDeepLinkParams(intent?.data)
-
 
                 if(ContextCompat.checkSelfPermission(
                         this,
@@ -370,29 +318,20 @@ class MainActivity : ComponentActivity() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                     {
                         when {
-//                        utils.sharedHelper.getBoolean(this,utils.noti_ON_OFF
                             ContextCompat.checkSelfPermission(
                                 this,
                                 Manifest.permission.POST_NOTIFICATIONS
                             ) == PackageManager.PERMISSION_GRANTED -> {
-                                println("NOTI-CHECK----1")
                                 MyApp(placesClient,deepliknUrl)
-//                                MainActivityContents(extras, this)
                             }
 
                             shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
-                                println("NOTI-CHECK----2")
                                 MyApp(placesClient,deepliknUrl)
-
-
-//                            notification.value = false
-//                            utils.sharedHelper.putBoolean(this,utils.noti_ON_OFF, false)
-//                            utils.sharedHelper.putBoolean(this,utils.notificationPermissionCheck,false)
 
                             }
 
                             else -> {
-                                //Permission  fesDeGrand
+
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     notiRequestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                                 }
@@ -401,31 +340,12 @@ class MainActivity : ComponentActivity() {
                     }
                     else
                     {
-                        println("NOTI-CHECK----3")
                         MyApp(placesClient,deepliknUrl)
-
-
-
-
-
-
-
-
-
-
-
-//                    notification.value = true
-//                        utils.sharedHelper.putBoolean(this, utils.notificationEnabled, true)
-//                        utils.sharedHelper.putBoolean(this, utils.noti_ON_OFF, true)
-//                        notification.value = false
-
-//                    utils.sharedHelper.putBoolean(this,utils.notificationPermissionCheck,true)
 
                     }
                 }
                 else
                 {
-                    println("NOTI-CHECK----4")
                     MyApp(placesClient,deepliknUrl)
                 }
 
@@ -434,13 +354,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//To hide status bar and navigation bar
 fun setSystemUIVisibility(hide: Boolean, mainActivity: MainActivity) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val window = mainActivity.window.insetsController!!
         val windows = WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars()
         if (hide) window.hide(windows) else window.show(windows)
-        // needed for hide, doesn't do anything in show
+
         window.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
     } else {
         val view = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
@@ -450,14 +369,9 @@ fun setSystemUIVisibility(hide: Boolean, mainActivity: MainActivity) {
     }
 }
 
-
 var directHome = mutableStateOf(false)
 
-
-
 var gooooo = mutableStateOf(false)
-
-
 
 @Composable
 fun IsNavigationBarVisible(): Boolean {
@@ -465,8 +379,6 @@ fun IsNavigationBarVisible(): Boolean {
     val bottomInset = insets.getBottom(LocalDensity.current)
     return bottomInset > 0
 }
-
-
 
 @Composable
 fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
@@ -477,7 +389,7 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
     val context = LocalContext.current
 
     fun logout() {
-        // AppPreferences.clearAll()
+
         navController.navigate(UserCredentialsScreenFlow.UserCredentials.route) {
             popUpTo(navController.graph.startDestinationId) {
                 inclusive = true
@@ -492,13 +404,6 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
     val alphaAnim = animateFloatAsState(targetValue = if (Animated) 1f else 0f,
         animationSpec = tween(durationMillis = 5000),
         label = "")
-
-
-
-
-
-
-
 
     LaunchedEffect(key1 = true) {
         Animated = true
@@ -523,20 +428,17 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
                     .alpha(alphaAnim.value)
             )
 
-
         }
     }
 
-
     if (gooooo.value) {
 
-        // Check login / onboarding status
         val onAuthenticationComplete =
             AppPreferences.getUserId() != -1 && AppPreferences.get_Verify_Complete() != -1
-        //|| AppPreferences.get_UserToken().isEmpty()
+
         val onBoardingCompleted = AppPreferences.get_Onboarding_Completed()
-        val userCompletedCredentials = AppPreferences.get_Interest_Completed() == 1 // true/false
-        val locationReceived = AppPreferences.get_Location_Received() == 1 // true/false
+        val userCompletedCredentials = AppPreferences.get_Interest_Completed() == 1
+        val locationReceived = AppPreferences.get_Location_Received() == 1
 
         val startDestination = when {
             !onBoardingCompleted -> UserCredentialsScreenFlow.Onboarding.route
@@ -545,13 +447,11 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
             !locationReceived -> UserCredentialsScreenFlow.UserInterests.route
             else ->
                 if (deepLinkUrl.isNullOrEmpty()) {
-                    println("kwdjvbjkwnvjk132jk31233232---1111")
                     UserCredentialsScreenFlow.Common_Screen.route
                 } else {
                     if (deepLinkUrl?.get("type") == "profile") {
                         set_FDLP_State(true)
                         AppPreferences.save_Post_Id(0)
-                        println("kwdjvbjkwnvjk132jk31233232---22221")
                         constants.Profile_ViewModel.put_Other_User_Id(
                             deepLinkUrl?.get("id")?.toInt() ?: 0
                         )
@@ -560,7 +460,6 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
                         )
                         UserCredentialsScreenFlow.Other_Profile_Structure.route
                     } else {
-                        println("kwdjvbjkwnvjk132jk31233232---3333")
                         AppPreferences.save_Post_Id(deepLinkUrl?.get("id")?.toInt() ?: 0)
                         set_FDLP_State(true)
                         UserCredentialsScreenFlow.ReelsView.route
@@ -569,20 +468,6 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
         }
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-//            BottomCenterRotateBox()
-           //Credentials_Rento()
-          // ProfileHeader()
-            //CalendarPickerWithBox()
-           // trao()
-           // PP_Fifth_Form()
-
-//            PP_Seventh_Form(
-//                onHover = mutableStateOf(false),
-//                //hoveredMedia = mutableStateOf(null)
-//            )
-
-            //PreviewScreen()
-            //CalendarPickerWithBox(false)
 
           NavHost(
                 navController = navController,
@@ -615,7 +500,6 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
                     Common_Screen(commonVM, navController, tabIndex)
                 }
 
-                // ✅ ADD THIS NEW DESTINATION
                 composable(
                     route = UserCredentialsScreenFlow.Justify_Post.route + "/{postId}",
                     arguments = listOf(navArgument("postId") { type = NavType.StringType })
@@ -638,7 +522,6 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
                     val commonVM: Common_H_ViewModel = viewModel()
                     In_App_Notification(navController ,commonVM)
                 }
-
 
                 composable(UserCredentialsScreenFlow.Other_Profile_Structure.route) {
                     val commonVM: Common_H_ViewModel = viewModel()
@@ -728,7 +611,7 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
                     val json = Json {
                         ignoreUnknownKeys = true
                     }
-//                    val video = json.decodeFromString<PostUser>(Uri.decode(videoJson))
+
                     val video =
                         navController.previousBackStackEntry
                             ?.savedStateHandle
@@ -762,9 +645,6 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
                     val viewModel : Start_Up_ViewModel = viewModel()
                     User_Credentials(navController , viewModel)
                 }
-
-
-
 
                 composable(
                     route = ProfileScreenFlow.ViewPropertyStructure.route,
@@ -838,26 +718,10 @@ fun MyApp(placesClient: PlacesClient,deepLinkUrl: Map<String, String>? = null) {
                 }
             }
 
-
-
-            //CircleToCylinderAnimation()
-
-
-            //Onboarding(navController)
-
-
-           // Search_Profile_Result_Screen(viewModel, navHostController)
             GlobalSnackbarHost()
         }
     }
 }
-
-
-
-
-
-
-
 
 @Composable
 fun CircleToCylinderAnimation() {
@@ -874,13 +738,13 @@ fun CircleToCylinderAnimation() {
     val height: Dp by transition.animateDp(
         transitionSpec = { tween(durationMillis = 600) }, label = "height"
     ) { isExpanded ->
-        if (isExpanded) 70.dp else 70.dp // same height
+        if (isExpanded) 70.dp else 70.dp
     }
 
     val cornerRadius: Dp by transition.animateDp(
         transitionSpec = { tween(durationMillis = 600) }, label = "corner"
     ) { isExpanded ->
-        if (isExpanded) 50.dp else 50.dp // 50% of height for circle
+        if (isExpanded) 50.dp else 50.dp
     }
 
     Column(
@@ -904,12 +768,6 @@ fun CircleToCylinderAnimation() {
     }
 }
 
-
-
-
-
-
-
 @Composable
 fun BottomCenterRotateBox() {
     val screenHeightDp = LocalConfiguration.current.screenHeightDp.dp
@@ -919,7 +777,7 @@ fun BottomCenterRotateBox() {
     val screenHeightPx = with(density) { screenHeightDp.toPx() }
     val boxHeightPx = with(density) { boxHeightDp.toPx() }
 
-    val offsetY = remember { Animatable(screenHeightPx - boxHeightPx) } // Start at bottom
+    val offsetY = remember { Animatable(screenHeightPx - boxHeightPx) }
     val rotation = remember { Animatable(0f) }
 
     val scope = rememberCoroutineScope()
@@ -932,20 +790,18 @@ fun BottomCenterRotateBox() {
                 detectTapGestures(
                     onTap = {
                         scope.launch {
-                            // Step 1: Move to center
+
                             offsetY.animateTo(
                                 (screenHeightPx - boxHeightPx) / 2,
                                 animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
                             )
 
-                            // Step 2: Rotate
                             rotation.animateTo(
                                 360f,
                                 animationSpec = tween(durationMillis = 800, easing = LinearEasing)
                             )
 
-                            // Step 3: Return to bottom
-                            rotation.snapTo(0f) // reset rotation
+                            rotation.snapTo(0f)
                             offsetY.animateTo(
                                 screenHeightPx - boxHeightPx,
                                 animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
@@ -1018,7 +874,7 @@ fun ProfileHeader(){
         item {
             Box(
                 modifier = Modifier
-                    ///.background(Color.Red)
+
                     .fillMaxWidth()
                     .wrapContentHeight()
             )
@@ -1031,7 +887,6 @@ fun ProfileHeader(){
                             listOf(Color(0xffF7F0DC) , Color(0xffE6C96A))
                         ))
                 )
-
 
                 Box (
                     modifier = Modifier
@@ -1069,7 +924,7 @@ fun ProfileHeader(){
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .background(newLightBlue)
-                                        //.padding(8.dp)
+
                                         ,
                                         contentAlignment = Alignment.Center
                                     ) {
@@ -1091,7 +946,7 @@ fun ProfileHeader(){
                             .zIndex(0f)
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            //.clip(RoundedCornerShape(8.dp))
+
                             .background(Color.White)
                             .padding(horizontal = 16.dp)
                             .padding(top = 40.dp, bottom = 16.dp),
@@ -1116,8 +971,6 @@ fun ProfileHeader(){
                         )
                         constants.spacer(2)
 
-//"This is about me in two hello lines. If the content gets longer, it will end with an ellipsis and a clickable 'see more' to view the full text."
-
                         ExpandableText(
                             fullText = "profile_Content?.bio ?: ",
                             maxCharacters = 80,
@@ -1128,7 +981,6 @@ fun ProfileHeader(){
 
                         constants.spacer(2)
 
-                        // follow follwing , post show box
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth(.9f)
@@ -1212,226 +1064,7 @@ fun ProfileHeader(){
         }
     }
 
-/*
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.LightGray)
-    ){
-        Box(
-            modifier = Modifier
-                .background(Color.Red)
-                .fillMaxWidth()
-                .wrapContentHeight()
-        )
-        {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .background(Brush.verticalGradient(
-                        listOf(Color(0xffF7F0DC) , Color(0xffE6C96A))
-                    ))
-            )
-            Box(
-                modifier = Modifier
-                    .padding(bottom = 40.dp)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            )
-            {
-                Text(
-                    text = "My Profile",
-                    color = newBlack,
-                    fontSize = constants.textUnit(24),
-                    fontFamily = constants.fontFamily(0),
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                )
-
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .size(if (forTab()) 28.dp else 24.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .border(
-                            1.dp,
-                            newGray,
-                            RoundedCornerShape(4.dp)
-                        )
-                        .background(Color.White)
-                        .noRippleClickable {
-                            constants.Profile_ViewModel.set_open_settings()
-                        }, contentAlignment = Alignment.Center
-                ) {
-                    AsyncImage(
-                        model = R.drawable.own_profile_settings_icon,
-                        "",
-                        modifier = Modifier
-                            .size(if (forTab()) 24.dp else 18.dp)
-                    )
-                }
-            }
-
-
-            Box (
-                modifier = Modifier
-                    .padding(top = 60.dp)
-            ){
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .size(if (forTab()) 92.dp else 80.dp)
-                        .clip(CircleShape)
-                        .background(newWhite)
-                        .zIndex(2f)
-                )
-                {
-
-                    SubcomposeAsyncImage(
-                        model = R.drawable.signupheader
-                            ?: "".ifEmpty { AppPreferences.get_ProfileImage() },
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentDescription = "",
-                        contentScale = ContentScale.FillBounds
-                    )
-                    {
-                        val state = painter.state
-                        if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(newLightBlue)
-                                //.padding(8.dp)
-                                ,
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "HIIII"
-                                )
-                            }
-                        } else {
-                            SubcomposeAsyncImageContent()
-                        }
-                    }
-
-                }
-
-                Column(
-                    modifier = Modifier
-                        .padding(top = if (forTab()) 46.dp else 40.dp)
-                        .zIndex(0f)
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color.Green)
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 40.dp, bottom = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                )
-                {
-                    constants.spacer(2)
-                    Text(
-                        text = "profile_Content?.username ?: ",
-                        color = newBlack,
-                        fontSize = constants.textUnit(18),
-                        fontFamily = constants.fontFamily(0)
-                    )
-                    constants.spacer(2)
-
-                    Text(
-                        text = "profile_Content?.name ?:",
-                        color = newGray,
-                        fontSize = constants.textUnit(14),
-                        fontFamily = constants.fontFamily(2)
-                    )
-                    constants.spacer(2)
-
-//"This is about me in two hello lines. If the content gets longer, it will end with an ellipsis and a clickable 'see more' to view the full text."
-
-                    ExpandableText(
-                        fullText = "profile_Content?.bio ?: ",
-                        maxCharacters = 80,
-                        modifier = Modifier.fillMaxWidth(.9f)
-                    )
-
-                    Spacer(modifier = Modifier.padding(4.dp))
-
-                    constants.spacer(2)
-
-                    // follow follwing , post show box
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(.9f)
-                            .height(if (forTab()) 64.dp else 56.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(
-                                1.dp,
-                                newGray,
-                                RoundedCornerShape(8.dp)
-                            ),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    )
-                    {
-                        repeat(3) { itemIndex ->
-                            Column(
-                                modifier = Modifier,
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = when (itemIndex) {
-                                        0 -> " ${0}"
-                                        1 -> "${999}"
-                                        2 -> "${999}"
-                                        else -> "48"
-                                    },
-                                    color = newBlack,
-                                    fontSize = constants.textUnit(
-                                        14
-                                    ),
-                                    fontFamily = constants.fontFamily(
-                                        0
-                                    )
-                                )
-
-                                Text(
-                                    text = when (itemIndex) {
-                                        0 -> "Properties"
-                                        1 -> "Followers"
-                                        2 -> "Following"
-                                        else -> "Extra"
-                                    },
-                                    color = newBlack,
-                                    fontSize = constants.textUnit(
-                                        12
-                                    ),
-                                    fontFamily = constants.fontFamily(
-                                        3
-                                    )
-                                )
-                            }
-
-                            if (itemIndex != 2) {
-                                VerticalDivider(
-                                    modifier = Modifier.padding(
-                                        vertical = 8.dp
-                                    )
-                                )
-                            }
-                        }
-                    }
-                    constants.spacer(2)
-
-                }
-            }
-        }
-    }*/
 }
-
 
 fun getDeviceToken(onTokenReceived: (String?) -> Unit) {
     FirebaseMessaging.getInstance().token
@@ -1442,13 +1075,11 @@ fun getDeviceToken(onTokenReceived: (String?) -> Unit) {
                 return@addOnCompleteListener
             }
 
-            // Get new FCM registration token
             val token = task.result
             Log.d("FCM", "Device token: $token")
             onTokenReceived(token)
         }
 }
-
 
 fun isLocationEnabled(context: Context): Boolean {
     val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -1478,14 +1109,8 @@ fun showEnableGPSDialog(context: Context, onPositiveClick: () -> Unit) {
         .show()
 }
 
-
-
-
-
-// Make file nullable instead of lateinit
 var file: File? = null
 
-// Get file extension from URI
 fun getFileExtension(context: Context, uri: Uri): String? {
     val contentResolver: ContentResolver = context.contentResolver
 
@@ -1496,8 +1121,6 @@ fun getFileExtension(context: Context, uri: Uri): String? {
     }
 }
 
-// AWS File Upload - Safe Version
-//lateinit var file: File
 var filePath: Uri? = null
 
 fun GenertateLink(
@@ -1533,11 +1156,10 @@ fun GenertateLink(
 
     } catch (e: Exception) {
         e.printStackTrace()
-        onComplete() // continue even if error
+        onComplete()
     }
 }
 
-// Upload function
 fun UploadS3000(
     mainActivity: MainActivity,
     fileExt: String,
@@ -1555,8 +1177,6 @@ fun UploadS3000(
         onComplete()
         return
     }
-
-
 
     val metadata = ObjectMetadata().apply {
         contentType = when (fileExt.lowercase()) {
@@ -1576,8 +1196,6 @@ fun UploadS3000(
     val fileName = "${folder.substringAfterLast("/")}_${timestamp}.$fileExt"
     val newKey = "$userId/post/$folder/${folder.dropLast(1)}_$timestamp.$fileExt"
 
-
-
     val s3Client = constants.s3Client ?: AmazonS3Client(
         BasicAWSCredentials(constants.ACCESS_ID, constants.SECRET_KEY)
     ).apply {
@@ -1587,7 +1205,7 @@ fun UploadS3000(
 
     Thread {
         try {
-            // Delete old files
+
             val existingFiles = s3Client.listObjects(constants.BUCKET_NAME, "$userId/$folder/")
                 .objectSummaries
                 .filter { !it.key.endsWith("/") }
@@ -1599,7 +1217,6 @@ fun UploadS3000(
                 s3Client.deleteObjects(deleteReq)
             }
 
-            // Upload new file
             val putRequest = PutObjectRequest(constants.BUCKET_NAME, newKey, fileToUpload).apply {
                 this.metadata = metadata
             }
@@ -1616,67 +1233,9 @@ fun UploadS3000(
             URL_COMPLETED.add(Pair(type, finalUrl))
 
             mainActivity.runOnUiThread {
-//                println("🌐 Uploaded URL: $finalUrl __ ${constants.PostProperty_ViewModel.get_Media().size} -- ${URL_COMPLETED.size}")
 
                 onSomething.value = 2134 + URL_COMPLETED.size
 
-               /* if (constants.PostProperty_ViewModel.get_Media().size == URL_COMPLETED.size){
-                    val videoUrl = URL_COMPLETED.find { it.first == 1 }?.second ?: ""
-                    val imageUrls = URL_COMPLETED.filter { it.first == 0 }.map { it.second }
-                    val type = if (videoUrl.isEmpty()) "2" else "1"
-
-//                   var imageUrls2 = imageUrls.map { it.replace("\\", "") }
-                    var imageUrls2 = imageUrls.map { it.replace("\\", "") }.distinct()
-
-                    val result = imageUrls2
-
-                    println("dschjvcdsbjcdsvjhcdvwj -- ${videoUrl} --${type} ${imageUrls2} -- ${result}")
-                    println("WHERE TO FOND 111111")
-                    constants.API_Vm.put_post_Form6(
-                        user_id = AppPreferences.getUserId(),
-                        user_post_id = AppPreferences.get_Post_Id(),
-                        post_type = type,
-                        video_url = videoUrl,
-                        image_urls = result
-                    )
-                    {
-                        aPI_Result_Handling ->
-                        when (aPI_Result_Handling) {
-                            is API_Result_Handling.NoData -> {
-                                constants.PostProperty_ViewModel.change_Status_PFs(false)
-                            }
-                            is API_Result_Handling.Deactivated -> {
-                                //resultCallback(5)
-                            }
-                            is API_Result_Handling.Loading -> {
-                                println("✅ Post submitted loading")
-                            }
-
-                            is API_Result_Handling.Error -> {
-                                constants.PostProperty_ViewModel.change_Status_PFs(false)
-                                println("✅ Post submitted failurre")
-                                //toast("Something Went wrong")
-                            }
-
-                            is API_Result_Handling.Success -> {
-                                constants.PostProperty_ViewModel.change_Status_PFs(false)
-                                println("✅ Post submitted successfully")
-
-                                constants.Profile_ViewModel.set_From_Repost(1)
-                                constants.PostProperty_ViewModel.set_Post_Form_Flow(1)
-
-                                constants.PostProperty_ViewModel.change_Status_PFs(false)
-
-
-                                constants.PostProperty_ViewModel.set_Post_Form_Flow(
-                                    999
-                                )
-                                navController.navigate(PostPropertyFlow.ViewPropertyStructure.route)
-                            }
-                        }
-
-                    }
-                }*/
             }
 
             onComplete()
@@ -1690,11 +1249,10 @@ fun UploadS3000(
     }.start()
 }
 
-
 @SuppressLint("SuspiciousModifierThen")
 fun Modifier.noRippleClickable(enabled: Boolean = true, onClick: () -> Unit): Modifier = composed {
 
-    this.then( // Use the Modifier instance
+    this.then(
 
         clickable(
 
@@ -1714,12 +1272,6 @@ fun Modifier.noRippleClickable(enabled: Boolean = true, onClick: () -> Unit): Mo
 
 }
 
-
-
-
-
-
-
 @Composable
 fun SimpleSnackbar(
     message: String,
@@ -1727,7 +1279,6 @@ fun SimpleSnackbar(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Launch the snackbar when message changes
     LaunchedEffect(message) {
         if (message.isNotEmpty()) {
             snackbarHostState.showSnackbar(
@@ -1745,14 +1296,13 @@ fun SimpleSnackbar(
     )
 }
 
-
 enum class ScrollDirection { UP, DOWN, IDLE }
 
 @Composable
 fun rememberLazyListScrollDirection(
     listState: LazyListState,
     reverseLayout: Boolean = false,
-    onlyWhileScrolling: Boolean = false // if true, updates only while listState.isScrollInProgress == true
+    onlyWhileScrolling: Boolean = false
 ): State<ScrollDirection> {
     val direction = remember { mutableStateOf(ScrollDirection.IDLE) }
 
@@ -1761,10 +1311,10 @@ fun rememberLazyListScrollDirection(
         var prevOffset = listState.firstVisibleItemScrollOffset
 
         snapshotFlow {
-            // collect both scrolling flag and (index, offset)
+
             Triple(listState.isScrollInProgress, listState.firstVisibleItemIndex, listState.firstVisibleItemScrollOffset)
         }
-            // optional: only update while the user (or fling) is in progress
+
             .let { flow ->
                 if (onlyWhileScrolling) flow.filter { it.first } else flow
             }
@@ -1782,7 +1332,7 @@ fun rememberLazyListScrollDirection(
                 prevOffset = offset
 
                 direction.value = if (reverseLayout) {
-                    // if you used reverseLayout = true, invert the sense of UP/DOWN
+
                     when (newDir) {
                         ScrollDirection.UP -> ScrollDirection.DOWN
                         ScrollDirection.DOWN -> ScrollDirection.UP
@@ -1794,15 +1344,6 @@ fun rememberLazyListScrollDirection(
 
     return direction
 }
-
-
-
-// ============================================================
-// 2️⃣ UPDATE POPUP COMPOSABLE
-// ============================================================
-
-
-// Compare version strings
 
 fun isVersionOlder(currentVersion: String, newVersion: String): Boolean {
     val current = currentVersion.split(".").map { it.toIntOrNull() ?: 0 }
@@ -1819,8 +1360,6 @@ fun isVersionOlder(currentVersion: String, newVersion: String): Boolean {
     return false
 }
 
-
-
 var openDialogCustom = mutableStateOf(false)
 inline fun <reified T> getDuration(current: Long, old: Long): T {
     val milliseconds = current - old
@@ -1828,7 +1367,6 @@ inline fun <reified T> getDuration(current: Long, old: Long): T {
     val hours: Int = (((milliseconds - 1000 * 60 * 60  * 24 * days) / (1000  *60 * 60)).toInt())
     val min: Int =
         ((milliseconds - 1000 * 60 * 60 * 24 * days - 1000 * 60  *60  *hours) / (1000 * 60)).toInt()
-
 
     return when (T::class) {
         Int::class -> days as T
@@ -1841,14 +1379,13 @@ fun AppUpdateDilaog() {
         val appUpdateManager = AppUpdateManagerFactory.create(activity)
         val appUpdateInfoTask = appUpdateManager.appUpdateInfo
 
-
         if(AppPreferences.get_version() == 0) {
             appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
 
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                     && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                 ) {
-                    //sharedhelper.putInt(activity,Utils.UpdateVersionCode,appUpdateInfo.availableVersionCode())
+
                     AppPreferences.save_version( appUpdateInfo.availableVersionCode())
                     openDialogCustom.value = true
 
@@ -1864,7 +1401,7 @@ fun AppUpdateDilaog() {
                 if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                     && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                 ) {
-                    //sharedhelper.putInt(activity,Utils.UpdateVersionCode,appUpdateInfo.availableVersionCode())
+
                     AppPreferences.save_version(appUpdateInfo.availableVersionCode())
                     openDialogCustom.value = true
 
@@ -1879,9 +1416,9 @@ fun AppUpdateDilaog() {
                     if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
                         && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE)
                     ) {
-                       // sharedhelper.putInt(activity,Utils.UpdateVersionCode,appUpdateInfo.availableVersionCode())
+
                         AppPreferences.save_version(appUpdateInfo.availableVersionCode())
-//                        sharedhelper.putInt(activity,Utils.skipCount,)
+
                         AppPreferences.save_skipcount(0)
                         openDialogCustom.value = true
                     }
@@ -1892,9 +1429,6 @@ fun AppUpdateDilaog() {
 
     }
 }
-
-
-
 
 @Composable
 fun UpdatePopup(
@@ -1924,28 +1458,26 @@ fun UpdatePopup(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // ✅ Icon
+
                 Image(
                     painter = painterResource(id = R.drawable.app_logo),
                     contentDescription = "Update Available",
                     modifier = Modifier.size(64.dp)
                 )
 
-                // ✅ Title (FIXED: Larger font)
                 Text(
                     text = "Update Available",
                     color = Color.Black,
-                    fontSize = constants.textUnit(20),  // ✅ CHANGED from 12 to 20
+                    fontSize = constants.textUnit(20),
                     fontFamily = constants.fontFamily(0),
-                    fontWeight = FontWeight.Bold,  // ✅ ADDED
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
 
-                // ✅ Description (FIXED: Correct font size)
                 Text(
                     text = "A new version of the app is available. Please update to continue using all features.",
                     color = Color.Gray,
-                    fontSize = constants.textUnit(12),  // ✅ CHANGED from 14 to 12
+                    fontSize = constants.textUnit(12),
                     fontFamily = constants.fontFamily(1),
                     textAlign = TextAlign.Center,
                     lineHeight = 20.sp
@@ -1953,12 +1485,11 @@ fun UpdatePopup(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // ✅ Buttons Row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Cancel Button
+
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -1979,7 +1510,6 @@ fun UpdatePopup(
                         )
                     }
 
-                    // Update Button
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -2004,5 +1534,3 @@ fun UpdatePopup(
         }
     }
 }
-
-

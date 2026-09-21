@@ -1,7 +1,5 @@
 package com.toletspot.houseforrent.Home_Screen.PostProperty_Module
 
-
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -61,466 +59,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
-/*
-@Composable
-fun PP_Forms_Next_Clicker(
-    current_Form: State<Int>,
-    isLoading: State<Boolean>,
-    navController: NavHostController,
-    apiError: MutableState<Boolean>
-) {
-    val network = rememberNetworkStatus()
-    val media = constants.PostProperty_ViewModel.mediaList.collectAsStateWithLifecycle()
-    val context = LocalContext.current
-    val state = constants.PostProperty_ViewModel.status_PFs.collectAsStateWithLifecycle()
-    val scope = rememberCoroutineScope()
-    val postFlow = constants.PostProperty_ViewModel.postFlow.collectAsStateWithLifecycle()
-
-    var isProcessing by remember { mutableStateOf(false) }
-
-    LaunchedEffect(current_Form.value) {
-        isProcessing = false
-    }
-
-    Box {
-        Static_Bottom(
-            modifier = Modifier.fillMaxSize(),
-            content = {
-                if (current_Form.value != 0) {
-                    NavigationButtons(
-                        isLoading = isLoading.value,
-                        isProcessing = isProcessing,
-                        apiError = apiError.value,
-                        state = state.value,
-                        onBack = {
-                            constants.PostProperty_ViewModel.onPreviousPPForm()
-                        },
-                        onContinue = {
-                            if (!isProcessing) {
-                                isProcessing = true
-
-                                if (network.value != NetworkStatus.Online) {
-                                    GlobalSnackbar.show(context.getString(R.string.no_Internet))
-                                    isProcessing = false
-                                    return@NavigationButtons
-                                }
-
-                                handleFormSubmission(
-                                    currentForm = current_Form.value,
-                                    postFlow = postFlow.value,
-                                    navController = navController,
-                                    scope = scope,
-                                    media = media.value,
-                                    onComplete = { isProcessing = false }
-                                )
-                            }
-                        }
-                    )
-                } else {
-                    InitialFormButton(
-                        isLoading = isLoading.value,
-                        isProcessing = isProcessing,
-                        apiError = apiError.value,
-                        state = state.value,
-                        network = network.value,
-                        onSubmit = {
-                            if (!isProcessing) {
-                                isProcessing = true
-                                handleFirstForm(onComplete = { isProcessing = false })
-                            }
-                        }
-                    )
-                }
-            }
-        )
-    }
-}
-
-@Composable
-private fun NavigationButtons(
-    isLoading: Boolean,
-    isProcessing: Boolean,
-    apiError: Boolean,
-    state: Boolean,
-    onBack: () -> Unit,
-    onContinue: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        Spacer(modifier = Modifier.weight(.5f))
-
-        // Go Back Button
-        Box(
-            modifier = Modifier
-                .height(44.dp)
-                .weight(4f)
-                .clip(RoundedCornerShape(8.dp))
-                .clickable(enabled = !isProcessing && !isLoading) { onBack() }
-                .background(Color(0xffE8E8E8)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                "Go Back",
-                color = Color(0xff666666),
-                fontSize = constants.textUnit(14),
-                fontFamily = constants.fontFamily(0)
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        // Continue Button
-        Box(
-            modifier = Modifier
-                .height(44.dp)
-                .weight(4f)
-                .clip(RoundedCornerShape(8.dp))
-                .background(newBlue)
-                .noRippleClickable(enabled = !isLoading && !isProcessing && !apiError && !state) {
-                    onContinue()
-                }
-                .padding(horizontal = 8.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            if (isLoading || isProcessing) {
-                CircularProgressIndicator(
-                    color = Color.White,
-                    modifier = Modifier.size(20.dp)
-                )
-            } else {
-                Text(
-                    "Continue",
-                    color = Color.White,
-                    fontSize = constants.textUnit(14),
-                    fontFamily = constants.fontFamily(0)
-                )
-            }
-        }
-        Spacer(modifier = Modifier.weight(.5f))
-    }
-}
-
-@Composable
-private fun InitialFormButton(
-    isLoading: Boolean,
-    isProcessing: Boolean,
-    apiError: Boolean,
-    state: Boolean,
-    network: NetworkStatus,
-    onSubmit: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .height(44.dp)
-            .fillMaxWidth(.9f)
-            .clip(RoundedCornerShape(8.dp))
-            .background(newBlue)
-            .clickable(enabled = !isLoading && !isProcessing && !apiError && !state) {
-                onSubmit()
-            }
-            .padding(horizontal = 8.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        if (isLoading || isProcessing) {
-            CircularProgressIndicator(
-                color = Color.White,
-                modifier = Modifier.size(20.dp)
-            )
-        } else {
-            Text(
-                "Continue",
-                color = Color.White,
-                fontSize = constants.textUnit(14),
-                fontFamily = constants.fontFamily(0)
-            )
-        }
-    }
-}
-
-private fun handleFirstForm(onComplete: () -> Unit) {
-    if (constants.PostProperty_ViewModel.get_FirstForm_Selected_PP() != -1) {
-        constants.PostProperty_ViewModel.change_Status_PFs(true)
-        AppPreferences.save_Post_Id(0)
-        post_Form_1_API_Call { result ->
-            onComplete()
-            if (result == 1) {
-                constants.PostProperty_ViewModel.onNextPPForm()
-            } else {
-                toast("Something went wrong")
-            }
-        }
-    } else {
-        onComplete()
-        toast("Select options to continue")
-    }
-}
-
-private fun handleFormSubmission(
-    currentForm: Int,
-    postFlow: PostFlow,
-    navController: NavHostController,
-    scope: CoroutineScope,
-    media: List<UploadPropertyMedia>,
-    onComplete: () -> Unit
-) {
-    when (postFlow) {
-        PostFlow.DRAFT, PostFlow.EDIT -> handleEditFlow(
-            currentForm = currentForm,
-            navController = navController,
-            scope = scope,
-            media = media,
-            onComplete = onComplete
-        )
-        PostFlow.NEW, PostFlow.REPOST -> handleNewFlow(
-            currentForm = currentForm,
-            navController = navController,
-            scope = scope,
-            media = media,
-            onComplete = onComplete
-        )
-        PostFlow.NONE -> {
-            onComplete()
-            toast("Invalid flow state")
-        }
-    }
-}
-
-// ========== EDIT FLOW ==========
-private fun handleEditFlow(
-    currentForm: Int,
-    navController: NavHostController,
-    scope: CoroutineScope,
-    media: List<UploadPropertyMedia>,
-    onComplete: () -> Unit
-) {
-    when (currentForm) {
-        1 -> validateForm1(onComplete)
-        2 -> validateForm2(onComplete)
-        3 -> validateForm3(onComplete)
-        4 -> validateForm4(onComplete)
-        5 -> validateForm5(onComplete)
-        6 -> validateForm6(onComplete)
-        7 -> handleForm6Upload(navController, scope, media, onComplete, isDraft = true)
-    }
-}
-
-// ========== NEW FLOW ==========
-private fun handleNewFlow(
-    currentForm: Int,
-    navController: NavHostController,
-    scope: CoroutineScope,
-    media: List<UploadPropertyMedia>,
-    onComplete: () -> Unit
-) {
-    when (currentForm) {
-        1 -> submitForm1(onComplete)
-        2 -> submitForm2(onComplete)
-        3 -> submitForm3(onComplete)
-        4 -> submitForm4(onComplete)
-        5 -> submitForm5(onComplete)
-        6 -> submitForm6(onComplete)
-        7 -> handleForm6Upload(navController, scope, media, onComplete, isDraft = false)
-    }
-}
-
-// ========== VALIDATION FUNCTIONS ==========
-private fun validateForm1(onComplete: () -> Unit) {
-    if (constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id() != -1 &&
-        constants.PostProperty_ViewModel.get_LandSubType_Selected_Click() != -1
-    ) {
-        constants.PostProperty_ViewModel.onNextPPForm()
-        onComplete()
-    } else {
-        toast("Select type of property")
-        onComplete()
-    }
-}
-
-private fun validateForm2(onComplete: () -> Unit) {
-    val pp3Data = constants.PostProperty_ViewModel.get_pp3_Data()
-    val locationMissing = listOf(
-        pp3Data?.locality,
-        pp3Data?.pincode,
-        pp3Data?.city,
-        pp3Data?.state,
-        pp3Data?.country
-    ).any { it.isNullOrEmpty() }
-
-    if (!locationMissing) {
-        limitGoingIn.value = true
-        constants.PostProperty_ViewModel.onNextPPForm()
-        onComplete()
-    } else {
-        toast("Enter the location or pin on map")
-        onComplete()
-    }
-}
-
-private fun validateForm3(onComplete: () -> Unit) {
-    constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-        it.copy(draft = 4)
-    }
-
-    val hasNoErrors = if (next_Active_Fields.isEmpty()) {
-        true
-    } else {
-        constants.PostProperty_ViewModel.check_Errors(next_Active_Fields)
-    }
-
-    if (hasNoErrors) {
-        constants.PostProperty_ViewModel.onNextPPForm()
-        onComplete()
-    } else {
-        onComplete()
-    }
-}
-
-private fun validateForm4(onComplete: () -> Unit) {
-    constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-        it.copy(draft = 5)
-    }
-    constants.PostProperty_ViewModel.onNextPPForm()
-    onComplete()
-}
-
-private fun validateForm5(onComplete: () -> Unit) {
-    val budgetPrice = constants.PostProperty_ViewModel.get_budget_Price_PF5()
-    val budgetPriceState = constants.PostProperty_ViewModel.budget_Price_PF5.value
-
-    if (!budgetPrice.isNullOrEmpty() && budgetPriceState.isNotEmpty()) {
-        constants.PostProperty_ViewModel.onNextPPForm()
-        onComplete()
-    } else {
-        toast("Enter price to continue")
-        onComplete()
-    }
-}
-*/
-
-/*
-private fun validateForm6(onComplete: () -> Unit) {
-    if (constants.PostProperty_ViewModel.mediaList.value.isNotEmpty()) {
-        constants.PostProperty_ViewModel.onNextPPForm()
-        onComplete()
-    } else {
-        toast("Upload images or video to continue")
-        onComplete()
-    }
-}
-
-// ========== SUBMISSION FUNCTIONS ==========
-private fun submitForm1(onComplete: () -> Unit) {
-    if (constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id() != -1 &&
-        constants.PostProperty_ViewModel.get_LandSubType_Selected_Click() != -1
-    ) {
-        constants.PostProperty_ViewModel.change_Status_PFs(true)
-        post_Form_2_API_Call { result ->
-            onComplete()
-            if (result == 1) {
-                constants.PostProperty_ViewModel.onNextPPForm()
-            } else {
-                toast("Something went wrong")
-            }
-        }
-    } else {
-        toast("Select type of property")
-        onComplete()
-    }
-}
-
-private fun submitForm2(onComplete: () -> Unit) {
-    val pp3Data = constants.PostProperty_ViewModel.get_pp3_Data()
-    val locationMissing = listOf(
-        pp3Data?.locality,
-        pp3Data?.pincode,
-        pp3Data?.city,
-        pp3Data?.state,
-        pp3Data?.country
-    ).any { it.isNullOrEmpty() }
-
-    if (!locationMissing) {
-        constants.PostProperty_ViewModel.change_Status_PFs(true)
-        post_Form_3_API_Call { result ->
-            onComplete()
-            if (result == 1) {
-                limitGoingIn.value = true
-                constants.PostProperty_ViewModel.onNextPPForm()
-            } else {
-                toast("Something went wrong")
-            }
-        }
-    } else {
-        toast("Enter the location or pin on map")
-        onComplete()
-    }
-}
-
-private fun submitForm3(onComplete: () -> Unit) {
-    constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-        it.copy(draft = 4)
-    }
-
-    val hasNoErrors = if (next_Active_Fields.isEmpty()) {
-        true
-    } else {
-        constants.PostProperty_ViewModel.check_Errors(next_Active_Fields)
-    }
-
-    if (hasNoErrors) {
-        constants.PostProperty_ViewModel.change_Status_PFs(true)
-        put_post_Form4_API_CALL { result ->
-            onComplete()
-            if (result == 1) {
-                constants.PostProperty_ViewModel.onNextPPForm()
-            } else {
-                toast("Something went wrong")
-            }
-        }
-    } else {
-        onComplete()
-    }
-}
-
-private fun submitForm4(onComplete: () -> Unit) {
-    constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-        it.copy(draft = 5)
-    }
-    constants.PostProperty_ViewModel.change_Status_PFs(true)
-    put_post_Form4_API_CALL { result ->
-        onComplete()
-        if (result == 1) {
-            constants.PostProperty_ViewModel.onNextPPForm()
-        } else {
-            toast("Something went wrong")
-        }
-    }
-}
-
-private fun submitForm5(onComplete: () -> Unit) {
-    val budgetPrice = constants.PostProperty_ViewModel.get_budget_Price_PF5()
-    val budgetPriceState = constants.PostProperty_ViewModel.budget_Price_PF5.value
-
-    if (!budgetPrice.isNullOrEmpty() && budgetPriceState.isNotEmpty()) {
-        constants.PostProperty_ViewModel.change_Status_PFs(true)
-        post_Form_5_API_Call { result ->
-            onComplete()
-            if (result == 1) {
-                constants.PostProperty_ViewModel.onNextPPForm()
-            } else {
-                toast("Something went wrong")
-            }
-        }
-    } else {
-        GlobalSnackbar.show("Enter your Budget")
-        onComplete()
-    }
-}
-*/
-
 private fun submitForm6(onComplete: () -> Unit) {
     if (constants.PostProperty_ViewModel.mediaList.value.isNotEmpty()) {
         constants.PostProperty_ViewModel.onNextPPForm()
@@ -531,144 +69,6 @@ private fun submitForm6(onComplete: () -> Unit) {
     }
 }
 
-// ========== FORM 6 UPLOAD HANDLING ==========
-/*private fun handleForm6Upload(
-    navController: NavHostController,
-    scope: CoroutineScope,
-    media: List<UploadPropertyMedia>,
-    onComplete: () -> Unit,
-    isDraft: Boolean
-) {
-    if (media.isEmpty()) {
-        toast("Add images or videos to continue")
-        onComplete()
-        return
-    }
-
-    constants.PostProperty_ViewModel.change_Status_PFs(true)
-
-    scope.launch {
-        try {
-            val results = uploadMediaFiles(media)
-
-            if (results.isEmpty()) {
-                toast("Upload failed")
-                onComplete()
-                return@launch
-            }
-
-            val videoUrl = results.find { it.type == S3Uploader.MediaType.VIDEO }?.url.orEmpty()
-            val imageUrls = results
-                .filter { it.type == S3Uploader.MediaType.IMAGE }
-                .map { it.url }
-
-            if (isDraft) {
-                handleDraftSubmission(navController, onComplete)
-            } else {
-                handlePostSubmission(navController, videoUrl, imageUrls, onComplete)
-            }
-        } catch (e: Exception) {
-            println("❌ Upload error: ${e.message}")
-            e.printStackTrace()
-            toast("Upload failed")
-            constants.PostProperty_ViewModel.change_Status_PFs(false)
-            onComplete()
-        }
-    }
-}
-
-private suspend fun uploadMediaFiles(
-    media: List<UploadPropertyMedia>
-): List<S3Uploader.UploadResult> = withContext(Dispatchers.IO) {
-    val uploader = S3Uploader(
-        bucket = constants.BUCKET_NAME,
-        cloudFront = constants.CLOUD_FRONT_URL,
-        accessId = constants.ACCESS_ID,
-        secretKey = constants.SECRET_KEY
-    )
-
-    val urisToUpload = media.map { it.uri }
-
-    uploader.uploadFiles(
-        context = constants.activity,
-        userId = AppPreferences.getUserId().toString(),
-        uris = urisToUpload,
-        onProgress = { uri, progress ->
-            println("📤 Uploading ${uri.lastPathSegment}: $progress%")
-        }
-    )
-}
-
-private fun handleDraftSubmission(
-    navController: NavHostController,
-    onComplete: () -> Unit
-) {
-    constants.PostProperty_ViewModel.save_Changes_Draft.value = 0
-    constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-        it.copy(draft = 7)
-    }
-
-    put_Draft_New_Flow_API_CALL { result ->
-        onComplete()
-        if (result == 1) {
-            constants.Reels_ViewModel.clear_view_pro_Details()
-            constants.PostProperty_ViewModel.setPostFlow(PostFlow.DRAFT)
-
-            val data = constants.PostProperty_ViewModel.get_new_Draft_Data()
-            data?.toGetReelsData_FDfs()?.let {
-                constants.Reels_ViewModel.add_View_Property_Details(it)
-            }
-
-            CoroutineScope(Dispatchers.Main).launch {
-                constants.PostProperty_ViewModel.setPostFlow(PostFlow.NONE)
-                constants.PostProperty_ViewModel.change_Status_PFs(false)
-                navController.navigate(PostPropertyFlow.ViewPropertyStructure.route)
-            }
-        }
-    }
-}
-
-private fun handlePostSubmission(
-    navController: NavHostController,
-    videoUrl: String,
-    imageUrls: List<String>,
-    onComplete: () -> Unit
-) {
-    val postType = if (videoUrl.isNotEmpty()) "1" else "2"
-
-    constants.API_Vm.put_post_Form6(
-        user_id = AppPreferences.getUserId(),
-        user_post_id = AppPreferences.get_Post_Id(),
-        post_type = postType,
-        video_url = videoUrl,
-        image_urls = imageUrls
-    ) { result ->
-        onComplete()
-        when (result) {
-            is API_Result_Handling.Success -> {
-                println("✅ Post submitted successfully")
-                constants.Profile_ViewModel.set_From_Repost(1)
-                constants.PostProperty_ViewModel.setPostFlow(PostFlow.EDIT)
-                constants.PostProperty_ViewModel.setPostFlow(PostFlow.NONE)
-                constants.PostProperty_ViewModel.change_Status_PFs(false)
-                navController.navigate(PostPropertyFlow.ViewPropertyStructure.route)
-            }
-            is API_Result_Handling.Error -> {
-                println("❌ Post submission failed")
-                toast("Something went wrong")
-                constants.PostProperty_ViewModel.change_Status_PFs(false)
-            }
-            is API_Result_Handling.Loading -> {
-                println("🚀 Submitting post...")
-            }
-            else -> {
-                constants.PostProperty_ViewModel.change_Status_PFs(false)
-            }
-        }
-    }
-}*/
-
-
 @Composable
 fun PP_Forms_Next_Clicker(
     current_Form: State<Int>,
@@ -678,7 +78,6 @@ fun PP_Forms_Next_Clicker(
 ) {
     val network = rememberNetworkStatus()
     val media = constants.PostProperty_ViewModel.mediaList.collectAsState()
-    println("MEDIAITEMSS ON CLICKER CHECK -- ${media.value} -- ${constants.PostProperty_ViewModel.mediaList}")
     val context = LocalContext.current
     val state = constants.PostProperty_ViewModel.status_PFs.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
@@ -694,12 +93,7 @@ fun PP_Forms_Next_Clicker(
 
     LaunchedEffect(proceedWithoutMedia.value) {
         if (proceedWithoutMedia.value) {
-            println("NO MEDIA EVENT")
-            // reset event
-            //constants.PostProperty_ViewModel.proceedWithoutMedia.value = false
 
-            println("NO MEDIA EVENT")
-            // manually call Continue logic again
             handleFormSubmission(
                 currentForm = current_Form.value,
                 postFlow = postFlow.value,
@@ -710,7 +104,6 @@ fun PP_Forms_Next_Clicker(
             )
         }
     }
-
 
     Box {
         Static_Bottom(
@@ -734,7 +127,6 @@ fun PP_Forms_Next_Clicker(
                                     isProcessing = false
                                     return@NavigationButtons
                                 }
-                                println("MEDIAITEMSS ONCLICK CHECK 22  -- ${media.value}")
 
                                 handleFormSubmission(
                                     currentForm = current_Form.value,
@@ -790,7 +182,6 @@ private fun NavigationButtons(
     ) {
         Spacer(modifier = Modifier.weight(.5f))
 
-        // Go Back Button
         Box(
             modifier = Modifier
                 .height(44.dp)
@@ -810,7 +201,6 @@ private fun NavigationButtons(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Continue Button
         Box(
             modifier = Modifier
                 .height(44.dp)
@@ -907,7 +297,6 @@ private fun handleFormSubmission(
     onComplete: () -> Unit,
 
 ) {
-    println("MEDIAITEMSS ONCLICK CHECK 333  -- ${media}")
 
     when (postFlow) {
         PostFlow.DRAFT, PostFlow.EDIT -> handleEditFlow(
@@ -937,7 +326,6 @@ private fun handleFormSubmission(
     }
 }
 
-// ========== EDIT FLOW ==========
 private fun handleEditFlow(
     currentForm: Int,
     navController: NavHostController,
@@ -955,7 +343,6 @@ private fun handleEditFlow(
     }
 }
 
-// ========== NEW FLOW ==========
 private fun handleNewFlow(
     currentForm: Int,
     navController: NavHostController,
@@ -963,7 +350,6 @@ private fun handleNewFlow(
     media: List<UploadPropertyMedia>,
     onComplete: () -> Unit
 ) {
-    println("MEDIAITEMSS ONCLICK CHECK 444  -- ${media} -- ${currentForm}")
 
     when (currentForm) {
         1 -> submitForm1(onComplete)
@@ -971,8 +357,7 @@ private fun handleNewFlow(
         3 -> submitForm3(onComplete)
         4 -> submitForm4(onComplete)
         5 -> submitForm5(onComplete)
-            //submitForm6Rento(onComplete)
-            //submitForm4(onComplete)
+
         6 ->  handleForm6Upload(
             navController = navController,
             scope = scope,
@@ -984,7 +369,6 @@ private fun handleNewFlow(
     }
 }
 
-// ========== VALIDATION FUNCTIONS ==========
 private fun validateForm1(onComplete: () -> Unit) {
     if (constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id() != -1 &&
         constants.PostProperty_ViewModel.get_LandSubType_Selected_Click() != -1
@@ -1073,7 +457,6 @@ private fun validateForm5(onComplete: () -> Unit) {
     }
 }
 
-// ========== SUBMISSION FUNCTIONS ==========
 private fun submitForm1(onComplete: () -> Unit) {
     if (constants.PostProperty_ViewModel.get_Selected_Land_Cat_Id() != -1 &&
         constants.PostProperty_ViewModel.get_LandSubType_Selected_Click() != -1
@@ -1158,7 +541,6 @@ private fun submitForm4(onComplete: () -> Unit) {
         it.copy(draft = 5)
     }
 
-
     val hasNoErrors = if (next_Active_Fields5.isEmpty()) {
         true
     } else {
@@ -1181,12 +563,10 @@ private fun submitForm4(onComplete: () -> Unit) {
     }
 }
 
-
 private fun submitForm5(onComplete: () -> Unit) {
     constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
         it.copy(draft = 6)
     }
-
 
     val hasNoErrors = if (next_Active_Fields6.isEmpty()) {
         true
@@ -1211,13 +591,9 @@ private fun submitForm5(onComplete: () -> Unit) {
     }
 }
 
-
 private fun goToPreview(onComplete: () -> Unit) {
-//    constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-//        it.copy(draft = 6)
-//    }
-}
 
+}
 
 fun handleForm6Upload(
     navController: NavHostController,
@@ -1228,10 +604,10 @@ fun handleForm6Upload(
     val media = constants.PostProperty_ViewModel.mediaList.value
 
     if (!constants.PostProperty_ViewModel.proceedWithoutMedia.value) {
-        // ensure at least one uploaded file exists (or at least uploadedUrl != null)
+
         if (media.none { it.uploadedUrl != null }) {
             constants.PostProperty_ViewModel.set_True_emptyMediaBtm()
-            //toast("No uploaded media available. Please wait for uploads to complete.")
+
             onComplete()
             return
         }
@@ -1240,13 +616,11 @@ fun handleForm6Upload(
         get_Form_Preview_API_CALL { result ->
             onComplete()
             if (result == 3) {
-                println("Successfull")
                 navController.navigate(PostPropertyFlow.PreviewScreen.route)
                 constants.PostProperty_ViewModel.proceedWithoutMedia.value = false
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
 
             } else if (result == 1){
-                println("fail")
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
                 toast("Something went wrong")
             }
@@ -1256,16 +630,11 @@ fun handleForm6Upload(
     scope.launch {
         try {
             val requestBody = constants.PostProperty_ViewModel.buildUploadRequestBody()
-            // call your API
-            // map to ImageAPIUpload if your API expects that model
+
             val imageApiMapped = requestBody.image_urls.map { ImageAPIUpload(it.url, it.heading) }
             val videoApiMapped = requestBody.video_urls.map { ImageAPIUpload(it.url, it.heading) }
 
-
-            println("📦 Final Payload -> $requestBody --- $isDraft")
-
             if (isDraft) {
-                println("111111111")
                 constants.PostProperty_ViewModel.setPostFlow(PostFlow.DRAFT)
                 handleDraftSubmission(requestBody , navController, "0",onComplete)
             } else {
@@ -1280,32 +649,23 @@ fun handleForm6Upload(
     }
 }
 
-
 private fun handleDraftSubmission2(
     requestBody : UploadPostRequest,
     navController: NavHostController,
     onComplete: () -> Unit
 ) {
 
-    println("22222222")
     constants.PostProperty_ViewModel.save_Changes_Draft.value = 0
     constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
         it.copy(draft = 6)
     }
 
-
     val selectedForm = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
-
-
-
 
     fun checkPrint(label: String, value: Any?) {
         if (value == null) {
-            println("$label = null")
         } else if (value is String && value.isEmpty()) {
-            println("$label = empty")
         } else {
-            println("$label = $value")
         }
     }
 
@@ -1315,7 +675,6 @@ private fun handleDraftSubmission2(
         requestBody.image_urls.isNotEmpty() && requestBody.video_urls.isNotEmpty() -> "3"
         else -> "4"
     }
-    //if (requestBody.video_urls.isNotEmpty()) "1" else "2"
 
     val imageApiMapped = requestBody.image_urls .map {
         ImageAPIUpload(url = it.url, heading = it.heading)
@@ -1325,7 +684,6 @@ private fun handleDraftSubmission2(
         ImageAPIUpload(url = it.url, heading = it.heading)
     }
 
-// Example usage for your fields
     checkPrint("user_id", AppPreferences.getUserId())
     checkPrint("user_post_id", AppPreferences.get_Post_Id())
 
@@ -1374,10 +732,9 @@ private fun handleDraftSubmission2(
     checkPrint("fire_safety_measures", selectedForm.property_Fire_Safety.joinToString(","))
     checkPrint("lifts", selectedForm.property_Lifts)
 
-//    checkPrint("is_it_pre_leased_pre_rented", selectedForm.property_Leased_Rented)
     checkPrint("noc_certified", selectedForm.property_NOC_Certified)
     checkPrint("occupancy_certificate", selectedForm.property_Occupancy)
-//    checkPrint("office_previously_used_for", selectedForm.property_Previously_Used_For)
+
     checkPrint("washroom_details", selectedForm.property_WashRoom.joinToString(","))
     checkPrint("which_local_authority", selectedForm.property_Authority_Approved)
     checkPrint("does_local_authority", selectedForm.property_Authority_Approved)
@@ -1412,9 +769,6 @@ private fun handleDraftSubmission2(
     checkPrint("land_type_id", constants.PostProperty_ViewModel.selected_Land_Type_PF2.value)
     checkPrint("land_categorie_id", constants.PostProperty_ViewModel.selected_Land_Cat_Id.value)
     checkPrint("user_type", constants.PostProperty_ViewModel.selected_User_Type_1PF.value)
-
-
-
 
     constants.API_Vm.draftNewFlow(
         user_id = AppPreferences.getUserId(),
@@ -1497,7 +851,7 @@ private fun handleDraftSubmission2(
         rent = constants.PostProperty_ViewModel.get_budget_Price_PF5(),
         rent_negotiable = constants.PostProperty_ViewModel.get_price_negotiation(),
         deposit_amount_month_of_rents = selectedForm.deposit_amount_month_of_rents,
-//        deposit_amount_months_or_amount = selectedForm.property_Deposit_Amount,
+
         duration_of_agreement = selectedForm.duration_of_agreement_type,
         notice_period = selectedForm.notice_period,
         lock_in_period = selectedForm.lock_in_period,
@@ -1506,8 +860,8 @@ private fun handleDraftSubmission2(
         lease_negotiable = if(selectedForm.lease_negotiable)"1" else "0",
 
         post_type = postType,
-        video = videoApiMapped,                     // LIST instead of string
-        images = imageApiMapped,                     // LIST object type
+        video = videoApiMapped,
+        images = imageApiMapped,
         thumbnail = requestBody.thumbnail,
         draft = selectedForm.draft.toString(),
         preview_model = constants.PostProperty_ViewModel.save_Changes_Draft.value.toString(),
@@ -1522,18 +876,15 @@ private fun handleDraftSubmission2(
         onComplete()
         when (result) {
             is API_Result_Handling.Loading -> {
-                println("aesfdghjhgfcdxszxfcgm0987654324567890-333333")
-                //resultCallback(3)
+
                 constants.PostProperty_ViewModel.change_Status_PFs(true)
             }
             is API_Result_Handling.Error -> {
-                println("aesfdghjhgfcdxszxfcgm0987654324567890-0000---${result.message}")
-                //resultCallback(0)
+
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.Success -> {
-               // resultCallback(1)
-                println("aesfdghjhgfcdxszxfcgm0987654324567890-1111111111")
+
                 constants.Reels_ViewModel.clear_view_pro_Details()
                 constants.PostProperty_ViewModel.setPostFlow(PostFlow.DRAFT)
 
@@ -1549,18 +900,15 @@ private fun handleDraftSubmission2(
                 }
             }
             is API_Result_Handling.NoData -> {
-                println("aesfdghjhgfcdxszxfcgm0987654324567890-")
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.Deactivated -> {
-                //resultCallback(5)
+
             }
         }
     }
 
 }
-
-
 
 fun handleDraftSubmission(
     requestBody: UploadPostRequest,
@@ -1568,13 +916,10 @@ fun handleDraftSubmission(
     draftPreview : String,
     onComplete: () -> Unit
 ) {
-    println("22222222")
     constants.PostProperty_ViewModel.save_Changes_Draft.value = 0
-
 
     val selectedForm = constants.PostProperty_ViewModel.get_Selected_Fields_Form()
 
-    // Determine post type
     val postType = when {
         requestBody.image_urls.isEmpty() && requestBody.video_urls.isNotEmpty() -> "1"
         requestBody.image_urls.isNotEmpty() && requestBody.video_urls.isEmpty() -> "2"
@@ -1585,7 +930,6 @@ fun handleDraftSubmission(
     val imageApiMapped = requestBody.image_urls.map { ImageAPIUpload(url = it.url, heading = it.heading) }
     val videoApiMapped = requestBody.video_urls.map { ImageAPIUpload(url = it.url, heading = it.heading) }
 
-    // Build the JSON request object
     val draftRequest = DraftNewFlowRequestRaw(
         user_id = AppPreferences.getUserId(),
         user_post_id = AppPreferences.get_Post_Id(),
@@ -1593,7 +937,6 @@ fun handleDraftSubmission(
         land_type_id = constants.PostProperty_ViewModel.selected_Land_Type_PF2.value,
         land_categorie_id = constants.PostProperty_ViewModel.selected_Land_Cat_Id.value,
 
-        // Location
         country = constants.PostProperty_ViewModel.get_pp3_Data()?.country,
         state = constants.PostProperty_ViewModel.get_pp3_Data()?.state,
         city = constants.PostProperty_ViewModel.get_pp3_Data()?.city,
@@ -1604,7 +947,6 @@ fun handleDraftSubmission(
         property_name = selectedForm.property_Name,
         property_for_rent_or_lease = selectedForm.property_for_rent_or_lease,
 
-        // Property details
         bhk_type = selectedForm.property_Floor_Plan_Bhk,
         property_area = selectedForm.property_Land_Area,
         property_area_unit = selectedForm.property_area_unit,
@@ -1682,7 +1024,6 @@ fun handleDraftSubmission(
         preview_model = draftPreview
     )
 
-    // Call new JSON API
     constants.API_Vm.draftNewFlowRaw(draftRequest) { result ->
         onComplete()
         when (result) {
@@ -1690,22 +1031,14 @@ fun handleDraftSubmission(
                 constants.PostProperty_ViewModel.change_Status_PFs(true)
             }
             is API_Result_Handling.Error -> {
-                println("Draft submission error: ${result.message}")
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.Success -> {
                 constants.Reels_ViewModel.clear_view_pro_Details()
                 constants.PostProperty_ViewModel.setPostFlow(PostFlow.DRAFT)
 
-//                val data = constants.PostProperty_ViewModel.get_new_Draft_Data()
-//                data?.toGetReelsData_FDfs()?.let {
-//                    constants.Reels_ViewModel.add_View_Property_Details(it)
-//                }
-
-
                 if (draftPreview == "1"){
-                   // constants.PostProperty_ViewModel.setPostFlow(PostFlow.NONE)
-                   // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                     onComplete()
                 }
                 else {
@@ -1714,7 +1047,6 @@ fun handleDraftSubmission(
                         constants.PostProperty_ViewModel.change_Status_PFs(false)
                         navController.navigate(PostPropertyFlow.PreviewScreen.route)
 
-                        // navController.navigate(PostPropertyFlow.ViewPropertyStructure.route)
                     }
                 }
             }
@@ -1722,14 +1054,11 @@ fun handleDraftSubmission(
                 constants.PostProperty_ViewModel.change_Status_PFs(false)
             }
             is API_Result_Handling.Deactivated -> {
-                // Optional handling
+
             }
         }
     }
 }
-
-
-
 
 private fun handlePostSubmission(
     requestBody : UploadPostRequest,
@@ -1743,7 +1072,6 @@ private fun handlePostSubmission(
             requestBody.image_urls.isNotEmpty() && requestBody.video_urls.isNotEmpty() -> "3"
             else -> "4"
         }
-        //if (requestBody.video_urls.isNotEmpty()) "1" else "2"
 
     val imageApiMapped = requestBody.image_urls .map {
         ImageAPIUpload(url = it.url, heading = it.heading)
@@ -1766,64 +1094,38 @@ private fun handlePostSubmission(
 
             when (result) {
                 is API_Result_Handling.Success -> {
-                    println("✅ Post submitted successfully")
-                 //   constants.Profile_ViewModel.set_From_Repost(1)
-//                constants.PostProperty_ViewModel.setPostFlow(PostFlow.EDIT)
-                    // constants.PostProperty_ViewModel.change_Status_PFs(false)
-//                onComplete()
-
-                    //constants.PostProperty_ViewModel.change_Status_PFs(true)
-
 
                     if (constants.PostProperty_ViewModel.postFlow.value == PostFlow.REQUESTMEDIA || constants.PostProperty_ViewModel.postFlow.value == PostFlow.EDIT) {
 
                         GlobalSnackbar.show("Changes Successfully Saved")
-                        //constants.PostProperty_ViewModel.loadCopy.value = true
-                        constants.PostProperty_ViewModel.loadOriginalToCopy()
-//                    println("NEW DATA COMING -- ${result.data.video_model.firstOrNull()?.post_property?.image} -- ${result.data.video_model.firstOrNull()?.post_property?.video}")
-//                   constants.Profile_ViewModel.updateMediaProfilePostByPostId(
-//                       postId = result.data.video_model.firstOrNull()?.user_post_id ?: 0,
-//                       newImages = result.data.video_model.firstOrNull()?.post_property?.image,
-//                       newVideos = result.data.video_model.firstOrNull()?.post_property?.video
-//                   )
-//                    constants.Reels_ViewModel.updateMediaReelsSFByPostId(
-//                       postId = result.data.video_model.firstOrNull()?.user_post_id ?: 0,
-//                       newImages = result.data.video_model.firstOrNull()?.post_property?.image,
-//                       newVideos = result.data.video_model.firstOrNull()?.post_property?.video
 
-//                   )
+                        constants.PostProperty_ViewModel.loadOriginalToCopy()
+
                         constants.PostProperty_ViewModel.indexClicked  = -1
-                         //navController.popBackStack()
+
                     } else {
                         get_Form_Preview_API_CALL { result ->
                             onComplete()
                             if (result == 3) {
-                                println("Successfull")
 
                                 navController.navigate(PostPropertyFlow.PreviewScreen.route)
                                 constants.PostProperty_ViewModel.change_Status_PFs(false)
 
                             } else if (result == 1) {
-                                println("fail")
                                 constants.PostProperty_ViewModel.change_Status_PFs(false)
                                 toast("Something went wrong")
                             }
                         }
                     }
 
-                    // navigate to preview here instead if needed
-//                constants.PostProperty_ViewModel.onNextPPForm()
-//                navController.navigate(PostPropertyFlow.ViewPropertyStructure.route)
                 }
 
                 is API_Result_Handling.Error -> {
-                    println("❌ Post submission failed")
                     toast("Something went wrong")
                     constants.PostProperty_ViewModel.change_Status_PFs(false)
                 }
 
                 is API_Result_Handling.Loading -> {
-                    println("🚀 Submitting post...")
                 }
 
                 else -> {
@@ -1838,33 +1140,3 @@ private fun handlePostSubmission(
         GlobalSnackbar.show("Upload At least 3 Images")
     }
 }
-
-
-
-/*
-
-private suspend fun uploadMediaFiles(
-    media: List<UploadPropertyMedia>
-): List<S3Uploader.UploadResult> = withContext(Dispatchers.IO) {
-
-    println("MEDIAITEMSS ONCLICK CHECK 6666  -- ${media}")
-
-    val uploader = S3Uploader(
-        bucket = constants.BUCKET_NAME,
-        cloudFront = constants.CLOUD_FRONT_URL,
-        accessId = constants.ACCESS_ID,
-        secretKey = constants.SECRET_KEY
-    )
-
-    val urisToUpload = media.map { it.uri }
-
-    uploader.uploadFiles(
-        context = constants.activity,
-        userId = AppPreferences.getUserId().toString(),
-        uris = urisToUpload,
-        onProgress = { uri, progress ->
-            println("📤 Uploading ${uri.lastPathSegment}: $progress%")
-        }
-    )
-}
-*/

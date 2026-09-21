@@ -4,7 +4,6 @@ import androidx.annotation.Keep
 import com.google.firebase.database.IgnoreExtraProperties
 import com.google.firebase.database.PropertyName
 
-
 @Keep
 @IgnoreExtraProperties
 data class User(
@@ -74,8 +73,6 @@ data class User(
     var blocks: Map<String, Boolean> = emptyMap()
 )
 
-
-
 @Keep
 @IgnoreExtraProperties
 data class ChatMessage(
@@ -98,7 +95,7 @@ data class ChatMessage(
 
     @get:PropertyName("status")
     @set:PropertyName("status")
-    var status: String = "sent", // sent, delivered, seen, deleted
+    var status: String = "sent",
 
     @get:PropertyName("deletedForEveryone")
     @set:PropertyName("deletedForEveryone")
@@ -132,7 +129,6 @@ data class ChatMessage(
     @set:PropertyName("timestamp")
     var timestamp: Long? = null
 )
-
 
 @Keep
 data class UserWithUnread(

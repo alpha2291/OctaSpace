@@ -148,7 +148,6 @@ fun PincodePlaceSearchOLD(
     show_Map_view: MutableState<Boolean>
 ) {
 
-
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
@@ -189,7 +188,7 @@ fun PincodePlaceSearchOLD(
 
     LazyColumn {
         item {
-            // 🔹 PINCODE
+
             Text("Enter Pincode" ,color = newBlack,
                 fontSize = constants.textUnit(18),
                 fontFamily = constants.fontFamily(0))
@@ -278,7 +277,7 @@ fun PincodePlaceSearchOLD(
                                     }
                                 } else {
                                     toast("Enter the pincode")
-                                    //GlobalSnackbar.show("Enter the Pincode")
+
                                 }
                             }
                         },
@@ -290,7 +289,6 @@ fun PincodePlaceSearchOLD(
                 }
             }
 
-            // 🔹 Country / State / City
             AnimatedVisibility(visible = condition) {
                 Column {
                     Spacer(Modifier.height(12.dp))
@@ -304,7 +302,6 @@ fun PincodePlaceSearchOLD(
 
             Spacer(Modifier.height(12.dp))
 
-            // 🔹 Locality with proper dropdown
             Text("Locality" ,
                 color = newBlack,
                 fontSize = constants.textUnit(18),
@@ -361,7 +358,7 @@ fun PincodePlaceSearchOLD(
                     onDismissRequest = { expanded = false }
                     , containerColor = Color.White
                     , border = BorderStroke(1.dp , newGray)
-                    , modifier = Modifier.heightIn(max = 400.dp) // change max height as you need
+                    , modifier = Modifier.heightIn(max = 400.dp)
                 ) {
                     localities.forEach { prediction ->
                         val primary = prediction.getPrimaryText(null).toString()
@@ -389,7 +386,6 @@ fun PincodePlaceSearchOLD(
 
             Spacer(Modifier.height(16.dp))
 
-            // 🔹 Map Section
             Box(
                 modifier = Modifier
                     .height(86.dp)
@@ -430,7 +426,6 @@ fun PincodePlaceSearchOLD(
                             .align(Alignment.TopCenter)
                             .noRippleClickable {
                                 ClickHelper.getInstance().clickOnce {
-                                    println("CANT FIND LOCATION -- ${localityQuery}")
 
                                     if (localityQuery.isNotEmpty()) {
                                         constants.PostProperty_ViewModel.set__selectedLocality3(
@@ -438,7 +433,6 @@ fun PincodePlaceSearchOLD(
                                         )
                                     }
                                     cant_find.value = true
-
 
                                 }
                             }
@@ -473,7 +467,6 @@ fun  PincodePlaceSearch(
     show_Map_view: MutableState<Boolean>
 ) {
 
-
     var network = rememberNetworkStatus()
 
     val focusManager = LocalFocusManager.current
@@ -486,7 +479,6 @@ fun  PincodePlaceSearch(
     val city = constants.PostProperty_ViewModel.city3.collectAsStateWithLifecycle()
     val latLng = constants.PostProperty_ViewModel.latLng3.collectAsStateWithLifecycle()
     val selectedLocality = constants.PostProperty_ViewModel.selectedLocality3.collectAsStateWithLifecycle()
-
 
     var form3ShowMap = constants.PostProperty_ViewModel.form3ShowMap.collectAsState()
 
@@ -503,10 +495,6 @@ fun  PincodePlaceSearch(
             )
         }
     }
-
-
-    println("LOCALITY CHECK 222 - ${ selectedLocality.value }&&&&&${localityQuery }")
-
 
     LaunchedEffect(Unit, show_Map_view.value) {
         val dmmy = constants.PostProperty_ViewModel.get_pp3_Data()
@@ -525,9 +513,6 @@ fun  PincodePlaceSearch(
     }
     var isPinCode_Invalid by remember { mutableStateOf(false) }
 
-    println("LOCALITY CHECK 3333 - ${ selectedLocality.value }*&^%$${localityQuery }")
-
-
     val postFlow = constants.PostProperty_ViewModel.postFlow.collectAsState()
 
     LaunchedEffect(selectedLocality.value) {
@@ -540,12 +525,9 @@ fun  PincodePlaceSearch(
         }
     }
 
-
-
-
     LazyColumn {
         item {
-            // 🔹 PINCODE
+
             Text(
                     buildAnnotatedString {
                 withStyle(style = SpanStyle(color = newBlack)){
@@ -620,7 +602,7 @@ fun  PincodePlaceSearch(
                         .weight(3.5f)
                         .noRippleClickable {
                             if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA){
-                                /// click not allowed
+
                             }
                             else {
                                 ClickHelper.getInstance().clickOnce {
@@ -712,7 +694,6 @@ fun  PincodePlaceSearch(
                     }
             }
 
-            // 🔹 Country / State / City
             AnimatedVisibility(visible = condition) {
                 Column {
                     Spacer(Modifier.height(12.dp))
@@ -726,7 +707,6 @@ fun  PincodePlaceSearch(
 
             Spacer(Modifier.height(12.dp))
 
-            // 🔹 Locality with proper dropdown
             Text("Locality",
                     color = newBlack,
                 fontSize = constants.textUnit(16),
@@ -750,10 +730,9 @@ fun  PincodePlaceSearch(
                     onValueChange = { newText ->
                         localityQuery = newText
                         constants.PostProperty_ViewModel.set__selectedLocality3(newText)
-                        println("Lat city 000 ${latLng.value } -- ${ city.value}")
 
                         if (latLng.value != null && newText.length > 2) {
-                            val requestQuery = newText  // 👈 snapshot
+                            val requestQuery = newText
 
                             fetchLocalities(
                                 requestQuery,
@@ -761,7 +740,7 @@ fun  PincodePlaceSearch(
                                 placesClient,
                                 city.value
                             ) { predictions ->
-                                // 👇 Ignore stale results
+
                                 if (localityQuery == requestQuery) {
                                     localities = predictions
                                     expanded = predictions.isNotEmpty()
@@ -772,20 +751,6 @@ fun  PincodePlaceSearch(
                             expanded = false
                         }
 
-//                        if (latLng.value != null && localityQuery.length > 2) {
-//                            fetchLocalities(
-//                                localityQuery,
-//                                latLng.value!!,
-//                                placesClient,
-//                                city.value
-//                            ) { predictions ->
-//                                localities = predictions
-//                                expanded = predictions.isNotEmpty()
-//                            }
-//                        } else {
-//                            localities = emptyList()
-//                            expanded = false
-//                        }
                     },
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
@@ -802,7 +767,7 @@ fun  PincodePlaceSearch(
                                 && country.value.isNotEmpty()
                                 && state.value.isNotEmpty()
                                 && city.value.isNotEmpty())) true else false,
-//                    readOnly = ,
+
                     textStyle = TextStyle(
                         color = newBlack,
                         fontSize = constants.textUnit(12),
@@ -823,7 +788,7 @@ fun  PincodePlaceSearch(
                     onDismissRequest = { expanded = false }
                     , containerColor = Color.White
                     , border = BorderStroke(1.dp , newGray)
-                    , modifier = Modifier.heightIn(max = 400.dp) // change max height as you need
+                    , modifier = Modifier.heightIn(max = 400.dp)
                 ) {
                     localities.forEach { prediction ->
                         val primary = prediction.getPrimaryText(null).toString()
@@ -854,7 +819,6 @@ fun  PincodePlaceSearch(
 
             Spacer(Modifier.height(16.dp))
 
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -873,7 +837,6 @@ fun  PincodePlaceSearch(
 
             Spacer(Modifier.height(16.dp))
 
-            // 🔹 Map Section
             Box(
                 modifier = Modifier
                     .height(86.dp)
@@ -890,7 +853,7 @@ fun  PincodePlaceSearch(
                         .padding(horizontal = 8.dp)
                         .noRippleClickable {
                             if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA){
-                                // click not allowed
+
                             }
                             else {
                                 ClickHelper.getInstance().clickOnce {
@@ -919,11 +882,10 @@ fun  PincodePlaceSearch(
                             .align(Alignment.TopCenter)
                             .noRippleClickable {
                                 if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA){
-                                    // click not allowed
+
                                 }
                                 else {
                                     ClickHelper.getInstance().clickOnce {
-                                        println("CANT FIND LOCATION -- ${localityQuery}")
 
                                         if (localityQuery.isNotEmpty()) {
                                             constants.PostProperty_ViewModel.set__selectedLocality3(
@@ -931,7 +893,6 @@ fun  PincodePlaceSearch(
                                             )
                                         }
                                         cant_find.value = true
-
 
                                     }
                                 }
@@ -957,9 +918,6 @@ fun  PincodePlaceSearch(
                 }
             }
 
-
-            /////
-
             constants.spacer(12)
 
             ListItem(
@@ -982,7 +940,7 @@ fun  PincodePlaceSearch(
                         checked = form3ShowMap.value,
                         onCheckedChange = {
                             if (postFlow.value == PostFlow.EDIT || postFlow.value == PostFlow.REQUESTMEDIA){
-                                // click not allowed
+
                             }
                             else {
                                 constants.PostProperty_ViewModel.set3formShowMap(it)
@@ -1045,9 +1003,6 @@ private fun ReadOnlyField(label: String, value: String) {
     }
 }
 
-
-
-
 suspend fun fetchDistrictFromPostalAPI(pincode: String): String? {
     return try {
         val url = URL("https://api.postalpincode.in/pincode/$pincode")
@@ -1072,7 +1027,6 @@ suspend fun fetchDistrictFromPostalAPI(pincode: String): String? {
     }
 }
 
-
 suspend fun isValidPincode(pincode: String, geocoder: Geocoder): Boolean {
     return try {
         val addresses = geocoder.getFromLocationName(pincode, 1)
@@ -1081,7 +1035,6 @@ suspend fun isValidPincode(pincode: String, geocoder: Geocoder): Boolean {
         false
     }
 }
-
 
 suspend fun getLatLngForPincode1(
     pincode: String,
@@ -1096,10 +1049,9 @@ suspend fun getLatLngForPincode1(
 
         var district: String? = address.subAdminArea
 
-        // ✅ Step 2: If district empty, try Postal API
         if (district.isNullOrEmpty()) {
             try {
-                val postalDistrict = fetchDistrictFromPostalAPI(pincode) // ⬅️ your API function
+                val postalDistrict = fetchDistrictFromPostalAPI(pincode)
                 if (!postalDistrict.isNullOrEmpty()) {
                     district = postalDistrict
                 }
@@ -1108,7 +1060,6 @@ suspend fun getLatLngForPincode1(
             }
         }
 
-        // ✅ Step 3: If still empty, fallback to locality
         if (district.isNullOrEmpty()) {
             district = address.locality ?: address.subLocality ?: ""
         }
@@ -1122,9 +1073,6 @@ suspend fun getLatLngForPincode1(
         Quad(null, null, null, null)
     }
 }
-
-
-
 
 fun fetchLocalities(
     query: String,
@@ -1141,8 +1089,8 @@ fun fetchLocalities(
     )
 
     val request = FindAutocompletePredictionsRequest.builder()
-        .setQuery("$query $city")        // force city context
-        .setLocationRestriction(bounds) // bias
+        .setQuery("$query $city")
+        .setLocationRestriction(bounds)
         .build()
 
     placesClient.findAutocompletePredictions(request)
@@ -1169,19 +1117,14 @@ fun fetchLocalities(
         }
 }
 
-
-
-
-
 @Composable
 fun MapSearchScreen(
     placesClient: PlacesClient,
     fusedLocationProviderClient: FusedLocationProviderClient,
     apiKey: String,
     show_Map_view: MutableState<Boolean>,
-    initialLatLng: LatLng? = null  // Optional initial pin
+    initialLatLng: LatLng? = null
 ) {
-
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -1220,15 +1163,14 @@ fun MapSearchScreen(
                 mapType = MapType.NORMAL,
                 mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
                     context,
-                    R.raw.map_light  // 👈 your JSON file reference
+                    R.raw.map_light
                 )
             )
         )
     }
 
-
     Box(modifier = Modifier.fillMaxSize()) {
-        // Google Map
+
         GoogleMap(
             modifier = Modifier.matchParentSize(),
             properties = mapProperties,
@@ -1237,9 +1179,9 @@ fun MapSearchScreen(
 
                 if (network.value == NetworkStatus.Online) {
                     pinnedLocation = latLng
-                    // Always get full address
+
                     addressText = getFullAddress(context, latLng)
-                    // Also try fetching POI/landmark name
+
                     coroutineScope.launch(Dispatchers.IO) {
                         val (name, _) = fetchPlaceDetailsForLatLng(latLng, apiKey)
                         withContext(Dispatchers.Main) {
@@ -1260,7 +1202,6 @@ fun MapSearchScreen(
             }
         }
 
-        // 🔍 Search Box + Predictions
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1279,7 +1220,7 @@ fun MapSearchScreen(
                         horizontal = 16.dp,
                         vertical = if (forTab()) 16.dp else rememberNotchHeightDp().value
                     )
-            // padding outside
+
             ) {
                 Column {
                     Row(
@@ -1304,11 +1245,10 @@ fun MapSearchScreen(
                             0
                             )
 
-
                     }
 
                     constants.spacer(16)
-                    // 🔹 Search field
+
                     TextField(
                         value = selectedPlace ?: query,
                         onValueChange = {
@@ -1327,7 +1267,7 @@ fun MapSearchScreen(
                                 painterResource(R.drawable.searchnotrento),
                                 "",
                                 modifier = Modifier.size(16.dp).noRippleClickable{
-                                    // show_Map_view.value = false
+
                                 }
                             )
                         },
@@ -1352,13 +1292,12 @@ fun MapSearchScreen(
                             .border(1.dp, Color(0xffCECECE), RoundedCornerShape(4.dp))
                     )
 
-                    // 🔹 Dropdown predictions (no gap)
                     if (predictions.isNotEmpty() && selectedPlace == null) {
                         Column(
                             modifier = Modifier
                                 .padding(top = 4.dp)
                                 .fillMaxWidth()
-                                //.border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
+
                                 .clip(RoundedCornerShape(8.dp))
                                 .background(Color.White)
 
@@ -1372,7 +1311,6 @@ fun MapSearchScreen(
                                             selectedPlace = prediction.getFullText(null).toString()
                                             predictions = emptyList()
 
-                                            // Fetch LatLng
                                             fetchPlaceLatLngmap(
                                                 prediction.placeId,
                                                 placesClient
@@ -1411,30 +1349,26 @@ fun MapSearchScreen(
             }
         }
 
-
-        // 🔽 Bottom Location Row + Confirm
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .fillMaxWidth()
         ) {
             val context = LocalContext.current
-            // 📍 Current location button
+
             var showPermissionDialog by remember { mutableStateOf(false) }
             var showGpsDialog by remember { mutableStateOf(false) }
-
 
             FloatingActionButton(
                 onClick = {
 
                     if (network.value == NetworkStatus.Online) {
-                        //ClickHelper.getInstance().clickOnce {
+
                         val locationManager =
                             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                         val isGpsEnabled =
                             locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 
-                        // Check permission
                         if (ActivityCompat.checkSelfPermission(
                                 context,
                                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -1444,7 +1378,6 @@ fun MapSearchScreen(
                             return@FloatingActionButton
                         }
 
-                        // Check GPS
                         if (!isGpsEnabled) {
                             showGpsDialog = true
                             return@FloatingActionButton
@@ -1482,7 +1415,6 @@ fun MapSearchScreen(
                         toast("Check your Internet Connection")
                     }
 
-                    /// }
                 },
                 modifier = Modifier
                     .align(Alignment.End)
@@ -1493,7 +1425,6 @@ fun MapSearchScreen(
                 Image(painterResource(R.drawable.location), "",
                     colorFilter = ColorFilter.tint(newBlack))
             }
-
 
             if (showPermissionDialog) {
                 AlertDialog(
@@ -1520,7 +1451,6 @@ fun MapSearchScreen(
                 )
             }
 
-// ✅ GPS Dialog
             if (showGpsDialog) {
                 AlertDialog(
                     onDismissRequest = { showGpsDialog = false },
@@ -1593,7 +1523,6 @@ fun MapSearchScreen(
                     )
                 }
 
-
                 constants.spacer(12)
             }
 
@@ -1612,10 +1541,7 @@ fun MapSearchScreen(
                         .noRippleClickable {
                             if (network.value == NetworkStatus.Online) {
                                 if (addressText.isNotEmpty() && pinnedLocation != null) {
-                                    // Save pinned LatLng in ViewModel
 
-                                    // if (country.isNotEmpty() && state.isNotEmpty() && city.isNotEmpty() && selectedLocality.isNotEmpty()) {
-                                    // Create your data object
                                     val components = getAddressComponents(context, pinnedLocation!!)
 
                                     if (!components.pincode.isNullOrEmpty()) {
@@ -1629,7 +1555,6 @@ fun MapSearchScreen(
                                             )
                                         )
 
-                                        //  }
                                         constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
                                             pinnedLocation!!
                                         )
@@ -1674,7 +1599,6 @@ fun MapSearchScreen(
     }
 }
 
-
 data class AddressComponents(
     val pincode: String,
     val country: String,
@@ -1682,7 +1606,6 @@ data class AddressComponents(
     val city: String,
     val locality: String
 )
-
 
 fun getAddressComponents(context: Context, latLng: LatLng): AddressComponents {
     val geocoder = Geocoder(context, Locale.getDefault())
@@ -1695,30 +1618,25 @@ fun getAddressComponents(context: Context, latLng: LatLng): AddressComponents {
 
     val addr = addresses[0]
 
-    // Validate postalCode
     if (addr.postalCode.isNullOrEmpty()) {
         GlobalSnackbar.show("Unable to find the Pincode")
         return AddressComponents("", "", "", "", "")
     }
 
-    // Validate country
     if (addr.countryName.isNullOrEmpty()) {
         GlobalSnackbar.show("Unable to find the Country")
         return AddressComponents("", "", "", "", "")
     }
 
-    // Validate state
     if (addr.adminArea.isNullOrEmpty()) {
         GlobalSnackbar.show("Unable to find the State")
         return AddressComponents("", "", "", "", "")
     }
 
-    // Validate city
     if (addr.locality.isNullOrEmpty()) {
         GlobalSnackbar.show("Unable to find the City")
         return AddressComponents("", "", "", "", "")
     }
-
 
     constants.PostProperty_ViewModel.set_country3(addr.countryName)
     constants.PostProperty_ViewModel.set_state3(addr.adminArea)
@@ -1734,9 +1652,6 @@ fun getAddressComponents(context: Context, latLng: LatLng): AddressComponents {
         locality = addr.subLocality ?: addr.featureName ?: ""
     )
 }
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1776,16 +1691,12 @@ fun PincodePlaceSearch2222222(
 
     val cant_find = remember { mutableStateOf(false) }
 
-
     var expanded by remember { mutableStateOf(false) }
     var cityOptions by remember { mutableStateOf<List<String>>(emptyList()) }
 
-
     Column(Modifier
-        //.padding(16.dp)
-    ) {
-        // PINCODE FIELD
 
+    ) {
 
         Text("Enter Pincode")
         Row (
@@ -1827,19 +1738,17 @@ fun PincodePlaceSearch2222222(
                     .clickable(enabled = pincode.length == 6) {
                         if (pincode.length == 6) {
                             CoroutineScope(Dispatchers.IO).launch {
-                                // 1. Get Google data
+
                                 val (ll, c, st, cn) = getLatLngForPincode1(pincode, geocoder)
                                 latLng = ll
                                 state = st ?: ""
                                 country = cn ?: ""
 
-                                // 2. Fetch localities from India Post API
-
                                 val areas = fetchLocalitiesFromPostalAPI(pincode)
                                 withContext(Dispatchers.Main) {
                                     cityOptions = areas
                                     if (areas.isNotEmpty()) {
-                                        city = areas.first() // default first one
+                                        city = areas.first()
                                     }
                                 }
                             }
@@ -1850,28 +1759,6 @@ fun PincodePlaceSearch2222222(
                 Text("Get details", color = newBlue)
             }
 
-
-
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxHeight()
-//                    .clip(RoundedCornerShape(topEnd = 8.dp , bottomEnd = 8.dp))
-//                    .background(Color(0xffF7F0DC))
-//                    .weight(3.5f)
-//                    .clickable (enabled = if (pincode.isNotEmpty()) true else false){
-//                        if (pincode.length == 6) {
-//                            val (ll, c, st, cn) = getLatLngForPincode1(pincode, geocoder)
-//                            latLng = ll
-//                            city = c ?: ""
-//                            state = st ?: ""
-//                            country = cn ?: ""
-//                        }
-//
-//                    }
-//                , contentAlignment = Alignment.Center
-//            ){
-//                Text("Get details", color = newBlue)
-//            }
         }
 
         Spacer(Modifier.height(12.dp))
@@ -1906,8 +1793,6 @@ fun PincodePlaceSearch2222222(
                 )
             )
         }
-
-        // AUTO-FILLED FIELDS (read-only)
 
         Spacer(Modifier.height(8.dp))
 
@@ -1995,40 +1880,10 @@ fun PincodePlaceSearch2222222(
             }
         }
 
-        /* Row (
-             modifier = Modifier
-                 .fillMaxWidth()
-                 .height(56.dp)
-                 .background(Color.White)
-                 .border(1.dp , newGray , RoundedCornerShape(8.dp))
-             , verticalAlignment = Alignment.CenterVertically,
-             horizontalArrangement = Arrangement.Start
-         )
-         {
-             TextField(
-                 value = city,
-                 onValueChange = {},
-                 modifier = Modifier
-                     .fillMaxSize()
-                 , placeholder = {
-                     Text("City")
-                 }
-                 ,readOnly = true
-                 , colors = TextFieldDefaults.colors(
-                     focusedContainerColor = Color.White,
-                     unfocusedContainerColor = Color.White,
-                     focusedTextColor = newBlack,
-                     unfocusedTextColor = newBlack,
-                     focusedIndicatorColor = Color.Transparent,
-                     unfocusedIndicatorColor = Color.Transparent
-                 )
-             )
-         }*/
-
         Spacer(Modifier.height(12.dp))
 
         Text("Locality")
-        // LOCALITY FIELD
+
         Row (
             modifier = Modifier
                 .fillMaxWidth()
@@ -2042,7 +1897,7 @@ fun PincodePlaceSearch2222222(
             TextField(
                 value = selectedLocality.ifEmpty { localityQuery },
                 onValueChange = {
-                    selectedLocality = "" // reset when typing new query
+                    selectedLocality = ""
                     localityQuery = it
                     if (latLng != null && localityQuery.length > 2) {
                         fetchLocalities(
@@ -2058,7 +1913,7 @@ fun PincodePlaceSearch2222222(
                     }
                 },
                 modifier = Modifier
-                //.fillMaxSize()
+
                 , placeholder = {
                     Text("Select your locality")
                 }
@@ -2074,7 +1929,6 @@ fun PincodePlaceSearch2222222(
             )
         }
 
-        // Custom dropdown below Locality
         if (localities.isNotEmpty() && selectedLocality.isEmpty()) {
             Column(
                 modifier = Modifier
@@ -2131,9 +1985,6 @@ fun PincodePlaceSearch2222222(
                 Image(painterResource(R.drawable.right_arrow), "")
             }
 
-
-            //selectedLocality.ifEmpty { localityQuery }
-            // Show "find failed" image if user searched but no results found
             if (localityQuery.isNotEmpty() && localities.isEmpty() && selectedLocality.isEmpty() && !cant_find.value) {
                 Image(
                     painter = painterResource(R.drawable.location_find_failed),
@@ -2141,15 +1992,14 @@ fun PincodePlaceSearch2222222(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .noRippleClickable {
-                            //localityQuery = ""
+
                             cant_find.value = true
                         }
                 )
             }
 
             if (country.isNotEmpty() && state.isNotEmpty() && city.isNotEmpty() && selectedLocality.isNotEmpty()) {
-                // Create your data object
-                println("DATA ADDED -- ")
+
                 constants.PostProperty_ViewModel.add_pp3_Data(
                     PP3_API_DC(
                         pincode =  pincode,
@@ -2160,8 +2010,6 @@ fun PincodePlaceSearch2222222(
                     )
                 )
 
-
-                println("DATA ADDED -66- ${constants.PostProperty_ViewModel.pp_3_API_Data.value}")
             }
 
         }
@@ -2192,11 +2040,10 @@ suspend fun fetchLocalitiesFromPostalAPI(pincode: String): List<String> {
     }
 }
 
-
 fun fetchLocalitiesFromPincode(
     latLng: LatLng,
     placesClient: PlacesClient,
-    fallbackQuery: String, // <- seed query, e.g. city or "a"
+    fallbackQuery: String,
     callback: (List<String>) -> Unit
 ) {
     val bounds = RectangularBounds.newInstance(
@@ -2207,7 +2054,7 @@ fun fetchLocalitiesFromPincode(
     val request = FindAutocompletePredictionsRequest.builder()
         .setLocationRestriction(bounds)
         .setTypesFilter(listOf("locality", "sublocality"))
-        .setQuery(fallbackQuery) // 🚀 must not be empty
+        .setQuery(fallbackQuery)
         .build()
 
     placesClient.findAutocompletePredictions(request)
@@ -2222,19 +2069,16 @@ fun fetchLocalitiesFromPincode(
         }
 }
 
-
-
 fun getLatLngForPincodeMultiple(
     pincode: String,
     geocoder: Geocoder
 ): Pair<LatLng?, List<String>> {
-    val addresses = geocoder.getFromLocationName(pincode, 20) // fetch more
+    val addresses = geocoder.getFromLocationName(pincode, 20)
     if (addresses.isNullOrEmpty()) return Pair(null, emptyList())
 
     val lat = addresses[0].latitude
     val lng = addresses[0].longitude
 
-    // Extract unique cities/sub-admins from results
     val cityList = addresses.mapNotNull { it.locality ?: it.subAdminArea }
         .distinct()
 
@@ -2243,25 +2087,6 @@ fun getLatLngForPincodeMultiple(
     return Pair(LatLng(lat, lng), cityList)
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @Composable
 fun LocationValidationScreen(placesClient: PlacesClient) {
     var selectedState by remember { mutableStateOf<String?>(null) }
@@ -2274,20 +2099,19 @@ fun LocationValidationScreen(placesClient: PlacesClient) {
             .padding(16.dp),
         verticalArrangement = Arrangement.Top
     ) {
-        // 1️⃣ State Search
+
         Text("Step 1: Select State", style = MaterialTheme.typography.bodyLarge)
         StateSearchFieldWithSelection(
             placesClient,
             onStateSelected = { state, latLng ->
                 selectedState = state
                 selectedLatLng = latLng
-                selectedCity = null // reset city if state changes
+                selectedCity = null
             }
         )
 
         Spacer(Modifier.height(24.dp))
 
-        // 2️⃣ City Search (enabled only after state is chosen)
         Text("Step 2: Select City", style = MaterialTheme.typography.bodyLarge)
         if (selectedState != null) {
             CitySearchFieldWithSelection(
@@ -2303,7 +2127,6 @@ fun LocationValidationScreen(placesClient: PlacesClient) {
 
         Spacer(Modifier.height(24.dp))
 
-        // 3️⃣ Pincode entry + validation (enabled only after city is chosen)
         Text("Step 3: Enter Pincode", style = MaterialTheme.typography.bodyLarge)
         if (selectedCity != null && selectedState != null) {
             PincodeField(
@@ -2316,7 +2139,6 @@ fun LocationValidationScreen(placesClient: PlacesClient) {
         }
     }
 }
-
 
 @Composable
 fun StateSearchFieldWithSelection(
@@ -2414,7 +2236,6 @@ fun CitySearchFieldWithSelection(
     }
 }
 
-
 @Composable
 fun CitySearchField(placesClient: PlacesClient) {
     var query by remember { mutableStateOf("") }
@@ -2467,7 +2288,6 @@ fun CitySearchField(placesClient: PlacesClient) {
     }
 }
 
-
 fun fetchPredictions2(
     query: String,
     placesClient: PlacesClient,
@@ -2475,7 +2295,7 @@ fun fetchPredictions2(
 ) {
     val request = FindAutocompletePredictionsRequest.builder()
         .setQuery(query)
-        //.setTypesFilter(listOf("locality")) // 👈 Only localities (cities/towns) worldwide
+
         .build()
 
     placesClient.findAutocompletePredictions(request)
@@ -2488,8 +2308,6 @@ fun fetchPredictions2(
         }
 }
 
-
-
 fun fetchPredictions(
     query: String,
     placesClient: PlacesClient,
@@ -2497,7 +2315,7 @@ fun fetchPredictions(
 ) {
     val request = FindAutocompletePredictionsRequest.builder()
         .setQuery(query)
-        .setTypeFilter(TypeFilter.CITIES) // ✅ Only cities
+        .setTypeFilter(TypeFilter.CITIES)
         .build()
 
     placesClient.findAutocompletePredictions(request)
@@ -2528,14 +2346,11 @@ fun fetchPlaceLatLng(
         }
 }
 
-
-
-
 @Composable
 fun StateSearchField(placesClient: PlacesClient) {
     val context = LocalContext.current
     var query by remember { mutableStateOf("") }
-    var predictions by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) } // Pair<Name, PlaceId>
+    var predictions by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
     var selectedLatLng by remember { mutableStateOf<LatLng?>(null) }
     var selectedState by remember { mutableStateOf<String?>(null) }
     var expanded by remember { mutableStateOf(false) }
@@ -2600,8 +2415,6 @@ fun StateSearchField(placesClient: PlacesClient) {
         }
     }
 
-
-
 }
 
 fun fetchStatePredictionsParallel(
@@ -2611,12 +2424,12 @@ fun fetchStatePredictionsParallel(
 ) {
     val request = FindAutocompletePredictionsRequest.builder()
         .setQuery(query)
-        .setTypesFilter(listOf("administrative_area_level_1")) // ✅ Only states/provinces worldwide
+        .setTypesFilter(listOf("administrative_area_level_1"))
         .build()
 
     placesClient.findAutocompletePredictions(request)
         .addOnSuccessListener { response ->
-            // ✅ Only take primary name (faster, cleaner UI)
+
             val stateResults = response.autocompletePredictions.map { prediction ->
                 prediction.getPrimaryText(null).toString() to prediction.placeId
             }
@@ -2626,7 +2439,6 @@ fun fetchStatePredictionsParallel(
             callback(emptyList())
         }
 }
-
 
 @Composable
 fun PincodeField(
@@ -2692,7 +2504,7 @@ fun validatePincodeWithCityState(
 
     val request = FindAutocompletePredictionsRequest.builder()
         .setQuery(pincode)
-        .setTypesFilter(listOf("postal_code")) // ✅ Look for postal codes
+        .setTypesFilter(listOf("postal_code"))
         .build()
 
     placesClient.findAutocompletePredictions(request)
@@ -2732,9 +2544,6 @@ fun validatePincodeWithCityState(
         }
 }
 
-
-
-
 @Composable
 fun PincodeToLocationField(placesClient: PlacesClient) {
     var pincode by remember { mutableStateOf("") }
@@ -2761,19 +2570,7 @@ fun PincodeToLocationField(placesClient: PlacesClient) {
 
         Button(
             onClick = {
-               /* fetchCityStateFromPincode(pincode, placesClient) { resultCity, resultState, resultCountry, error ->
-                    if (error != null) {
-                        errorMessage = error
-                        city = null
-                        state = null
-                        country = null
-                    } else {
-                        city = resultCity
-                        state = resultState
-                        country = resultCountry
-                        errorMessage = null
-                    }
-                }*/
+
             },
             enabled = pincode.length >= 4
         ) {
@@ -2793,16 +2590,14 @@ fun PincodeToLocationField(placesClient: PlacesClient) {
     }
 }
 
-
-
 fun fetchCityStateFromPincode(
     pincode: String,
     placesClient: PlacesClient,
-    callback: (String?, String?, String?, String?, Double?, Double?) -> Unit // city, state, country, error, lat, lng
+    callback: (String?, String?, String?, String?, Double?, Double?) -> Unit
 ) {
     val request = FindAutocompletePredictionsRequest.builder()
         .setQuery(pincode)
-        .setTypesFilter(listOf("postal_code")) // ✅ Only postal codes
+        .setTypesFilter(listOf("postal_code"))
         .build()
 
     placesClient.findAutocompletePredictions(request)
@@ -2815,7 +2610,7 @@ fun fetchCityStateFromPincode(
             val placeId = response.autocompletePredictions[0].placeId
             val fetchRequest = FetchPlaceRequest.builder(
                 placeId,
-                listOf(Place.Field.ADDRESS_COMPONENTS, Place.Field.LAT_LNG) // ✅ include lat/lng
+                listOf(Place.Field.ADDRESS_COMPONENTS, Place.Field.LAT_LNG)
             ).build()
 
             placesClient.fetchPlace(fetchRequest)
@@ -2829,7 +2624,6 @@ fun fetchCityStateFromPincode(
                     val latLng = placeResponse.place.latLng
 
                     if (city != null && state != null && country != null && latLng != null) {
-
 
                         callback(city, state, country, null, latLng.latitude, latLng.longitude)
                         constants.Start_Up_ViewModel.set_Latitude(latLng.latitude)
@@ -2848,23 +2642,8 @@ fun fetchCityStateFromPincode(
         }
 }
 
-
-
-
-
-
-
-///////// locaity based on pincode
-
-
-
-// Updated to return City, State, Country
-
-// Helper Quad class
 data class Quad<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
 
-
-// Step 1: Convert Pincode to LatLng + City
 fun getLatLngForPincode(pincode: String, geocoder: Geocoder): Pair<LatLng?, String?> {
     val addresses = geocoder.getFromLocationName(pincode, 1)
     return if (addresses != null && addresses.isNotEmpty()) {
@@ -2877,10 +2656,6 @@ fun getLatLngForPincode(pincode: String, geocoder: Geocoder): Pair<LatLng?, Stri
     }
 }
 
-
-
-
-
 fun fetchPincodeLatLng(
     pincode: String,
     placesClient: PlacesClient,
@@ -2888,7 +2663,7 @@ fun fetchPincodeLatLng(
 ) {
     val request = FindAutocompletePredictionsRequest.builder()
         .setQuery(pincode)
-        .setTypesFilter(listOf("postal_code")) // force postal code search
+        .setTypesFilter(listOf("postal_code"))
         .build()
 
     placesClient.findAutocompletePredictions(request)
@@ -2920,8 +2695,8 @@ fun fetchPlacesForPincode(
 
     val request = FindAutocompletePredictionsRequest.builder()
         .setQuery(query)
-        .setLocationBias(bias) // restrict results near the pincode center
-        .setTypesFilter(listOf("locality", "sublocality")) // 👈 cities, towns, subareas
+        .setLocationBias(bias)
+        .setTypesFilter(listOf("locality", "sublocality"))
         .build()
 
     placesClient.findAutocompletePredictions(request)
@@ -2933,9 +2708,6 @@ fun fetchPlacesForPincode(
         }
 }
 
-
-///// global places
-
 @Composable
 fun GlobalPlaceSearch(placesClient: PlacesClient) {
     var query by remember { mutableStateOf("") }
@@ -2946,9 +2718,9 @@ fun GlobalPlaceSearch(placesClient: PlacesClient) {
         OutlinedTextField(
             value = selectedPlace.ifEmpty { query },
             onValueChange = {
-                selectedPlace = "" // reset if user starts typing again
+                selectedPlace = ""
                 query = it
-                if (query.length > 2) { // fetch after 3+ chars
+                if (query.length > 2) {
                     fetchGlobalPlaces(query, placesClient) { newPredictions ->
                         predictions = newPredictions
                     }
@@ -2961,7 +2733,6 @@ fun GlobalPlaceSearch(placesClient: PlacesClient) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        // 🔽 Custom dropdown for global results
         if (predictions.isNotEmpty() && selectedPlace.isEmpty()) {
             Column(
                 modifier = Modifier
@@ -2986,7 +2757,6 @@ fun GlobalPlaceSearch(placesClient: PlacesClient) {
     }
 }
 
-// 🌍 Worldwide Places Fetcher
 fun fetchGlobalPlaces(
     query: String,
     placesClient: PlacesClient,
@@ -3005,10 +2775,6 @@ fun fetchGlobalPlaces(
         }
 }
 
-
-
-/// map view
-
 @SuppressLint("MissingPermission")
 @Composable
 fun MapSearchScreen1(
@@ -3021,11 +2787,11 @@ fun MapSearchScreen1(
     var selectedLatLng by remember { mutableStateOf<LatLng?>(null) }
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(20.5937, 78.9629), 4f) // Default India view
+        position = CameraPosition.fromLatLngZoom(LatLng(20.5937, 78.9629), 4f)
     }
 
     Box(Modifier.fillMaxSize()) {
-        // 🌍 Map
+
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
@@ -3038,7 +2804,6 @@ fun MapSearchScreen1(
             }
         }
 
-        // 🔍 Floating Search Bar
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -3080,7 +2845,6 @@ fun MapSearchScreen1(
                                     selectedPlace = prediction.getFullText(null).toString()
                                     predictions = emptyList()
 
-                                    // Fetch LatLng of selected place
                                     fetchPlaceLatLngmap(
                                         prediction.placeId,
                                         placesClient
@@ -3100,7 +2864,6 @@ fun MapSearchScreen1(
             }
         }
 
-        // 📍 FAB for current location
         FloatingActionButton(
             onClick = {
                 ClickHelper.getInstance().clickOnce {
@@ -3121,12 +2884,10 @@ fun MapSearchScreen1(
             containerColor = Color.Blue,
             contentColor = Color.White
         ) {
-            //Icon(Icons.Default.MyLocation, contentDescription = "My Location")
+
         }
     }
 }
-
-
 
 @Composable
 fun MapSearchScreen2(
@@ -3147,7 +2908,7 @@ fun MapSearchScreen2(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Google Map
+
         GoogleMap(
             modifier = Modifier.matchParentSize(),
             cameraPositionState = cameraPositionState,
@@ -3168,7 +2929,7 @@ fun MapSearchScreen2(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
-                //.padding(16.dp)
+
         )
         {
             TextField(
@@ -3206,23 +2967,6 @@ fun MapSearchScreen2(
                         vertical = if (forTab()) 16.dp else rememberNotchHeightDp().value
                     )
             )
-//            OutlinedTextField(
-//                value = selectedPlace ?: query,
-//                onValueChange = {
-//                    selectedPlace = null
-//                    query = it
-//                    if (query.length > 2) {
-//                        fetchGlobalPlaces(query, placesClient) { newPredictions ->
-//                            predictions = newPredictions
-//                        }
-//                    } else {
-//                        predictions = emptyList()
-//                    }
-//                },
-//                label = { Text("Search location") },
-//                modifier = Modifier.fillMaxWidth(),
-//                singleLine = true
-//            )
 
             Column {
                 if (predictions.isNotEmpty() && selectedPlace == null) {
@@ -3241,18 +2985,17 @@ fun MapSearchScreen2(
                                         selectedPlace = prediction.getFullText(null).toString()
                                         predictions = emptyList()
 
-                                        // Fetch LatLng of selected place
                                         fetchPlaceLatLngmap(
                                             prediction.placeId,
                                             placesClient
                                         ) { latLng ->
                                             if (latLng != null) {
                                                 selectedLatLng = latLng
-                                                pinnedLocation = latLng // ✅ also pin here
+                                                pinnedLocation = latLng
                                                 addressText = getAddressFromLatLng(
                                                     context,
                                                     latLng
-                                                ) // ✅ show address at bottom
+                                                )
                                                 cameraPositionState.move(
                                                     CameraUpdateFactory.newLatLngZoom(latLng, 15f)
                                                 )
@@ -3268,16 +3011,12 @@ fun MapSearchScreen2(
             }
         }
 
-
-
-        // 🔽 Location row at the bottom
-
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .fillMaxWidth()
             ) {
-                // Floating button for current location
+
                 FloatingActionButton(
                     onClick = {
                         fusedLocationProviderClient.lastLocation
@@ -3308,20 +3047,17 @@ fun MapSearchScreen2(
                 if (pinnedLocation != null) {
                     Row(
                         modifier = Modifier
-                            // .align(Alignment.BottomStart)
+
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                             .background(Color.White)
                             .padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        //Icon(Icons.Default.Place, contentDescription = "Pinned", tint = Color.Red)
+
                         Spacer(Modifier.width(8.dp))
                         Column {
-//                            Text(
-//                                text = "Lat: ${pinnedLocation!!.latitude}, Lng: ${pinnedLocation!!.longitude}",
-//                                style = MaterialTheme.typography.bodySmall
-//                            )
+
                             if (addressText.isNotEmpty()) {
                                 Row (
                                     modifier = Modifier
@@ -3333,7 +3069,7 @@ fun MapSearchScreen2(
                                     Text(
                                         text = addressText,
                                         style = MaterialTheme.typography.bodyMedium,
-                                        //overflow = TextOverflow.Ellipsis
+
                                     )
                                 }
                             }
@@ -3367,9 +3103,6 @@ fun MapSearchScreen2(
     }
 }
 
-
-
-// ✅ Always return FULL postal address
 fun getFullAddress(context: Context, latLng: LatLng): String {
     return try {
         val geocoder = Geocoder(context, Locale.getDefault())
@@ -3391,7 +3124,6 @@ fun getFullAddress(context: Context, latLng: LatLng): String {
     }
 }
 
-// ✅ Fetch nearest POI name
 suspend fun fetchPlaceDetailsForLatLng(
     latLng: LatLng,
     apiKey: String
@@ -3418,20 +3150,6 @@ suspend fun fetchPlaceDetailsForLatLng(
     return "" to ""
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @Composable
 fun PinnedMapScreen(
     placesClient: PlacesClient,
@@ -3447,7 +3165,6 @@ fun PinnedMapScreen(
         position = CameraPosition.fromLatLngZoom(LatLng(20.0, 77.0), 4f)
     }
 
-    // ✅ Detect when the map stops moving
     LaunchedEffect(cameraPositionState) {
         snapshotFlow { cameraPositionState.isMoving }
             .collect { moving ->
@@ -3461,7 +3178,6 @@ fun PinnedMapScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Google Map
         GoogleMap(
             modifier = Modifier.matchParentSize(),
             cameraPositionState = cameraPositionState,
@@ -3478,7 +3194,6 @@ fun PinnedMapScreen(
             )
         )
 
-        // 📍 Center Pin Icon (always fixed)
         Image(
             painter = painterResource(R.drawable.locationpinenquiry),
             contentDescription = "Center Pin",
@@ -3487,7 +3202,6 @@ fun PinnedMapScreen(
                 .size(48.dp)
         )
 
-        // 🔽 Floating button for current location
         FloatingActionButton(
             onClick = {
                 fusedLocationProviderClient.lastLocation
@@ -3512,7 +3226,6 @@ fun PinnedMapScreen(
             Image(painterResource(R.drawable.location), contentDescription = "My Location")
         }
 
-        // 📍 Address shown at bottom
         if (addressText.isNotEmpty()) {
             Column(
                 modifier = Modifier
@@ -3538,10 +3251,9 @@ fun PinnedMapScreen(
 
                 Spacer(Modifier.height(12.dp))
 
-                // Confirm Button
                 Button(
                     onClick = {
-                        // Handle confirm action with currentLatLng
+
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -3570,7 +3282,6 @@ fun PinnedPlacesMapScreen1(
         position = CameraPosition.fromLatLngZoom(LatLng(20.0, 77.0), 4f)
     }
 
-    // ✅ Detect when the map stops moving → fetch place details
     LaunchedEffect(cameraPositionState) {
         snapshotFlow { cameraPositionState.isMoving }
             .collect { moving ->
@@ -3578,10 +3289,8 @@ fun PinnedPlacesMapScreen1(
                     val target = cameraPositionState.position.target
                     currentLatLng = target
 
-                    // Reverse geocode (for fallback address)
                     addressText = getAddressFromLatLng(context, target)
 
-                    // Fetch place details (name, type, etc.)
                     fetchPlaceDetails(placesClient, target) { name, address ->
                         if (name.isNotEmpty()) {
                             placeName = name
@@ -3609,7 +3318,6 @@ fun PinnedPlacesMapScreen1(
             )
         )
 
-        // 📍 Center Pin Icon
         Image(
             painter = painterResource(R.drawable.locationpinenquiry),
             contentDescription = "Center Pin",
@@ -3618,7 +3326,6 @@ fun PinnedPlacesMapScreen1(
                 .size(48.dp)
         )
 
-        // 📍 Bottom sheet with Place name + address
         if (addressText.isNotEmpty() || placeName.isNotEmpty()) {
 
             Column(
@@ -3641,7 +3348,7 @@ fun PinnedPlacesMapScreen1(
 
                 Button(
                     onClick = {
-                        // handle confirm with placeName + address
+
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -3653,201 +3360,6 @@ fun PinnedPlacesMapScreen1(
         }
     }
 }
-
-/*@Composable
-fun PinnedPlacesMapScreen2(
-    placesClient: PlacesClient,
-    fusedLocationProviderClient: FusedLocationProviderClient
-) {
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-
-    var query by remember { mutableStateOf("") }
-    var predictions by remember { mutableStateOf<List<AutocompletePrediction>>(emptyList()) }
-    var selectedPlace by remember { mutableStateOf<String?>(null) }
-
-    var placeName by remember { mutableStateOf("") }
-    var addressText by remember { mutableStateOf("") }
-    var currentLatLng by remember { mutableStateOf<LatLng?>(null) }
-
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(20.0, 77.0), 4f)
-    }
-
-    // ✅ Detect when camera stops moving → fetch place details
-    LaunchedEffect(cameraPositionState) {
-        snapshotFlow { cameraPositionState.isMoving }
-            .collect { moving ->
-                if (!moving) {
-                    val target = cameraPositionState.position.target
-                    currentLatLng = target
-
-                    // Reverse geocode fallback
-                    addressText = getAddressFromLatLng(context, target)
-
-                    // Fetch place details
-                    fetchPlaceDetails(placesClient, target) { name, address ->
-                        if (name.isNotEmpty()) placeName = name
-                        if (address.isNotEmpty()) addressText = address
-                    }
-                }
-            }
-    }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        // Google Map
-        GoogleMap(
-            modifier = Modifier.matchParentSize(),
-            cameraPositionState = cameraPositionState
-        )
-
-        // 📍 Center Pin Icon
-        Image(
-            painter = painterResource(R.drawable.locationpinenquiry),
-            contentDescription = "Center Pin",
-            modifier = Modifier
-                .align(Alignment.Center)
-                .size(48.dp)
-        )
-
-        // 🔍 Search bar
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
-        ) {
-            TextField(
-                value = selectedPlace ?: query,
-                onValueChange = {
-                    selectedPlace = null
-                    query = it
-                    if (query.length > 2) {
-                        fetchGlobalPlaces(query, placesClient) { newPredictions ->
-                            predictions = newPredictions
-                        }
-                    } else {
-                        predictions = emptyList()
-                    }
-                },
-                leadingIcon = {
-                    Image(painterResource(R.drawable.left_arrow), contentDescription = "")
-                },
-                placeholder = { Text("Search by area, city..") },
-                singleLine = true,
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
-                    focusedTextColor = newBlack,
-                    unfocusedTextColor = newBlack,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = rememberNotchHeightDp().value)
-            )
-
-            // Predictions dropdown
-            if (predictions.isNotEmpty() && selectedPlace == null) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                        .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
-                ) {
-                    predictions.forEach { prediction ->
-                        Text(
-                            text = prediction.getFullText(null).toString(),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .noRippleClickable{
-                                    selectedPlace = prediction.getFullText(null).toString()
-                                    predictions = emptyList()
-
-                                    fetchPlaceLatLngmap(
-                                        prediction.placeId,
-                                        placesClient
-                                    ) { latLng ->
-                                        if (latLng != null) {
-                                            coroutineScope.launch {
-                                                cameraPositionState.animate(
-                                                    update = CameraUpdateFactory.newLatLngZoom(latLng, 15f),
-                                                    durationMs = 1000
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                                .padding(12.dp)
-                        )
-                    }
-                }
-            }
-        }
-
-        // 📍 Floating current location button
-        FloatingActionButton(
-            onClick = {
-                fusedLocationProviderClient.lastLocation
-                    .addOnSuccessListener { location: Location? ->
-                        location?.let {
-                            val latLng = LatLng(it.latitude, it.longitude)
-                            coroutineScope.launch {
-                                cameraPositionState.animate(
-                                    update = CameraUpdateFactory.newLatLngZoom(latLng, 16f),
-                                    durationMs = 1000
-                                )
-                            }
-                        }
-                    }
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            shape = CircleShape,
-            containerColor = Color.White
-        ) {
-            Image(painterResource(R.drawable.location), contentDescription = "My Location")
-        }
-
-        // 📍 Bottom sheet with place info
-        if (addressText.isNotEmpty() || placeName.isNotEmpty()) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                    .background(Color.White)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                if (placeName.isNotEmpty()) {
-                    Text(placeName, style = MaterialTheme.typography.titleMedium)
-                }
-                if (addressText.isNotEmpty()) {
-                    Text(addressText, style = MaterialTheme.typography.bodyMedium)
-                }
-
-                Spacer(Modifier.height(12.dp))
-
-                Button(
-                    onClick = {
-                        // Handle confirm with placeName + address
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = newBlue)
-                ) {
-                    Text("Confirm Location", color = Color.White)
-                }
-            }
-        }
-    }
-}*/
-
-
-
-
 
 fun fetchPlaceDetails(
     placesClient: PlacesClient,
@@ -3872,10 +3384,8 @@ fun fetchPlaceDetails(
     }
 }
 
-
-
 fun haversineDistance(a: LatLng, b: LatLng): Double {
-    val R = 6371e3 // earth radius in meters
+    val R = 6371e3
     val lat1 = Math.toRadians(a.latitude)
     val lat2 = Math.toRadians(b.latitude)
     val dLat = Math.toRadians(b.latitude - a.latitude)
@@ -3885,18 +3395,9 @@ fun haversineDistance(a: LatLng, b: LatLng): Double {
             cos(lat1) * cos(lat2) *
             sin(dLng / 2).pow(2.0)
 
-    return 2 * R * asin(sqrt(h)) // distance in meters
+    return 2 * R * asin(sqrt(h))
 }
 
-
-
-
-
-
-
-
-
-// 🌍 Fetch place details to get LatLng
 fun fetchPlaceLatLngmap(
     placeId: String,
     placesClient: PlacesClient,
@@ -3915,10 +3416,6 @@ fun fetchPlaceLatLngmap(
         }
 }
 
-
-
-
-
 @Composable
 fun PinnedPlacesMapScreen(
     context: Context,
@@ -3935,7 +3432,6 @@ fun PinnedPlacesMapScreen(
         position = CameraPosition.fromLatLngZoom(LatLng(20.0, 77.0), 5f)
     }
 
-    // ✅ When map stops moving → fetch POI + address
     LaunchedEffect(cameraPositionState) {
         snapshotFlow { cameraPositionState.isMoving }
             .collect { moving ->
@@ -3943,15 +3439,13 @@ fun PinnedPlacesMapScreen(
                     val target = cameraPositionState.position.target
                     currentLatLng = target
 
-                    // Always fetch full address
                     val fullAddress = getAddressFromLatLng(context, target)
                     addressText = fullAddress
 
-                    // Try fetching a POI/business name (hospital, fire station, etc.)
                     coroutineScope.launch(Dispatchers.IO) {
                         val (name, _) = fetchPlaceDetailsForLatLng(target, apiKey)
                         withContext(Dispatchers.Main) {
-                            placeName = name // if empty, UI won’t show it
+                            placeName = name
                         }
                     }
                 }
@@ -3960,7 +3454,6 @@ fun PinnedPlacesMapScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Google Map
         GoogleMap(
             modifier = Modifier.matchParentSize(),
             cameraPositionState = cameraPositionState,
@@ -3974,7 +3467,6 @@ fun PinnedPlacesMapScreen(
             )
         )
 
-        // 📍 Center Pin
         Image(
             painter = painterResource(R.drawable.locationpinenquiry),
             contentDescription = "Center Pin",
@@ -3983,7 +3475,6 @@ fun PinnedPlacesMapScreen(
                 .size(48.dp)
         )
 
-        // 📍 FAB for current location
         FloatingActionButton(
             onClick = {
                 fusedLocationProviderClient.lastLocation
@@ -4005,10 +3496,9 @@ fun PinnedPlacesMapScreen(
             shape = CircleShape,
             containerColor = Color.White
         ) {
-            //Icon(Icons.Default.MyLocation, contentDescription = "My Location")
+
         }
 
-        // 📍 Bottom sheet with Place + Address
         if (addressText.isNotEmpty()) {
             Column(
                 modifier = Modifier
@@ -4019,20 +3509,19 @@ fun PinnedPlacesMapScreen(
                     .padding(16.dp),
                 horizontalAlignment = Alignment.Start
             ) {
-                // Show POI/landmark name only if available
+
                 if (placeName.isNotEmpty()) {
                     Text(placeName, style = MaterialTheme.typography.titleMedium)
                     Spacer(Modifier.height(4.dp))
                 }
 
-                // Always show full address
                 Text(addressText, style = MaterialTheme.typography.bodyMedium)
 
                 Spacer(Modifier.height(12.dp))
 
                 Button(
                     onClick = {
-                        // handle confirm with (placeName, addressText, currentLatLng)
+
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
@@ -4045,14 +3534,13 @@ fun PinnedPlacesMapScreen(
     }
 }
 
-// 🔹 Nearby Search API: Find nearest POI
 suspend fun fetchPlaceDetailsForLatLng1(
     latLng: LatLng,
     apiKey: String
 ): Pair<String, String> {
     val url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
             "?location=${latLng.latitude},${latLng.longitude}" +
-            "&radius=50" + // meters around pin
+            "&radius=50" +
             "&key=$apiKey"
 
     val client = OkHttpClient()
@@ -4073,8 +3561,6 @@ suspend fun fetchPlaceDetailsForLatLng1(
     return "" to ""
 }
 
-// 🔹 Reverse Geocoding: Get postal address
-// 🔹 Reverse Geocoding: Get FULL postal address
 fun getAddressFromLatLng(context: Context, latLng: LatLng): String {
     return try {
         val geocoder = Geocoder(context, Locale.getDefault())
@@ -4082,15 +3568,14 @@ fun getAddressFromLatLng(context: Context, latLng: LatLng): String {
         if (!addresses.isNullOrEmpty()) {
             val addr = addresses[0]
 
-            // Build full address manually (street → city → state → postal code → country)
             listOfNotNull(
-                addr.featureName,         // house no / building / landmark
-                addr.subLocality,         // area / colony
-                addr.locality,            // city / town
-                addr.subAdminArea,        // district
-                addr.adminArea,           // state
-                addr.postalCode,          // pincode
-                addr.countryName          // country
+                addr.featureName,
+                addr.subLocality,
+                addr.locality,
+                addr.subAdminArea,
+                addr.adminArea,
+                addr.postalCode,
+                addr.countryName
             ).joinToString(", ")
         } else {
             "Unknown Location"

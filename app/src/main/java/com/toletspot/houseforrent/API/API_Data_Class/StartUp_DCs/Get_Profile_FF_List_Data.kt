@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -24,8 +23,3 @@ data class Get_Profile_FF_List_Data(
     val following_count: Int,
 
 )
-
-//"im_followed": 1,
-//"is_followed": 1,
-//
-//"

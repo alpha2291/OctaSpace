@@ -1,15 +1,7 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-
-
-
-
-
-
 
 @Serializable
 data class Property_Search_Data(
@@ -58,4 +50,3 @@ data class Property_Search_Data(
     @SerialName("whatsapp_num_cc")
     val whatsapp_num_cc: String
 )
-

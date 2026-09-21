@@ -8,9 +8,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.database.ValueEventListener
 
-
 object FirebaseRepository {
-    private const val DB_URL = "https://rental-app-a46a3-default-rtdb.firebaseio.com/"
+    private const val DB_URL = ""
     private val database = FirebaseDatabase.getInstance(DB_URL).reference
 
     fun blockUser(currentUserId: String, blockedUserId: String) {
@@ -63,7 +62,6 @@ object FirebaseRepository {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val msg = snapshot.getValue(ChatMessage::class.java) ?: return
 
-                // 🔒 HARD STOP — NEVER TOUCH BLOCKED MESSAGES
                 if (msg.status == "blocked") return
                 if (msg.blocked) return
                 if (msg.blockedFor == receiverId) return
@@ -91,7 +89,6 @@ object FirebaseRepository {
         ref.addChildEventListener(seenListener!!)
     }
 
-
     fun removeSeenListener(chatId: String) {
         seenListener?.let {
             database.child("chats").child(chatId).child("messages")
@@ -99,8 +96,6 @@ object FirebaseRepository {
         }
         seenListener = null
     }
-
-
 
     fun markMessagesAsDelivered(chatId: String, receiverId: String) {
         val messagesRef = database.child("chats").child(chatId).child("messages")
@@ -110,7 +105,6 @@ object FirebaseRepository {
                 snapshot.children.forEach { msgSnap ->
                     val msg = msgSnap.getValue(ChatMessage::class.java) ?: return@forEach
 
-                    // 🔒 HARD BLOCK
                     if (msg.status == "blocked") return@forEach
                     if (msg.blocked) return@forEach
                     if (msg.blockedFor == receiverId) return@forEach
@@ -130,9 +124,6 @@ object FirebaseRepository {
         })
     }
 
-
-
-    // ✅ Mark messages as delivered when receiver comes online
     fun markMessagesAsDeliveredold(chatId: String, receiverId: String) {
         database.child("chats").child(chatId).child("messages")
             .get()
@@ -140,11 +131,7 @@ object FirebaseRepository {
                 val updates = mutableMapOf<String, Any>()
                 snapshot.children.forEach { msgSnap ->
                     val msg = msgSnap.getValue(ChatMessage::class.java)
-                    // ✅ CRITICAL: Only mark as delivered if:
-                    // 1. Message is FOR this receiver
-                    // 2. Status is "sent" (not already delivered/seen)
-                    // 3. Not already delivered
-                    // 4. Not already read
+
                     if (msg?.receiverId == receiverId &&
                         msg.status == "sent" &&
                         !msg.isDelivered &&
@@ -164,8 +151,6 @@ object FirebaseRepository {
             }
     }
 
-
-    // ✅ Mark messages as seen when receiver OPENS the chat
     fun markMessagesAsSeen(chatId: String, receiverId: String) {
         database.child("chats").child(chatId).child("messages")
             .get()
@@ -173,7 +158,7 @@ object FirebaseRepository {
                 val updates = mutableMapOf<String, Any>()
                 snapshot.children.forEach { msgSnap ->
                     val msg = msgSnap.getValue(ChatMessage::class.java)
-                    // ✅ Only mark as seen if message is FOR this receiver and not already read
+
                     if (msg?.receiverId == receiverId && !msg.isRead) {
                         updates["${msgSnap.key}/status"] = "seen"
                         updates["${msgSnap.key}/isDelivered"] = true
@@ -196,7 +181,6 @@ object FirebaseRepository {
             }
     }
 
-    // ✅ Reset unread count when chat is opened
     fun resetUnreadCount(chatId: String, userId: String) {
         database.child("chats").child(chatId)
             .child("unreadCount").child(userId).setValue(0)
@@ -215,11 +199,6 @@ object FirebaseRepository {
         return "${propertyId}_${sellerId}_${buyerId}"
     }
 
-
-
-    /**
-     * ✅ Set or unset 'isAccountDeleted' for a user.
-     */
     fun setAccountDeleted(userId: String, isDeleted: Boolean, onComplete: (Boolean) -> Unit = {}) {
         val userRef = database.child("users").child(userId).child("isAccountDeleted")
         userRef.setValue(isDeleted)
@@ -250,7 +229,6 @@ object FirebaseRepository {
                     val isRead = msgSnap.child("isRead").getValue(Boolean::class.java) ?: true
                     val senderId = msgSnap.child("senderId").getValue(String::class.java)
 
-                    // Count unread messages sent by others
                     if (!isRead && senderId != currentUserId) {
                         totalUnread++
                     }
@@ -276,10 +254,8 @@ object FirebaseRepository {
                 val buyerId = chatSnapshot.child("buyerId").getValue(String::class.java)
                 val sellerId = chatSnapshot.child("sellerId").getValue(String::class.java)
 
-                // ✅ Skip chats not involving the current user
                 if (buyerId != currentUserId && sellerId != currentUserId) return@forEach
 
-                // ✅ Check if this chat has at least one unread message from the *other* user
                 var hasUnread = false
 
                 chatSnapshot.child("messages").children.forEach { msgSnap ->
@@ -288,7 +264,7 @@ object FirebaseRepository {
 
                     if (!isRead && senderId != currentUserId) {
                         hasUnread = true
-                        return@forEach // stop checking this chat
+                        return@forEach
                     }
                 }
 
@@ -313,7 +289,6 @@ object FirebaseRepository {
 
     }
 
-
     fun setUserActiveInChatNew(chatId: String, userId: String) {
         val ref = database.database
             .getReference("chats")
@@ -333,8 +308,6 @@ object FirebaseRepository {
             .child(userId)
             .removeValue()
     }
-
-
 
     fun isOtherUserActive(chatId: String, otherUserId: String, onResult: (Boolean) -> Unit) {
         database.database
@@ -370,16 +343,11 @@ object FirebaseRepository {
             })
     }
 
-
-
 }
-
 
 object FirebasePresence {
 
-
-//    private val db = FirebaseDatabase.getInstance("https://rental-app-a46a3-default-rtdb.firebaseio.com/")
-    private val db = FirebaseDatabase.getInstance("https://rental-app-a46a3-default-rtdb.firebaseio.com/")
+    private val db = FirebaseDatabase.getInstance("")
     private val usersRef = db.getReference("users")
     private val connectedRef = db.getReference(".info/connected")
 
@@ -436,9 +404,8 @@ object FirebasePresence {
     }
 }
 
-
 object FirebaseHelper {
-    private const val DB_URL = "https://rental-app-a46a3-default-rtdb.firebaseio.com/"
+    private const val DB_URL = ""
     private val db = FirebaseDatabase.getInstance(DB_URL).reference
 
     fun addUser(user: User, onComplete: (Boolean) -> Unit = {}) {
@@ -461,7 +428,6 @@ object FirebaseHelper {
         }
     }
 
-
     fun addOrUpdateUser(user: User, onComplete: (Boolean) -> Unit = {}) {
 
         val userRef = db.child("users").child(user.userId)
@@ -469,7 +435,7 @@ object FirebaseHelper {
         userRef.get().addOnSuccessListener { snapshot ->
             if (snapshot.exists())
             {
-                // 🔄 Update existing user — only specific fields if needed
+
                 val updates = mapOf(
                     "name" to user.name,
                     "email" to user.email,
@@ -490,7 +456,6 @@ object FirebaseHelper {
 
                 Log.d("FirebaseHelper", "Updating user ${user.userId} with: $updates")
 
-
                 userRef.updateChildren(updates)
                     .addOnSuccessListener {
                         Log.d("FirebaseHelper", "✅ User updated: ${user.userId}")
@@ -506,7 +471,7 @@ object FirebaseHelper {
             }
             else
             {
-                // 🆕 Add new user if not found
+
                 userRef.setValue(user)
                     .addOnSuccessListener {
                         Log.d("FirebaseHelper", "✅ User added: ${user.userId}")
@@ -522,8 +487,6 @@ object FirebaseHelper {
             onComplete(false)
         }
     }
-
-
 
     fun createPropertyChat(
         propertyId: String,

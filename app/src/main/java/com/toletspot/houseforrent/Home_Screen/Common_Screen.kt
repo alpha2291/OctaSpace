@@ -82,470 +82,6 @@ import com.toletspot.houseforrent.rememberNetworkStatus
 import com.toletspot.houseforrent.ui.theme.newBlue
 import java.util.Calendar
 
-/*
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
-@Composable
-fun Common_Screen12345678   (){
-
-    println("RECOMPOSED SCREEN")
-    val navHost = rememberNavController()
-
-
-    val showTABars = constants.Common_H_ViewModel.showTABars.collectAsState()
-    val showBABars = constants.Common_H_ViewModel.showBABars.collectAsState()
-
-
-
-    val selectedTab = remember {  constants.Common_H_ViewModel.tab_View }
-
-    LaunchedEffect(constants.Common_H_ViewModel.tab_View , isConnected.value, selectedTab.value) { }
-
-
-
-    Box (
-        modifier = Modifier
-            .fillMaxSize()
-        , contentAlignment = Alignment.Center
-    ){
-        Box(modifier = Modifier.fillMaxSize()){
-
-            NavHost(
-                navController = navHost,
-                startDestination =  when (selectedTab.value) {
-                    0 -> {
-                     BottomBarScreen.Videos.route
-//
-
-                    }
-                    1 -> {
-                        //LottiAnimation(0)
-                        BottomBarScreen.Search.route
-                    }
-                    2 -> {
-                        // LottiAnimation(1)
-
-                        BottomBarScreen.Post.route
-
-                    }
-                    3 -> {
-                       BottomBarScreen.Enquiry.route
-
-                        //Enquiry_Home_Screen(navHost)
-                    }
-                    else ->  BottomBarScreen.Profile.route
-                }
-
-            ) {
-                when (selectedTab.value) {
-                    0 -> {
-                        if (showTABars.value) {
-                            constants.Common_H_ViewModel.toggleshowTABars(true)
-                        }
-
-//                        Box(modifier = Modifier.fillMaxSize()){
-
-//                            NavHost(
-//                                navController = navHost,
-//                                startDestination = BottomBarScreen.Videos.route
-////                    , enterTransition = {
-////                        fadeIn(tween(300))
-////                    }
-////                    , exitTransition = {
-////                        fadeOut(tween(300))
-////                    }
-//                            ) {
-                                Videos_Graph(navHost, viewModel)
-//                            }
-//
-//                            GlobalSnackbarHost()
-//                        }
-
-                    }
-                    1 -> {
-                        //LottiAnimation(0)
-
-                        constants.Common_H_ViewModel.toggleshowTABars(false)
-                        if (showBABars.value) {
-                            constants.Common_H_ViewModel.toggleshowBABars(true)
-                        }
-
-//                        NavHost(
-//                            navController = navHost,
-//                            startDestination = BottomBarScreen.Search.route
-//                        ) {
-                            SearchGraph(navHost)
-//                        }
-                    }
-                    2 -> {
-                        // LottiAnimation(1)
-
-                        constants.Common_H_ViewModel.toggleshowTABars(false)
-                        constants.Common_H_ViewModel.toggleshowBABars(false)
-
-                        constants.PostProperty_ViewModel.clear_Old_FormData()
-
-//                        NavHost(
-//                            navController = navHost,
-//                            startDestination = BottomBarScreen.Post.route
-//                        ) {
-                            PostPropertyGraph(navHost)
-//                        }
-                    }
-                    3 -> {
-                        constants.Common_H_ViewModel.toggleshowTABars(false)
-//                        NavHost(
-//                            navController = navHost,
-//                            startDestination = BottomBarScreen.Enquiry.route
-//                        ) {
-                            EnquiryGraph(navHost)
-//                        }
-                        //Enquiry_Home_Screen(navHost)
-                    }
-                    4 -> {
-                        constants.Common_H_ViewModel.toggleshowTABars(false)
-                        if (showBABars.value) {
-                            constants.Common_H_ViewModel.toggleshowBABars(true)
-                        }
-                        if (!showTABars.value) {
-                            constants.Common_H_ViewModel.toggleshowTABars(false)
-                        }
-
-//                constants.Profile_ViewModel.set_Profile_Mode(0)
-//
-//                constants.Profile_ViewModel.setSelectedUser(
-//                    Users_Profiles_List_DC(
-//                        id = 0,
-//                        user_Name = "mee",
-//                        real_Name = "real me",
-//                        profile_Image = "",
-//                        type = -1,
-//                        about_User = "Two lines",
-//                        num_of_Fwers = "300",
-//                        num_of_Fwing = "400",
-//                        isBlocked = false,
-//                    )
-//                )
-//
-//                constants.Profile_ViewModel.addProfile( Users_Profiles_List_DC(
-//                    id = 0,
-//                    user_Name = "mee",
-//                    real_Name = "real me",
-//                    profile_Image = "",
-//                    type = -1,
-//                    about_User = "Two lines",
-//                    num_of_Fwers = "300",
-//                    num_of_Fwing = "400",
-//                    isBlocked = false,
-//                ))
-
-                        constants.Profile_ViewModel.put_Other_User_Id(0)
-//                        NavHost(
-//                            navController = navHost,
-//                            startDestination = BottomBarScreen.Profile.route
-//                        ) {
-                            Profile_Graph(navHost)
-//                        }
-                    }
-                }
-                //Videos_Graph(navHost)
-            }
-
-            GlobalSnackbarHost()
-        }
-        println("TABBBB -- ${selectedTab.value}")
-       */
-/* when (selectedTab.value) {
-            0 -> {
-                if (showTABars.value) {
-                    constants.Common_H_ViewModel.toggleshowTABars(true)
-                }
-
-                Box(modifier = Modifier.fillMaxSize()){
-
-                    NavHost(
-                        navController = navHost,
-                        startDestination = BottomBarScreen.Videos.route
-//                    , enterTransition = {
-//                        fadeIn(tween(300))
-//                    }
-//                    , exitTransition = {
-//                        fadeOut(tween(300))
-//                    }
-                    ) {
-                        Videos_Graph(navHost)
-                    }
-
-                    GlobalSnackbarHost()
-                }
-
-            }
-            1 -> {
-                //LottiAnimation(0)
-
-                constants.Common_H_ViewModel.toggleshowTABars(false)
-                if (showBABars.value) {
-                    constants.Common_H_ViewModel.toggleshowBABars(true)
-                }
-
-                NavHost(
-                    navController = navHost,
-                    startDestination = BottomBarScreen.Search.route
-                ) {
-                    SearchGraph(navHost)
-                }
-            }
-            2 -> {
-               // LottiAnimation(1)
-
-                constants.Common_H_ViewModel.toggleshowTABars(false)
-                constants.Common_H_ViewModel.toggleshowBABars(false)
-
-                constants.PostProperty_ViewModel.clear_Old_FormData()
-
-                NavHost(
-                    navController = navHost,
-                    startDestination = BottomBarScreen.Post.route
-                ) {
-                    PostPropertyGraph(navHost)
-                }
-            }
-            3 -> {
-                constants.Common_H_ViewModel.toggleshowTABars(false)
-                NavHost(
-                    navController = navHost,
-                    startDestination = BottomBarScreen.Enquiry.route
-                ) {
-                    EnquiryGraph(navHost)
-                }
-                //Enquiry_Home_Screen(navHost)
-            }
-            4 -> {
-                constants.Common_H_ViewModel.toggleshowTABars(false)
-                if (showBABars.value) {
-                    constants.Common_H_ViewModel.toggleshowBABars(true)
-                }
-
-//                constants.Profile_ViewModel.set_Profile_Mode(0)
-//
-//                constants.Profile_ViewModel.setSelectedUser(
-//                    Users_Profiles_List_DC(
-//                        id = 0,
-//                        user_Name = "mee",
-//                        real_Name = "real me",
-//                        profile_Image = "",
-//                        type = -1,
-//                        about_User = "Two lines",
-//                        num_of_Fwers = "300",
-//                        num_of_Fwing = "400",
-//                        isBlocked = false,
-//                    )
-//                )
-//
-//                constants.Profile_ViewModel.addProfile( Users_Profiles_List_DC(
-//                    id = 0,
-//                    user_Name = "mee",
-//                    real_Name = "real me",
-//                    profile_Image = "",
-//                    type = -1,
-//                    about_User = "Two lines",
-//                    num_of_Fwers = "300",
-//                    num_of_Fwing = "400",
-//                    isBlocked = false,
-//                ))
-
-                constants.Profile_ViewModel.put_Other_User_Id(0)
-                NavHost(
-                    navController = navHost,
-                    startDestination = BottomBarScreen.Profile.route
-                ) {
-                    Profile_Graph(navHost)
-                }
-            }
-        }*/
-/*
-
-
-        // 🎛️ Top bar
-        AnimatedVisibility(
-            visible = showTABars.value,
-            enter = fadeIn() +  slideInVertically(initialOffsetY = { -it }, animationSpec = tween(300)),
-            exit = fadeOut() + slideOutVertically(targetOffsetY = { -it }, animationSpec = tween(300)),
-            modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            Reels_TopBar(modifier = Modifier)
-        }
-
-        // 🎛️ Bottom bar
-        AnimatedVisibility(
-            visible = showBABars.value,
-            enter = fadeIn() + slideInVertically(initialOffsetY = { it }, animationSpec = tween(300)),
-            exit = fadeOut() + slideOutVertically(targetOffsetY = { it }, animationSpec = tween(300)),
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-           BottomBar(
-                modifier = Modifier,
-                selectedIndex = selectedTab.value,
-                onTabTapped = { index ->
-                   // if (isConnected.value){
-                    println("INDE XCHANGEEJHGBSHVB -- ${index}")
-                    constants.Common_H_ViewModel.selectedBABTab(index)
-                    constants.Common_H_ViewModel.selectedBABTab_new(index)
-                      //  }
-                }
-            )
-        }
-
-
-    }
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
-@Composable
-fun Common_Screen2() {
-
-    val navController = rememberNavController()
-
-    val showTABars = constants.Common_H_ViewModel.showTABars.collectAsStateWithLifecycle()
-    val showBABars = constants.Common_H_ViewModel.showBABars.collectAsStateWithLifecycle()
-
-
-    val selectedTab = constants.Common_H_ViewModel.Viewing_Screen_BB.collectAsStateWithLifecycle()
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        // 🔹 Single NavHost for all tabs
-        NavHost(
-            navController = navController,
-            startDestination = BottomBarScreen.Videos.route
-        ) {
-            Videos_Graph(navController, viewModel)
-            SearchGraph(navController)
-            PostPropertyGraph(navController)
-            EnquiryGraph(navController)
-            Profile_Graph(navController)
-        }
-
-        // 🎛️ Top bar
-        AnimatedVisibility(
-            visible = showTABars.value,
-            enter = fadeIn() + slideInVertically(initialOffsetY = { -it }, animationSpec = tween(300)),
-            exit = fadeOut() + slideOutVertically(targetOffsetY = { -it }, animationSpec = tween(300)),
-            modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            Reels_TopBar(modifier = Modifier)
-        }
-
-        // 🎛️ Bottom bar
-        AnimatedVisibility(
-            visible = showBABars.value,
-            enter = fadeIn() + slideInVertically(initialOffsetY = { it }, animationSpec = tween(300)),
-            exit = fadeOut() + slideOutVertically(targetOffsetY = { it }, animationSpec = tween(300)),
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            BottomBar(
-                modifier = Modifier,
-                selectedIndex = selectedTab.value,
-                onTabTapped = { index ->
-                    constants.Common_H_ViewModel.selectedBABTab(index)
-
-                    // 🔹 Navigate to the right route
-                    val route = constants.Common_H_ViewModel.BB_Items[index].route
-                    navController.navigate(route) {
-                        launchSingleTop = true
-                        popUpTo(BottomBarScreen.Videos.route) { inclusive = false }
-                    }
-
-                    println("index --- ${index}")
-                    // 🔹 Control top/bottom bar visibility
-                    when (index) {
-                        0 -> {
-                            constants.Common_H_ViewModel.toggleshowTABars(true)
-                            constants.Common_H_ViewModel.toggleshowBABars(true)
-                        }
-                        1, 4 -> {
-                            constants.Common_H_ViewModel.toggleshowTABars(false)
-                            constants.Common_H_ViewModel.toggleshowBABars(true)
-                        }
-                        2 -> {
-                            constants.Common_H_ViewModel.toggleshowTABars(false)
-                            constants.Common_H_ViewModel.toggleshowBABars(false)
-                        }
-                        3 -> {
-                            constants.Common_H_ViewModel.toggleshowTABars(false)
-                            constants.Common_H_ViewModel.toggleshowBABars(true)
-                        }
-                    }
-                },
-               // network = rememberNetworkStatus()
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
-@Composable
-fun Common_Screen3() {
-    val navController = rememberNavController()
-
-    // Track current route from navController
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        // 🔹 Single NavHost
-        NavHost(
-            navController = navController,
-            startDestination = BottomBarScreen.Videos.route
-        ) {
-            Videos_Graph(navController, viewModel)
-            SearchGraph(navController)
-            PostPropertyGraph(navController)
-            EnquiryGraph(navController)
-            Profile_Graph(navController)
-        }
-
-        // 🎛️ Top bar — only for Videos screen
-        AnimatedVisibility(
-            visible = currentRoute == BottomBarScreen.Videos.route,
-            enter = fadeIn() + slideInVertically(initialOffsetY = { -it }, animationSpec = tween(300)),
-            exit = fadeOut() + slideOutVertically(targetOffsetY = { -it }, animationSpec = tween(300)),
-            modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            Reels_TopBar(modifier = Modifier)
-        }
-
-        // 🎛️ Bottom bar — hidden only on Post screen
-        AnimatedVisibility(
-            visible = currentRoute != BottomBarScreen.Post.route,
-            enter = fadeIn() + slideInVertically(initialOffsetY = { it }, animationSpec = tween(300)),
-            exit = fadeOut() + slideOutVertically(targetOffsetY = { it }, animationSpec = tween(300)),
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            BottomBar(
-                modifier = Modifier,
-                selectedIndex = constants.Common_H_ViewModel.Viewing_Screen_BB.collectAsStateWithLifecycle().value,
-                onTabTapped = { index ->
-                    constants.Common_H_ViewModel.selectedBABTab(index)
-                    val route = constants.Common_H_ViewModel.BB_Items[index].route
-                    navController.navigate(route) {
-                        launchSingleTop = true
-                        popUpTo(BottomBarScreen.Videos.route) { inclusive = false }
-                    }
-                },
-                //network = rememberNetworkStatus()
-            )
-        }
-    }
-}
-
-*/
-
 @Composable
 fun MainContent(
     selectedTab: Int,
@@ -574,33 +110,24 @@ fun MainContent(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun Common_Screen(
-    viewModel: Common_H_ViewModel = viewModel() // or hiltViewModel()
+    viewModel: Common_H_ViewModel = viewModel()
     ,navHostController: NavHostController,
-    tabIndex: Int = 0 // default to Videos tab
+    tabIndex: Int = 0
 
 ) {
     AppUpdateDilaog()
-    println("🏠 RECOMPOSED SCREEN — VM hash: ${viewModel.hashCode()}")
 
-    val context = LocalContext.current  // ✅ ADD THIS - Get context
+    val context = LocalContext.current
 
     var showUpdatePopup by remember { mutableStateOf(false) }
     var latestVersionAvailable by remember { mutableStateOf("") }
     var needsUpdate by remember { mutableStateOf(false) }
 
-//    // ✅ Check for updates on app launch
-//    LaunchedEffect(Unit) {
-//        openDialogCustom.value = true
-//    }
-
-
-
     fun logout() {
-       // AppPreferences.clearAll()
+
         navHostController.navigate(UserCredentialsScreenFlow.UserCredentials.route) {
             popUpTo(navHostController.graph.startDestinationId) {
                 inclusive = true
@@ -610,42 +137,26 @@ fun Common_Screen(
         constants.Profile_ViewModel.dismiss_Logout_PP()
     }
 
-    // lifecycle-aware collection (use collectAsStateWithLifecycle if you have lifecycle-compose)
     val showTABars = viewModel.showTABars.collectAsState()
     val showBABars = viewModel.showBABars.collectAsState()
     val selectedTab by viewModel.Viewing_Screen_BB.collectAsState()
 
-    println("   selectedTab: $selectedTab, showTABars: $showTABars, showBABars: $showBABars")
-
     LaunchedEffect(selectedTab) {
-        println("   📱 LaunchedEffect triggered for tab: $selectedTab")
     }
 
-
     var network = rememberNetworkStatus()
-    // Set the correct tab initially
+
     LaunchedEffect(tabIndex) {
         viewModel.selectedBABTab(tabIndex)
     }
 
-    // ✅ Use rememberSaveable instead of remember
-    // ✅ Use rememberSaveable for location_Change
     var location_Change = remember { mutableStateOf(false) }
 
-    // ✅ Get dialog states from ViewModel
     val showGPS = constants.Start_Up_ViewModel.showGpsDialog.collectAsState()
     val location_Settings = constants.Start_Up_ViewModel.showLocationSettings.collectAsState()
     var app_Exit by remember { mutableStateOf(false) }
 
-
     Box(Modifier.fillMaxSize()) {
-//        when (selectedTab) {
-//            0 -> VideosModule(viewModel ,::logout)
-//            1 -> SearchModule(viewModel ,::logout)
-//            2 -> PostModule(viewModel ,::logout )
-//            3 -> EnquiryModule(viewModel ,::logout)
-//            4 -> ProfileModule(viewModel, ::logout)
-//        }
 
         MainContent(
             selectedTab = selectedTab,
@@ -654,7 +165,6 @@ fun Common_Screen(
                 logout()
             }
         )
-
 
         AnimatedVisibility(
             visible = showTABars.value,
@@ -681,7 +191,6 @@ fun Common_Screen(
                 modifier = Modifier,
                 selectedIndex = selectedTab,
                 onTabTapped = { index ->
-                    println("🎯 onTabTapped: $index  (Common_Screen VM hash: ${viewModel.hashCode()})")
 
                     if (network.value == NetworkStatus.Offline){
                         if (index == 0){
@@ -693,28 +202,11 @@ fun Common_Screen(
                     constants.Enquiry_ViewModel.enquiries_View(0)
                     viewModel.selectedBABTab(index)
 
-//                    constants.Profile_ViewModel.clearPosts()
-//                    constants.Profile_ViewModel.clearownProfileContent()
-
-//                    else {
-//                        //if (index != 2 ){
-//                            viewModel.selectedBABTab(index)
-//                            constants.Enquiry_ViewModel.enquiries_View(0)
-//                            viewModel.selectedBABTab(index)
-//                            toast(constants.activity.getString(R.string.no_Internet))
-                       // }
-                        //else {
-                            //toast(constants.activity.getString(R.string.no_Internet))
-                       // }
-                   // }
-
                     constants.Search_ViewModel.search_Profile_Name.value = ""
-
 
                     constants.Profile_ViewModel.clear_All_BF_Handler()
                     constants.Profile_ViewModel.clearAllFFData()
 
-                    // search sort clear
                     constants.Search_ViewModel.not_Apply_FS()
                     constants.Search_ViewModel.clear_Selected_Fields_Form4()
 
@@ -749,14 +241,10 @@ fun Common_Screen(
                     constants.Enquiry_ViewModel.leads_selected_Filter = 4
                   constants.Enquiry_ViewModel.leads_selected_Sort = 1
 
-                      //constants.Profile_ViewModel.clearPosts()
-
                     constants.Reels_ViewModel.clear_All_Reels()
 
                     AppPreferences.save_Noti_Post_Id("")
                     set_FDLP_State(false)
-
-
 
                 }
             )
@@ -767,20 +255,13 @@ fun Common_Screen(
         val placesClient = Places.createClient(context)
 
         val network = rememberNetworkStatus()
-        println("LATITUDE LONGITUE -- ${AppPreferences.get_Lat_Long()}")
 
         AnimatedMapView( location_Change , 1, latlong = AppPreferences.get_Lat_Long(),navHostController = navHostController)
     }
 
-
-
-
-
-    // Deactivated account dialog
-
     if (openDialogCustom.value) {
         AlertDialog(
-            onDismissRequest = { /*TODO*/ }
+            onDismissRequest = {  }
             , modifier = Modifier
                 .noRippleClickable{
 
@@ -802,7 +283,7 @@ fun Common_Screen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight()
-                            //.height(400.dp)
+
                     ) {
                         SubcomposeAsyncImage(
                             model = R.drawable.updatepopup,
@@ -852,9 +333,6 @@ fun Common_Screen(
                                     colors = ButtonDefaults.buttonColors(newBlue),
                                     onClick = {
                                         AppPreferences.save_timestamp(Calendar.getInstance().timeInMillis)
-//                                    Utils.sharedhelper.putLong(
-//                                        context, Utils.UpdateTimeStamp,
-//                                        Calendar.getInstance().timeInMillis)
 
                                         try {
                                             constants.activity.startActivity(
@@ -886,10 +364,6 @@ fun Common_Screen(
                                     colors = ButtonDefaults.buttonColors(Color.White),
                                     onClick = {
                                         AppPreferences.save_timestamp(Calendar.getInstance().timeInMillis)
-//                                    Utils.sharedhelper.putLong(
-//                                        context, Utils.UpdateTimeStamp,
-//                                        Calendar.getInstance().timeInMillis
-//                                    )
 
                                         val skip = AppPreferences.get_skipcount()
 
@@ -909,15 +383,12 @@ fun Common_Screen(
                         }
                     }
 
-
                 }
             }
         }
     }
 
-
     BackHandler {
-        println("90876543245678908765432345678908765432345678")
         if (location_Change.value){
             location_Change.value = false
         }
@@ -926,11 +397,8 @@ fun Common_Screen(
         }
     }
 
-
 }
 
-
-// ==================== MODULE 1: VIDEOS ====================
 @Composable
 fun VideosModule(viewModel: Common_H_ViewModel,onLogout: () -> Unit ) {
     val navHost = rememberNavController()
@@ -951,7 +419,6 @@ fun VideosModule(viewModel: Common_H_ViewModel,onLogout: () -> Unit ) {
     }
 }
 
-// ==================== MODULE 2: SEARCH ====================
 @Composable
 fun SearchModule(viewModel: Common_H_ViewModel,onLogout: () -> Unit ) {
     val navHost = rememberNavController()
@@ -974,7 +441,6 @@ fun SearchModule(viewModel: Common_H_ViewModel,onLogout: () -> Unit ) {
     }
 }
 
-// ==================== MODULE 3: POST ====================
 @Composable
 fun PostModule(viewModel: Common_H_ViewModel,onLogout: () -> Unit ) {
     val navHost = rememberNavController()
@@ -998,7 +464,6 @@ fun PostModule(viewModel: Common_H_ViewModel,onLogout: () -> Unit ) {
     }
 }
 
-// ==================== MODULE 4: ENQUIRY ====================
 @Composable
 fun EnquiryModule(viewModel: Common_H_ViewModel,onLogout: () -> Unit ) {
     val navHost = rememberNavController()
@@ -1020,12 +485,10 @@ fun EnquiryModule(viewModel: Common_H_ViewModel,onLogout: () -> Unit ) {
     }
 }
 
-// ==================== MODULE 5: PROFILE ====================
 @Composable
-fun ProfileModule(viewModel: Common_H_ViewModel ,onLogout: () -> Unit  // ← Receive logout function
+fun ProfileModule(viewModel: Common_H_ViewModel ,onLogout: () -> Unit
  ) {
 
-//    val network = rememberNetworkStatus()
     val navHost = rememberNavController()
 
     val context = LocalContext.current
@@ -1037,7 +500,6 @@ fun ProfileModule(viewModel: Common_H_ViewModel ,onLogout: () -> Unit  // ← Re
     }
 
     val placesClient = Places.createClient(context)
-
 
     Box(modifier = Modifier.fillMaxSize()
     ) {
@@ -1052,5 +514,3 @@ fun ProfileModule(viewModel: Common_H_ViewModel ,onLogout: () -> Unit  // ← Re
         GlobalSnackbarHost()
     }
 }
-
-// ==================== UPDATED BOTTOM BAR ====================

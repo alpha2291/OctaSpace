@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Home_Screen.Search_Module
 
-
 import android.content.Context
 import android.util.Log
 import androidx.activity.compose.BackHandler
@@ -158,28 +157,17 @@ import java.util.Locale
 fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H_ViewModel)
 {
 
-
-
-
     LaunchedEffect(Unit) {
         viewModel.toggleshowTABars(false)
         viewModel.toggleshowBABars(true)
         constants.Common_H_ViewModel.toggleshowBABars(true)
     }
 
-//    DisposableEffect(Unit) {
-//        viewModel.toggleshowBABars(true)
-//        onDispose {  }
-//    }
-
     val go_to_Search_Results = constants.Search_ViewModel.show_Search_Results.collectAsStateWithLifecycle()
 
     val network = rememberNetworkStatus()
 
     val list = listOf("Residential" , "Commercial" , "Agricultural" , "Sellers")
-
-
-
 
     var search_State = constants.Search_ViewModel.search_State
 
@@ -188,14 +176,11 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
 
     var selectedRange by remember { mutableStateOf(1_000f..10_000_000f) }
 
-
     var api_State = remember { mutableStateOf(-1) }
     var api_State2 = remember { mutableStateOf(-1) }
 
-
     val popular_Cities = constants.Search_ViewModel.popular_Cities.collectAsState()
     val popular_Sellers = constants.Search_ViewModel.popular_Sellers.collectAsState()
-
 
     if (network.value == NetworkStatus.Online)
     {
@@ -211,7 +196,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                         }
 
                         is API_Result_Handling.Deactivated -> {
-                            //resultCallback(5)
+
                         }
 
                         is API_Result_Handling.Error -> {
@@ -238,7 +223,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                         }
 
                         is API_Result_Handling.Deactivated -> {
-                            //resultCallback(5)
+
                         }
 
                         is API_Result_Handling.Error -> {
@@ -256,7 +241,6 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                 }
             }
 
-
             onDispose {
                 if (search_State.value == 4) {
                     constants.Search_ViewModel.search_Land_Type.value = 4
@@ -271,14 +255,10 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
         GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
     }
 
-
-
     var minInput = remember { mutableStateOf(selectedRange.start.toInt().toString()) }
     var maxInput = remember { mutableStateOf(selectedRange.endInclusive.toInt().toString()) }
 
-
     var scrollstate = rememberScrollState()
-
 
     val scope = rememberCoroutineScope()
 
@@ -293,11 +273,8 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
         }
     }
 
-
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     val isLoading = constants.API_Vm.isLoading_ProfileS
     val errorMessage = constants.API_Vm.errorMessage_ProfileS
@@ -313,11 +290,9 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
     var failure = remember { mutableStateOf(false) }
     var retry by remember { mutableStateOf(0) }
 
-
     if (network.value == NetworkStatus.Online) {
         LaunchedEffect(search_username.value , retry) {
             if (search_username.value.length >= 3) {
-                println("WHENPROFILE SEARCHED HITTING NORMAL")
                 constants.API_Vm.load_Profile_Search(
                     user_id = AppPreferences.getUserId(),
                     name = search_username.value,
@@ -326,9 +301,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
             }
         }
 
-        // Pagination logic stays the same
         LaunchedEffect(listState, currentPage, isLoading, totalPages) {
-            println("WHENPROFILE SEARCHED HITTING Pagination")
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                 .collect { lastVisibleItemIndex ->
                     val totalItems = listState.layoutInfo.totalItemsCount
@@ -341,7 +314,6 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                         !isLoading &&
                         currentPage < totalPages
                     ) {
-                        println("CURRENT PAGE - ${currentPage}")
                         constants.API_Vm.load_Profile_Search(
                             user_id = AppPreferences.getUserId(),
                             name = search_username.value,
@@ -368,7 +340,6 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
     )
     {
         item {
-           // Spacer(modifier = Modifier.padding(top = if (forTab()) 16.dp else notchPadding.value))
 
             Text(
                 "Search",
@@ -388,9 +359,8 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
             )
             {
 
-
-                val itemWidth = 140.dp // approximate width of each item including padding/margin
-                val itemSpacing = 8.dp // spacing between items
+                val itemWidth = 140.dp
+                val itemSpacing = 8.dp
 
                 Row(
                     modifier = Modifier
@@ -400,7 +370,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                     list.forEachIndexed { index, item ->
                         Box(
                             modifier = Modifier
-                                .width(itemWidth) // make width fixed
+                                .width(itemWidth)
                                 .clip(RoundedCornerShape(4.dp))
                                 .background(
                                     if (constants.Search_ViewModel.selectedOption_SEARCHTYPE == item) newBlack else newWhite
@@ -411,7 +381,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                     constants.Search_ViewModel.search_Profile_Name.value = ""
                                     constants.Search_ViewModel.clear_profile_SearchData()
                                     scope.launch {
-                                        // calculate offset in pixels
+
                                         val offset = with(density) {
                                             (itemWidth + itemSpacing).toPx() * index
                                         }
@@ -432,14 +402,10 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                     }
                 }
 
-
+                Spacer(modifier = Modifier.height(15.dp))
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-
-                Spacer(modifier = Modifier.height(15.dp))
-
-//                if (search_State.value != "Sellers"){
                 if (constants.Search_ViewModel.selectedOption_SEARCHTYPE != "Sellers"){
                     Search_Main_Property(focusManager , viewModel, search_State , selectedRange)
                 }
@@ -448,8 +414,6 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                 }
 
             }
-
-                // popular cities flow row
 
             Column {
                 if (constants.Search_ViewModel.selectedOption_SEARCHTYPE == "Sellers") {
@@ -463,7 +427,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                 fontFamily = constants.fontFamily(0),
                                 color = Color.Black,
                                 modifier = Modifier.align(Alignment.Start).padding(start = 8.dp)
-                                //.align(Alignment.Start)
+
                             )
 
                             constants.spacer(2)
@@ -476,7 +440,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                 verticalArrangement = Arrangement.spacedBy(if (forTab())16.dp else 8.dp)
                             )
                             {
-                                /// content from api
+
                                 popular_Sellers.value.filterNot { it?.user_id == AppPreferences.getUserId() }.forEach { item ->
 
                                     Row(
@@ -488,62 +452,29 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                             .noRippleClickable{
                                                 ClickHelper.getInstance().clickOnce {
                                                     viewModel.toggleshowTABars(false)
-//                                                    constants.Profile_ViewModel.add_Selected_User_Name(
-//                                                        item?.username ?: "Unknown"
-//                                                    )
-
-                                                    //new flowwewwwwwww
-//                                                    constants.Profile_ViewModel.add_BF_Handler(
-//                                                        Profile_Handle_Back(
-//                                                            current_UsedId = AppPreferences.getUserId(),
-//                                                            other_UserId = item?.user_id ?: 0,
-//                                                            ff_User_Name = item?.username ?: "",
-//                                                            ff_Fw_Count = item?.followers ?: 0,
-//                                                            ff_Fg_Count = item?.following ?: 0,
-//                                                            // is_Search_Enabled = is_Search_Enabled.value,
-//                                                            // search_Text = search_Text.value
-//                                                        )
-//                                                    )
-//
-//                                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-//
-//                                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
-//
-//                                                    constants.Profile_ViewModel.addProfile(
-//                                                        item?.user_id ?: 0
-//                                                    )
-//                                                    constants.Profile_ViewModel.add_Selected_Profile_Id(
-//                                                        id = item?.user_id ?: 0
-//                                                    )
-
-//                                                    keyboardController1?.hide()
-//                                                    focusManager1.clearFocus()
 
                                                     constants.Profile_ViewModel.add_BF_Handler(
                                                         item = Profile_Handle_Back(
-                                                            //id = ,
+
                                                             current_UsedId = AppPreferences.getUserId(),
                                                             other_UserId = item?.user_id ?: 0,
-                                                            //selected_Tab = item?.selected_Tab ?: 0,
+
                                                             ff_User_Name = item?.username?: "username",
                                                             ff_Fw_Count = item?.followers ?: 0,
                                                             ff_Fg_Count = item?.following ?: 0,
-//                                                            is_Search_Enabled = is_Search_Enabled.value,
-//                                                            search_Text = search_Text.value
+
                                                         )
                                                     )
 
                                                     constants.Profile_ViewModel.clearSelectedUserProfile()
                                                     constants.Profile_ViewModel.add_Selected_User_Name(item?.username ?: "username")
 
-                                                    // Set the profile ID and navigate
                                                     constants.Profile_ViewModel.addProfile(item?.user_id ?: 0)
                                                     constants.Profile_ViewModel.add_Selected_Profile_Id(id = item?.user_id ?: 0)
                                                     constants.Profile_ViewModel.put_Other_User_Id(item?.user_id ?: 0)
                                                     constants.Profile_ViewModel.clear_SearchList_FF()
                                                     constants.API_Vm.totalPages_Profile_Posts = 1
 
-                                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                     viewModel.toggleshowBABars(false)
                                                     navHostController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                 }
@@ -574,7 +505,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                                         modifier = Modifier
                                                             .fillMaxSize()
                                                             .background(newLightBlue, CircleShape)
-                                                        //.padding(8.dp)
+
                                                         , contentAlignment = Alignment.Center
                                                     ) {
                                                         Text(
@@ -593,8 +524,6 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                                 }
                                             }
                                         }
-
-
 
                                         constants.spacer(4)
 
@@ -617,7 +546,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                             network.value == NetworkStatus.Offline  &&  search_Profile_Content.value.isEmpty() -> {
                                 Column(
                                     modifier = Modifier
-                                        //.padding(bottom = 48.dp)
+
                                         .fillMaxWidth()
                                         .wrapContentHeight()
                                         .padding(horizontal = 16.dp)
@@ -646,7 +575,6 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
 
                             errorMessage?.isNotEmpty() == true -> {
 
-
                                 Common_API_Fail(
                                     failure
                                     , onReTryClick = {
@@ -656,10 +584,10 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                             }
 
                             search_username.value.isNotEmpty() && !isLoading && search_Profile_Content.value.isEmpty() -> {
-                                // no data
+
                                 Column(
                                     modifier = Modifier
-                                        //.padding(bottom = 48.dp)
+
                                         .fillMaxWidth()
                                         .height(400.dp)
                                         .padding(horizontal = 16.dp , vertical = 16.dp)
@@ -726,7 +654,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                                                     modifier = Modifier
                                                                         .fillMaxSize()
                                                                         .background(newLightBlue)
-                                                                    //.padding(8.dp)
+
                                                                     ,
                                                                     contentAlignment = Alignment.Center
                                                                 ) {
@@ -761,7 +689,6 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                                             option.username ?: "Unknown"
                                                         )
 
-                                                        //new flowwewwwwwww
                                                         constants.Profile_ViewModel.add_BF_Handler(
                                                             Profile_Handle_Back(
                                                                 current_UsedId = AppPreferences.getUserId(),
@@ -770,14 +697,9 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                                                     ?: "",
                                                                 ff_Fw_Count = option.followers,
                                                                 ff_Fg_Count = option.following,
-                                                                // is_Search_Enabled = is_Search_Enabled.value,
-                                                                // search_Text = search_Text.value
+
                                                             )
                                                         )
-
-                                                        /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                                        println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                                         constants.Profile_ViewModel.addProfile(
                                                             option?.user_id ?: 0
@@ -786,7 +708,6 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                                             id = option.user_id ?: 0
                                                         )
 
-                                                        // if (view_Details_Data.value?.user_id == AppPreferences.)
                                                         viewModel.toggleshowBABars(false)
                                                         navHostController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                                     }
@@ -814,7 +735,7 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
                                         when {
                                             search_username.value.isNotEmpty() -> {
                                                 focusManager.clearFocus()
-                                              //  constants.Search_ViewModel.clear_profile_SearchData()
+
                                                 constants.API_Vm.isLoading_ProfileS = false
                                                 constants.API_Vm.totalPages_ProfileS = 1
                                                 constants.API_Vm.errorMessage_ProfileS = null
@@ -856,16 +777,13 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
         , enter = slideInHorizontally(tween(600)) { it }
         , exit = slideOutHorizontally(tween(600)) { it }
     ) {
-        //Search_Result_Structure()
 
         LaunchedEffect(go_to_Search_Results.value , key2 = go_to_Search_Results.value) {
             if (go_to_Search_Results.value){
-                println("Search result page truue")
                 viewModel.toggleshowTABars(false)
                 viewModel.toggleshowBABars(false)
             }
             else {
-                println("Search result page false")
                 viewModel.toggleshowTABars(false)
                 viewModel.toggleshowBABars(true)
             }
@@ -875,10 +793,9 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
             Search_Result_Screen(notchPadding , navHostController , search_State, search_Area, minInput, maxInput ,viewModel)
         }
         else {
-            //constants.API_Vm.isLoading_ProfileS = false
+
             Search_Profile_Result_Screen(viewModel , navHostController)
         }
-
 
     }
 
@@ -894,8 +811,6 @@ fun Search_Main_Screen(navHostController: NavHostController, viewModel: Common_H
         }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -947,7 +862,6 @@ fun BudgetSelector(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            // ======================== MIN FIELD ============================
             ExposedDropdownMenuBox(
                 expanded = minExpanded.value,
                 onExpandedChange = { }
@@ -1049,7 +963,6 @@ fun BudgetSelector(
 
             Spacer(Modifier.width(10.dp))
 
-            // ======================== MAX FIELD ============================
             ExposedDropdownMenuBox(
                 expanded = maxExpanded.value,
                 onExpandedChange = { }
@@ -1151,14 +1064,11 @@ fun BudgetSelector(
             }
         }
 
-        // ERROR TEXTS
         AnimatedVisibility(visible = isError) {
             Text("Max should be greater than Min", color = Color.Red)
         }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1173,12 +1083,8 @@ fun Search_Main_Property(
     val network = rememberNetworkStatus()
     val placesClient = Places.createClient(context)
 
-
     var api_State = remember { mutableStateOf(-1) }
     var api_State2 = remember { mutableStateOf(-1) }
-
-//    var minexpanded = remember { mutableStateOf(false) }
-//    var maxexpanded = remember { mutableStateOf(false) }
 
     val MIN_LIMIT = 2000L
     val MAX_LIMIT = 10_000_000L
@@ -1196,9 +1102,6 @@ fun Search_Main_Property(
     }
     val popular_Cities = constants.Search_ViewModel.popular_Cities.collectAsState()
 
-
-
-
     if (network.value == NetworkStatus.Online) {
         DisposableEffect(Unit) {
             if (popular_Cities.value.isEmpty()) {
@@ -1212,7 +1115,7 @@ fun Search_Main_Property(
                         }
 
                         is API_Result_Handling.Deactivated -> {
-                            //resultCallback(5)
+
                         }
 
                         is API_Result_Handling.Error -> {
@@ -1230,7 +1133,6 @@ fun Search_Main_Property(
                 }
             }
 
-
             onDispose {
                 if (search_State.value == 4) {
                     constants.Search_ViewModel.search_Land_Type.value = 4
@@ -1246,30 +1148,21 @@ fun Search_Main_Property(
         GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
     }
 
-
-
     val search_Area = constants.Search_ViewModel.search_Area
 
-    // Observe ViewModel values as State
     val minRangeFromVM by constants.Search_ViewModel.minRangeRefs
     val maxRangeFromVM by constants.Search_ViewModel.maxRangeRefs
 
-    println("MIN MAX VALUE -- ${constants.Search_ViewModel.minRangeRefs} -- ${constants.Search_ViewModel.maxRangeRefs}")
-
-    // Convert ViewModel strings to Float values
     val minValue = minRangeFromVM.toFloat() ?: 2_000f
     val maxValue = maxRangeFromVM.toFloat() ?: 10_000_000f
 
-    // Local slider range state
     var sliderRange by remember(minValue, maxValue) {
         mutableStateOf(minValue..maxValue)
     }
 
-    // Display values for UI
     val minDisplay = remember(sliderRange) { "%,.0f".format(sliderRange.start) }
     val maxDisplay = remember(sliderRange) { "%,.0f".format(sliderRange.endInclusive) }
 
-    // Sync when VM values change
     LaunchedEffect(minRangeFromVM, maxRangeFromVM) {
         val newMin = minRangeFromVM.toFloat() ?: 2_000f
         val newMax = maxRangeFromVM.toFloat() ?: 10_000_000f
@@ -1282,7 +1175,6 @@ fun Search_Main_Property(
 
     Column(modifier = Modifier.fillMaxWidth()) {
 
-        // City search input
         CityDropdown(
             modifier = Modifier,
             placesClient = placesClient,
@@ -1291,8 +1183,6 @@ fun Search_Main_Property(
         )
 
         constants.spacer(8)
-
-        /// popular cities
 
         when(api_State.value){
              0 -> {
@@ -1310,13 +1200,10 @@ fun Search_Main_Property(
                         fontSize = constants.textUnit(14),
                         fontFamily = constants.fontFamily(0),
                         color = Color.Black, modifier = Modifier
-                            //.padding(start = 8.dp)
-                        //.align(Alignment.Start)
+
                     )
 
                     constants.spacer(2)
-
-
 
                     FlowRow(
                         modifier = Modifier
@@ -1343,7 +1230,7 @@ fun Search_Main_Property(
                                     )
                                     .noRippleClickable{
                                         ClickHelper.getInstance().clickOnce {
-                                            //constants.Search_ViewModel.select_Popular_Cities(reportType.id)
+
                                             search_Area.value = reportType?.city ?: ""
                                             focusManager1.clearFocus()
                                             constants.Search_ViewModel.search_Area.value =
@@ -1355,7 +1242,6 @@ fun Search_Main_Property(
                                                 constants.Search_ViewModel.maxRangeRefs.value.toFloat() ?: 0f
 
                                             if (selectedRange.start != minSaved || selectedRange.endInclusive != maxSaved) {
-                                                println("BUDGET UPDATING")
                                                 constants.Search_ViewModel.update_Search_SF {
                                                     it.copy(
                                                         budget_from = selectedRange.start.toInt()
@@ -1374,7 +1260,6 @@ fun Search_Main_Property(
                                             constants.API_Vm.isLoading_PS_FF = true
                                             constants.API_Vm.totalPages_PS_FF = 1
 
-                                            println("DATA ADED SUCCES -- ${constants.Search_ViewModel.selected_Sort_Filter_Fields.value}")
                                             constants.Search_ViewModel.enable_Search_Results()
 
                                         }
@@ -1404,12 +1289,7 @@ fun Search_Main_Property(
             modifier = Modifier.padding(top = 16.dp)
         )
 
-
-
-
         constants.spacer(8)
-
-        // Min & Max Display Boxes
 
         BudgetSelector(
             minBudget = constants.Search_ViewModel.minRangeRefs ,
@@ -1418,10 +1298,8 @@ fun Search_Main_Property(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Search Button
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1469,7 +1347,6 @@ fun Search_Main_Property(
     }
 }
 
-
 @Composable
 fun Search_Main_Profile(
     viewModel: Common_H_ViewModel,
@@ -1478,13 +1355,9 @@ fun Search_Main_Profile(
     search_State: MutableState<Int>
 ) {
 
-
-
     val network = rememberNetworkStatus()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-
-
 
     val isLoading = constants.API_Vm.isLoading_ProfileS
     val errorMessage = constants.API_Vm.errorMessage_FF
@@ -1501,13 +1374,10 @@ fun Search_Main_Profile(
     var failure = remember { mutableStateOf(false) }
     var retry by remember { mutableStateOf(0) }
 
-
-
     if (network.value == NetworkStatus.Online) {
         LaunchedEffect(search_username.value , retry) {
             if (search_username.value.length >= 3 && search_Profile_Content.value.isEmpty() &&  !constants.API_Vm.isLoading_ProfileS) {
-                println("WHENPROFILE SEARCHED HITTING NORMAL 1625623636")
-                //constants.API_Vm.isLoading_ProfileS = false
+
                 constants.API_Vm.load_Profile_Search(
                     user_id = AppPreferences.getUserId(),
                     name = search_username.value,
@@ -1516,9 +1386,7 @@ fun Search_Main_Profile(
             }
         }
 
-        // Pagination logic stays the same
         LaunchedEffect(listState, currentPage, isLoading, totalPages) {
-            println("WHENPROFILE SEARCHED HITTING Pagination 3u7327327")
             snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                 .collect { lastVisibleItemIndex ->
                     val totalItems = listState.layoutInfo.totalItemsCount
@@ -1531,7 +1399,6 @@ fun Search_Main_Profile(
                         !isLoading &&
                         currentPage < totalPages
                     ) {
-                        println("CURRENT PAGE - ${currentPage}")
 
                         constants.API_Vm.load_Profile_Search(
                             user_id = AppPreferences.getUserId(),
@@ -1547,18 +1414,16 @@ fun Search_Main_Profile(
 
     Box(
         modifier = Modifier
-            //.menuAnchor()
+
             .clip(RoundedCornerShape(4.dp))
             .background(Color.White)
-            //.border(1.dp, newGray, RoundedCornerShape(4.dp))
-           // .padding(horizontal = 8.dp, vertical = 6.dp)
+
     )
     {
         OutlinedTextField(
             value = search_username.value,
             onValueChange = {
                 search_username.value = it
-                println("NETWORK --  ${network.value }")
                     if (it.length >= 3) {
                         user_search_trigger.value = true
                         constants.API_Vm.isLoading_ProfileS = false
@@ -1599,8 +1464,7 @@ fun Search_Main_Profile(
                         modifier = Modifier
                             .noRippleClickable{
                                 search_username.value = ""
-                                println("PROFILE SEARCH DATA --search_Profile_Content.value ${search_Profile_Content.value.size}")
-                                //user_search_trigger.value = false
+
                                 constants.Search_ViewModel.clear_profile_SearchData()
 
                             }
@@ -1623,12 +1487,7 @@ fun Search_Main_Profile(
         )
     }
 
-
-
-
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1641,8 +1500,6 @@ fun Search_Result_Screen(
     maxInput: MutableState<String>,
     viewModel: Common_H_ViewModel,
 ) {
-
-
 
     viewModel.toggleshowBABars(false)
     val isLoading = constants.API_Vm.isLoading_PS_FF
@@ -1662,8 +1519,6 @@ fun Search_Result_Screen(
 
     val placesClient = Places.createClient(context)
 
-
-
     val cmt_btm_Sheet = constants.Common_H_ViewModel.comment_btm_Sheet.collectAsState()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -1672,14 +1527,12 @@ fun Search_Result_Screen(
 
     val selected_SF = constants.Search_ViewModel.selected_Sort_Filter_Fields.collectAsStateWithLifecycle()
 
-
     if (network.value == NetworkStatus.Online) {
 
         LaunchedEffect (Unit, constants.Search_ViewModel.trigger_Search_Again.value, retry) {
 
             if (apply_FS.value) {
-                println("1234567890-")
-//                constants.Search_ViewModel.total_SearchResults_Counts.value = 0
+
                 constants.API_Vm.load_Search_SF(
                     user_id = AppPreferences.getUserId(),
                     search_text = search_Area.value,
@@ -1736,7 +1589,7 @@ fun Search_Result_Screen(
                     user_id = AppPreferences.getUserId(),
                     search_text = search_Area.value,
                     short_by = selected_SF.value?.short_by ?: 0,
-                   // recently_posted_date = System.currentTimeMillis().toString(),
+
                     land_categorie_id = selected_SF.value?.land_categorie_id?.joinToString(","),
                     land_type_id = constants.Search_ViewModel.search_Land_Type.value.toString(),
                     property_area_unit = selected_SF.value?.property_area_unit ?: "sq",
@@ -1745,8 +1598,7 @@ fun Search_Result_Screen(
                     budget_from = selected_SF.value?.budget_from,
                     budget_to = selected_SF.value?.budget_to,
                     posted_by = selected_SF.value?.posted_by?.joinToString(","),
-                    //ownership = selected_SF.value?.ownership?.joinToString(","),
-//                    availability_status = selected_SF.value?.availability_status?.joinToString(","),
+
                     floor_plan = selected_SF.value?.floor_plan?.joinToString(","),
                     furnishing_status = selected_SF.value?.furnishing_status?.joinToString(","),
                     parking_available = selected_SF.value?.parking_available?.joinToString(","),
@@ -1755,45 +1607,34 @@ fun Search_Result_Screen(
                     property_facing = selected_SF.value?.property_facing?.joinToString(","),
                     amenities = selected_SF.value?.amenities?.joinToString(","),
                     property_highlights = selected_SF.value?.property_highlights?.joinToString(","),
-                    //business_type = selected_SF.value?.business_type?.joinToString(","),
+
                     authority_approved = selected_SF.value?.approved?.joinToString(","),
                     page = 1,
                 )
             }
             else {
-                println("WHAT ARE THE SEARCHES $$$$${constants.Search_ViewModel.maxRangeRefs.value.toInt()}-###${constants.Search_ViewModel.minRangeRefs.value.toInt()}-n ${search_State.value} -- ${search_Area.value} -- ${minInput.value.toInt()} -${maxInput.value.toInt()}-" )
                 constants.Search_ViewModel.total_SearchResults_Counts.value = 0
                 constants.API_Vm.load_Property_Search(
                     user_id = AppPreferences.getUserId(),
                     search_type = search_State.value,
                     search_text = search_Area.value,
                     min_price = constants.Search_ViewModel.minRangeRefs.value.toInt(),
-                    //minInput.value.toInt(),
+
                     max_price = constants.Search_ViewModel.maxRangeRefs.value.toInt(),
-                    //maxInput.value.toInt(),
+
                     page = 1,
                 )
             }
 
-
-
-//            onDispose {
-//                constants.Search_ViewModel.search_Area.value = search_Area.value
-//                println("Profile_FF_Structure disposed")
-//
-//            }
         }
 
-
-        // Detect when near end of list
         LaunchedEffect(listState, currentPage, isLoading, totalPages) {
 
             if (apply_FS.value) {
-                println("WHEN SEARCHED HITTING")
                 snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                     .collect { lastVisibleItemIndex ->
                         val totalItems = listState.layoutInfo.totalItemsCount
-                        val loadMoreThreshold = 4// 👈 trigger when 4 items from the end
+                        val loadMoreThreshold = 4
 
                         if (
                             lastVisibleItemIndex != null &&
@@ -1802,8 +1643,7 @@ fun Search_Result_Screen(
                             !isLoading &&
                             currentPage < totalPages
                         ) {
-                            println("CURRENT PAGE - ${currentPage}")
-                            //constants.API_Vm.loadCategories(currentPage + 1)
+
                             constants.API_Vm.load_Search_SF(
                                 user_id = AppPreferences.getUserId(),
                                 search_text = search_Area.value,
@@ -1860,11 +1700,10 @@ fun Search_Result_Screen(
                     }
             }
             else {
-                println("WHEN SEARCHED HITTING")
                 snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                     .collect { lastVisibleItemIndex ->
                         val totalItems = listState.layoutInfo.totalItemsCount
-                        val loadMoreThreshold = 4// 👈 trigger when 4 items from the end
+                        val loadMoreThreshold = 4
 
                         if (
                             lastVisibleItemIndex != null &&
@@ -1873,14 +1712,13 @@ fun Search_Result_Screen(
                             !isLoading &&
                             currentPage < totalPages
                         ) {
-                            println("CURRENT PAGE - ${currentPage}")
-                            //constants.API_Vm.loadCategories(currentPage + 1)
+
                             constants.API_Vm.load_Property_Search(
                                 user_id = AppPreferences.getUserId(),
                                 search_type = search_State.value,
                                 search_text = search_Area.value,
                                 min_price = constants.Search_ViewModel.minRangeRefs.value.toInt(),
-                                //minInput.value.toInt(),
+
                                 max_price = constants.Search_ViewModel.maxRangeRefs.value.toInt(),
                                 page = currentPage + 1,
                             )
@@ -1896,16 +1734,13 @@ fun Search_Result_Screen(
 
     val cmt_Clicked_Index = remember { mutableStateOf(0) }
 
-
     var report_BS = remember { mutableStateOf(false) }
 
     val report_success = constants.Profile_ViewModel.report_Submit_Success.collectAsState()
 
     val report_Options = constants.Profile_ViewModel.profile_Report_Options.collectAsState()
 
-
     var reported_Index by remember { mutableStateOf(-1) }
-
 
     BackHandler {
         ClickHelper.getInstance().clickOnce {
@@ -1913,27 +1748,22 @@ fun Search_Result_Screen(
             if (ClickGuard.canClick()) {
                 when {
                     cmt_btm_Sheet.value -> {
-                        println("909090909090909090")
                         !cmt_btm_Sheet.value
                     }
                     report_BS.value -> {
-                        println("343434343434344")
                         !report_BS.value
                     }
                     !cmt_btm_Sheet.value && !report_BS.value -> {
                         viewModel.toggleshowBABars(true)
-                        println("121212121212121221122112")
                         constants.Search_ViewModel.minRangeRefs.value = 2000
                         constants.Search_ViewModel.maxRangeRefs.value = 10000000
 
                         constants.Search_ViewModel.updateMinInViewModel(2000)
                         constants.Search_ViewModel.updateMaxInViewModel(10_000_000)
-                        //search_Area.value = ""
-                       // constants.Search_ViewModel.search_Area.value = ""
+
                         constants.Search_ViewModel.dismiss_Search_Results()
                     }
                     else -> {
-                        println("787878878778788778")
                         constants.Search_ViewModel.minRangeRefs.value = 2000
                         constants.Search_ViewModel.maxRangeRefs.value = 10000000
 
@@ -1941,8 +1771,7 @@ fun Search_Result_Screen(
                         constants.Search_ViewModel.updateMaxInViewModel(10_000_000)
 
                         viewModel.toggleshowBABars(true)
-                        //search_Area.value = ""
-                        //constants.Search_ViewModel.search_Area.value = ""
+
                         constants.Search_ViewModel.dismiss_Search_Results()
                     }
 
@@ -1950,7 +1779,6 @@ fun Search_Result_Screen(
             }
         }
     }
-
 
     Column (
         modifier = Modifier
@@ -1962,7 +1790,6 @@ fun Search_Result_Screen(
     )
     {
 
-        // top bar
         Box (
             modifier = Modifier
                 .fillMaxWidth()
@@ -1973,7 +1800,6 @@ fun Search_Result_Screen(
             Backer(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                println("#Back Search")
                 constants.Search_ViewModel.minRangeRefs.value = 2000
                 constants.Search_ViewModel.maxRangeRefs.value = 10000000
 
@@ -2003,7 +1829,6 @@ fun Search_Result_Screen(
 
         }
 
-        /// search bar with filter
         Row (
             modifier = Modifier
                 .fillMaxWidth()
@@ -2024,7 +1849,7 @@ fun Search_Result_Screen(
                     .height(56.dp)
                     .weight(1.5f)
                     .noRippleClickable{
-                        // show_Sort_Filter.value = false
+
                         if (network.value == NetworkStatus.Online) {
                             navHostController.navigate(SearchScreenFlow.Search_Filter_Sort.route)
                         } else {
@@ -2033,8 +1858,6 @@ fun Search_Result_Screen(
                     }
             )
         }
-
-        /// text to show counts of results
 
         Row (
             modifier = Modifier
@@ -2050,20 +1873,12 @@ fun Search_Result_Screen(
                     withStyle(style = SpanStyle(color = newGray)){
                         append("showing ${ constants.Search_ViewModel.total_SearchResults_Counts.value ?: 0} results")
                     }
-//                    withStyle(style = SpanStyle(color = newBlack)){
-//                        append("“${search_Area?.value ?:""}...”")
-//                    }
 
                 }
                 , fontSize = constants.textUnit(14)
                 , fontFamily = constants.fontFamily(2)
             )
         }
-
-        // search results item lazy column
-
-
-        println("LOADING STATES -- ${isLoading} -- ${search_Result_Content} -- ${currentPage}")
 
         when {
             !errorMessage.isNullOrEmpty() -> {
@@ -2081,10 +1896,10 @@ fun Search_Result_Screen(
             }
 
             network.value == NetworkStatus.Offline && search_Result_Content.isEmpty() -> {
-               //constants.activity.getString(R.string.no_Internet) 
+
                 Column(
                     modifier = Modifier
-                        //.height(600.dp)
+
                         .fillMaxSize()
                         .fillMaxWidth()
                     , verticalArrangement = Arrangement.Center
@@ -2097,15 +1912,14 @@ fun Search_Result_Screen(
                     Text(
                         constants.activity.getString(R.string.no_Internet)
                         , modifier = Modifier
-                           // .padding(start = 24.dp , end = 24.dp)
+
                             .padding(horizontal = 36.dp)
                     )
                 }
             }
 
-
             isLoading
-                  //  && search_Result_Content.isEmpty()
+
                     && currentPage == 1 -> {
                 Column(
                     modifier = Modifier
@@ -2117,11 +1931,9 @@ fun Search_Result_Screen(
                 }
             }
 
-
-
             !isLoading && search_Result_Content.isEmpty() -> {
                 constants.Search_ViewModel.total_SearchResults_Counts.value = 0
-                // no data
+
                 Column(
                     modifier = Modifier
                         .padding(bottom = 48.dp)
@@ -2147,18 +1959,16 @@ fun Search_Result_Screen(
 
                 constants.Reels_ViewModel.setReelsContent(
                     search_Result_Content
-                   /// posts.value.map { it.toReelsData() }  // map each element to Get_Reels_Data
+
                 )
                 LazyColumn (
                     state = listState
                 ){
                     itemsIndexed(
                         items = search_Result_Content,
-                        key = { index, item -> item.user_post_id } // 👈 stable key
+                        key = { index, item -> item.user_post_id }
                     ){
                             index,item ->
-
-                        println("r  ---- ${item.total_comments}")
 
                         Column {
                             Search_Result_Structure(item , index, navHostController
@@ -2173,7 +1983,6 @@ fun Search_Result_Screen(
                                     constants.Common_H_ViewModel.enable_Cmt_btm_Sheet()
                                     constants.Search_ViewModel.get_Post_Id_Search_Cmt_Clicked.value = search_Result_Content[index].user_post_id
                                 }
-                                println("CLICKED INDEX ____ ${index} ERTYU ${cmt_Clicked_Index.value}")
                             },
                                 onReportIndexClicked = {
                                     index ->
@@ -2194,7 +2003,6 @@ fun Search_Result_Screen(
 
     }
 
-    // Comment sheet
     if (cmt_btm_Sheet.value) {
 
         ModalBottomSheet(
@@ -2214,7 +2022,6 @@ fun Search_Result_Screen(
         }
     }
 
-    // Report Sheet
     if (report_BS.value){
 
         val sheetState = rememberModalBottomSheetState(
@@ -2241,8 +2048,6 @@ fun Search_Result_Screen(
             ){
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
-
 
                 AnimatedContent (
                     targetState = report_success
@@ -2357,14 +2162,12 @@ fun Search_Result_Screen(
                                     .size(150.dp)
                             )
 
-
                             Text(
                                 text = "Submitted Successfully",
                                 color = newBlack,
                                 fontSize = constants.textUnit(18),
                                 fontFamily = constants.fontFamily(0)
                             )
-
 
                             Text(
                                 text = "Thank you for bringing this to our attention.",
@@ -2408,7 +2211,7 @@ fun Search_Result_Screen(
                                                 constants.API_Vm.put_Report_All(
                                                     user_id = AppPreferences.getUserId(),
                                                     user_post_id = search_Result_Content[reported_Index].user_post_id.toString(),
-                                                    //AppPreferences.get_Post_Id(),
+
                                                     receiver_id = search_Result_Content[reported_Index].user_id.toString(),
                                                     comment_id = "",
                                                     report_sentence_id = (constants.Profile_ViewModel.getSelectedProfileReportOptionId()
@@ -2420,46 +2223,36 @@ fun Search_Result_Screen(
 
                                                     when (apiResultHandling) {
                                                         is API_Result_Handling.Loading -> {
-                                                            // loading
-                                                            //constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                         }
 
                                                         is API_Result_Handling.Deactivated -> {
-                                                            //resultCallback(5)
+
                                                         }
 
                                                         is API_Result_Handling.Error -> {
-                                                            // fail
-                                                            //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                         }
 
                                                         is API_Result_Handling.Success -> {
-
 
                                                             constants.Profile_ViewModel.toggleReportSubmissionSuccess()
                                                             constants.Search_ViewModel.toggle_is_Report(
                                                                 search_Result_Content[reported_Index].user_post_id
                                                             )
-                                                            //constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(videos[pagerState.currentPage].user_id)
-                                                            // success
-                                                            //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                         }
 
                                                         is API_Result_Handling.NoData -> {
-                                                            // no data
-                                                            //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                         }
                                                     }
                                                 }
                                             } else {
 
-                                                //constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
-
                                                 GlobalSnackbar.show("Post already reported")
 
                                                 report_BS.value = false
-
-                                                //SimpleSnackbar(" Post Already Reported")
 
                                             }
 
@@ -2482,16 +2275,13 @@ fun Search_Result_Screen(
     }
 }
 
-
 @Composable
 fun Search_Profile_Result_Screen(
     viewModel: Common_H_ViewModel,
     navHostController: NavHostController
 ) {
 
-
     val network = rememberNetworkStatus()
-
 
     val isLoading = constants.API_Vm.isLoading_ProfileS
     val errorMessage = constants.API_Vm.errorMessage_ProfileS
@@ -2501,25 +2291,17 @@ fun Search_Profile_Result_Screen(
     var retry by remember { mutableStateOf(0) }
     var failure = remember { mutableStateOf(false) }
 
-
     val listState = rememberLazyListState()
-
 
     val search_Profile_Content = constants.Search_ViewModel.profile_Search_Results.collectAsState()
 
     var search_username = constants.Search_ViewModel.search_Profile_Name
-
-    println("DATA SIXE --- ${search_Profile_Content.value.size}")
-    println("DATA SIXE --- ${search_Profile_Content.value.isEmpty()}")
-
-
 
     if (network.value == NetworkStatus.Online) {
         if (search_username.value.length >= 3 &&  !search_Profile_Content.value.isNotEmpty() && !constants.API_Vm.isLoading_ProfileS) {
 
         LaunchedEffect(search_username.value , retry) {
 
-                println("WHENPROFILE SEARCHED HITTING NORMAL")
                 constants.API_Vm.load_Profile_Search(
                     user_id = AppPreferences.getUserId(),
                     name = search_username.value,
@@ -2528,10 +2310,8 @@ fun Search_Profile_Result_Screen(
             }
         }
 
-        // Pagination logic stays the same
         LaunchedEffect(listState, currentPage, isLoading, totalPages) {
-          //  if (search_username.value.length >= 3) {
-                println("WHENPROFILE SEARCHED HITTING Pagination")
+
                 snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
                     .collect { lastVisibleItemIndex ->
                         val totalItems = listState.layoutInfo.totalItemsCount
@@ -2544,7 +2324,6 @@ fun Search_Profile_Result_Screen(
                                 !isLoading &&
                                 currentPage < totalPages
                             ) {
-                                println("CURRENT PAGE - ${currentPage}")
                                 constants.API_Vm.load_Profile_Search(
                                     user_id = AppPreferences.getUserId(),
                                     name = search_username.value,
@@ -2553,14 +2332,12 @@ fun Search_Profile_Result_Screen(
                             }
 
                     }
-            //}
+
         }
     }
     else {
         GlobalSnackbar.show(constants.activity.getString(R.string.no_Internet))
     }
-
-
 
     Column(
         modifier = Modifier
@@ -2579,7 +2356,7 @@ fun Search_Profile_Result_Screen(
                     .noRippleClickable{
                         viewModel.toggleshowBABars(true)
                         constants.Search_ViewModel.dismiss_Search_Results()
-                       // constants.Search_ViewModel.clear_profile_SearchData()
+
                         viewModel.toggleshowBABars(true)
                     }
             )
@@ -2595,7 +2372,7 @@ fun Search_Profile_Result_Screen(
             network.value == NetworkStatus.Offline  &&  search_Profile_Content.value.isEmpty() -> {
                 Column(
                     modifier = Modifier
-                        //.padding(bottom = 48.dp)
+
                         .fillMaxWidth()
                         .wrapContentHeight()
                         .padding(horizontal = 16.dp)
@@ -2624,7 +2401,6 @@ fun Search_Profile_Result_Screen(
 
             errorMessage?.isNotEmpty() == true -> {
 
-
                 Common_API_Fail(
                     failure
                     , onReTryClick = {
@@ -2634,10 +2410,10 @@ fun Search_Profile_Result_Screen(
             }
 
             search_username.value.isNotEmpty() && !isLoading && search_Profile_Content.value.isEmpty() -> {
-                // no data
+
                 Column(
                     modifier = Modifier
-                        //.padding(bottom = 48.dp)
+
                         .fillMaxWidth()
                         .weight(9f)
                         .padding(horizontal = 16.dp , vertical = 16.dp)
@@ -2662,7 +2438,6 @@ fun Search_Profile_Result_Screen(
                         , state = listState
                 ) {
 
-
                     itemsIndexed(search_Profile_Content.value){
                             index ,item ->
                         ProfileSearchItem(  item , index, viewModel , navHostController)
@@ -2671,104 +2446,11 @@ fun Search_Profile_Result_Screen(
                     }
                 }
 
-                /*search_Profile_Content.value.forEachIndexed { index, option ->
-
-                    ListItem(
-                        headlineContent = {
-                            Text(option.username,  fontSize = constants.textUnit(14),
-                                fontFamily = constants.fontFamily(1),
-                                color = Color(0xff575757),)
-                        },
-                        supportingContent = {
-                            Text(option.name ,  fontSize = constants.textUnit(12),
-                                fontFamily = constants.fontFamily(1),
-                                color = Color(0XFF7E7E7E),)
-                        },
-                        leadingContent = {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(CircleShape)
-                                    .background(newLightBlue),
-                                contentAlignment = Alignment.Center
-                            ) {
-
-                                SubcomposeAsyncImage(
-                                    model = option?.profile_image ?: "",
-                                    modifier = Modifier
-                                        .fillMaxSize(),
-                                    contentDescription = "",
-                                    contentScale = ContentScale.FillBounds
-                                )
-                                {
-                                    val state = painter.state
-                                    if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .background(newLightBlue)
-                                            //.padding(8.dp)
-                                            , contentAlignment = Alignment.Center
-                                        ) {
-                                            Text(
-                                                text = option?.username.takeIf { it?.isNotEmpty() == true }
-                                                    ?.take(1)?.uppercase() ?: ""
-                                            )
-                                        }
-                                    } else {
-                                        SubcomposeAsyncImageContent()
-                                    }
-                                }
-                            }
-                        }, colors = ListItemColors(
-                            containerColor = newWhite,
-                            headlineColor = Color.Black,
-                            leadingIconColor = Color.DarkGray,
-                            overlineColor = Color.Gray,
-                            supportingTextColor = Color.Gray,
-                            trailingIconColor = Color.LightGray,
-                            disabledHeadlineColor = Color.Gray.copy(alpha = 0.5f),
-                            disabledLeadingIconColor = Color.Gray.copy(alpha = 0.5f),
-                            disabledTrailingIconColor = Color.Gray.copy(alpha = 0.5f)
-                        )
-                        , modifier = Modifier
-                            .noRippleClickable{
-                                viewModel.toggleshowTABars(false)
-                                constants.Profile_ViewModel.add_Selected_User_Name(
-                                    option.username ?: "Username"
-                                )
-
-                                //new flowwewwwwwww
-                                constants.Profile_ViewModel.add_BF_Handler(Profile_Handle_Back(
-                                    current_UsedId = AppPreferences.getUserId(),
-                                    other_UserId = option?.user_id ?: 0,
-                                    ff_User_Name = option?.username ?: "",
-                                    ff_Fw_Count = option.followers,
-                                    ff_Fg_Count = option.following,
-                                    // is_Search_Enabled = is_Search_Enabled.value,
-                                    // search_Text = search_Text.value
-                                ))
-
-                                /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
-
-                                constants.Profile_ViewModel.addProfile(option?.user_id ?: 0)
-                                constants.Profile_ViewModel.add_Selected_Profile_Id(id = option.user_id ?: 0)
-
-                                // if (view_Details_Data.value?.user_id == AppPreferences.)
-                                viewModel.toggleshowBABars(false)
-                                navHostController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
-                            }
-                    )
-                    HorizontalDivider()
-                }*/
             }
         }
 
     }
 }
-
 
 @Composable
 fun ProfileSearchItem(
@@ -2777,7 +2459,6 @@ fun ProfileSearchItem(
    , viewModel: Common_H_ViewModel,
     navHostController: NavHostController
 ) {
-
 
     val network = rememberNetworkStatus()
 
@@ -2803,7 +2484,6 @@ fun ProfileSearchItem(
                 }
             }
 
-
         ListItem(
             leadingContent = {
                 Box(
@@ -2815,7 +2495,7 @@ fun ProfileSearchItem(
                 {
                     SubcomposeAsyncImage(
                         model = option.profile_image
-                            //item?.profile_image ?: ""
+
                         ,modifier = Modifier
                             .fillMaxSize()
                             .clip(CircleShape),
@@ -2829,7 +2509,7 @@ fun ProfileSearchItem(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue, CircleShape)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -2879,32 +2559,29 @@ fun ProfileSearchItem(
                                 ClickHelper.getInstance().clickOnce {
                                     if (ClickGuard.canClick()) {
                                         if (network.value == NetworkStatus.Online) {
-                                            println("BLOCKED API CALL HIT STATUS __ ${constants.Profile_ViewModel.get_Block_Status()} --- ")
                                             constants.API_Vm.put_Block_User(
                                                 user_id = AppPreferences.getUserId(),
                                                 blocker_id = option.user_id,
-                                                //profile_Content.value?.user_id ?: 0,
+
                                                 status = 2
-                                                //if (profile_Content.value?.is_blocked == 0) "1" else "0"
+
                                             )
                                             { apiResultHandling ->
                                                 when (apiResultHandling) {
                                                     is API_Result_Handling.Error -> {
-                                                        //errror
-                                                        //constants.Profile_ViewModel.change_Update_profile(false)
+
                                                     }
 
                                                     is API_Result_Handling.Deactivated -> {
-                                                        // resultCallback(5)
+
                                                     }
 
                                                     is API_Result_Handling.NoData -> {
-                                                        // no data
+
                                                     }
 
                                                     is API_Result_Handling.Loading -> {
-                                                        //loading
-                                                        // constants.Profile_ViewModel.change_Update_profile(true)
+
                                                     }
 
                                                     is API_Result_Handling.Success -> {
@@ -2914,49 +2591,7 @@ fun ProfileSearchItem(
                                                                 0 -> {}
                                                                 1 -> {
 
-
                                                                     constants.Search_ViewModel.updateBlockState(option.user_id)
-
-
-//                                                                    // ✅ FIX: Update counts for the OTHER user's profile
-//                                                                    constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-//                                                                        userId = profile_Content.value?.user_id
-//                                                                            ?: 0,
-//                                                                        newFollowers = constants.Profile_ViewModel.get_Followers_Count_BGAPIC(),
-//                                                                        newFollowing = constants.Profile_ViewModel.get_Following_Count_BGAPIC()
-//                                                                    )
-//
-//                                                                    // ✅ FIX: Also update YOUR OWN profile's following count
-//                                                                    // Since you unfollowed someone, YOUR following count decreases
-//                                                                    val myUserId =
-//                                                                        AppPreferences.getUserId()
-//                                                                    val myCurrentHandler =
-//                                                                        constants.Profile_ViewModel.profile_BF_Handler.value
-//                                                                            .find { it.current_UsedId == myUserId && it.other_UserId == 0 }
-//
-//                                                                    if (myCurrentHandler != null) {
-//                                                                        constants.Profile_ViewModel.update_FF_BF_CountsByUserId(
-//                                                                            userId = myUserId,
-//                                                                            newFollowers = myCurrentHandler.ff_Fw_Count,
-//                                                                            newFollowing = (myCurrentHandler.ff_Fg_Count - 1).coerceAtLeast(
-//                                                                                0
-//                                                                            )
-//                                                                        )
-//                                                                    }
-//
-//                                                                    if (profile_Content.value?.is_blocked == 0) {
-//                                                                        constants.Profile_ViewModel.updateBlockedStatus_Selected_Profile(
-//                                                                            1
-//                                                                        )
-//                                                                        constants.Profile_ViewModel.update_OnUnBlocked_Follow()
-//                                                                    } else {
-//                                                                        constants.Profile_ViewModel.updateBlockedStatus_Selected_Profile(
-//                                                                            0
-//                                                                        )
-//                                                                        constants.Profile_ViewModel.update_OnUnBlocked_Follow()
-//                                                                    }
-//                                                                    block_PopUp = false
-
 
                                                                 }
 
@@ -2968,9 +2603,6 @@ fun ProfileSearchItem(
                                                             }
                                                         }
 
-                                                        //constants.Profile_ViewModel.enable_Edit_Profile()
-                                                        //constants.Profile_ViewModel.change_Update_profile(false)
-                                                        //success
                                                     }
                                                 }
                                             }
@@ -3028,7 +2660,7 @@ fun ProfileSearchItem(
                                     follow_Unfollow_Delete_API_Call() { result ->
                                         when (result) {
                                             0 -> {
-                                                /// suxxesss
+
                                                 when (followState) {
                                                     1 -> {
                                                         constants.Search_ViewModel.updateFollowState(
@@ -3093,54 +2725,28 @@ fun ProfileSearchItem(
             , modifier = Modifier
                 .noRippleClickable{
                     viewModel.toggleshowTABars(false)
-//                    constants.Profile_ViewModel.add_Selected_User_Name(
-//                        option.username ?: "Username"
-//                    )
-//
-//                    //new flowwewwwwwww
-//                    constants.Profile_ViewModel.add_BF_Handler(Profile_Handle_Back(
-//                        current_UsedId = AppPreferences.getUserId(),
-//                        other_UserId = option?.user_id ?: 0,
-//                        ff_User_Name = option?.username ?: "",
-//                        ff_Fw_Count = option.followers,
-//                        ff_Fg_Count = option.following,
-//                        // is_Search_Enabled = is_Search_Enabled.value,
-//                        // search_Text = search_Text.value
-//                    ))
-//
-//                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-//
-//                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
-//
-//                    constants.Profile_ViewModel.addProfile(option?.user_id ?: 0)
-//                    constants.Profile_ViewModel.add_Selected_Profile_Id(id = option.user_id ?: 0)
-//
-
 
                     constants.Profile_ViewModel.add_BF_Handler(
                         item = Profile_Handle_Back(
-                            //id = ,
+
                             current_UsedId = AppPreferences.getUserId(),
                             other_UserId = option?.user_id ?: 0,
                             ff_User_Name = option?.username ?: "",
                             ff_Fw_Count = option.followers,
                             ff_Fg_Count = option.following,
-//                                                            is_Search_Enabled = is_Search_Enabled.value,
-//                                                            search_Text = search_Text.value
+
                         )
                     )
 
                     constants.Profile_ViewModel.clearSelectedUserProfile()
                     constants.Profile_ViewModel.add_Selected_User_Name(option?.username ?: "username")
 
-                    // Set the profile ID and navigate
                     constants.Profile_ViewModel.addProfile(option?.user_id ?: 0)
                     constants.Profile_ViewModel.add_Selected_Profile_Id(id = option?.user_id ?: 0)
                     constants.Profile_ViewModel.put_Other_User_Id(option?.user_id ?: 0)
                     constants.Profile_ViewModel.clear_SearchList_FF()
                     constants.API_Vm.totalPages_Profile_Posts = 1
 
-                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                     viewModel.toggleshowBABars(false)
                     navHostController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                 }
@@ -3150,13 +2756,11 @@ fun ProfileSearchItem(
 
         val buildimageList = buildThumbnailList(context , option.thumbnails)
 
-        //// multiple shape parts
         StaggeredProfileImages(
             images = buildimageList
         )
     }
 }
-
 
 fun buildThumbnailList(context: Context, urls: List<String>): List<String> {
     val result = mutableListOf<String>()
@@ -3166,10 +2770,10 @@ fun buildThumbnailList(context: Context, urls: List<String>): List<String> {
 
         val thumbnailUrl =
             if (lowerUrl.endsWith(".mp4") || lowerUrl.endsWith(".mov") || lowerUrl.endsWith(".mkv")) {
-                // Generate thumbnail from video URL
+
                 getVideoThumbnailBase64(context, url)
             } else {
-                // Normal image URL
+
                 url
             }
 
@@ -3178,8 +2782,6 @@ fun buildThumbnailList(context: Context, urls: List<String>): List<String> {
 
     return result
 }
-
-
 
 @Composable
 fun StaggeredProfileImages(images: List<String>) {
@@ -3213,17 +2815,7 @@ fun StaggeredProfileImages(images: List<String>) {
                     SubcomposeAsyncImageContent()
                 }
             }
-//            SubcomposeAsyncImage(
-//                model = images[0],
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(240.dp)
-//                    .clip(RoundedCornerShape(12.dp))
-//                    .border(1.dp , newGray , RoundedCornerShape(12.dp))
-//                ,
-//                contentScale = ContentScale.Crop,
-//                contentDescription = null
-//            )
+
         }
 
         2 -> {
@@ -3256,23 +2848,13 @@ fun StaggeredProfileImages(images: List<String>) {
                             SubcomposeAsyncImageContent()
                         }
                     }
-//                    SubcomposeAsyncImage(
-//                        model = image,
-//                        modifier = Modifier
-//                            .weight(1f)
-//                            .height(280.dp)
-//                            .padding(2.dp)
-//                            .clip(RoundedCornerShape(12.dp)),
-//                        contentScale = ContentScale.Crop,
-//                        contentDescription = null
-//                    )
+
                 }
             }
         }
 
         3 -> {
             Column(Modifier.fillMaxWidth()) {
-
 
                 SubcomposeAsyncImage(
                     model = images[0],
@@ -3300,16 +2882,6 @@ fun StaggeredProfileImages(images: List<String>) {
                         SubcomposeAsyncImageContent()
                     }
                 }
-//                SubcomposeAsyncImage(
-//                    model = images[0],
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(180.dp)
-//                        .padding(2.dp)
-//                        .clip(RoundedCornerShape(12.dp)),
-//                    contentScale = ContentScale.Crop,
-//                    contentDescription = null
-//                )
 
                 Row(Modifier.fillMaxWidth()) {
                     images.subList(1, 3).forEach { image ->
@@ -3340,16 +2912,7 @@ fun StaggeredProfileImages(images: List<String>) {
                                 SubcomposeAsyncImageContent()
                             }
                         }
-//                        SubcomposeAsyncImage(
-//                            model = image,
-//                            modifier = Modifier
-//                                .weight(1f)
-//                                .height(120.dp)
-//                                .padding(2.dp)
-//                                .clip(RoundedCornerShape(12.dp)),
-//                            contentScale = ContentScale.Crop,
-//                            contentDescription = null
-//                        )
+
                     }
                 }
             }
@@ -3388,16 +2951,6 @@ fun StaggeredProfileImages(images: List<String>) {
                                 }
                             }
 
-//                            SubcomposeAsyncImage(
-//                                model = image,
-//                                modifier = Modifier
-//                                    .weight(1f)
-//                                    .height(140.dp)
-//                                    .padding(2.dp)
-//                                    .clip(RoundedCornerShape(12.dp)),
-//                                contentScale = ContentScale.Crop,
-//                                contentDescription = null
-//                            )
                         }
                     }
                 }
@@ -3432,16 +2985,6 @@ fun StaggeredProfileImages(images: List<String>) {
                         SubcomposeAsyncImageContent()
                     }
                 }
-//                SubcomposeAsyncImage(
-//                    model = images[0],
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(180.dp)
-//                        .padding(2.dp)
-//                        .clip(RoundedCornerShape(12.dp)),
-//                    contentScale = ContentScale.Crop,
-//                    contentDescription = null
-//                )
 
                 Row(Modifier.fillMaxWidth()) {
                     images.subList(1, 5).forEach { image ->
@@ -3472,23 +3015,13 @@ fun StaggeredProfileImages(images: List<String>) {
                                 SubcomposeAsyncImageContent()
                             }
                         }
-//                        SubcomposeAsyncImage(
-//                            model = image,
-//                            modifier = Modifier
-//                                .weight(1f)
-//                                .height(120.dp)
-//                                .padding(2.dp)
-//                                .clip(RoundedCornerShape(12.dp)),
-//                            contentScale = ContentScale.Crop,
-//                            contentDescription = null
-//                        )
+
                     }
                 }
             }
         }
     }
 }
-
 
 @Composable
 fun  Search_Result_Structure(
@@ -3504,7 +3037,6 @@ fun  Search_Result_Structure(
     var show_DropDown = remember { mutableStateOf(false) }
 
     val send_Eq_State = constants.Reels_ViewModel.send_Enquiry_Btm_Sheet.collectAsState()
-
 
     Box(
         modifier = Modifier
@@ -3523,7 +3055,6 @@ fun  Search_Result_Structure(
         ){
             ListItem(
                 headlineContent = {
-                    //Text()
 
                     item?.name?.ifEmpty { item.username }?.let {
                         Text(
@@ -3539,7 +3070,7 @@ fun  Search_Result_Structure(
                         , color = Color.Black
                         , fontSize = constants.textUnit(10)
                         , fontFamily = constants.fontFamily(1))
-                    /// posted time should come
+
                 },
                 leadingContent = {
                     Box(
@@ -3556,7 +3087,6 @@ fun  Search_Result_Structure(
                                             item?.username ?: "UserName"
                                         )
 
-                                        //new flowwewwwwwww
                                         constants.Profile_ViewModel.add_BF_Handler(
                                             Profile_Handle_Back(
                                                 current_UsedId = AppPreferences.getUserId(),
@@ -3564,14 +3094,9 @@ fun  Search_Result_Structure(
                                                 ff_User_Name = item?.username ?: "",
                                                 ff_Fw_Count = 999,
                                                 ff_Fg_Count = 999,
-                                                // is_Search_Enabled = is_Search_Enabled.value,
-                                                // search_Text = search_Text.value
+
                                             )
                                         )
-
-                                        /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                        println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                         constants.Profile_ViewModel.addProfile(
                                             item?.user_id ?: 0
@@ -3580,7 +3105,6 @@ fun  Search_Result_Structure(
                                             id = item?.user_id ?: 0
                                         )
 
-                                        // if (view_Details_Data.value?.user_id == AppPreferences.)
                                         viewModel.toggleshowBABars(false)
                                         navHostController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                     }
@@ -3601,7 +3125,7 @@ fun  Search_Result_Structure(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(newLightBlue, CircleShape)
-                                    //.padding(8.dp)
+
                                     , contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -3616,16 +3140,7 @@ fun  Search_Result_Structure(
                     }
                 },
                 trailingContent = {
-//                    Box(
-//                        modifier = Modifier
-//                            .size(24.dp)
-//                            .clip(RoundedCornerShape(4.dp))
-//                            .background(Color.White)
-//                            .border(1.dp, newGray, RoundedCornerShape(4.dp))
-//
-//                        , contentAlignment = Alignment.Center
-//                    )
-//                    {
+
                         Common_DropDown2Options(
                             expanded = show_DropDown,
                             mainIcon = R.drawable.moreblackrento,
@@ -3643,19 +3158,18 @@ fun  Search_Result_Structure(
 
                                 constants.DefaultShare("https://toletspot.com/property/${ item?.user_post_id ?: 0}" ,0)
                                 show_DropDown.value = false
-                                       //constants.Search_ViewModel.enable_Search_Results_Dropdown()
+
                             },
                             onClick2 = {
-                                //constants.Search_ViewModel.enable_Search_Results_Dropdown()
+
                                 onReportIndexClicked(index)
                             },
                             modifier = Modifier.size(24.dp).noRippleClickable{
                                 show_DropDown.value = true
                             }
-                                //.align(Alignment.TopEnd)
-                                //.padding(top = 48.dp, end = 16.dp)
+
                         )
-                    //}
+
                 }
                 , colors = ListItemColors(
                     containerColor = newWhite,
@@ -3670,7 +3184,6 @@ fun  Search_Result_Structure(
                 )
 
             )
-
 
             Box(
                 modifier = Modifier
@@ -3704,7 +3217,7 @@ fun  Search_Result_Structure(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(Color(0xffCECECE))
-                            //.padding(8.dp)
+
                             , contentAlignment = Alignment.Center
                         ) {
                             Image(painterResource(R.drawable.emptypostsrento) , "",
@@ -3751,8 +3264,6 @@ fun  Search_Result_Structure(
                         Spacer(modifier = Modifier.padding(2.dp))
                     }
 
-
-
                 }
                 , supportingContent = {
                     Column {
@@ -3772,11 +3283,10 @@ fun  Search_Result_Structure(
                                 , fontSize = constants.textUnit(12)
                                 , fontFamily = constants.fontFamily(1)
                                 , overflow = TextOverflow.Ellipsis)
-                            /// location should come
+
                         }
 
                         Spacer(modifier = Modifier.padding(2.dp))
-
 
                         val formattedPrice = item?.post_property?.rent?.ifEmpty { item?.post_property?.lease_amount } ?.let { price ->
                             try {
@@ -3802,7 +3312,7 @@ fun  Search_Result_Structure(
 
                             Box(
                                 modifier = Modifier
-                                    //.align(Alignment.CenterEnd)
+
                                     .wrapContentSize()
                                     .clip(RoundedCornerShape(4.dp))
                                     .background(brush = Brush.verticalGradient(newPurpleGradient))
@@ -3815,42 +3325,10 @@ fun  Search_Result_Structure(
                                 Text("Send Enquiry" , color = Color.White , fontSize = constants.textUnit(12))
                             }
 
-
                         }
                     }
                 }
-                /*, trailingContent = {
-                    Column (
-                        modifier = Modifier
-                        , verticalArrangement = Arrangement.SpaceBetween
-                        , horizontalAlignment = Alignment.CenterHorizontally
-                    )
-                    {
-                        Box(
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .background(Color(0xffF7F0DC))
-                                .padding(horizontal = 8.dp, vertical = 8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                item?.post_property?.landCategoryText ?:"",
-                                color = newBlue,
-                                fontSize = constants.textUnit(12)
-                                , fontFamily = constants.fontFamily(0)
-                            )
-                        }
 
-                        Spacer(modifier = Modifier.padding(8.dp))
-
-                        Row(
-                            modifier = Modifier
-                            , horizontalArrangement = Arrangement.SpaceBetween
-                            , verticalAlignment = Alignment.CenterVertically
-                        ) {
-                        }
-                    }
-                }*/
                 , colors = ListItemColors(
                     containerColor = newWhite,
                     headlineColor = Color.Black,
@@ -3872,7 +3350,7 @@ fun  Search_Result_Structure(
                     .fillMaxWidth()
                     .height(60.dp)
                     .background(Color(0xffF7F0DC))
-//                    .background(Color(0xffE8E8E8))
+
             )
             {
                 Box (
@@ -3880,8 +3358,7 @@ fun  Search_Result_Structure(
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)
                     , contentAlignment = Alignment.Center
-//                    , verticalAlignment = Alignment.CenterVertically
-//                    , horizontalArrangement = Arrangement.SpaceEvenly
+
                 )
                 {
                     Row (
@@ -3895,26 +3372,13 @@ fun  Search_Result_Structure(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         )
                         {
-//                            Box(
-//                                modifier = Modifier
-//                                    .size(24.dp)
-//                                    .clip(RoundedCornerShape(4.dp))
-//                                    .background(newWhite)
-//
-//                                    .border(1.dp, Color(0xffE8E8E8), RoundedCornerShape(4.dp)),
-//                                contentAlignment = Alignment.Center
-//                            )
-//                            {
-//                                if (isLike_Loading.value) {
-//                                    CircularProgressIndicator(modifier = Modifier.size(12.dp))
-//                                } else {
-//                                    if (item?.is_liked == 1) {
+
                                         SubcomposeAsyncImage(
                                             model =if (item?.is_liked == 1) R.drawable.searchlikedrento else R.drawable.searchlikerento, "",
                                             modifier = Modifier
                                                 .size(24.dp)
                                                 .noRippleClickable {
-                                                    // constants.Search_ViewModel.toggle_isLiked_SR(item.user_post_id)
+
                                                     constants.API_Vm.like_Dislike(
                                                         user_id = AppPreferences.getUserId(),
                                                         user_post_id = item?.user_post_id ?: 0,
@@ -3925,20 +3389,20 @@ fun  Search_Result_Structure(
                                                             is API_Result_Handling.Error -> {
                                                                 isLike_Loading.value = false
                                                                 GlobalSnackbar.show("Something went wrong")
-                                                                //errror
+
                                                             }
 
                                                             is API_Result_Handling.NoData -> {
-                                                                // no data
+
                                                             }
 
                                                             is API_Result_Handling.Deactivated -> {
-                                                                // resultCallback(5)
+
                                                             }
 
                                                             is API_Result_Handling.Loading -> {
                                                                 isLike_Loading.value = true
-                                                                //loading
+
                                                             }
 
                                                             is API_Result_Handling.Success -> {
@@ -3957,23 +3421,11 @@ fun  Search_Result_Structure(
                                                                     item?.user_post_id ?: 0
                                                                 )
 
-                                                                //success
                                                             }
                                                         }
                                                     }
                                                 }
                                         )
-//                                    } else {
-//                                        SubcomposeAsyncImage(
-//                                            model = R.drawable.likerento,
-//                                            "",
-//                                            modifier = Modifier
-//                                                .size(16.dp),
-//                                            colorFilter = ColorFilter.tint(newBlack)
-//                                        )
-//                                    }
-                               // }
-//                            }
 
                             Text(
                                 "${item?.total_likes ?: 0}",
@@ -3989,20 +3441,8 @@ fun  Search_Result_Structure(
                                 fontFamily = constants.fontFamily(1)
                             )
 
-
                             Spacer(modifier = Modifier.padding(4.dp))
 
-
-
-//                            Box(
-//                                modifier = Modifier
-//                                    .size(24.dp)
-//                                    .clip(RoundedCornerShape(4.dp))
-//                                    .background(newWhite)
-//                                    .border(1.dp, Color(0xffE8E8E8), RoundedCornerShape(4.dp)),
-//                                contentAlignment = Alignment.Center
-//                            )
-//                            {
                                 SubcomposeAsyncImage(
                                     model = R.drawable.commentrento, "",
                                     colorFilter = ColorFilter.tint(newBlack),
@@ -4012,7 +3452,6 @@ fun  Search_Result_Structure(
                                             onCommentIndexClicked(index)
                                         }
                                 )
-//                            }
 
                             Text(
                                 "${item?.total_comments ?: 0}",
@@ -4028,26 +3467,9 @@ fun  Search_Result_Structure(
                                 fontFamily = constants.fontFamily(1)
                             )
 
-
-
                             Spacer(modifier = Modifier.padding(4.dp))
 
-
                         }
-
-//                        Box(
-//                            modifier = Modifier
-//                                .size(24.dp)
-//                                .clip(RoundedCornerShape(4.dp))
-//                                .background(newWhite)
-//
-//                                .border(1.dp, Color(0xffE8E8E8), RoundedCornerShape(4.dp)),
-//                            contentAlignment = Alignment.Center
-//                        )
-//                        {
-//                            if (isSave_Loading.value) {
-//                                CircularProgressIndicator(modifier = Modifier.size(12.dp))
-//                            } else {
 
                                     SubcomposeAsyncImage(
                                         model =  if (item?.is_saved == 1) R.drawable.saveedrento else R.drawable.saverento, "",
@@ -4055,7 +3477,7 @@ fun  Search_Result_Structure(
                                         modifier = Modifier
                                             .size(24.dp)
                                             .noRippleClickable {
-                                                //constants.Search_ViewModel.toggle_isSaved_SR(item.id)
+
                                                 constants.API_Vm.put_save_UnSave_Property(
                                                     user_id = AppPreferences.getUserId(),
                                                     user_post_id = item?.user_post_id ?: 0,
@@ -4066,20 +3488,20 @@ fun  Search_Result_Structure(
                                                         is API_Result_Handling.Error -> {
                                                             isSave_Loading.value = false
                                                             GlobalSnackbar.show("Something went wrong")
-                                                            //errror
+
                                                         }
 
                                                         is API_Result_Handling.NoData -> {
-                                                            // no data
+
                                                         }
 
                                                         is API_Result_Handling.Loading -> {
                                                             isSave_Loading.value = true
-                                                            //loading
+
                                                         }
 
                                                         is API_Result_Handling.Deactivated -> {
-                                                            // resultCallback(5)
+
                                                         }
 
                                                         is API_Result_Handling.Success -> {
@@ -4088,39 +3510,14 @@ fun  Search_Result_Structure(
                                                             constants.Search_ViewModel.toggleSave_Reels_Search(
                                                                 item?.user_post_id ?: 0
                                                             )
-                                                            //success
+
                                                         }
                                                     }
                                                 }
                                             }
                                     )
-//                                } else {
-//                                    SubcomposeAsyncImage(
-//                                        model = R.drawable.saverento, "",
-//                                        colorFilter = ColorFilter.tint(newBlack),
-//                                        modifier = Modifier
-//                                            .size(16.dp)
-//                                    )
-//                                }
-//                            }
-                        //}
+
                     }
-
-
-                   /* Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .wrapContentSize()
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(newBlue)
-                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                            .noRippleClickable{
-                                constants.Reels_ViewModel.enable_Send_Eq_Btm_Sheet()
-                            }
-                    ){
-                        Text("Send Enquiry" , color = Color.White , fontSize = constants.textUnit(12))
-                    }*/
-
 
                 }
             }
@@ -4132,18 +3529,15 @@ fun  Search_Result_Structure(
     }
 }
 
-
-
 fun fetchCities(
     query: String,
-    countryCode: String, // e.g. "IN", "US"
+    countryCode: String,
     placesClient: PlacesClient,
     callback: (List<AutocompletePrediction>) -> Unit
 ) {
     val request = FindAutocompletePredictionsRequest.builder()
         .setQuery(query)
-        //.setTypesFilter(listOf("(cities)")) // only cities
-        //.setCountries(countryCode) // restrict to specific country
+
         .build()
 
     placesClient.findAutocompletePredictions(request)
@@ -4155,9 +3549,6 @@ fun fetchCities(
             callback(emptyList())
         }
 }
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -4174,7 +3565,6 @@ fun CityDropdown(
     val focusManager = LocalFocusManager.current
     var expanded by remember { mutableStateOf(false) }
 
-    // TextField with dropdown
     ExposedDropdownMenuBox(
         expanded = expanded && cities.isNotEmpty(),
         onExpandedChange = { expanded = it },
@@ -4197,14 +3587,14 @@ fun CityDropdown(
                 }
             },
             leadingIcon = {
-               // if (cityQuery.value.isEmpty()) {
+
                     Icon(
                         painter = painterResource(R.drawable.searchnotrento),
                         contentDescription = "Clear",
                         modifier = Modifier
                             .size(18.dp)
                     )
-               // }
+
             },
             placeholder = {
                 Text("Search by property, city.."
@@ -4252,7 +3642,6 @@ fun CityDropdown(
 
                         constants.Search_ViewModel.search_Area.value = displayName
 
-
                         constants.Search_ViewModel.total_SearchResults_Counts.value = 0
                         constants.API_Vm.totalPages_PS_FF = 1
                         constants.API_Vm.isLoading_PS_FF = true
@@ -4266,12 +3655,11 @@ fun CityDropdown(
                 }
             ),
             modifier = Modifier
-                .menuAnchor() // anchor for dropdown menu
+                .menuAnchor()
                 .fillMaxWidth()
                 .border(1.dp , newBlack , RoundedCornerShape(6.dp))
         )
 
-        // Overlay dropdown that does NOT push layout
         ExposedDropdownMenu(
             expanded = expanded && cities.isNotEmpty(),
             onDismissRequest = { expanded = false },
@@ -4288,7 +3676,6 @@ fun CityDropdown(
                     onClick = {
                         selectedCity = displayName
                         search_Area.value = displayName
-
 
                         constants.Search_ViewModel.search_Area.value = displayName
 
@@ -4309,11 +3696,3 @@ fun CityDropdown(
         }
     }
 }
-
-
-
-
-
-
-
-

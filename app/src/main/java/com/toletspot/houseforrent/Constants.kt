@@ -58,7 +58,6 @@ class constants {
           lateinit var PostProperty_ViewModel : PostProperty_ViewModel
           lateinit var Profile_ViewModel : Profile_ViewModel
 
-
           const val notificationiconEnable = "notificationiconEnable"
           lateinit var API_Vm : API_ViewModel
         var sharedHelper = sharedHelper()
@@ -66,14 +65,11 @@ class constants {
         val notificationEnabled = "notificationEnabled"
         var REQUEST_CODE = 1001
 
-
         const val APP_URL = "https://play.google.com/store/apps/details?id="
 
         var open_Btm_Sheet by mutableStateOf(Custom_BottomSheetState())
 
         var open_Popup by mutableStateOf(Custom_PopUpState())
-
-
 
         private var _onHoverEnable = MutableStateFlow(false)
         var onHoverEnable: StateFlow<Boolean> = _onHoverEnable
@@ -82,14 +78,9 @@ class constants {
             _onHoverEnable.value = value
         }
 
-
-        //// profile expire or active default status
         var active = "published"
         var expired = "expired"
 
-        //// AWS
-
-        //AWS
         lateinit var s3Client : AmazonS3Client
         lateinit var fileExt : String
         var requestCodes : Int = 0
@@ -101,10 +92,7 @@ class constants {
         var CLOUD_FRONT_URL = MainActivity.getBaseimageUrl()
         var URL_COMPLETED = mutableStateListOf(Pair(0,""))
 
-
-
         var PROFILE_IMAGE_URL = mutableStateOf("")
-
 
         val AREA_UNITS = listOf(
             "Sq Ft",
@@ -123,7 +111,6 @@ class constants {
         var skipCount = mutableStateOf(0)
 
         fun DefaultShare(content: String ,value :Int ){
-            println("VALUE ___ ${value}")
             val sendIntent: Intent =
                 Intent().apply {
                     action =
@@ -151,18 +138,9 @@ class constants {
             )
         }
 
-
-        //// Text Size
-
-//        @Composable
-//        fun textUnit(size: Int): TextUnit {
-//
-//            return size.scaledSp
-//        }
-
         @Composable
         fun textUnit(size: Int): TextUnit {
-            val isTablet = forTab() // from your earlier Compose helper
+            val isTablet = forTab()
 
             val final = when (size) {
                 24 -> if (isTablet) 28.scaledSp else 24.scaledSp
@@ -177,10 +155,9 @@ class constants {
             return final
         }
 
-
         @Composable
         fun spacer(size: Int) {
-            val isTablet = forTab() // or forTab()
+            val isTablet = forTab()
 
             val space =  when (size) {
                 2 -> if (isTablet) 4.dp else 2.dp
@@ -196,8 +173,6 @@ class constants {
             Spacer(modifier = Modifier.padding(space))
         }
 
-
-
         fun fontFamily(isWhat : Int): FontFamily{
             return when (isWhat){
                 0 -> FontFamily(Font(R.font.nunito_bold))
@@ -209,7 +184,6 @@ class constants {
                 }
             }
         }
-
 
         @SuppressLint("HardwareIds")
         fun GetDevice_UDID(activity: MainActivity): String {
@@ -230,7 +204,6 @@ class constants {
             return (px / displayMetrics.densityDpi.toFloat() * DisplayMetrics.DENSITY_DEFAULT).roundToInt()
         }
 
-
         fun getScreenWidth(): Int {
             return Resources.getSystem().displayMetrics.widthPixels
         }
@@ -238,7 +211,6 @@ class constants {
         fun getScreenHeight(): Int {
             return Resources.getSystem().displayMetrics.heightPixels
         }
-
 
     }
 }
@@ -262,7 +234,6 @@ fun CommonText(
 
 }
 
-
 data class Sort_Filter_Field_DC(
     var user_Id: Int = AppPreferences.getUserId(),
     var short_by: Int? = 0,
@@ -276,7 +247,7 @@ data class Sort_Filter_Field_DC(
     var budget_to: String? = "",
     var posted_by: List<Int?> = emptyList(),
     var ownership: List<String?> = emptyList(),
-   // var availability_status: List<String?> = emptyList(),
+
     var floor_plan: List<String?> = emptyList(),
     var furnishing_status: List<String?> = emptyList(),
     var parking_available: List<String?> = emptyList(),
@@ -286,9 +257,8 @@ data class Sort_Filter_Field_DC(
     var amenities: List<String?> = emptyList(),
     var property_highlights: List<String?> = emptyList(),
     var business_type: List<String?> = emptyList(),
-    //var authority_approved: List<String?> = emptyList(),
-    var search_Text: String? = "",   // your own field for search string
 
+    var search_Text: String? = "",
 
     var available_from : List<Int?> = emptyList(),
     var available_for : List<String?> = emptyList(),
@@ -301,25 +271,9 @@ data class Sort_Filter_Field_DC(
     var posted_date : List<Int?> = emptyList(),
     var rent_type : List<String?> = emptyList()
 
-
 )
 
-//, colors = ListItemColors(
-//containerColor = newWhite,
-//headlineColor = Color.Black,
-//leadingIconColor = Color.DarkGray,
-//overlineColor = Color.Gray,
-//supportingTextColor = Color.Gray,
-//trailingIconColor = Color.LightGray,
-//disabledHeadlineColor = Color.Gray.copy(alpha = 0.5f),
-//disabledLeadingIconColor = Color.Gray.copy(alpha = 0.5f),
-//disabledTrailingIconColor = Color.Gray.copy(alpha = 0.5f)
-//)
-
-
-
 var profileChangeErrorMessage = mutableStateOf("")
-
 
 @SuppressLint("LocalContextConfigurationRead")
 @Composable
@@ -329,8 +283,6 @@ fun forTab(): Boolean {
     val screenLayout = configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK
     return screenLayout >= Configuration.SCREENLAYOUT_SIZE_LARGE
 }
-
-
 
 fun Get_Reels_Data.toPostUser(): PostUser {
     return PostUser(
@@ -367,7 +319,7 @@ fun Get_Reels_Property_Data.toPostPropertyXXX(): PostPropertyXXX {
         amenities = this.amenities,
         area_length = this.area_length,
         area_width = this.area_width,
-        //availability_status = this.availability_status,
+
         bhk_type = this.bhk_type,
         boundary_wall = this.boundary_wall,
         built_up_area = this.built_up_area,
@@ -382,7 +334,7 @@ fun Get_Reels_Property_Data.toPostPropertyXXX(): PostPropertyXXX {
         facade_width = this.facade_width,
         fire_safety_measures = this.fire_safety_measures,
         furnishing_status = this.furnishing_status,
-        //is_it_pre_leased_pre_rented = this.is_it_pre_leased_pre_rented,
+
         is_report = this.is_report,
         land_categorie_id = this.land_categorie_id,
         landCategoryText = this.landCategoryText ?: "",
@@ -403,19 +355,18 @@ fun Get_Reels_Property_Data.toPostPropertyXXX(): PostPropertyXXX {
         no_of_staircases = this.no_of_Staircases,
         noc_certified = this.noc_certified,
         occupancy_certificate = this.occupancy_certificate,
-        //office_previously_used_for = this.office_previously_used_for,
+
         other_rooms = this.other_rooms,
         oxygen_duct = this.oxygen_duct,
         pantry = this.pantry,
         pantry_size = this.pantry_size,
-        //price = this.price,
-        //price_negotiable = this.price_negotiable,
+
         property_area = this.property_area,
         property_facing = this.property_facing,
-        //property_floor_no = this.property_floor_no,
+
         property_highlights = this.property_highlights,
         property_name = this.property_name,
-        //property_ownership = this.property_ownership,
+
         reception_area = this.reception_area,
         state = this.state,
         suitable_business_type = this.suitable_business_type,
@@ -425,9 +376,9 @@ fun Get_Reels_Property_Data.toPostPropertyXXX(): PostPropertyXXX {
         ups = this.ups,
         user_post_id = this.user_post_id,
         user_type = this.user_type,
-        // video = this.video,
+
         washroom_details = this.washroom_details,
-        //which_local_authority = this.which_local_authority,
+
         video = this.video,
         draft = this.draft,
         agreement_type = this.agreement_type,
@@ -466,7 +417,6 @@ fun Get_Reels_Property_Data.toPostPropertyXXX(): PostPropertyXXX {
         status = this.status,
     )
 }
-
 
 val grayscaleMatrix = ColorMatrix().apply {
     setToSaturation(0f)

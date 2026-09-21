@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -16,8 +15,7 @@ data class Get_Comment_Data(
     val like_count: Int,
     @SerialName("profile_image")
     val profile_image: String,
-//    @SerialName("replies")
-//    val replies: List<Any>,
+
     @SerialName("user_id")
     val user_id: Int,
     @SerialName("username")

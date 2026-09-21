@@ -39,7 +39,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun LandSalesTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+ (disabled to keep brand colors)
+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

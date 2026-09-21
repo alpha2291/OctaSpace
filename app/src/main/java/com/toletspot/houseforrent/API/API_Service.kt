@@ -18,7 +18,7 @@ class API_Service {
 
         private fun providesHttpLogging(): HttpLoggingInterceptor {
             return HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY // Always log
+                level = HttpLoggingInterceptor.Level.BODY
             }
         }
 
@@ -57,7 +57,7 @@ class API_Service {
 
         fun create(): API_Interface {
             val retrofit = Retrofit.Builder()
-                .baseUrl(MainActivity.getLiveUrl())
+                .baseUrl(MainActivity.getDemoUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(getUnsafeOkHttpClient())
                 .build()

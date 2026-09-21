@@ -52,7 +52,6 @@ import com.toletspot.houseforrent.constants
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-
 fun NavGraphBuilder.User_Credential_Graph(
     navController: NavHostController,
     placesClient: PlacesClient,
@@ -89,34 +88,29 @@ fun NavGraphBuilder.User_Credential_Graph(
             In_App_Notification(navController,commonVM)
         }
 
-//        composable(UserCredentialsScreenFlow.Other_Profile_Structure.route) {
-//            val commonVM: Common_H_ViewModel = viewModel()
-//            Other_Profile_Structure(navController,commonVM)
-//        }
-
         composable(
             route = VideosScreenFlow.Other_Profile_Structure.route,
             enterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { it }, // from right
+                    initialOffsetX = { it },
                     animationSpec = tween(300)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -it }, // to left
+                    targetOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -it }, // from left
+                    initialOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { it }, // to right
+                    targetOffsetX = { it },
                     animationSpec = tween(300)
                 )
             }
@@ -188,30 +182,7 @@ fun NavGraphBuilder.User_Credential_Graph(
             commonVM.toggleshowTABars(false)
             Edit_Property_Option(navController ,commonVM)
         }
-//        composable(
-//            route = "${UserCredentialsScreenFlow.SingleVideoPlayerEnquiry.route}/{video}",
-//            arguments = listOf(navArgument("video") { type = NavType.StringType })
-//        )
-//        { backStackEntry ->
-//            val commonVM: Common_H_ViewModel = viewModel()
-//            val videoJson = backStackEntry.arguments?.getString("video") ?: return@composable
-//            val json = Json {
-//                ignoreUnknownKeys = true
-//            }
-//            val video = json.decodeFromString<PostUser>(Uri.decode(videoJson))
-////            val video =
-////                navController.previousBackStackEntry
-////                    ?.savedStateHandle
-////                    ?.get<PostUser>("post_user")
-//
-//            commonVM.toggleshowBABars(false)
-//            SingleVideoPlayerEnquiry(
-//                video =  video,
-//                navController = navController,
-//                reels_Show = remember { mutableStateOf(true) },
-//                viewModel = commonVM
-//            )
-//        }
+
         composable(UserCredentialsScreenFlow.SingleVideoPlayerEnquiry.route) {
 
             val postId = navController.previousBackStackEntry
@@ -224,22 +195,21 @@ fun NavGraphBuilder.User_Credential_Graph(
 
             var enquiryFlow = constants.Enquiry_ViewModel.enquiryFlows.collectAsState()
 
-            println("SIZE OF DATAS --_${enquiryFlow.value}")
             val currentVideo = remember(myLeads, selfEnquiry, postId ,messagechatlist ) {
                 when {
                     enquiryFlow.value == EnquiryFlow.LEADS -> {
                         myLeads.value.firstOrNull { it.post_user.user_post_id == postId }?.post_user
-                        //println("SIZE OF DATAS --leadss")
+
                     }
 
                     enquiryFlow.value == EnquiryFlow.SELF -> {
                         selfEnquiry.value.firstOrNull { it?.post_user?.user_post_id == postId }?.post_user
                             ?: messagechatlist.value?.video_model
-                        //println("SIZE OF DATAS --sekf")
+
                     }
 
                     else -> {
-                        //println("SIZE OF DATAS -chatt-")
+
                         messagechatlist.value?.video_model
                     }
 
@@ -247,12 +217,10 @@ fun NavGraphBuilder.User_Credential_Graph(
             }
 
             if (currentVideo == null) {
-                // Optional: loading / fallback UI
+
                 return@composable
             }
 
-//            viewModel.toggleshowBABars(false)
-//            viewModel.toggleshowTABars(false)
             val commonVM: Common_H_ViewModel = viewModel()
 
             SingleVideoPlayerEnquiry(
@@ -266,12 +234,6 @@ fun NavGraphBuilder.User_Credential_Graph(
         composable(UserCredentialsScreenFlow.SingleVideoPlayerEnquiry2.route) {
             val commonVM: Common_H_ViewModel = viewModel()
             val video = constants.Profile_ViewModel.selectedVideo.value ?: return@composable
-
-//            val video =
-//                navController.previousBackStackEntry
-//                    ?.savedStateHandle
-//                    ?.get<PostUser>("post_user")
-
 
             commonVM.toggleshowBABars(false)
             SingleVideoPlayerEnquiry(
@@ -373,8 +335,6 @@ fun NavGraphBuilder.Videos_Graph(navController: NavHostController,
 
         composable(VideosScreenFlow.ReelsView.route
         ) {
-//            val showTABars = viewModel.showTABars.collectAsState()
-//            val showBABars = viewModel.showBABars.collectAsState()
 
             constants.PostProperty_ViewModel.set_Post_Form_Flow(-1)
             ReelsView( navController , viewModel  , onLogout = onLogout)
@@ -396,36 +356,29 @@ fun NavGraphBuilder.Videos_Graph(navController: NavHostController,
             Profile_Structure(navController, viewModel , onLogout)
         }
 
-//        composable(
-//            VideosScreenFlow.Other_Profile_Structure.route
-//        ) {
-//
-//            Other_Profile_Structure(navController ,viewModel)
-//        }
-
         composable(
             route = VideosScreenFlow.Other_Profile_Structure.route,
             enterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { it }, // from right
+                    initialOffsetX = { it },
                     animationSpec = tween(300)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -it }, // to left
+                    targetOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -it }, // from left
+                    initialOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { it }, // to right
+                    targetOffsetX = { it },
                     animationSpec = tween(300)
                 )
             }
@@ -441,8 +394,6 @@ fun NavGraphBuilder.Videos_Graph(navController: NavHostController,
         ) {
             Profile_FF_Structure(navController ,viewModel)
         }
-
-
 
         composable(
             route = VideosScreenFlow.Repost_Property.route,
@@ -475,31 +426,6 @@ fun NavGraphBuilder.Videos_Graph(navController: NavHostController,
             viewModel.toggleshowTABars(false)
             Edit_Property_Option(navController ,viewModel)
         }
-      /*  composable(
-            route = "${VideosScreenFlow.SingleVideoPlayerEnquiry.route}/{video}",
-            arguments = listOf(navArgument("video") { type = NavType.StringType })
-        )
-        { backStackEntry ->
-            val commonVM: Common_H_ViewModel = viewModel()
-            val videoJson = backStackEntry.arguments?.getString("video") ?: return@composable
-            val json = Json {
-                ignoreUnknownKeys = true
-            }
-            val video = json.decodeFromString<PostUser>(Uri.decode(videoJson))
-//            val video =
-//                navController.previousBackStackEntry
-//                    ?.savedStateHandle
-//                    ?.get<PostUser>("post_user")
-
-
-            commonVM.toggleshowBABars(false)
-            SingleVideoPlayerEnquiry(
-                video = video,
-                navController = navController,
-                reels_Show = remember { mutableStateOf(true) },
-                viewModel = commonVM
-            )
-        }*/
 
         composable(VideosScreenFlow.SingleVideoPlayerEnquiry.route) {
 
@@ -513,22 +439,21 @@ fun NavGraphBuilder.Videos_Graph(navController: NavHostController,
 
             var enquiryFlow = constants.Enquiry_ViewModel.enquiryFlows.collectAsState()
 
-            println("SIZE OF DATAS --_${enquiryFlow.value}")
             val currentVideo = remember(myLeads, selfEnquiry, postId ,messagechatlist ) {
                 when {
                     enquiryFlow.value == EnquiryFlow.LEADS -> {
                         myLeads.value.firstOrNull { it.post_user.user_post_id == postId }?.post_user
-                        //println("SIZE OF DATAS --leadss")
+
                     }
 
                     enquiryFlow.value == EnquiryFlow.SELF -> {
                         selfEnquiry.value.firstOrNull { it?.post_user?.user_post_id == postId }?.post_user
                             ?: messagechatlist.value?.video_model
-                        //println("SIZE OF DATAS --sekf")
+
                     }
 
                     else -> {
-                        //println("SIZE OF DATAS -chatt-")
+
                         messagechatlist.value?.video_model
                     }
 
@@ -536,12 +461,10 @@ fun NavGraphBuilder.Videos_Graph(navController: NavHostController,
             }
 
             if (currentVideo == null) {
-                // Optional: loading / fallback UI
+
                 return@composable
             }
 
-//            viewModel.toggleshowBABars(false)
-//            viewModel.toggleshowTABars(false)
             val commonVM: Common_H_ViewModel = viewModel()
 
             SingleVideoPlayerEnquiry(
@@ -552,16 +475,9 @@ fun NavGraphBuilder.Videos_Graph(navController: NavHostController,
             )
         }
 
-
         composable(VideosScreenFlow.SingleVideoPlayerEnquiry2.route) {
             val commonVM: Common_H_ViewModel = viewModel()
             val video = constants.Profile_ViewModel.selectedVideo.value ?: return@composable
-
-//            val video =
-//                navController.previousBackStackEntry
-//                    ?.savedStateHandle
-//                    ?.get<PostUser>("post_user")
-//
 
             commonVM.toggleshowBABars(false)
             SingleVideoPlayerEnquiry(
@@ -666,37 +582,29 @@ fun NavGraphBuilder.Profile_Graph(navController: NavHostController,
             Profile_FF_Structure(navController, viewModel)
         }
 
-//        composable(
-//            route = ProfileScreenFlow.Other_Profile_Structure.route,
-//        ) {
-//            viewModel.toggleshowBABars(false)
-//            viewModel.toggleshowTABars(false)
-//            Other_Profile_Structure(navController, viewModel)
-//        }
-
         composable(
             route = VideosScreenFlow.Other_Profile_Structure.route,
             enterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { it }, // from right
+                    initialOffsetX = { it },
                     animationSpec = tween(300)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -it }, // to left
+                    targetOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -it }, // from left
+                    initialOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { it }, // to right
+                    targetOffsetX = { it },
                     animationSpec = tween(300)
                 )
             }
@@ -713,32 +621,6 @@ fun NavGraphBuilder.Profile_Graph(navController: NavHostController,
             Edit_Property_Option(navController ,viewModel)
         }
 
-//        composable(
-//            route = "${ProfileScreenFlow.SingleVideoPlayerEnquiry.route}/{video}",
-//            arguments = listOf(navArgument("video") { type = NavType.StringType })
-//        )
-//        { backStackEntry ->
-//            val videoJson = backStackEntry.arguments?.getString("video") ?: return@composable
-//            val json = Json {
-//                ignoreUnknownKeys = true
-//            }
-//            val video = json.decodeFromString<PostUser>(Uri.decode(videoJson))
-////
-////            val video =
-////                navController.previousBackStackEntry
-////                    ?.savedStateHandle
-////                    ?.get<PostUser>("post_user")
-//
-//
-//            viewModel.toggleshowBABars(false)
-//            SingleVideoPlayerEnquiry(
-//                video = video!!,
-//                navController = navController,
-//                reels_Show = remember { mutableStateOf(true) },
-//                viewModel = viewModel
-//            )
-//        }
-
         composable(ProfileScreenFlow.SingleVideoPlayerEnquiry.route) {
 
             val postId = navController.previousBackStackEntry
@@ -751,22 +633,21 @@ fun NavGraphBuilder.Profile_Graph(navController: NavHostController,
 
             var enquiryFlow = constants.Enquiry_ViewModel.enquiryFlows.collectAsState()
 
-            println("SIZE OF DATAS --_${enquiryFlow.value}")
             val currentVideo = remember(myLeads, selfEnquiry, postId ,messagechatlist ) {
                 when {
                     enquiryFlow.value == EnquiryFlow.LEADS -> {
                         myLeads.value.firstOrNull { it.post_user.user_post_id == postId }?.post_user
-                        //println("SIZE OF DATAS --leadss")
+
                     }
 
                     enquiryFlow.value == EnquiryFlow.SELF -> {
                         selfEnquiry.value.firstOrNull { it?.post_user?.user_post_id == postId }?.post_user
                             ?: messagechatlist.value?.video_model
-                        //println("SIZE OF DATAS --sekf")
+
                     }
 
                     else -> {
-                        //println("SIZE OF DATAS -chatt-")
+
                         messagechatlist.value?.video_model
                     }
 
@@ -774,12 +655,10 @@ fun NavGraphBuilder.Profile_Graph(navController: NavHostController,
             }
 
             if (currentVideo == null) {
-                // Optional: loading / fallback UI
+
                 return@composable
             }
 
-//            viewModel.toggleshowBABars(false)
-//            viewModel.toggleshowTABars(false)
             val commonVM: Common_H_ViewModel = viewModel()
 
             SingleVideoPlayerEnquiry(
@@ -789,7 +668,6 @@ fun NavGraphBuilder.Profile_Graph(navController: NavHostController,
                 viewModel = commonVM
             )
         }
-
 
         composable(ProfileScreenFlow.SingleVideoPlayerEnquiry2.route) {
             val video = constants.Profile_ViewModel.selectedVideo.value ?: return@composable
@@ -810,9 +688,6 @@ fun NavGraphBuilder.Profile_Graph(navController: NavHostController,
             val viewModel : Start_Up_ViewModel = viewModel()
             User_Credentials(navController , viewModel)
         }
-
-
-
 
         composable(
             route = ProfileScreenFlow.ViewPropertyStructure.route,
@@ -892,7 +767,6 @@ fun NavGraphBuilder.Profile_Graph(navController: NavHostController,
     }
 }
 
-
 fun NavGraphBuilder.SearchGraph(navController: NavHostController,
                                 viewModel: Common_H_ViewModel , onLogout: () -> Unit) {
     navigation(startDestination = SearchScreenFlow.Search_Main_Screen.route, route = BottomBarScreen.Search.route) {
@@ -958,33 +832,29 @@ fun NavGraphBuilder.SearchGraph(navController: NavHostController,
             Profile_Structure(navController, viewModel , onLogout)
         }
 
-//        composable(SearchScreenFlow.Other_Profile_Structure.route) {
-//            Other_Profile_Structure(navController, viewModel)
-//        }
-
         composable(
             route = VideosScreenFlow.Other_Profile_Structure.route,
             enterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { it }, // from right
+                    initialOffsetX = { it },
                     animationSpec = tween(300)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -it }, // to left
+                    targetOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -it }, // from left
+                    initialOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { it }, // to right
+                    targetOffsetX = { it },
                     animationSpec = tween(300)
                 )
             }
@@ -1027,32 +897,6 @@ fun NavGraphBuilder.SearchGraph(navController: NavHostController,
             viewModel.toggleshowTABars(false)
             Edit_Property_Option(navController ,viewModel)
         }
-//        composable(
-//            route = "${SearchScreenFlow.SingleVideoPlayerEnquiry.route}/{video}",
-//            arguments = listOf(navArgument("video") { type = NavType.StringType })
-//        )
-//        { backStackEntry ->
-//            val commonVM: Common_H_ViewModel = viewModel()
-//            val videoJson = backStackEntry.arguments?.getString("video") ?: return@composable
-//            val json = Json {
-//                ignoreUnknownKeys = true
-//            }
-//            val video = json.decodeFromString<PostUser>(Uri.decode(videoJson))
-////
-////            val video =
-////                navController.previousBackStackEntry
-////                    ?.savedStateHandle
-////                    ?.get<PostUser>("post_user")
-////
-//
-//            commonVM.toggleshowBABars(false)
-//            SingleVideoPlayerEnquiry(
-//                video = video!!,
-//                navController = navController,
-//                reels_Show = remember { mutableStateOf(true) },
-//                viewModel = commonVM
-//            )
-//        }
 
         composable(SearchScreenFlow.SingleVideoPlayerEnquiry.route) {
 
@@ -1066,22 +910,21 @@ fun NavGraphBuilder.SearchGraph(navController: NavHostController,
 
             var enquiryFlow = constants.Enquiry_ViewModel.enquiryFlows.collectAsState()
 
-            println("SIZE OF DATAS --_${enquiryFlow.value}")
             val currentVideo = remember(myLeads, selfEnquiry, postId ,messagechatlist ) {
                 when {
                     enquiryFlow.value == EnquiryFlow.LEADS -> {
                         myLeads.value.firstOrNull { it.post_user.user_post_id == postId }?.post_user
-                        //println("SIZE OF DATAS --leadss")
+
                     }
 
                     enquiryFlow.value == EnquiryFlow.SELF -> {
                         selfEnquiry.value.firstOrNull { it?.post_user?.user_post_id == postId }?.post_user
                             ?: messagechatlist.value?.video_model
-                        //println("SIZE OF DATAS --sekf")
+
                     }
 
                     else -> {
-                        //println("SIZE OF DATAS -chatt-")
+
                         messagechatlist.value?.video_model
                     }
 
@@ -1089,12 +932,10 @@ fun NavGraphBuilder.SearchGraph(navController: NavHostController,
             }
 
             if (currentVideo == null) {
-                // Optional: loading / fallback UI
+
                 return@composable
             }
 
-//            viewModel.toggleshowBABars(false)
-//            viewModel.toggleshowTABars(false)
             val commonVM: Common_H_ViewModel = viewModel()
 
             SingleVideoPlayerEnquiry(
@@ -1104,8 +945,6 @@ fun NavGraphBuilder.SearchGraph(navController: NavHostController,
                 viewModel = commonVM
             )
         }
-
-
 
         composable(SearchScreenFlow.SingleVideoPlayerEnquiry2.route) {
             val commonVM: Common_H_ViewModel = viewModel()
@@ -1189,7 +1028,7 @@ fun NavGraphBuilder.PostPropertyGraph(navController: NavHostController,
             Justify_Post(navController, postId)
         }
         composable(PostPropertyFlow.Post_Property_Forms.route) {
-            //constants.PostProperty_ViewModel.set_Post_Form_Flow()
+
             constants.PostProperty_ViewModel.change_Status_PFs(false)
             Post_Property_Forms(
             navController,
@@ -1245,32 +1084,6 @@ fun NavGraphBuilder.PostPropertyGraph(navController: NavHostController,
             constants.Common_H_ViewModel.toggleshowTABars(false)
             Profile_FF_Structure_Followings(navController, viewModel)
         }
-//        composable(
-//            route = "${PostPropertyFlow.SingleVideoPlayerEnquiry.route}/{video}",
-//            arguments = listOf(navArgument("video") { type = NavType.StringType })
-//        )
-//        { backStackEntry ->
-//            val commonVM: Common_H_ViewModel = viewModel()
-//            val videoJson = backStackEntry.arguments?.getString("video") ?: return@composable
-//            val json = Json {
-//                ignoreUnknownKeys = true
-//            }
-//            val video = json.decodeFromString<PostUser>(Uri.decode(videoJson))
-////
-////            val video =
-////                navController.previousBackStackEntry
-////                    ?.savedStateHandle
-////                    ?.get<PostUser>("post_user")
-//
-//
-//            commonVM.toggleshowBABars(false)
-//            SingleVideoPlayerEnquiry(
-//                video = video!!,
-//                navController = navController,
-//                reels_Show = remember { mutableStateOf(true) },
-//                viewModel = commonVM
-//            )
-//        }
 
         composable(PostPropertyFlow.SingleVideoPlayerEnquiry.route) {
 
@@ -1284,22 +1097,21 @@ fun NavGraphBuilder.PostPropertyGraph(navController: NavHostController,
 
             var enquiryFlow = constants.Enquiry_ViewModel.enquiryFlows.collectAsState()
 
-            println("SIZE OF DATAS --_${enquiryFlow.value}")
             val currentVideo = remember(myLeads, selfEnquiry, postId ,messagechatlist ) {
                 when {
                     enquiryFlow.value == EnquiryFlow.LEADS -> {
                         myLeads.value.firstOrNull { it.post_user.user_post_id == postId }?.post_user
-                        //println("SIZE OF DATAS --leadss")
+
                     }
 
                     enquiryFlow.value == EnquiryFlow.SELF -> {
                         selfEnquiry.value.firstOrNull { it?.post_user?.user_post_id == postId }?.post_user
                             ?: messagechatlist.value?.video_model
-                        //println("SIZE OF DATAS --sekf")
+
                     }
 
                     else -> {
-                        //println("SIZE OF DATAS -chatt-")
+
                         messagechatlist.value?.video_model
                     }
 
@@ -1307,12 +1119,10 @@ fun NavGraphBuilder.PostPropertyGraph(navController: NavHostController,
             }
 
             if (currentVideo == null) {
-                // Optional: loading / fallback UI
+
                 return@composable
             }
 
-//            viewModel.toggleshowBABars(false)
-//            viewModel.toggleshowTABars(false)
             val commonVM: Common_H_ViewModel = viewModel()
 
             SingleVideoPlayerEnquiry(
@@ -1322,8 +1132,6 @@ fun NavGraphBuilder.PostPropertyGraph(navController: NavHostController,
                 viewModel = commonVM
             )
         }
-
-
 
         composable(PostPropertyFlow.SingleVideoPlayerEnquiry2.route) {
             val commonVM: Common_H_ViewModel = viewModel()
@@ -1363,37 +1171,30 @@ fun NavGraphBuilder.PostPropertyGraph(navController: NavHostController,
 
             Enquiry_Home_Screen(navController ,viewModel)
         }
-//        composable(
-//            route = PostPropertyFlow.Other_Profile_Structure.route,
-//        ) {
-//            constants.Common_H_ViewModel.toggleshowBABars(false)
-//            constants.Common_H_ViewModel.toggleshowTABars(false)
-//            Other_Profile_Structure(navController, viewModel)
-//        }
 
         composable(
             route = VideosScreenFlow.Other_Profile_Structure.route,
             enterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { it }, // from right
+                    initialOffsetX = { it },
                     animationSpec = tween(300)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -it }, // to left
+                    targetOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -it }, // from left
+                    initialOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { it }, // to right
+                    targetOffsetX = { it },
                     animationSpec = tween(300)
                 )
             }
@@ -1402,7 +1203,6 @@ fun NavGraphBuilder.PostPropertyGraph(navController: NavHostController,
             viewModel.toggleshowTABars(false)
             Other_Profile_Structure(navController, viewModel)
         }
-
 
     }
 }
@@ -1474,46 +1274,6 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
                 viewModel
             )
         }
-//        composable(
-//            route = EnquiriesFlow.SingleVideoPlayerEnquiry.route
-//        ) { backStackEntry ->
-//
-//            val videoJson = backStackEntry.arguments?.getString("video") ?: return@composable
-//            val json = Json {
-//                ignoreUnknownKeys = true
-//            }
-//            val video = json.decodeFromString<PostUser>(Uri.decode(videoJson))
-//
-//            viewModel.toggleshowBABars(false)
-//
-//            SingleVideoPlayerEnquiry(
-//                video = video,
-//                navController = navController,
-//                reels_Show = remember { mutableStateOf(true) },
-//                viewModel = viewModel
-//            )
-//        }
-//
-//    }
-
-        /*composable(
-            route = EnquiriesFlow.SingleVideoPlayerEnquiry.route
-        )
-        { backStackEntry ->
-            val video = navController.previousBackStackEntry
-                ?.savedStateHandle
-                ?.get<PostUser>("post_user") ?: return@composable
-
-            viewModel.toggleshowBABars(false)
-            println("DATA ON NAVIGATION --- ${video}")
-
-            SingleVideoPlayerEnquiry(
-                video = video,
-                navController = navController,
-                reels_Show = remember { mutableStateOf(true) },
-                viewModel = viewModel
-            )
-        }*/
 
         composable(EnquiriesFlow.SingleVideoPlayerEnquiry.route) {
 
@@ -1527,22 +1287,21 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
 
             var enquiryFlow = constants.Enquiry_ViewModel.enquiryFlows.collectAsState()
 
-            println("SIZE OF DATAS --_${enquiryFlow.value}")
             val currentVideo = remember(myLeads, selfEnquiry, postId ,messagechatlist ) {
                 when {
                     enquiryFlow.value == EnquiryFlow.LEADS -> {
                         myLeads.value.firstOrNull { it.post_user.user_post_id == postId }?.post_user
-                        //println("SIZE OF DATAS --leadss")
+
                     }
 
                     enquiryFlow.value == EnquiryFlow.SELF -> {
                         selfEnquiry.value.firstOrNull { it?.post_user?.user_post_id == postId }?.post_user
                             ?: messagechatlist.value?.video_model
-                        //println("SIZE OF DATAS --sekf")
+
                     }
 
                     else -> {
-                        //println("SIZE OF DATAS -chatt-")
+
                         messagechatlist.value?.video_model
                     }
 
@@ -1550,10 +1309,10 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
             }
 
             if (currentVideo == null) {
-                // Optional: loading / fallback UI
+
                 return@composable
             }
-            
+
             viewModel.toggleshowBABars(false)
             viewModel.toggleshowTABars(false)
 
@@ -1565,8 +1324,6 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
             )
         }
 
-
-
         composable(
             route = EnquiriesFlow.ReelsView_Search_Flow.route + "/{startIndex}",
             arguments = listOf(navArgument("startIndex") { type = NavType.IntType })
@@ -1576,7 +1333,6 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
             val index = backStackEntry.arguments?.getInt("startIndex") ?: 0
             ReelsView_Search_Flow(navController, startIndex = index, viewModel)
         }
-
 
         composable(
             EnquiriesFlow.Profile_Structure.route
@@ -1590,36 +1346,29 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
             Profile_FF_Structure(navController, viewModel)
         }
 
-//    composable(
-//        route = EnquiriesFlow.Other_Profile_Structure.route,
-//    ) {
-//        viewModel.toggleshowBABars(false)
-//        Other_Profile_Structure(navController, viewModel)
-//    }
-
         composable(
             route = VideosScreenFlow.Other_Profile_Structure.route,
             enterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { it }, // from right
+                    initialOffsetX = { it },
                     animationSpec = tween(300)
                 )
             },
             exitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { -it }, // to left
+                    targetOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popEnterTransition = {
                 slideInHorizontally(
-                    initialOffsetX = { -it }, // from left
+                    initialOffsetX = { -it },
                     animationSpec = tween(300)
                 )
             },
             popExitTransition = {
                 slideOutHorizontally(
-                    targetOffsetX = { it }, // to right
+                    targetOffsetX = { it },
                     animationSpec = tween(300)
                 )
             }
@@ -1688,7 +1437,6 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
             PP_Fourth_Form(apiError)
         }
 
-        // User list
         composable(
             route = EnquiriesFlow.Msg_UserList.route + "/{propertyId}/{sellerId}",
             arguments = listOf(
@@ -1700,8 +1448,6 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
 
             val propertyId = backStackEntry.arguments?.getString("propertyId") ?: ""
             val sellerId = backStackEntry.arguments?.getString("sellerId") ?: ""
-
-
 
             Msg_UserList(
                 propertyId = propertyId,
@@ -1764,7 +1510,7 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
 
                 currentUserId = AppPreferences.getUserId().toString(),
                 otherUserId = buyerId,
-                otherUserLocation = otherUserLocation, // optional, if you want to pass name too
+                otherUserLocation = otherUserLocation,
                 otherUserName = otherUserName,
                 otherUserProfile = otherUserProfile,
                 propertyId = propertyId,
@@ -1779,4 +1525,3 @@ fun NavGraphBuilder.EnquiryGraph(navController: NavHostController,
     }
 
 }
-

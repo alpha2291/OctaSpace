@@ -133,12 +133,9 @@ import kotlinx.coroutines.delay
 import java.time.LocalDate
 import kotlin.text.ifEmpty
 
-
-
 enum class EnquiryFlow {
     LEADS, SELF, CHAT
 }
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
@@ -156,10 +153,8 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
 
     val disable_Click_ONPOPUP = if ( constants.open_Popup.type == "self_enquiry_delete" && constants.open_Popup.isVisible) true else false
 
-
     var reload_api_onSORT = remember { mutableStateOf(0) }
     var reload_ONSort_Filter = remember { mutableStateOf(0) }
-
 
     val selected_Date_Range = constants.Enquiry_ViewModel.selected_Date_Range.collectAsStateWithLifecycle()
 
@@ -167,14 +162,11 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
 
     var selfEnquiriesSort = remember { mutableStateOf(false) }
 
-
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     var myleadsSearchtext = remember { mutableStateOf("") }
     var selfenquirySearchtext = remember { mutableStateOf("") }
-
-
 
     Column (
         modifier = Modifier
@@ -186,7 +178,6 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
     ) {
         Spacer(modifier = Modifier.padding(top = if (forTab()) 16.dp else notchPadding.value))
 
-
         Text(context.getString(R.string.enquiry_Heading)
             , color = Color.Black
             , fontSize = constants.textUnit(24)
@@ -196,10 +187,10 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
 
         Row (modifier = Modifier
             .fillMaxWidth()
-            //.clip(RoundedCornerShape(4.dp))
+
             .background(newWhite)
             .clickable(disable_Click_ONPOPUP){}
-            //.border(1.dp, Color(0xffE8E8E8), RoundedCornerShape(4.dp))
+
         )
         {
             repeat(constants.Enquiry_ViewModel.Enquiry_Types_List.size){
@@ -208,14 +199,13 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                     modifier = Modifier
                         .padding(horizontal = 8.dp, vertical = 8.dp)
                         .height(if (forTab())42.dp else 33.dp)
-                        //.width(104.dp)
+
                         .weight(1f)
                         .clip(RoundedCornerShape(4.dp))
                         .noRippleClickable{
                             ClickHelper.getInstance().clickOnce {
                                 constants.Enquiry_ViewModel.Selected_Dates_List.clear()
                                 constants.Enquiry_ViewModel.enquiries_View(index)
-
 
                                 when(index) {
                                     0 -> {
@@ -261,18 +251,7 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                         constants.API_Vm.errorMessage_CML = null
                                     }
                                 }
-//                                if (index == 1){
-//
-//                                else {
-//                                    constants.Enquiry_ViewModel.clear_MyleadsEnquiry()
-//                                    constants.Enquiry_ViewModel.clear_Selected_DateRange()
-//
-//                                    constants.Enquiry_ViewModel.leads_selected_Filter = 4
-//                                    constants.Enquiry_ViewModel.leads_selected_Sort = 1
-//
-//                                    constants.API_Vm.isLoading_Leads = true
-//                                    constants.API_Vm.totalPages_Leads = 1
-//                                }
+
                             }
                         }
                         .background(if (selected_Etype.value == index) newBlack else newWhite)
@@ -290,13 +269,6 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
 
         when (selected_Etype.value){
             0 -> {
-//                Row(
-//                    modifier = Modifier
-//                        .fillMaxWidth(),
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.SpaceBetween
-//                )
-//                {
 
                     Column {
                         CommonText(
@@ -338,18 +310,17 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                             constants.API_Vm.totalPages_Leads = 1
                                             reload_ONSort_Filter.value = reload_ONSort_Filter.value + 12345
 
-
                                         }
                                     },
                                     leadingIcon = {
-                                        // if (cityQuery.value.isEmpty()) {
+
                                         Icon(
                                             painter = painterResource(R.drawable.searchnotrento),
                                             contentDescription = "Clear",
                                             modifier = Modifier
                                                 .size(18.dp)
                                         )
-                                        // }
+
                                     },
                                     placeholder = {
                                         Text("search by name, location.."
@@ -402,7 +373,7 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                         }
                                     ),
                                     modifier = Modifier
-                                        //.menuAnchor() // anchor for dropdown menu
+
                                         .fillMaxWidth()
                                 )
                             }
@@ -426,13 +397,13 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                     .weight(2f)
                                     .noRippleClickable {
                                         ClickHelper.getInstance().clickOnce {
-                                            // if (constants.Enquiry_ViewModel.get_Myleads_Data().isNotEmpty()) {
+
                                             constants.open_Btm_Sheet =
                                                 Custom_BottomSheetState(
                                                     type = "leads_filter",
                                                     isVisible = true
                                                 )
-                                            // }
+
                                         }
                                     }
                             )
@@ -441,7 +412,6 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
             }
 
             1 -> {
-                //SelfEnquiry_Sort(modifier = Modifier .clickable(disable_Click_ONPOPUP){} , reload_api_onSORT)
 
                 Column {
                     CommonText(
@@ -484,14 +454,14 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                     }
                                 },
                                 leadingIcon = {
-                                    // if (cityQuery.value.isEmpty()) {
+
                                     Icon(
                                         painter = painterResource(R.drawable.searchnotrento),
                                         contentDescription = "Clear",
                                         modifier = Modifier
                                             .size(18.dp)
                                     )
-                                    // }
+
                                 },
                                 placeholder = {
                                     Text("search by name, location.."
@@ -543,7 +513,7 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                     }
                                 ),
                                 modifier = Modifier
-                                    //.menuAnchor() // anchor for dropdown menu
+
                                     .fillMaxWidth()
                             )
                         }
@@ -552,7 +522,7 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
 
                         var iconstate =
                             if (
-                                //constants.Enquiry_ViewModel.leads_selected_Filter != 4
+
                                  constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort != 1
                             ) {
                                 R.drawable.rentoselfenqiuryfilterapplied
@@ -571,13 +541,7 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                     ClickHelper.getInstance().clickOnce {
 
                                         selfEnquiriesSort.value = true
-                                        // if (constants.Enquiry_ViewModel.get_Myleads_Data().isNotEmpty()) {
-//                                        constants.open_Btm_Sheet =
-//                                            Custom_BottomSheetState(
-//                                                type = "leads_filter",
-//                                                isVisible = true
-//                                            )
-                                        // }
+
                                     }
                                 }
                         )
@@ -586,12 +550,10 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
             }
 
             2 -> {
-               // Message_Filter()
+
             }
 
-
         }
-
 
         Spacer(modifier = Modifier.padding(top = 16.dp))
 
@@ -609,7 +571,6 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                     SelfEnquiry_Content(reels_Show , navController , reload_api_onSORT ,viewModel , selfEnquiriesSort , selfenquirySearchtext , keyboardController , focusManager)
                 }
                 2 -> {
-                   // Message_Content(onOpenBuyersList = {"", ""})
 
                     Message_Content(
                         onOpenBuyersList = { propertyId, sellerId ->
@@ -627,13 +588,11 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
 
     }
 
-
     Common_Popup(
         visible = constants.open_Popup.type == "self_enquiry_delete" && constants.open_Popup.isVisible,
         modifier = Modifier.background(Color(0xffFCEDEC)),
         content = {
 
-//            Spacer(modifier = Modifier.padding(2.dp))
             constants.spacer(2)
             constants.spacer(4)
             Image(painter = painterResource(R.drawable.deletepopupicon) , "",
@@ -653,10 +612,7 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
 
             )
 
-
-
             constants.spacer(8)
-            //constants.spacer(2)
 
             Row (
                 modifier = Modifier
@@ -691,10 +647,8 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                             ClickHelper.getInstance().clickOnce {
                                 if (ClickGuard.canClick()) {
                                     constants.Common_H_ViewModel.toggleshowBABars(true)
-                                    println("SLEETCD ENWUIRY -- ${constants.Enquiry_ViewModel.selectedEnquiry}")
                                     val enquiry = constants.Enquiry_ViewModel.selectedEnquiry
 
-                                    println("ENWUIRY __ ${enquiry}")
                                     if (enquiry != null) {
                                         constants.Common_H_ViewModel.toggleshowBABars(true)
                                         constants.API_Vm.put_Enquiry_Decline_Undodecline(
@@ -704,27 +658,19 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                         { aPI_Result_Handling ->
                                             when (aPI_Result_Handling) {
                                                 is API_Result_Handling.Loading -> {
-                                                    // loading
-//                        next.value = true
-                                                    //state.value = 0
-                                                    // constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                 }
 
                                                 is API_Result_Handling.Deactivated -> {
-                                                    // resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.Error -> {
-                                                    // fail
-//                        next.value = true
-                                                    // state.value = 1
-                                                    ///constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                 }
 
                                                 is API_Result_Handling.Success -> {
-                                                    // success
-//                        next.value = true
-                                                    // state.value = 2
+
                                                     viewModel.toggleshowBABars(true)
                                                     constants.Enquiry_ViewModel.remove_Enquiry(
                                                         enquiry?.enquiry_details?.enquire_id ?: 0
@@ -734,13 +680,11 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                                     )
                                                     constants.open_Popup =
                                                         Custom_PopUpState(type = "", false)
-                                                    // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                 }
 
                                                 is API_Result_Handling.NoData -> {
-//                        next.value = true
-                                                    // no data
-                                                    // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                 }
                                             }
                                         }
@@ -764,7 +708,7 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
     )
 
     val deleteMyLeadsEnquiryPopup = constants.Enquiry_ViewModel.deleteMyLeadsEnquiryPopup.collectAsState()
-    // delete my leads popup
+
     Common_Popup(
         visible =  deleteMyLeadsEnquiryPopup.value.second,
         modifier = Modifier
@@ -780,14 +724,6 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
         {
 
             constants.spacer(2)
-//            constants.spacer(2)
-
-//            Text(
-//                text = "Block Akash Kishore ?",
-//                color = newBlack,
-//                fontSize = constants.textUnit(16),
-//                fontFamily = constants.fontFamily(0)
-//            )
 
             Image(painter = painterResource(R.drawable.deletepopupicon), "",
                 modifier = Modifier.size(56.dp))
@@ -851,40 +787,29 @@ fun Enquiry_Home_Screen(navController: NavHostController, viewModel: Common_H_Vi
                                     aPI_Result_Handling ->
                                 when (aPI_Result_Handling) {
                                     is API_Result_Handling.Loading -> {
-                                        // loading
-//                        next.value = true
-                                        //state.value = 0
-                                        // constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                     }
 
                                     is API_Result_Handling.Deactivated -> {
-                                        //resultCallback(5)
+
                                     }
 
                                     is API_Result_Handling.Error -> {
-                                        // fail
-//                        next.value = true
-                                        // state.value = 1
-                                        ///constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                     }
 
                                     is API_Result_Handling.Success -> {
-                                        // success
-//                        next.value = true
-                                        // state.value = 2
 
                                         constants.Enquiry_ViewModel.remove_Enquiry(
                                             deleteMyLeadsEnquiryPopup.value.first
                                                 ?: 0
                                         )
                                         constants.Enquiry_ViewModel.deleteLeads(0 , false)
-                                        // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                     }
 
                                     is API_Result_Handling.NoData -> {
-//                        next.value = true
-                                        // no data
-                                        // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                     }
                                 }
                             }
@@ -933,8 +858,6 @@ fun MyLeads_Content(
     focusManager1: FocusManager
 ) {
 
-
-
     val isLoading = constants.API_Vm.isLoading_Leads
     val totalPages = constants.API_Vm.totalPages_Leads
 
@@ -944,31 +867,21 @@ fun MyLeads_Content(
 
     val network = rememberNetworkStatus()
 
-
     val context = LocalContext.current
 
     val placesClient = Places.createClient(context)
 
-
     val scope = rememberCoroutineScope()
 
     val lead_Data = constants.Enquiry_ViewModel.my_Leads.collectAsStateWithLifecycle()
-
 
     val selected_Date_Range = constants.Enquiry_ViewModel.selected_Date_Range.collectAsStateWithLifecycle()
 
     var retry by remember { mutableStateOf(0) }
     listState.isScrollInProgress
 
+    LaunchedEffect(reload_ONSort_Filter.value, retry) {
 
-
-    LaunchedEffect(reload_ONSort_Filter.value, retry) {  // Remove Unit
-        println("🔄 UI: Reloading due to filter/retry change")
-
-        // Reset state properly
-//        constants.API_Vm.currentPage_Leads = 1
-
-        // Load first page
         constants.API_Vm.load_My_Leads(
             user_id = AppPreferences.getUserId(),
             page = 1,
@@ -980,19 +893,15 @@ fun MyLeads_Content(
             search_text = myleadsSearchtext.value,
         )
 
-        // Scroll after a short delay to allow data to load
         delay(100)
         listState.animateScrollToItem(0)
     }
 
-
-    // Detect when near end of list
     LaunchedEffect(listState, currentPage, isLoading, totalPages) {
-        println("WHEN SEARCHED HITTING")
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { lastVisibleItemIndex ->
                 val totalItems = listState.layoutInfo.totalItemsCount
-                val loadMoreThreshold = 2// 👈 trigger when 4 items from the end
+                val loadMoreThreshold = 2
 
                 if (
                     lastVisibleItemIndex != null &&
@@ -1001,14 +910,13 @@ fun MyLeads_Content(
                     !isLoading &&
                     currentPage < totalPages
                 ) {
-                    println("CURRENT PAGE - ${currentPage} -- tota; ${totalPages}")
-                    //constants.API_Vm.loadCategories(currentPage + 1)
+
                     constants.API_Vm.load_My_Leads(
                         user_id = AppPreferences.getUserId(),
-                            //AppPreferences.getUserId(),
+
                         page = currentPage + 1,
                         search_type = constants.Enquiry_ViewModel.leads_selected_Filter,
-                        //if (constants.Enquiry_ViewModel.leads_selected_Filter != 0) constants.Enquiry_ViewModel.leads_selected_Filter + 1 else 4,
+
                         filter_type =  constants.Enquiry_ViewModel.leads_selected_Sort,
                         customer_dates =  convertDateToTimestamp(LocalDate.now().toString()) ,
                         customer_dates_start = selected_Date_Range.value?.timestamp_Start ?: "" ,
@@ -1021,14 +929,9 @@ fun MyLeads_Content(
 
     }
 
-
-
-
-// 👇 Keep bottom sheet state at list level, not inside each item
     var selectedEnquiry by remember { mutableStateOf<Get_My_Leads_Data?>(null) }
 
     when {
-
 
         network.value == NetworkStatus.Offline -> {
             Column(
@@ -1047,7 +950,7 @@ fun MyLeads_Content(
         }
 
         isLoading && currentPage == 1
-                //&& lead_Data.value.isEmpty()
+
             -> {
             Column(
                 modifier = Modifier
@@ -1072,7 +975,6 @@ fun MyLeads_Content(
                 })
             }
         }
-
 
         !isLoading && lead_Data.value.isEmpty() -> {
 
@@ -1118,18 +1020,7 @@ fun MyLeads_Content(
                     Text("We’ll let you know as soon as new leads come in." , textAlign = TextAlign.Center , color = newBlack , fontSize = constants.textUnit(14))
                 }
             }
-            // no data
-//            Column(
-//                modifier = Modifier
-//                    .padding(bottom = 48.dp)
-//                    .fillMaxSize()
-//                , verticalArrangement = Arrangement.Center
-//                , horizontalAlignment = Alignment.CenterHorizontally
-//            ){
-//                Image(painterResource(R.drawable.enptyleadsrento) , "")
-//                Text("No lead yet!" , color = newBlack , fontSize = constants.textUnit(14))
-//                Text("We’ll let you know as soon as new leads come in." , textAlign = TextAlign.Center , color = newBlack , fontSize = constants.textUnit(14))
-//            }
+
         }
 
         lead_Data.value.isNotEmpty() -> {
@@ -1147,8 +1038,7 @@ fun MyLeads_Content(
                     ) {
                         Column {
                             if (item.isWhich < 4) {
-                                println("CONTENT MY LEADS -- ${lead_Data.value}")
-                                // Enquiry_Message_Structure(lead_Data.value,index  , reels_Show ,navController)
+
                                 Enquiry_Message_Structure(
                                     content = lead_Data.value,
                                     index = index,
@@ -1170,7 +1060,6 @@ fun MyLeads_Content(
                                 Enquiry_Message_Structure2(item, navController , from_where = 0 ,onDeleteClick = { enquiry ->
                                     constants.Enquiry_ViewModel.selectedEnquiry = enquiry
                                     viewModel.toggleshowBABars(false)
-                                    println("SELECTED ENQUIRY click-- ${constants.Enquiry_ViewModel.selectedEnquiry}")
                                     constants.open_Popup = Custom_PopUpState(
                                         type = "self_enquiry_delete",
                                         true
@@ -1185,8 +1074,6 @@ fun MyLeads_Content(
             }
         }
     }
-
-
 
     if (constants.open_Btm_Sheet.type == "review_delete" && constants.open_Btm_Sheet.isVisible && selectedEnquiry != null)
     {
@@ -1315,26 +1202,23 @@ fun MyLeads_Content(
                                             { aPI_Result_Handling ->
                                                 when (aPI_Result_Handling) {
                                                     is API_Result_Handling.Loading -> {
-                                                        // loading
-//                        next.value = true
+
                                                         state.value = 0
-                                                        // constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                     }
 
                                                     is API_Result_Handling.Deactivated -> {
-                                                        //resultCallback(5)
+
                                                     }
 
                                                     is API_Result_Handling.Error -> {
-                                                        // fail
-//                        next.value = true
+
                                                         state.value = 1
-                                                        ///constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                     }
 
                                                     is API_Result_Handling.Success -> {
-                                                        // success
-//                        next.value = true
+
                                                         state.value = 2
 
                                                         constants.Enquiry_ViewModel.decline_Update_Enquiry(
@@ -1349,13 +1233,11 @@ fun MyLeads_Content(
                                                                 type = "",
                                                                 false
                                                             )
-                                                        // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                     }
 
                                                     is API_Result_Handling.NoData -> {
-//                        next.value = true
-                                                        // no data
-                                                        // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                     }
                                                 }
                                             }
@@ -1378,11 +1260,8 @@ fun MyLeads_Content(
         )
     }
 
-
-
     if (constants.open_Btm_Sheet.type == "leads_filter" && constants.open_Btm_Sheet.isVisible) {
 
-        // ✅ Temporary local states (do not commit until Apply)
         var bring_Calender by rememberSaveable { mutableStateOf(false) }
         var tempSelectedFilter by rememberSaveable { mutableStateOf(constants.Enquiry_ViewModel.leads_selected_Filter) }
         var tempSelectedSort by rememberSaveable { mutableStateOf(constants.Enquiry_ViewModel.leads_selected_Sort) }
@@ -1399,7 +1278,7 @@ fun MyLeads_Content(
                 ) { showCalendar ->
 
                     if (showCalendar) {
-                        // ✅ Show Calendar screen
+
                         CalendarExample(
                             modifier = Modifier
                                 .background(newWhite)
@@ -1443,7 +1322,7 @@ fun MyLeads_Content(
                             }
                         )
                     } else {
-                        // ✅ Show Filter + Sort UI
+
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.Center,
@@ -1556,7 +1435,7 @@ fun MyLeads_Content(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    // Cancel / Reset Button
+
                     Box(
                         modifier = Modifier
                             .width(168.dp)
@@ -1574,7 +1453,7 @@ fun MyLeads_Content(
                                         bring_Calender = false
                                         constants.Enquiry_ViewModel.Selected_Dates_List.clear()
                                     } else {
-                                        // Reset temporary selections only
+
                                         tempSelectedFilter = 4
                                         tempSelectedSort = 1
 
@@ -1598,7 +1477,6 @@ fun MyLeads_Content(
                         )
                     }
 
-                    // Apply / Update Button
                     Box(
                         modifier = Modifier
                             .width(168.dp)
@@ -1621,7 +1499,7 @@ fun MyLeads_Content(
                                                 Custom_BottomSheetState(type = "", isVisible = false)
                                         }
                                     } else {
-                                        // ✅ Commit only on Apply
+
                                         constants.Enquiry_ViewModel.leads_selected_Filter = tempSelectedFilter
                                         constants.Enquiry_ViewModel.leads_selected_Sort = tempSelectedSort
                                         constants.open_Btm_Sheet =
@@ -1661,32 +1539,26 @@ fun MyLeads_Content(
             if (ClickGuard.canClick()) {
                 when {
                     constants.open_Btm_Sheet.type == "review_delete" && constants.open_Btm_Sheet.isVisible && selectedEnquiry != null -> {
-//                        constants.Enquiry_ViewModel.report_Option_Selection =
-//                            "Already Sold"
+
                         constants.open_Btm_Sheet =
                             Custom_BottomSheetState(type = "", false)
                     }
 
                     constants.open_Btm_Sheet.type == "leads_filter" && constants.open_Btm_Sheet.isVisible -> {
 
-//
-                        // assinged to default value
                             constants.Enquiry_ViewModel.leads_selected_Filter = 4
                             constants.Enquiry_ViewModel.leads_selected_Sort = 1
                         reload_ONSort_Filter.value = reload_ONSort_Filter.value + 1
 
-
                         constants.open_Btm_Sheet =
                                 Custom_BottomSheetState(type = "", isVisible = false)
-//                        }
+
                     }
                 }
             }
         }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1708,7 +1580,6 @@ fun SelfEnquiry_Content(
 
     val network = rememberNetworkStatus()
 
-
     val isLoading = constants.API_Vm.isLoading_Self_Enquiry
     val errorMessage = constants.API_Vm.errorMessage_Self_Enquiry
     val currentPage = constants.API_Vm.currentPage_Self_Enquiry
@@ -1724,28 +1595,23 @@ fun SelfEnquiry_Content(
     val selected_Date_Range = constants.Enquiry_ViewModel.selected_Date_Range.collectAsStateWithLifecycle()
     val selected_Date_Range_List = constants.Enquiry_ViewModel.Selected_Dates_List
 
-    // ✅ Create reversed list once for consistent indexing
     val reversedData = remember(selfe_Data.value) { selfe_Data.value}
 
     LaunchedEffect(Unit, reload_api_onSORT.value, retry) {
-
-        println("ON SORT APPLIED ON SELF ENQUIRY")
 
         val selectedRange = selected_Date_Range_List.firstOrNull()
 
         val start = selectedRange?.timestamp_Start.orEmpty()
         val end = selectedRange?.timeStamp_End.orEmpty()
 
-// Determine mainDate (only used when not a range)
         val isRange = start.isNotEmpty() && end.isNotEmpty() && start != end
         val mainDate = if (!isRange) {
-            // single date → use start or end (whichever is not empty)
+
             if (end.isNotEmpty()) end else start
         } else {
-            "" // range → leave empty
+            ""
         }
 
-// Prepare params dynamically based on range/single date
         val customer_dates = if (isRange) "" else mainDate
         val customer_dates_start = if (isRange) start else ""
         val customer_dates_end = if (isRange) end else ""
@@ -1763,10 +1629,7 @@ fun SelfEnquiry_Content(
 
     }
 
-
-    // Detect when near end of list
     LaunchedEffect(listState, currentPage, isLoading, totalPages) {
-        println("WHEN SEARCHED HITTING ${selected_Date_Range}")
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { lastVisibleItemIndex ->
                 val totalItems = listState.layoutInfo.totalItemsCount
@@ -1779,7 +1642,6 @@ fun SelfEnquiry_Content(
                     !isLoading &&
                     currentPage < totalPages
                 ) {
-                    println("CURRENT PAGE - ${currentPage}")
                     constants.API_Vm.load_Self_Enquiry(
                         user_id = AppPreferences.getUserId(),
                         page = currentPage + 1,
@@ -1795,7 +1657,6 @@ fun SelfEnquiry_Content(
             }
     }
 
-    println("SELFIED DATA111 -- ${selfe_Data.value}")
     when {
 
         network.value == NetworkStatus.Offline -> {
@@ -1814,7 +1675,6 @@ fun SelfEnquiry_Content(
 
             }
         }
-
 
         isLoading && selfe_Data.value.isEmpty() -> {
             Column(
@@ -1884,12 +1744,11 @@ fun SelfEnquiry_Content(
         }
 
         selfe_Data.value.isNotEmpty() -> {
-            println("SELFIED DATA222 -- ${selfe_Data.value}")
             LazyColumn(
                 modifier = Modifier.padding(bottom = 108.dp),
                 state = listState
             ) {
-                // ✅ Use reversedData consistently
+
                 itemsIndexed(reversedData) { index, item ->
                     AnimatedVisibility(
                         visible = true,
@@ -1897,7 +1756,7 @@ fun SelfEnquiry_Content(
                         exit = shrinkOut { it }
                     ) {
                         Column {
-                            // ✅ Now item directly corresponds to the current index
+
                             if ((item?.isWhich ?: 1) < 5) {
                                 Enquiry_Message_Structure(
                                     content = reversedData,
@@ -1907,7 +1766,6 @@ fun SelfEnquiry_Content(
                                     onDeleteClick = { enquiry ->
                                         constants.Enquiry_ViewModel.selectedEnquiry = enquiry
                                         viewModel.toggleshowBABars(false)
-                                        println("SELECTED ENQUIRY click-- ${constants.Enquiry_ViewModel.selectedEnquiry}")
                                         constants.open_Popup = Custom_PopUpState(
                                             type = "self_enquiry_delete",
                                             true
@@ -1925,7 +1783,6 @@ fun SelfEnquiry_Content(
                                     onDeleteClick = { enquiry ->
                                         constants.Enquiry_ViewModel.selectedEnquiry = enquiry
                                         viewModel.toggleshowBABars(false)
-                                        println("SELECTED ENQUIRY click-- ${constants.Enquiry_ViewModel.selectedEnquiry}")
                                         constants.open_Popup = Custom_PopUpState(
                                             type = "self_enquiry_delete",
                                             true
@@ -1941,7 +1798,6 @@ fun SelfEnquiry_Content(
                     }
                 }
 
-                // ✅ Loading indicator at the end
                 if (isLoading && currentPage > 1) {
                     item {
                         Box(
@@ -1958,16 +1814,12 @@ fun SelfEnquiry_Content(
         }
     }
 
-
-
-
-
     var selectedOption by remember { mutableStateOf("Newest first") }
 
     if (selfEnquiriesSort.value) {
-        // ✅ Temporary local states (do not commit until Apply)
+
         var bring_Calender by rememberSaveable { mutableStateOf(false) }
-//        var tempSelectedFilter by rememberSaveable { mutableStateOf(constants.Enquiry_ViewModel.leads_selected_Filter) }
+
         var tempSelectedSort by rememberSaveable { mutableStateOf(constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort) }
 
         Common_BTM_Sheet(
@@ -1982,7 +1834,7 @@ fun SelfEnquiry_Content(
                 ) { showCalendar ->
 
                     if (showCalendar) {
-                        // ✅ Show Calendar screen
+
                         CalendarExample(
                             modifier = Modifier
                                 .background(newWhite)
@@ -2026,7 +1878,7 @@ fun SelfEnquiry_Content(
                             }
                         )
                     } else {
-                        // ✅ Show Filter + Sort UI
+
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             verticalArrangement = Arrangement.Center,
@@ -2055,13 +1907,10 @@ fun SelfEnquiry_Content(
                                             .noRippleClickable {
                                                 ClickHelper.getInstance().clickOnce {
 
-
-                                                    //ClickHelper.getInstance().clickOnce {
                                                     selectedOption = sortType
                                                     tempSelectedSort = index + 1
 
                                                     constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort = index + 1
-
 
                                                     if (index == 4) {
                                                         bring_Calender = true
@@ -2070,12 +1919,6 @@ fun SelfEnquiry_Content(
                                                         constants.Enquiry_ViewModel.Selected_Dates_List.clear()
                                                     }
 
-
-                                                    println("SELF ENQUIEY SORT SELECTE D_- ${constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort}")
-                                                    //  constants.API_Vm.isLoading_Self_Enquiry = true
-
-                                                    //expanded = false
-                                                    //}
                                                 }
                                             }
                                             .border(
@@ -2106,7 +1949,7 @@ fun SelfEnquiry_Content(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    // Cancel / Reset Button
+
                     Box(
                         modifier = Modifier
                             .width(168.dp)
@@ -2116,37 +1959,28 @@ fun SelfEnquiry_Content(
                             .noRippleClickable {
                                 ClickHelper.getInstance().clickOnce {
                                     if (bring_Calender) {
-                                        //tempSelectedFilter = 4
+
                                         tempSelectedSort = 1
                                         constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort = 1
 
-//                                        constants.Enquiry_ViewModel.leads_selected_Filter = 4
-//                                        constants.Enquiry_ViewModel.leads_selected_Sort = 1
                                         bring_Calender = false
                                         constants.Enquiry_ViewModel.Selected_Dates_List.clear()
                                         selfEnquiriesSort.value = false
                                     } else {
-                                        // Reset temporary selections only
-                                        // tempSelectedFilter = 4
+
                                         tempSelectedSort = 1
 
                                         constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort = 1
 
-
-
-                                        //  if (index != 4){
                                         constants.Enquiry_ViewModel.Selected_Dates_List.clear()
                                         constants.API_Vm.isLoading_Self_Enquiry = true
                                         constants.API_Vm.totalPages_Self_Enquiry = 1
                                         reload_api_onSORT.value = reload_api_onSORT.value + 4560
 
                                         selfEnquiriesSort.value = false
-                                        // }
+
                                     }
 
-//                                    constants.API_Vm.isLoading_Leads = true
-//                                    constants.API_Vm.totalPages_Leads = 1
-                                    // reload_ONSort_Filter.value = reload_ONSort_Filter.value + 4574657
                                 }
                             },
                         contentAlignment = Alignment.Center
@@ -2158,7 +1992,6 @@ fun SelfEnquiry_Content(
                         )
                     }
 
-                    // Apply / Update Button
                     Box(
                         modifier = Modifier
                             .width(168.dp)
@@ -2177,7 +2010,7 @@ fun SelfEnquiry_Content(
                                 ClickHelper.getInstance().clickOnce {
                                     if (bring_Calender) {
                                         if (constants.Enquiry_ViewModel.Selected_Dates_List.isNotEmpty()) {
-                                            // constants.Enquiry_ViewModel.leads_selected_Filter = tempSelectedFilter
+
                                             constants.Enquiry_ViewModel.leads_selected_Sort =
                                                 tempSelectedSort
                                             constants.open_Btm_Sheet =
@@ -2192,8 +2025,7 @@ fun SelfEnquiry_Content(
                                             selfEnquiriesSort.value = false
                                         }
                                     } else {
-                                        // ✅ Commit only on Apply
-                                        //   constants.Enquiry_ViewModel.leads_selected_Filter = tempSelectedFilter
+
                                         constants.Enquiry_ViewModel.leads_selected_Sort =
                                             tempSelectedSort
                                         constants.open_Btm_Sheet =
@@ -2204,7 +2036,7 @@ fun SelfEnquiry_Content(
                                     constants.API_Vm.totalPages_Self_Enquiry = 1
                                     reload_api_onSORT.value = reload_api_onSORT.value + 12345
                                     selfEnquiriesSort.value = false
-                                    //reload_ONSort_Filter.value = reload_ONSort_Filter.value + 4574657
+
                                 }
                             }
                             .border(
@@ -2242,8 +2074,6 @@ fun SelfEnquiry_Content(
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Message_Content(
@@ -2253,15 +2083,10 @@ fun Message_Content(
     var network = rememberNetworkStatus()
     var listState = rememberLazyListState()
 
-
-
-
     var isLoading = constants.API_Vm.isLoading_CML
     var totalPages = constants.API_Vm.totalPages_CML
     var currentPage = constants.API_Vm.currentPage_CML
     var errorMessage = constants.API_Vm.errorMessage_CML
-
-
 
     val chatList = constants.Enquiry_ViewModel.chatMainList.collectAsStateWithLifecycle()
 
@@ -2269,10 +2094,7 @@ fun Message_Content(
 
     val focusManager = LocalFocusManager.current
 
-
-
     var chatsearchtext = remember { mutableStateOf("") }
-
 
     DisposableEffect(Unit , reLoadchatListApi.value) {
         Log.d("MESSAGE API HITTING", "HITTING DISPOSAL -- ${constants.Enquiry_ViewModel.selected_Msg_Filter.value}")
@@ -2286,7 +2108,7 @@ fun Message_Content(
                 constants.Enquiry_ViewModel.selected_Msg_Filter.value == 2 -> "1"
                 else -> "2"
             },
-                //constants.Enquiry_ViewModel.selected_Msg_Filter.value,
+
             search_text = chatsearchtext.value,
             page = 1
         )
@@ -2295,14 +2117,11 @@ fun Message_Content(
         }
     }
 
-
-    // Detect when near end of list
     LaunchedEffect(listState, currentPage, isLoading, totalPages) {
-        println("WHEN Message Pagination api call HITTING")
         snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
             .collect { lastVisibleItemIndex ->
                 val totalItems = listState.layoutInfo.totalItemsCount
-                val loadMoreThreshold = 4// 👈 trigger when 4 items from the end
+                val loadMoreThreshold = 4
 
                 if (
                     lastVisibleItemIndex != null &&
@@ -2311,7 +2130,6 @@ fun Message_Content(
                     !isLoading &&
                     currentPage < totalPages
                 ) {
-                    println("CURRENT PAGE message pagination api  - ${currentPage} -- tota; ${totalPages}")
                     constants.API_Vm.load_ChatMainList(
                         user_id = AppPreferences.getUserId(),
                         filter_type = when {
@@ -2328,17 +2146,10 @@ fun Message_Content(
 
     }
 
-
-
     var chatlistFilterOptions = listOf("All" , "Enquired" , "Self Enquired")
-
-
-   // var selectedChatFilter = remember { mutableStateOf(constants.Enquiry_ViewModel.selected_Msg_Filter.value) }
 
     var chatFilterOpen = remember { mutableStateOf(false) }
 
-
-//    item {
         Column(
             modifier = Modifier
                 .padding(bottom = 16.dp)
@@ -2376,14 +2187,14 @@ fun Message_Content(
                             }
                         },
                         leadingIcon = {
-                            // if (cityQuery.value.isEmpty()) {
+
                             Icon(
                                 painter = painterResource(R.drawable.searchnotrento),
                                 contentDescription = "Clear",
                                 modifier = Modifier
                                     .size(18.dp)
                             )
-                            // }
+
                         },
                         placeholder = {
                             Text(
@@ -2394,7 +2205,6 @@ fun Message_Content(
                             )
                         },
                         trailingIcon = {
-                            // if (cityQuery.value.isNotEmpty()) {
 
                             Image(
                                 painter = painterResource(R.drawable.search_text_clear),
@@ -2412,7 +2222,7 @@ fun Message_Content(
                                     }
 
                             )
-                            //}
+
                         },
                         textStyle = TextStyle(
                             fontSize = constants.textUnit(14),
@@ -2436,18 +2246,16 @@ fun Message_Content(
                             }
                         ),
                         modifier = Modifier
-                            //.menuAnchor() // anchor for dropdown menu
+
                             .fillMaxWidth()
                     )
                 }
 
                 constants.spacer(6)
 
-
-                println("SELF SORT -- ${constants.Enquiry_ViewModel.selected_Msg_Filter.value}")
                         var iconstate =
                             if (
-                                //constants.Enquiry_ViewModel.selected_Msg_Filter.value != 4 ||
+
                                 constants.Enquiry_ViewModel.selected_Msg_Filter.value == 1
                             ) {
                                 R.drawable.filter
@@ -2463,9 +2271,9 @@ fun Message_Content(
                         .weight(2f)
                         .noRippleClickable {
                             ClickHelper.getInstance().clickOnce {
-                                // if (constants.Enquiry_ViewModel.get_Myleads_Data().isNotEmpty()) {
+
                                 chatFilterOpen.value = true
-                                // }
+
                             }
                         }
                 )
@@ -2533,7 +2341,7 @@ fun Message_Content(
                         modifier = Modifier
                             .padding(bottom = 76.dp)
                             .fillMaxSize()
-                        //.background(newBlue)
+
                         , verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     )
@@ -2552,18 +2360,6 @@ fun Message_Content(
                         )
                     }
 
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                , contentAlignment = Alignment.Center
-//            ) {
-//                Column {
-//                    Image(painter = painterResource(R.drawable.empty_messages) , "")
-//                    Text("No messages yet!")
-//                    Text("We’ll alert you when someone messages you.")
-//
-//                }
-//            }
                 }
 
                 chatList.value.isNotEmpty() && !isLoading -> {
@@ -2572,11 +2368,6 @@ fun Message_Content(
                             count ->
                         Log.d("COUNT TOTAL UNREAD BY USER --- " , "${count}")
                     })
-
-
-
-
-
 
                     LazyColumn(
                         modifier = Modifier
@@ -2590,9 +2381,6 @@ fun Message_Content(
 
                                 index, item ->
 
-                            //Chat_Property_Show_Structure(item)
-
-                            //Chat_User_Structure(item, index)
                             Chat_User_Structure(
                                 content = item,
                                 index = index,
@@ -2612,9 +2400,6 @@ fun Message_Content(
                 }
             }
         }
-
-
-
 
     if (chatFilterOpen.value){
 
@@ -2652,7 +2437,6 @@ fun Message_Content(
                 )
                 constants.spacer(6)
 
-
                 FlowRow(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
@@ -2673,16 +2457,7 @@ fun Message_Content(
                                 .noRippleClickable {
                                     ClickHelper.getInstance().clickOnce {
 
-//                                        if (index == 0){
-//                                            constants.Enquiry_ViewModel.selected_Msg_Filter.value = "1,2"
-//                                        }
-//                                        else {
                                         tempSelectedFilter.value = index + 1
-//                                        }
-
-                                        //ClickHelper.getInstance().clickOnce {
-//                                        selectedChatFilter.value = (index + 1).toString()
-
 
                                     }
                                 }
@@ -2746,7 +2521,6 @@ fun Message_Content(
 
                             constants.spacer(4)
 
-
                             Box(
                                 modifier = Modifier
                                     .weight(4f)
@@ -2777,16 +2551,12 @@ fun Message_Content(
 
 }
 
-
-
-
 @Composable
 fun Chat_User_Structure(
     content: Chat_Main_List_Data
     , index: Int
     , onClick: (Chat_Main_List_Data) -> Unit
 ){
-
 
     var countUnread = remember { mutableStateOf(0) }
 
@@ -2795,22 +2565,19 @@ fun Chat_User_Structure(
             propertyId = content.video_model.user_post_id.toString(),
             currentUserId = AppPreferences.getUserId().toString()
         ) { count ->
-            countUnread.value = count   // 👈 update the state properly
+            countUnread.value = count
             Log.d("COUNT PER PROPERTY", "$count")
         }
     }
 
-    println("USER DETAILS SIZE -- ${content.user_details.size}")
-
-
     Card(
         modifier = Modifier
-            //.padding(horizontal = 16.dp)
+
             .fillMaxWidth()
             .clickable {
                 onClick(content)
                 constants.Enquiry_ViewModel.selectMainListData(content)
-                       } // 👈 Added
+                       }
         , shape = RoundedCornerShape(8.dp)
         , border = BorderStroke(1.dp , Color(0xffCECECE))
         , colors = CardDefaults.cardColors(
@@ -2821,7 +2588,7 @@ fun Chat_User_Structure(
     {
         Column (
             modifier = Modifier
-                //.padding(horizontal = 8.dp , vertical = 8.dp)
+
                 .fillMaxSize()
         ){
             Row(
@@ -2837,10 +2604,9 @@ fun Chat_User_Structure(
                         , color = Color(0xff269D3D)
                         , textAlign = TextAlign.Start
                         , modifier = Modifier
-                            //.background(Color(0xffE9F5EC))
+
                             .padding(vertical = 6.dp, horizontal = 6.dp)
                     )
-
 
                     Row {
 
@@ -2865,7 +2631,6 @@ fun Chat_User_Structure(
                             }
                         }
 
-
                         constants.spacer(2)
 
                         Icon(painterResource(R.drawable.right_arrow), "")
@@ -2877,7 +2642,7 @@ fun Chat_User_Structure(
                         , color = newBlue
                         , textAlign = TextAlign.Start
                         , modifier = Modifier
-                            //.background(Color(0xffF7F0DC))
+
                             .padding(vertical = 6.dp, horizontal = 6.dp)
                     )
 
@@ -2911,7 +2676,7 @@ fun Chat_User_Structure(
                                 }
 
                                 constants.spacer(2)
-                                //Icon(painterResource(R.drawable.right_arrow), "")
+
                             }
 
                         }
@@ -2956,7 +2721,7 @@ fun Chat_User_Structure(
                             modifier = Modifier
                                 .width(90.dp)
                                 .heightIn(min = 50.dp , max = 80.dp)
-                                //.height(80.dp)
+
                             , contentDescription = "",
                             contentScale = ContentScale.FillBounds
                         )
@@ -2968,7 +2733,6 @@ fun Chat_User_Structure(
                                         .fillMaxSize()
                                         .background(newLightBlue)
 
-                                    //.padding(8.dp)
                                     , contentAlignment = Alignment.Center
                                 ) {
                                     Image(painter = painterResource(R.drawable.emptypostsrento) , "")
@@ -2977,9 +2741,6 @@ fun Chat_User_Structure(
                                 SubcomposeAsyncImageContent()
                             }
                         }
-
-
-
 
                         SubcomposeAsyncImage(
                             model = content.video_model.post_property.thumbnail ?: "",
@@ -2994,174 +2755,6 @@ fun Chat_User_Structure(
                 )
             }
 
-           /* if(content.chat_type == 2) {
-                *//*Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                    , verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                )
-                {
-
-                    Row {
-
-                        Box(
-                            modifier = Modifier
-                                .size(26.dp)
-                                .clip(CircleShape)
-                                .background(newLightBlue)
-                            , contentAlignment = Alignment.Center
-                        ) {
-                            SubcomposeAsyncImage(
-                                model = content.video_model.profile_image ?: "",
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(25.dp),
-                                contentScale = ContentScale.FillBounds,
-                                contentDescription = ""
-                            )
-                            {
-                                val state = painter.state
-                                if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(8.dp)
-                                    ) {
-                                        Text(
-                                            text = content.video_model.username.takeIf { it?.isNotEmpty() == true }
-                                                ?.take(1)?.uppercase() ?: "",
-                                            fontSize = constants.textUnit(14),
-                                            fontFamily = constants.fontFamily(1),
-                                            color = Color.Black
-                                        )
-//                                Image(painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                                    contentDescription = "",modifier = Modifier
-//                                        .matchParentSize())
-                                    }
-                                } else {
-                                    SubcomposeAsyncImageContent()
-                                }
-                            }
-                        }
-
-                        constants.spacer(2)
-
-                        Text(content.video_model.username ?: "")
-
-                    }
-
-
-
-                        Row {
-
-                            if (countUnread.value != 0 ) {
-                                Text("New Message")
-
-                                constants.spacer(2)
-
-                                Box(
-                                    modifier = Modifier
-                                        .size(20.dp)
-                                        .clip(CircleShape)
-                                        .background(newBlue), contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        "${countUnread.value}",
-                                        color = Color.White,
-                                        lineHeight = 8.sp,
-                                        modifier = Modifier
-                                            .padding(2.dp)
-                                    )
-                                }
-                            }
-
-
-                            constants.spacer(2)
-
-                            Icon(painterResource(R.drawable.right_arrow), "")
-                        }
-                }*//*
-            }
-            else {*/
-                /// mulitple user
-
-               /* Row(
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
-                        .height(30.dp)
-                        .fillMaxWidth()
-                        .padding(horizontal = 6.dp)
-                    , verticalAlignment = Alignment.CenterVertically
-                    , horizontalArrangement = Arrangement.SpaceBetween
-                )
-                {
-
-
-                    Text("Chats")
-
-
-                    constants.spacer(2)
-
-                    content.user_details.take(3).forEachIndexed { index, detail ->
-                        Box(
-                            modifier = Modifier
-                                .offset(x = (index * (-12)).dp) // overlap slightly to the left
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(newLightBlue)
-                                .border(1.dp, Color.White, CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            SubcomposeAsyncImage(
-                                model = detail.profile_image.takeIf { it.isNotEmpty() },
-                                contentDescription = detail.username,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                when (painter.state) {
-                                    is AsyncImagePainter.State.Loading,
-                                    is AsyncImagePainter.State.Error -> {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                            , contentAlignment = Alignment.Center
-                                        ) {
-                                            Text(
-                                                text = detail.username.takeIf { it.isNotEmpty() }
-                                                    ?.take(1)?.uppercase() ?: "?",
-                                                color = Color.Black,
-                                                fontSize = constants.textUnit(14),
-                                                fontFamily = constants.fontFamily(1)
-                                            )
-                                        }
-                                    }
-
-                                    else -> SubcomposeAsyncImageContent()
-                                }
-                            }
-                        }
-                    }
-
-                    // Optional: if more users than shown
-                    if (content.user_details.size > 3) {
-                        Text(
-                            "+${content.user_details.size - 3}",
-                            modifier = Modifier
-                                .offset(x = (-10).dp)
-                                .background(Color.Gray, CircleShape)
-                                .padding(horizontal = 6.dp, vertical = 2.dp),
-                            color = Color.White,
-                            fontSize = constants.textUnit(12)
-                        )
-                    }
-
-
-
-//                }
-
-            }*/
-
             Row(
                 modifier = Modifier
                     .padding(vertical = 4.dp)
@@ -3174,7 +2767,6 @@ fun Chat_User_Structure(
 
                 Text("Chats")
 
-                // ✅ Avatar group container
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -3216,7 +2808,6 @@ fun Chat_User_Structure(
                         }
                     }
 
-                    // +N badge
                     if (content.user_details.size > 3) {
                         Text(
                             "+${content.user_details.size - 3}",
@@ -3231,13 +2822,6 @@ fun Chat_User_Structure(
                 }
             }
 
-
-
         }
     }
 }
-
-
-
-
-

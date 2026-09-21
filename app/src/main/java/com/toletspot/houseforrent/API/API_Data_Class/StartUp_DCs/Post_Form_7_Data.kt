@@ -1,34 +1,7 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-//@Serializable
-//data class Post_Form_7_Datasdf(
-//    @SerialName("amenities")
-//    val amenities: String,
-//    @SerialName("city")
-//    val city: String,
-//    @SerialName("created_at")
-//    val created_at: String,
-//    @SerialName("description")
-//    val description: String,
-//    @SerialName("facing_direction")
-//    val facing_direction: String,
-//    @SerialName("image_ids")
-//    val image_ids: String,
-//    @SerialName("locality")
-//    val locality: String,
-//    @SerialName("price")
-//    val price: String,
-//    @SerialName("property_area")
-//    val property_area: String,
-//    @SerialName("property_name")
-//    val property_name: String,
-//    @SerialName("video")
-//    val video: String
-//)
 
 @Serializable
 data class Post_Form_7_Data(
@@ -174,5 +147,3 @@ data class Post_Form_7_Data(
     @SerialName("rent_floor_no")
     val rent_floor_no: String
 )
-
-

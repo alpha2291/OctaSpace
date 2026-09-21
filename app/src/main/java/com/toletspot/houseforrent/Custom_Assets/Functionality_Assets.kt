@@ -207,7 +207,6 @@ import java.time.Instant
 import java.util.UUID
 import kotlin.reflect.full.memberProperties
 
-
 import java.time.format.DateTimeFormatter
 import java.time.ZoneId
 
@@ -248,7 +247,7 @@ import java.io.ByteArrayOutputStream
 import java.io.FileOutputStream
 import java.text.NumberFormat
 import androidx.compose.runtime.snapshots.SnapshotStateList
-//import androidx.compose.ui.Alignment
+
 import androidx.core.net.toUri
 import androidx.media3.common.PlaybackException
 import com.bumptech.glide.Glide
@@ -278,10 +277,8 @@ import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.Date
 
-
 import java.util.Locale
 import kotlin.text.ifEmpty
-
 
 fun getDeviceId(context: Context): String {
     val androidId = Settings.Secure.getString(
@@ -290,59 +287,20 @@ fun getDeviceId(context: Context): String {
     val androidId_UUID = UUID.nameUUIDFromBytes(androidId.toByteArray(charset("utf8")))
     val device_UDID = androidId_UUID.toString()
     return device_UDID
-   //return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+
 }
 
-//@SuppressLint("HardwareIds")
-//fun GetDevice_UDID(activity: MainActivity): String {
-//
-//}
-//var deviceToken = ""toast
 fun getDeviceType(): String {
-    return "Android"  // Since this app runs on Android
+    return "Android"
 }
-
-//@SuppressLint("HardwareIds")
-//fun getDeviceToken(context: Context): String {
-//    return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
-//}
-
-
-/*fun getDeviceToken() {
-    println("DEVICETOKEN")
-    try {
-        if (isConnected.value) {
-            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    //Log.w("TAG", "Fetching FCM registration token failed", task.exception)
-                    return@OnCompleteListener
-                }
-                try {
-                    // Get new FCM registration token
-                    deviceToken = task.result
-                    println("DeviceToken $deviceToken")
-
-                } catch (e: Exception) {
-                    println("taskk-----${e.message}")
-                    e.printStackTrace()
-                }
-            })
-        }
-    } catch (e: Exception) {
-        println("taskk1111-----${e.message}")
-        e.printStackTrace()
-    }
-}*/
-
 
 private var currentToast: Toast? = null
 
 fun toast(message: String, length: Int = Toast.LENGTH_SHORT) {
-    currentToast?.cancel() // cancel previous toast
+    currentToast?.cancel()
     currentToast = Toast.makeText(activity, message, length)
     currentToast?.show()
 }
-
 
 @Composable
 fun rememberNotchHeightDp(): State<Dp> {
@@ -357,13 +315,12 @@ fun rememberNotchHeightDp(): State<Dp> {
             val cutout = insets?.displayCutout
             val notchPx = cutout?.safeInsetTop ?: 0
 
-            notchHeight.value = with(density) { notchPx.toDp() } // ✅ convert px to dp
+            notchHeight.value = with(density) { notchPx.toDp() }
         }
     }
 
     return notchHeight
 }
-
 
 fun Modifier.dashedBorder(
     strokeWidth: Dp,
@@ -398,7 +355,6 @@ fun Modifier.dashedBorder(
     }
 )
 
-
 @Composable
 fun PhoneNumberInput233(
     phoneNumber: String,
@@ -425,11 +381,11 @@ fun PhoneNumberInput233(
             .border(1.dp, newGray, RoundedCornerShape(8.dp))
 
     ) {
-        // Country code dropdown
+
         Box (
             modifier = Modifier
                 .weight(1.8f)
-                //.padding(end = 4.dp)
+
             , contentAlignment = Alignment.Center
         ){
             Row (
@@ -469,7 +425,6 @@ fun PhoneNumberInput233(
                                     code.country_Code,
                                     countryCodes.value
                                 )!!
-                                println("LIMIT OF COUNTRY === $isLimit")
                                 onCountryCodeChange(code.country_Code)
                                 expanded = false
                             }
@@ -482,13 +437,8 @@ fun PhoneNumberInput233(
             }
         }
 
-
-
         VerticalDivider(modifier = Modifier.fillMaxHeight() , thickness = 1.dp , newGray)
 
-
-
-        // Phone number input
         Box(
             modifier = Modifier
                 .weight(8.2f)
@@ -545,7 +495,7 @@ fun PhoneNumberInput(
     onPhoneNumberChange: (String) -> Unit,
     countryCode: String,
     onCountryCodeChange: (String) -> Unit,
-    isError: Boolean // <-- new parameter
+    isError: Boolean
 ) {
     val countryCodes = constants.Start_Up_ViewModel.country_Code_Handler.collectAsState()
     var expanded by remember { mutableStateOf(false) }
@@ -553,7 +503,6 @@ fun PhoneNumberInput(
 
     Column(modifier = Modifier.fillMaxWidth()) {
 
-        // Row for input
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -566,7 +515,7 @@ fun PhoneNumberInput(
                     shape = RoundedCornerShape(8.dp)
                 )
         ) {
-            // Country code dropdown
+
             Box(
                 modifier = Modifier.weight(1.8f),
                 contentAlignment = Alignment.Center
@@ -622,7 +571,6 @@ fun PhoneNumberInput(
                 color = newGray
             )
 
-            // Phone input
             Box(modifier = Modifier.weight(8.2f)) {
                 TextField(
                     value = phoneNumber,
@@ -666,8 +614,6 @@ fun PhoneNumberInput(
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PhoneNumberInput1(
@@ -679,14 +625,12 @@ fun PhoneNumberInput1(
     val context = LocalContext.current
     val countryCodes = constants.Start_Up_ViewModel.country_Code_Handler.collectAsState()
 
-
     var isLimit by remember { mutableStateOf(10) }
 
     var showSheet by remember { mutableStateOf(false) }
 
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
-    // Bottom Sheet
     if (showSheet) {
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },
@@ -696,7 +640,6 @@ fun PhoneNumberInput1(
         {
             LazyColumn (){
                 items(countryCodes.value) { code ->
-
 
                     Row(
                         modifier = Modifier
@@ -713,7 +656,7 @@ fun PhoneNumberInput1(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = code.country_Name, // Assuming this field exists
+                            text = code.country_Name,
                             modifier = Modifier.weight(1f),
                             fontSize = constants.textUnit(14),
                             color = newBlack
@@ -731,7 +674,6 @@ fun PhoneNumberInput1(
         }
     }
 
-    // Main input UI
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -740,7 +682,7 @@ fun PhoneNumberInput1(
             .padding(horizontal = 16.dp)
             .border(1.dp, newGray, RoundedCornerShape(8.dp))
     ) {
-        // Country code selector (opens bottom sheet)
+
         Box(
             modifier = Modifier
                 .weight(2.3f)
@@ -750,7 +692,7 @@ fun PhoneNumberInput1(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
+
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxSize()
@@ -774,7 +716,6 @@ fun PhoneNumberInput1(
 
         VerticalDivider(modifier = Modifier.fillMaxHeight(), thickness = 1.dp, color = newGray)
 
-        // Phone number input
         Box(modifier = Modifier.weight(7.7f)) {
             TextField(
                 value = phoneNumber,
@@ -802,7 +743,6 @@ fun PhoneNumberInput1(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WA_NumberInput(
@@ -814,14 +754,12 @@ fun WA_NumberInput(
     val context = LocalContext.current
     val countryCodes = constants.Start_Up_ViewModel.country_Code_Handler.collectAsState()
 
-
     var isLimit by remember { mutableStateOf(10) }
 
     var showSheet by remember { mutableStateOf(false) }
 
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
-    // Bottom Sheet
     if (showSheet) {
         ModalBottomSheet(
             onDismissRequest = { showSheet = false },
@@ -846,7 +784,7 @@ fun WA_NumberInput(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = code.country_Name, // Assuming this field exists
+                            text = code.country_Name,
                             modifier = Modifier.weight(1f),
                             fontSize = constants.textUnit(14),
                             color = newBlack
@@ -864,16 +802,15 @@ fun WA_NumberInput(
         }
     }
 
-    // Main input UI
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp)
-            //.padding(horizontal = 16.dp)
+
             .border(1.dp, newGray, RoundedCornerShape(8.dp))
     ) {
-        // Country code selector (opens bottom sheet)
+
         Box(
             modifier = Modifier
                 .weight(2.3f)
@@ -883,7 +820,7 @@ fun WA_NumberInput(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                //horizontalArrangement = Arrangement.SpaceBetween,
+
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxSize()
@@ -907,7 +844,6 @@ fun WA_NumberInput(
 
         VerticalDivider(modifier = Modifier.fillMaxHeight(), thickness = 1.dp, color = newGray)
 
-        // Phone number input
         Box(modifier = Modifier.weight(7.7f)) {
             TextField(
                 value = phoneNumber,
@@ -965,13 +901,13 @@ fun WA_NumberInput1(
             .border(1.dp, newGray, RoundedCornerShape(8.dp))
 
     ) {
-        // Country code dropdown
+
         Box (
             modifier = Modifier
                 .weight(1.9f)
                 .fillMaxHeight()
                 .background(Color(0xffF4F4F4))
-                //.padding(horizontal = 8.dp)
+
             , contentAlignment = Alignment.Center
         ){
             Row (
@@ -1012,7 +948,6 @@ fun WA_NumberInput1(
                                     code.country_Code,
                                     countryCodes.value
                                 )!!
-                                println("LIMIT OF COUNTRY === $isLimit")
                                 onCountryCodeChange(code.country_Code)
                                 expanded = false
                             }
@@ -1025,13 +960,8 @@ fun WA_NumberInput1(
             }
         }
 
-
-
         VerticalDivider(modifier = Modifier.fillMaxHeight() , thickness = 1.dp , newGray)
 
-
-
-        // Phone number input
         Box(
             modifier = Modifier
                 .weight(8.2f)
@@ -1047,11 +977,8 @@ fun WA_NumberInput1(
                         checkBox1.value = false
                     }
 
-//                    else {
-//                        Toast.makeText(context , "Enter your phone number ")
-//                    }
                 },
-                //enabled = !checkBox1.value,
+
                 textStyle = TextStyle(
                     color = newBlack,
                     fontSize = constants.textUnit(12)
@@ -1070,15 +997,13 @@ fun WA_NumberInput1(
                     unfocusedIndicatorColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
 
-                    disabledContainerColor = newWhite, // Slightly gray background
+                    disabledContainerColor = newWhite,
 
                     focusedTextColor = newBlack,
                     unfocusedTextColor = newBlack,
-                    disabledTextColor = newBlack, // Gray text when disabled (if you want visual feedback)
-
+                    disabledTextColor = newBlack,
 
                     disabledPlaceholderColor = newGray,
-
 
                     disabledIndicatorColor = Color.Transparent
                 )
@@ -1086,7 +1011,6 @@ fun WA_NumberInput1(
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1101,8 +1025,6 @@ fun PhoneNumberInput_Settings(
     var isLimit by remember { mutableStateOf(10) }
     var expanded by remember { mutableStateOf(false) }
 
-    println("SAVE PREFERENCE __N${AppPreferences.get_User_WaNumber()}")
-    // Main input UI
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -1110,7 +1032,7 @@ fun PhoneNumberInput_Settings(
             .height(56.dp)
             .border(1.dp, newGray, RoundedCornerShape(8.dp))
     ) {
-        // Wrap country code + dropdown in Box to anchor dropdown correctly
+
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -1141,7 +1063,7 @@ fun PhoneNumberInput_Settings(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 modifier = Modifier.height(400.dp),
-                offset = DpOffset(0.dp, 0.dp), // align directly under the box
+                offset = DpOffset(0.dp, 0.dp),
                 properties = PopupProperties(focusable = true),
                 containerColor = newWhite
             ) {
@@ -1166,13 +1088,11 @@ fun PhoneNumberInput_Settings(
             }
         }
 
-        // Divider
         VerticalDivider(
             modifier = Modifier.width(1.dp),
             color = newGray
         )
 
-        // Phone input
         TextField(
             value = phoneNumber,
             onValueChange = {
@@ -1207,7 +1127,6 @@ fun PhoneNumberInput_Settings(
 
         VerticalDivider()
 
-        // "Change" Button
         Box(
             modifier = Modifier
                 .fillMaxHeight()
@@ -1231,15 +1150,12 @@ fun PhoneNumberInput_Settings(
                 fontSize = constants.textUnit(12),
                 fontFamily = constants.fontFamily(2),
                 color = if (phoneNumber.length != isLimit ) newBlack else if(AppPreferences.get_User_WaNumber() == constants.Start_Up_ViewModel.WaNumber)  newBlack else  Color.White,
-                    //if (phoneNumber.length == isLimit )Color.White else newBlack,
+
                 modifier = Modifier
             )
         }
     }
 }
-
-
-
 
 @Composable
 fun LoginSwitchText(onLoginClick: () -> Unit , modifier: Modifier) {
@@ -1252,21 +1168,19 @@ fun LoginSwitchText(onLoginClick: () -> Unit , modifier: Modifier) {
                 color = newBlack,
                 fontSize = constants.textUnit(14),
                 fontFamily = constants.fontFamily(0),
-//                fontWeight = FontWeight.Bold,
-                //textDecoration = TextDecoration.Underline // Optional
+
             )
         ) {
             append(normalText)
         }
 
-        // Start annotating login text
         pushStringAnnotation(tag = "LOGIN", annotation = "login_click")
         withStyle(
             style = SpanStyle(
                 color = newBlue,
                 fontSize = constants.textUnit(14),
                 fontFamily = constants.fontFamily(0),
-                //textDecoration = TextDecoration.Underline // Optional
+
             )
         ) {
             append(loginText)
@@ -1287,8 +1201,6 @@ fun LoginSwitchText(onLoginClick: () -> Unit , modifier: Modifier) {
     )
 }
 
-
-
 @Composable
 fun SignSwitchText(onSignClick: () -> Unit , modifier: Modifier) {
     val normalText = activity.getString(R.string.login_accountswitch) + " "
@@ -1300,22 +1212,19 @@ fun SignSwitchText(onSignClick: () -> Unit , modifier: Modifier) {
                 color = newBlack,
                 fontSize = constants.textUnit(14),
                 fontFamily = constants.fontFamily(0),
-//                fontWeight = FontWeight.Bold,
-                //textDecoration = TextDecoration.Underline // Optional
+
             )
         ) {
             append(normalText)
         }
 
-        // Start annotating login text
         pushStringAnnotation(tag = "SIGN", annotation = "sign_click")
         withStyle(
             style = SpanStyle(
                 color = newBlue,
                 fontSize = constants.textUnit(14),
                 fontFamily = constants.fontFamily(0),
-//                fontWeight = FontWeight.Bold,
-                //textDecoration = TextDecoration.Underline // Optional
+
             )
         ) {
             append(loginText)
@@ -1336,8 +1245,6 @@ fun SignSwitchText(onSignClick: () -> Unit , modifier: Modifier) {
     )
 }
 
-
-
 @Composable
 fun verifyOtp(
     resendOTP: () -> Unit,
@@ -1352,7 +1259,6 @@ fun verifyOtp(
     val annotatedString = buildAnnotatedString {
         append(normalText)
 
-        // Conditional styling with alpha
         val resendColor = newBlue.copy(alpha = if (isTimerFinished) 1f else 0.5f)
         val underline = if (isTimerFinished) TextDecoration.Underline else TextDecoration.None
 
@@ -1370,14 +1276,13 @@ fun verifyOtp(
         pop()
     }
 
-
     Row (modifier){
         ClickableText(
             text = annotatedString,
             modifier = modifier,
             onClick = { offset ->
                 if (isResend_Loading.value){
-                    /// click disabled while loading
+
                 }
                 else {
                     if (isTimerFinished) {
@@ -1399,87 +1304,11 @@ fun verifyOtp(
     }
 }
 
-
-/*@Composable
-fun OTP_TF()
-{
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-    val focusRequester = remember { FocusRequester() }
-
-    BasicTextField(value = Utils.signUp_LoginVM.otpValue.value,
-        onValueChange = {
-            if (it.length <= 4) {
-                Utils.signUp_LoginVM.otpFail.value = false
-                Utils.signUp_LoginVM.otpValue.value = it
-            }
-            else it.take(4) },
-        modifier = Modifier.focusRequester(focusRequester),
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done  // Prevents jumping to the next field
-        ),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                focusRequester.freeFocus()
-                focusManager.clearFocus()
-                keyboardController?.hide()
-            }
-        ),
-        decorationBox = {
-            Row(modifier = Modifier
-                .fillMaxWidth(if(Utils.isTabDevice(Utils.activity)) 0.85f else 1f),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically)
-            {
-                repeat(4) {
-                        index->
-                    val char = when{
-                        index >= Utils.signUp_LoginVM.otpValue.value.length->""
-                        else -> Utils.signUp_LoginVM.otpValue.value[index].toString()
-                    }
-                    var isFocused = Utils.signUp_LoginVM.otpValue.value.length == index
-
-                    Box(
-                        contentAlignment = Alignment.Center, // Center content within the box
-                        modifier = Modifier
-                            .size(if(Utils.isTabDevice(Utils.activity)) 75.dp else 60.dp)
-                            .background(if (Utils.signUp_LoginVM.otpFail.value) LightRedMatOver else Color.White ,
-                                shape = RoundedCornerShape(8.dp))
-                            .border(
-                                width = if (isFocused) 2.dp else 1.dp,
-                                color = if (Utils.signUp_LoginVM.otpFail.value) Color(
-                                    0xFFFF5858
-                                ) else {
-                                    if (isFocused) RedMat else Color.LightGray
-                                },
-                                shape = RoundedCornerShape(8.dp)
-                            )
-
-                    )
-                    {
-                        Text(
-                            text = char,
-                            color = Color.Black,
-                            textAlign = TextAlign.Center,
-                            fontFamily = FontFamily(Font(R.font.robotoreg))
-                        )
-                    }
-                }
-            }
-        },
-        textStyle = TextStyle(color = Color.Black,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily(Font(R.font.robotoreg)),
-            fontSize = if(Utils.isTabDevice(Utils.activity)) 20.ScaledSp else 16.ScaledSp)
-    )
-}*/
-
 @Composable
 fun OtpTextField(
     otp: String,
     onOtpChange: (String) -> Unit,
-    isError: Boolean, // pass Utils.signUp_LoginVM.otpFail.value here
+    isError: Boolean,
     modifier: Modifier = Modifier
 ) {
     val focusRequesters = List(4) { remember { FocusRequester() } }
@@ -1501,7 +1330,6 @@ fun OtpTextField(
                         }
                         onOtpChange(newOtp)
 
-                        // move focus automatically
                         if (value.isNotEmpty() && index < 3) {
                             focusRequesters[index + 1].requestFocus()
                         }
@@ -1522,7 +1350,7 @@ fun OtpTextField(
                 singleLine = true,
                 textStyle = LocalTextStyle.current.copy(
                     textAlign = TextAlign.Center,
-//                    fontSize = if (Utils.isTabDevice(Utils.activity)) 20.ScaledSp else 16.ScaledSp,
+
                     fontWeight = FontWeight.Bold
                 ),
                 keyboardOptions = KeyboardOptions(
@@ -1534,7 +1362,7 @@ fun OtpTextField(
                     unfocusedTextColor = Color.Black,
                     disabledTextColor = Color.Black,
                     errorTextColor = Color.Black,
-                    // ✅ border logic same as your old code
+
                     focusedIndicatorColor = if (isError) Color(0xFFFF5858) else Color.Red,
                     unfocusedIndicatorColor = if (isError) Color(0xFFFF5858) else Color.LightGray,
                     disabledIndicatorColor = Color.LightGray,
@@ -1553,7 +1381,7 @@ fun OtpTextField(
 fun OTP_TF(
     otp: String,
     onOtpChange: (String) -> Unit,
-    isError: Boolean, // pass Utils.signUp_LoginVM.otpFail.value here
+    isError: Boolean,
     modifier: Modifier = Modifier
 )
 {
@@ -1565,14 +1393,13 @@ fun OTP_TF(
         onValueChange = {
             if (it.length <= 4) {
                 onOtpChange(it)
-                //Utils.signUp_LoginVM.otpFail.value = false
-               // Utils.signUp_LoginVM.otpValue.value = it
+
             }
             else it.take(4) },
         modifier = modifier.focusRequester(focusRequester),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done  // Prevents jumping to the next field
+            imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(
             onDone = {
@@ -1596,7 +1423,7 @@ fun OTP_TF(
                     var isFocused = otp.length == index
 
                     Box(
-                        contentAlignment = Alignment.Center, // Center content within the box
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .size(60.dp)
                             .background(
@@ -1618,7 +1445,7 @@ fun OTP_TF(
                             text = char,
                             color = Color.Black,
                             textAlign = TextAlign.Center,
-//                            fontFamily = FontFamily(Font(R.font.robotoreg))
+
                         )
                     }
                 }
@@ -1626,18 +1453,14 @@ fun OTP_TF(
         },
         textStyle = TextStyle(color = Color.Black,
             fontWeight = FontWeight.Bold,))
-//            fontFamily = FontFamily(Font(R.font.robotoreg)),
-//            fontSize = if(Utils.isTabDevice(Utils.activity)) 20.ScaledSp else 16.ScaledSp)
-//    )
+
 }
-
-
 
 @Composable
 fun OTP_TF_6(
     otp: String,
     onOtpChange: (String) -> Unit,
-    isError: State<Boolean>, // pass Utils.signUp_LoginVM.otpFail.value here
+    isError: State<Boolean>,
     modifier: Modifier = Modifier
 )
 {
@@ -1654,7 +1477,7 @@ fun OTP_TF_6(
         modifier = modifier.focusRequester(focusRequester),
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done  // Prevents jumping to the next field
+            imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(
             onDone = {
@@ -1678,22 +1501,13 @@ fun OTP_TF_6(
                     var isFocused = otp.length == index
 
                     Box(
-                        contentAlignment = Alignment.Center, // Center content within the box
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .size(40.dp)
                             .background(
                                 Color.White,
                                 shape = RoundedCornerShape(8.dp)
                             )
-//                            .border(
-//                                width = if (isFocused) 2.dp else 1.dp,
-//                                if (isError) {
-//                                    Color.Red
-//                                } else {
-//                                    if (isFocused) newBlue else if (char.isNotEmpty()) newBlue else Color.LightGray
-//                                }
-//                                , shape = RoundedCornerShape(8.dp)
-//                            )
 
                     )
                     {
@@ -1720,13 +1534,8 @@ fun OTP_TF_6(
         },
         textStyle = TextStyle(color = Color.Black,
             fontWeight = FontWeight.Bold,))
-//            fontFamily = FontFamily(Font(R.font.robotoreg)),
-//            fontSize = if(Utils.isTabDevice(Utils.activity)) 20.ScaledSp else 16.ScaledSp)
-//    )
+
 }
-
-
-
 
 @Composable
 fun OtpTextField1(
@@ -1737,7 +1546,7 @@ fun OtpTextField1(
     val focusRequesters = List(4) { remember { FocusRequester() } }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val newBlue = Color(0xFF007BFF) // Replace with your actual color
+    val newBlue = Color(0xFF007BFF)
     val lightGray = Color(0xFFCCCCCC)
 
     Row(
@@ -1778,7 +1587,7 @@ fun OtpTextField1(
                 singleLine = true,
                 textStyle = LocalTextStyle.current.copy(
                     textAlign = TextAlign.Center,
-//                    fontSize = 24.sp
+
                 ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
@@ -1799,13 +1608,11 @@ fun OtpTextField1(
     }
 }
 
-
 class CountdownTimerState(
     val time: State<String>,
     val isFinished: State<Boolean>,
     val restart: () -> Unit
 )
-
 
 @Composable
 fun rememberCountdownTimer(startSeconds: Int = 180): CountdownTimerState {
@@ -1813,14 +1620,12 @@ fun rememberCountdownTimer(startSeconds: Int = 180): CountdownTimerState {
     var triggerRestart by remember { mutableStateOf(0) }
     var finished by remember { mutableStateOf(false) }
 
-    // Restart function
     val restart: () -> Unit = {
         timeLeft = startSeconds
         finished = false
-        triggerRestart++ // retriggers LaunchedEffect
+        triggerRestart++
     }
 
-    // Timer logic
     LaunchedEffect(triggerRestart) {
         while (timeLeft > 0) {
             delay(1000L)
@@ -1840,7 +1645,6 @@ fun rememberCountdownTimer(startSeconds: Int = 180): CountdownTimerState {
     )
 }
 
-
 fun compressImageToUnder1MB1(context: Context, uri: Uri): File? {
     try {
         val inputStream = context.contentResolver.openInputStream(uri) ?: return null
@@ -1859,13 +1663,12 @@ fun compressImageToUnder1MB1(context: Context, uri: Uri): File? {
 
             val byteArray = outputStream.toByteArray()
             if (byteArray.size / 1024 / 1024 <= 1) {
-                // Save to file
+
                 outputFile.outputStream().use { it.write(byteArray) }
                 compressedFile = outputFile
                 break
             }
 
-            // reduce quality step by step
             quality -= 5
         } while (quality > 10)
 
@@ -1898,17 +1701,15 @@ fun compressImageToUnder1MB(context: Context, uri: Uri): File? {
                 return outputFile
             }
 
-            // reduce quality until ~50, then start downscaling
             if (quality > 50) {
                 quality -= 10
             } else {
-                // downscale the bitmap by half
+
                 val newWidth = (currentBitmap.width * 0.7).toInt()
                 val newHeight = (currentBitmap.height * 0.7).toInt()
                 currentBitmap = Bitmap.createScaledBitmap(currentBitmap, newWidth, newHeight, true)
             }
 
-            // fail-safe to avoid infinite loop
             if (currentBitmap.width < 200 || currentBitmap.height < 200) {
                 return null
             }
@@ -1918,161 +1719,6 @@ fun compressImageToUnder1MB(context: Context, uri: Uri): File? {
         null
     } as File?
 }
-
-
-
-/*fun handleSelectedImages(
-    context: Context,
-    uris: List<Uri>,
-    snackbarHostState: SnackbarHostState,
-    scope: CoroutineScope
-) {
-    val currentList = constants.PostProperty_ViewModel.mediaList.value
-
-    if (currentList.count { !it.isVideo } + uris.size > 10) {
-        scope.launch { snackbarHostState.showSnackbar("Maximum 10 images allowed") }
-        return
-    }
-
-    val updated = mutableListOf<UploadPropertyMedia>()
-
-    for (uri in uris) {
-        var finalUri = uri
-        val sizeMB = getFileSizeInMB(context, uri)
-
-        if (sizeMB > 1) {
-            val compressedFile = compressImageToUnder1MB(context, uri)
-            if (compressedFile == null || compressedFile.length() > 1 * 1024 * 1024) {
-                scope.launch { snackbarHostState.showSnackbar("Image could not be compressed under 1MB") }
-                return
-            } else {
-                finalUri = Uri.fromFile(compressedFile)
-            }
-        }
-
-        updated.add(
-            UploadPropertyMedia(
-                id = UUID.randomUUID().toString(),
-                uri = finalUri,
-                isVideo = false
-            )
-        )
-    }
-
-    val totalSizeMB = updated.sumOf { getFileSizeInMB(context, it.uri) }
-    if (totalSizeMB > 10) {
-        scope.launch { snackbarHostState.showSnackbar("Total image size exceeds 10MB") }
-        return
-    }
-
-    constants.PostProperty_ViewModel.addImages(updated)
-}
-
-
-
-fun handleSelectedImagesold(
-    context: Context,
-    uris: List<Uri>,
-    snackbarHostState: SnackbarHostState,
-    scope: CoroutineScope
-) {
-    val currentList = constants.PostProperty_ViewModel.mediaList.value
-    val totalCount = currentList.size + uris.size
-
-    if (totalCount > 10) {
-        scope.launch {
-            snackbarHostState.showSnackbar("Maximum 10 images allowed")
-        }
-        return
-    }
-
-    val updated = mutableListOf<UploadPropertyMedia>()
-
-    for (uri in uris) {
-        var finalUri = uri
-        val sizeMB = getFileSizeInMB(context, uri)
-
-        if (sizeMB > 1) {
-            val compressedFile = compressImageToUnder1MB(context, uri)
-            if (compressedFile == null || compressedFile.length() > 1 * 1024 * 1024) {
-                scope.launch {
-                    snackbarHostState.showSnackbar("Image could not be compressed under 1MB")
-                }
-                return
-            } else {
-                finalUri = Uri.fromFile(compressedFile)
-            }
-        }
-
-        updated.add(UploadPropertyMedia(uri = finalUri, isVideo = false))
-    }
-
-    // ✅ Total size check for the new selection
-    val totalSizeMB = updated.sumOf {
-        getFileSizeInMB(context, it.uri)
-    }
-    if (totalSizeMB > 10) {
-        scope.launch {
-            snackbarHostState.showSnackbar("Total image size exceeds 10MB")
-        }
-        return
-    }
-
-    // ✅ Add only if total remains <= 10
-    if (currentList.size + updated.size <= 10) {
-        constants.PostProperty_ViewModel.addImages(updated)
-    } else {
-        scope.launch {
-            snackbarHostState.showSnackbar("Maximum 10 images allowed")
-        }
-    }
-}
-
-
-fun handleSelectedVideo(
-    context: Context,
-    uri: Uri,
-    snackbarHostState: SnackbarHostState,
-    scope: CoroutineScope
-) {
-    val videoCount = constants.PostProperty_ViewModel.mediaList.value.count { it.isVideo }
-
-    if (videoCount >= 5) {
-        scope.launch { snackbarHostState.showSnackbar("Maximum 5 videos allowed") }
-        return
-    }
-
-    val sizeMB = getFileSizeInMB(context, uri)
-    if (sizeMB > 25) {
-        scope.launch { snackbarHostState.showSnackbar("Video exceeds 25MB") }
-        return
-    }
-
-    val videoMedia = UploadPropertyMedia(
-        id = UUID.randomUUID().toString(),
-        uri = uri,
-        isVideo = true
-    )
-    constants.PostProperty_ViewModel.addVideo(videoMedia)
-}
-
-
-fun handleSelectedVideoold(
-    context: Context,
-    uri: Uri,
-    snackbarHostState: SnackbarHostState,
-    scope: CoroutineScope
-) {
-    val sizeMB = getFileSizeInMB(context, uri)
-    if (sizeMB > 25) {
-        scope.launch {
-            snackbarHostState.showSnackbar("Video exceeds 25MB")
-        }
-    } else {
-        val videoMedia = UploadPropertyMedia(uri = uri, isVideo = true)
-        constants.PostProperty_ViewModel.addVideo(videoMedia)
-    }
-}*/
 
 fun getVideoThumbnail(context: Context, uri: Uri): Bitmap? {
     val retriever = MediaMetadataRetriever()
@@ -2087,14 +1733,12 @@ fun getVideoThumbnail(context: Context, uri: Uri): Bitmap? {
     }
 }
 
-
 suspend fun getVideoThumbnailFP(
     context: Context,
     videoUrl: String,
     headers: Map<String, String>? = null
 ): Bitmap? = withContext(Dispatchers.IO) {
 
-    // -------- TRY MediaMetadataRetriever first ----------
     try {
         val retriever = MediaMetadataRetriever()
 
@@ -2114,12 +1758,11 @@ suspend fun getVideoThumbnailFP(
         e.printStackTrace()
     }
 
-    // -------- FALLBACK Glide for .MOV / CloudFront --------
     return@withContext try {
         Glide.with(context)
             .asBitmap()
             .load(videoUrl)
-            .frame(1_000_000L)  // 1 second
+            .frame(1_000_000L)
             .submit()
             .get()
     } catch (e: Exception) {
@@ -2127,8 +1770,6 @@ suspend fun getVideoThumbnailFP(
         null
     }
 }
-
-////
 
 private fun generateVideoThumbnail(
     context: Context,
@@ -2160,22 +1801,16 @@ private fun bitmapToTempUri(
     return file.toUri()
 }
 
-
 suspend fun generateAndUploadVideoThumbnail(
     context: Context,
     videoUrl: String
 ): String = withContext(Dispatchers.IO) {
 
-    // 1️⃣ Generate bitmap
     val bitmap = generateVideoThumbnail(context, videoUrl)
         ?: return@withContext ""
 
-    // 2️⃣ Convert bitmap to Uri
     val thumbnailUri = bitmapToTempUri(context, bitmap)
 
-
-
-    // 3️⃣ Upload to S3
     val s3Uploader = S3Uploader(
         bucket = constants.BUCKET_NAME,
         cloudFront = constants.CLOUD_FRONT_URL,
@@ -2192,16 +1827,14 @@ suspend fun generateAndUploadVideoThumbnail(
         onProgress = {}
     )
 
-    // 4️⃣ Return uploaded URL
     uploadResult.url
 }
-
 
 fun getVideoThumbnailString(context: Context, videoUrl: String): Bitmap? {
     val retriever = MediaMetadataRetriever()
 
     return try {
-        val uri = Uri.parse(videoUrl) // Convert String to Uri
+        val uri = Uri.parse(videoUrl)
         retriever.setDataSource(context, uri)
         retriever.getFrameAtTime(1_000_000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC)
     } catch (e: Exception) {
@@ -2239,9 +1872,6 @@ fun getVideoThumbnailBase64(context: Context, videoUrl: String): String? {
     }
 }
 
-
-
-
 fun getFileSizeInMB(context: Context, uri: Uri): Double {
     val fileDescriptor = context.contentResolver.openFileDescriptor(uri, "r") ?: return 0.0
     val size = fileDescriptor.statSize
@@ -2262,31 +1892,17 @@ fun getVideoThumbnailold(context: Context, uri: Uri): Bitmap? {
     }
 }
 
-
-
-
 @Composable
 fun Backer(modifier: Modifier, onBackClick: () -> Unit){
-//    Box(
-//        modifier = modifier//.padding(top = notchPadding.value)
-//            .size(24.dp)
-//            .clip(RoundedCornerShape(4.dp))
-//            .border(1.dp, newGray, RoundedCornerShape(4.dp))
-//            .background(Color.White)
-//            .noRippleClickable {
-//                onBackClick()
-//            }
-//            , contentAlignment = Alignment.Center
-//    ) {
+
         Icon(painter = painterResource(R.drawable.left_arrow), "",
-            modifier = modifier//.padding(top = notchPadding.value)
+            modifier = modifier
                 .size(24.dp)
                 .noRippleClickable {
                     onBackClick()
                 })
-//    }
-}
 
+}
 
 @Composable
 fun Static_Bottom(modifier: Modifier , content: @Composable () -> Unit){
@@ -2299,7 +1915,6 @@ fun Static_Bottom(modifier: Modifier , content: @Composable () -> Unit){
 
         content()
 
-        // Add a top shadow as a gradient
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -2310,10 +1925,8 @@ fun Static_Bottom(modifier: Modifier , content: @Composable () -> Unit){
     }
 }
 
-
 @Composable
 fun LottiAnimation(isWhichAnimation : Int){
-
 
     val loadAnimation =  when (isWhichAnimation){
         0 -> R.raw.nodatafound
@@ -2330,11 +1943,10 @@ fun LottiAnimation(isWhichAnimation : Int){
 
     var visible by remember { mutableStateOf(true) }
 
-    // Toggle visibility in a loop
     LaunchedEffect(Unit) {
         while (true) {
             visible = !visible
-            delay(800) // Change speed as needed
+            delay(800)
         }
     }
 
@@ -2455,8 +2067,6 @@ fun <T> LazyListScope.gridItems(
     }
 }
 
-
-
 @Composable
 fun LocationButton(
     context: Context,
@@ -2488,7 +2098,6 @@ fun LocationButton(
             Toast.makeText(context, "Location permission denied", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     val is_Loadind = constants.Common_H_ViewModel.status.collectAsState()
 
@@ -2558,7 +2167,6 @@ fun LocationButton(
     }
 }
 
-
 @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
 fun getCurrentLocationold(
     fusedLocationClient: FusedLocationProviderClient,
@@ -2572,11 +2180,9 @@ fun getCurrentLocationold(
             val latitude = location.latitude
             val longitude = location.longitude
 
-
             constants.Start_Up_ViewModel.set_Latitude(latitude)
             constants.Start_Up_ViewModel.set_Longitude(longitude)
 
-            // Reverse geocoding
             val addresses = geocoder.getFromLocation(latitude, longitude, 1)
             if (!addresses.isNullOrEmpty()) {
                 val address = addresses[0]
@@ -2586,22 +2192,17 @@ fun getCurrentLocationold(
                 val pincode = address.postalCode ?: "Unknown"
                 val country = address.countryName ?: "unknown"
 
-                // You can now use these values
                 Log.d("LocationInfo", "City: $city, State: $state, Pincode: $pincode")
 
-                // Example: Save to ViewModel or show Toast
                 Toast.makeText(context, "$city, $state, $pincode", Toast.LENGTH_LONG).show()
 
-                // Optional: Save in variables or global state
                 constants.Start_Up_ViewModel.updateSelectedState(state)
                 constants.Start_Up_ViewModel.updateSelectedCity(city)
-                //constants.Start_Up_ViewModel.pincode =
 
                 constants.Start_Up_ViewModel.set_Country(country )
                 constants.Start_Up_ViewModel.set_State(state)
                 constants.Start_Up_ViewModel.set_City(city)
                 constants.Start_Up_ViewModel.set_Pincode(pincode)
-
 
                 if (isConnected.value) {
                     if (constants.Start_Up_ViewModel.country.value.isNotEmpty()
@@ -2615,19 +2216,19 @@ fun getCurrentLocationold(
                             resultCallback = { result ->
                                 when (result) {
                                     0 -> {
-                                        //sucess
+
                                         AppPreferences.save_Location_Received(1)
                                         toast("LOCATION STORED SUCCESSFULLY")
                                         navController.navigate(UserCredentialsScreenFlow.Common_Screen.route)
                                     }
 
                                     1 -> {
-                                        //fail
+
                                         toast("Something went wrong while storing location")
                                     }
 
                                     2 -> {
-                                        //loading
+
                                         constants.Common_H_ViewModel.changeStatus(true)
                                     }
                                 }
@@ -2635,7 +2236,6 @@ fun getCurrentLocationold(
                         )
                     }
                 }
-
 
             }
         }
@@ -2650,7 +2250,6 @@ fun getCurrentLocationold(
         Toast.makeText(context, "Failed to get location", Toast.LENGTH_SHORT).show()
     }
 }
-
 
 @SuppressLint("MissingPermission")
 fun getCurrentLocation(
@@ -2691,9 +2290,6 @@ fun getCurrentLocation(
                    constants.Start_Up_ViewModel.set_City(city)
                    constants.Start_Up_ViewModel.set_Pincode(pincode)
 
-                   // Proceed with API call if connected
-
-//                   if (!constants.Start_Up_ViewModel.getCurrrentLocation_View.value) {
                        if (isConnected.value &&
                            listOf(
                                constants.Start_Up_ViewModel.country.value,
@@ -2720,11 +2316,11 @@ fun getCurrentLocation(
                                }
                            }
                        }
-//                   }
+
                }
            }
             else {
-               //Toast.makeText(context, "Unable to get location. Please ensure GPS is on.", Toast.LENGTH_SHORT).show()
+
                AppPreferences.save_Location_Received(0)
                constants.Start_Up_ViewModel.setLocationDenied(false)
            }
@@ -2744,8 +2340,6 @@ fun getCurrentLocation(
                 constants.Start_Up_ViewModel.set_State(state)
                 constants.Start_Up_ViewModel.set_City(city)
                 constants.Start_Up_ViewModel.set_Pincode(pincode)
-
-                // Proceed with API call if connected
 
                 if (!constants.Start_Up_ViewModel.getCurrrentLocation_View.value) {
                     if (isConnected.value &&
@@ -2785,7 +2379,6 @@ fun getCurrentLocation(
     }
 }
 
-
 @Composable
 fun CheckLocationPermissionOnResume(
     context: Context,
@@ -2796,7 +2389,7 @@ fun CheckLocationPermissionOnResume(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                // Check again when returning from Settings
+
                 if (isLocationPermissionGranted(context)) {
                     location_Settings.value = false
                 }
@@ -2823,12 +2416,6 @@ fun isLocationPermissionGranted(context: Context): Boolean {
     return fineLocation || coarseLocation
 }
 
-
-
-
-
-
-
 @Composable
 fun GetCurrentLocationButton(
     context: Context,
@@ -2836,9 +2423,7 @@ fun GetCurrentLocationButton(
     no_Click_SaveLocation: MutableState<Boolean>
 ) {
 
-
     val network = rememberNetworkStatus()
-
 
     val view = constants.Start_Up_ViewModel.getCurrrentLocation_View.collectAsState()
 
@@ -2854,7 +2439,6 @@ fun GetCurrentLocationButton(
 
         if (granted) {
             checkGpsAndProceed(context, fusedLocationClient, navController, onGpsDisabled = {
-                println("VIEWW 11__ ${view.value}")
                 if (!view.value) {
                     constants.Start_Up_ViewModel.setShowGpsDialog(true)
                 }
@@ -2891,7 +2475,6 @@ fun GetCurrentLocationButton(
                                 fusedLocationClient,
                                 navController,
                                 onGpsDisabled = {
-                                    println("VIEWW 11__ ${view.value}")
                                     if (!view.value) {
                                         constants.Start_Up_ViewModel.setShowGpsDialog(true)
                                     } else {
@@ -2936,7 +2519,6 @@ fun GetCurrentLocationButton(
     }
 }
 
-
 private fun checkGpsAndProceed(
     context: Context,
     fusedLocationClient: FusedLocationProviderClient,
@@ -2949,16 +2531,13 @@ private fun checkGpsAndProceed(
     val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 
     if (isGpsEnabled || isNetworkEnabled) {
-        // ✅ Both permission and GPS OK
+
         getCurrentLocation(fusedLocationClient, context, navController, 0 ,no_Click_SaveLocation)
     } else {
-        // ⚠️ GPS disabled
+
         onGpsDisabled()
     }
 }
-
-
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun getDaysInMonth(yearMonth: YearMonth): List<LocalDate> {
@@ -2967,27 +2546,22 @@ fun getDaysInMonth(yearMonth: YearMonth): List<LocalDate> {
 
     val days = mutableListOf<LocalDate>()
 
-    // Fill from previous month to align start day
     val startDayOfWeek = firstDay.dayOfWeek.value % 7
     val prevMonthDays = (1..startDayOfWeek).map {
         firstDay.minusDays(it.toLong())
     }.reversed()
     days.addAll(prevMonthDays)
 
-    // Current month
     days.addAll((1..yearMonth.lengthOfMonth()).map { day ->
         yearMonth.atDay(day)
     })
 
-    // Fill remaining to make full weeks
     while (days.size % 7 != 0) {
         days.add(days.last().plusDays(1))
     }
 
     return days
 }
-
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -3001,7 +2575,7 @@ fun RangeCalendar(
     val days = getDaysInMonth(month)
 
     Column(modifier.padding(all = 16.dp)) {
-        // Week headers
+
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat").forEach {
                 Text(
@@ -3014,7 +2588,6 @@ fun RangeCalendar(
             }
         }
 
-        // Calendar days
         days.chunked(7).forEach { week ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 week.forEach { date ->
@@ -3056,24 +2629,20 @@ fun RangeCalendar(
     }
 }
 
-
-
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarExampleold(
     modifier: Modifier = Modifier,
-    isRangeSelectionEnabled: Boolean = true, // 👈 new flag
+    isRangeSelectionEnabled: Boolean = true,
     onDateSelected: (LocalDate?) -> Unit = {},
-    initialStartDate: LocalDate? = null, // 👈 Add these parameters
-    initialEndDate: LocalDate? = null,    // 👈
+    initialStartDate: LocalDate? = null,
+    initialEndDate: LocalDate? = null,
     onDateRangeSelected: (LocalDate?, LocalDate?) -> Unit = { _, _ -> }
 ) {
     var currentMonth by remember { mutableStateOf(YearMonth.now()) }
-    var startDate by remember { mutableStateOf(initialStartDate) } // 👈 Initialize from parameter
-    var endDate by remember { mutableStateOf(initialEndDate) }     // 👈
+    var startDate by remember { mutableStateOf(initialStartDate) }
+    var endDate by remember { mutableStateOf(initialEndDate) }
 
-    // 👇 Notify parent whenever dates change
     var hasInitialized by remember { mutableStateOf(false) }
 
     LaunchedEffect(startDate, endDate) {
@@ -3088,7 +2657,6 @@ fun CalendarExampleold(
         }
     }
 
-
     Box(
         modifier = modifier
             .fillMaxWidth(0.9f)
@@ -3098,7 +2666,7 @@ fun CalendarExampleold(
         contentAlignment = Alignment.TopCenter
     ) {
         Column {
-            // 🔹 Month header
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -3136,7 +2704,6 @@ fun CalendarExampleold(
                 modifier = Modifier.padding(vertical = 4.dp)
             )
 
-            // 🔹 Calendar grid
             RangeCalendar(
                 modifier = Modifier.fillMaxWidth(),
                 month = currentMonth,
@@ -3144,7 +2711,6 @@ fun CalendarExampleold(
                 selectedEndDate = endDate,
                 onDayClick = { date ->
 
-                    // 🚫 Prevent selecting future dates
                     if (date.isAfter(LocalDate.now())) {
                         toast("you can't select future dates")
                         return@RangeCalendar
@@ -3152,35 +2718,35 @@ fun CalendarExampleold(
 
                     when {
                         startDate == null -> {
-                            // 🟢 First tap — user starts selection
+
                             startDate = date
                             endDate = null
-                            // Considered "single" for now (user may stop here)
+
                             onDateSelected(date)
                         }
 
                         endDate == null -> {
                             if (date == startDate) {
-                                // 🔵 Same date tapped again — treat as single confirm
+
                                 onDateSelected(startDate)
                             } else {
-                                // 🔴 Second date tapped — switch to range mode
+
                                 if (date.isBefore(startDate)) {
                                     endDate = startDate
                                     startDate = date
                                 } else {
                                     endDate = date
                                 }
-                                // ✅ User finished range selection
+
                                 onDateRangeSelected(startDate, endDate)
                             }
                         }
 
                         else -> {
-                            // 🟡 Third tap — reset selection
+
                             startDate = date
                             endDate = null
-                            // New single selection starts again
+
                             onDateSelected(date)
                         }
                     }
@@ -3207,7 +2773,6 @@ fun CalendarExample(
 
     var hasInitialized by remember { mutableStateOf(false) }
 
-    // Get reference to your ViewModel (assuming it’s globally accessible)
     val enquiryVm = constants.Enquiry_ViewModel
 
     LaunchedEffect(startDate, endDate) {
@@ -3257,7 +2822,6 @@ fun CalendarExample(
                 ,1
             )
 
-
                 Text(
                     "${formatToShortMonthDay(constants.Enquiry_ViewModel.Selected_Dates_List.firstOrNull()?.start_Date.toString())} ${ if (constants.Enquiry_ViewModel.Selected_Dates_List.firstOrNull()?.end_Date != null ) "-" else "" } ${formatToShortMonthDay(constants.Enquiry_ViewModel.Selected_Dates_List.firstOrNull()?.end_Date.toString())}",
                     color = Color(0xff666666),
@@ -3280,7 +2844,7 @@ fun CalendarExample(
         )
         {
             Column {
-                // 🔹 Month header
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -3320,7 +2884,6 @@ fun CalendarExample(
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
 
-                // 🔹 Calendar grid
                 RangeCalendar(
                     modifier = Modifier.fillMaxWidth(),
                     month = currentMonth,
@@ -3328,7 +2891,6 @@ fun CalendarExample(
                     selectedEndDate = endDate,
                     onDayClick = { date ->
 
-                        // 🚫 Prevent selecting future dates
                         if (date.isAfter(LocalDate.now())) {
                             toast("You can't select future dates")
                             return@RangeCalendar
@@ -3336,11 +2898,10 @@ fun CalendarExample(
 
                         when {
                             startDate == null -> {
-                                // 🟢 First tap
+
                                 startDate = date
                                 endDate = null
 
-                                // Update ViewModel for single-day selection
                                 enquiryVm.Selected_Dates_List.clear()
                                 enquiryVm.Selected_Dates_List.add(
                                     Selected_Dates_Calender(
@@ -3356,10 +2917,10 @@ fun CalendarExample(
 
                             endDate == null -> {
                                 if (date == startDate) {
-                                    // Same date tapped twice → single-day confirm
+
                                     onDateSelected(startDate)
                                 } else {
-                                    // Second tap → complete range
+
                                     if (date.isBefore(startDate)) {
                                         endDate = startDate
                                         startDate = date
@@ -3367,7 +2928,6 @@ fun CalendarExample(
                                         endDate = date
                                     }
 
-                                    // ✅ Update ViewModel with proper range
                                     enquiryVm.Selected_Dates_List.clear()
                                     enquiryVm.Selected_Dates_List.add(
                                         Selected_Dates_Calender(
@@ -3383,7 +2943,7 @@ fun CalendarExample(
                             }
 
                             else -> {
-                                // Third tap → reset selection
+
                                 startDate = date
                                 endDate = null
 
@@ -3407,8 +2967,6 @@ fun CalendarExample(
     }
 }
 
-
-
 @Composable
 fun Common_DropDown2Options(
     expanded : MutableState<Boolean>
@@ -3424,27 +2982,16 @@ fun Common_DropDown2Options(
             .background(Color.Transparent)
     )
     {
-        // Trigger icon
-//        Box(
-//            modifier = Modifier
-//                .size(32.dp)
-//            , contentAlignment = Alignment.Center
-//        ) {
+
             AsyncImage(
                 model = mainIcon,
                 contentDescription = "",
                 modifier = modifier
-                    //.align(Alignment.Center)
-                    //.size(18.dp)
-                    .noRippleClickable{ expanded.value = true },
-//                colorFilter = ColorFilter.tint(
-//                    newBlack
-//                   // Color(0xff484848)
-//                )
-            )
-//        }
 
-        // Dropdown menu
+                    .noRippleClickable{ expanded.value = true },
+
+            )
+
         DropdownMenu(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false },
@@ -3478,39 +3025,14 @@ fun Common_DropDown2Options(
                                 onClick2()
                             }
                         }
-                        // Handle "Undo Decline"
+
                     }
                 )
             }
 
-//            DropdownMenuItem(
-//                text = {
-//                    Row(verticalAlignment = Alignment.CenterVertically) {
-//                        SubcomposeAsyncImage(
-//                            model = content.icon,
-//                            contentDescription = "",
-//                            modifier = Modifier.size(16.dp),
-//                            colorFilter = ColorFilter.tint(newBlack)
-//                        )
-//                        Spacer(modifier = Modifier.width(8.dp))
-//                        Text(content.title
-//                            ,color = newBlack,
-//                            fontSize = constants.textUnit(14),
-//                            fontFamily = constants.fontFamily(2)
-//                        )
-//                    }
-//                },
-//                onClick = {
-//                    expanded.value = false
-//                    onClick2()
-//                    // Handle "Delete"
-//                }
-//            )
         }
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -3522,32 +3044,17 @@ fun FullScreenReels(
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     if (reels_Show.value) {
-//        ModalBottomSheet(
-//            onDismissRequest = { reels_Show.value = false },
-//            sheetState = sheetState,
-//            shape = RectangleShape,
-//            dragHandle = null, // 🚫 removes the drag handle
-//            sheetGesturesEnabled = false,
-//            modifier = Modifier
-//                .fillMaxSize(), // make the sheet fill screen
-//            //windowInsets = WindowInsets(0) // remove default padding
-//        ) {
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black)
             ) {
-//                SingleVideoPlayerEnquiry(
-//                    video = content,
-//                    modifier = Modifier.fillMaxSize(),
-//                    reels_Show = reels_Show,
-//                    navController = navController
-//                )
+
             }
-//        }
+
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -3556,12 +3063,11 @@ fun Enquiry_Message_Structure(
     index: Int,
     reels_Show: MutableState<Boolean>,
     navController: NavHostController,
-    onDeleteClick: (Get_My_Leads_Data?) -> Unit, // 👈 pass callback,
+    onDeleteClick: (Get_My_Leads_Data?) -> Unit,
     from_where: Int,
     keyboardController: SoftwareKeyboardController?,
     focusManager1: FocusManager
 ) {
-
 
     var viewMore by remember { mutableStateOf(false) }
 
@@ -3578,7 +3084,7 @@ fun Enquiry_Message_Structure(
             .border(1.dp, newGray, RoundedCornerShape(16.dp))
     )
     {
-        // Top List Item
+
         ListItem(
             headlineContent = {
                 if (from_where == 0) {
@@ -3586,7 +3092,7 @@ fun Enquiry_Message_Structure(
                         modifier = Modifier
                             .fillMaxWidth()
                         , verticalAlignment = Alignment.CenterVertically
-//                        , horizontalArrangement = Arrangement.SpaceBetween
+
                     ) {
                         Text(
                             if (isWhich == 3) content[index]?.post_user?.username?:"username" else  content[index]?.enquiry_details?.enquiry_by_username ?: "username",
@@ -3607,7 +3113,7 @@ fun Enquiry_Message_Structure(
                         modifier = Modifier
                             .fillMaxWidth()
                         , verticalAlignment = Alignment.CenterVertically
-//                        , horizontalArrangement = Arrangement.SpaceBetween
+
                     ) {
                         Text((content[index]?.post_user?.name?.ifEmpty { content[index]?.post_user?.username }
                             ?: "").ifEmpty { content[index]?.post_user?.name ?: "" },
@@ -3615,10 +3121,8 @@ fun Enquiry_Message_Structure(
                             fontFamily = constants.fontFamily(0),
                             color = Color.Black)
 
-
                     }
                 }
-
 
             },
             leadingContent = {
@@ -3628,7 +3132,7 @@ fun Enquiry_Message_Structure(
                         .clip(CircleShape)
                         .background(newBlue)
                 ) {
-                    // Optional: Load image using profile_Pic
+
                     SubcomposeAsyncImage(
                         model =  if (from_where == 0) content[index]?.enquiry_details?.enquiry_by_profile_image ?: "" else content[index]?.post_user?.profile_image ?: "",
                         modifier = Modifier
@@ -3643,7 +3147,7 @@ fun Enquiry_Message_Structure(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ){
                                 Text(
@@ -3652,9 +3156,7 @@ fun Enquiry_Message_Structure(
                                     fontFamily = constants.fontFamily(1),
                                     color = Color.Black
                                 )
-//                            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                                contentDescription = "",modifier = Modifier
-//                                    .matchParentSize())
+
                             }
                         } else {
                             SubcomposeAsyncImageContent()
@@ -3664,23 +3166,12 @@ fun Enquiry_Message_Structure(
             },
             supportingContent = {
 
-//                    Text( "${content[index]?.post_user?.cities}, ${content[index]?.post_user?.state}.",
-//                        fontSize = constants.textUnit(14),
-//                        fontFamily = constants.fontFamily(1),
-//                        color = Color.Black
-//                    )
                 Text( getTimeAgo(content[index]?.enquiry_details?.created_at ?:""),
                     fontSize = constants.textUnit(14),
                     fontFamily = constants.fontFamily(1),
                     color = newGray
                 )
 
-//                    Text(
-//                        text = run {
-//                            println("Created at value: ${content.enquiry_details.created_at}")
-//                            getTimeAgo(content.enquiry_details.created_at)
-//                        }
-//                    )
             },
             trailingContent = {
 
@@ -3694,7 +3185,6 @@ fun Enquiry_Message_Structure(
                                 constants.Enquiry_ViewModel.selectedEnquiry = content[index]
 
                                 onDeleteClick(content[index])
-                                println("CHECK DATA PRERSENT -- ${constants.Enquiry_ViewModel.selectedEnquiry}")
                                 constants.open_Popup =
                                     Custom_PopUpState(type = "self_enquiry_delete", true)
                             }
@@ -3746,7 +3236,6 @@ fun Enquiry_Message_Structure(
                                     ?: "Unknown"
                             )
 
-                            //new flowwewwwwwww
                             constants.Profile_ViewModel.add_BF_Handler(
                                 Profile_Handle_Back(
                                     current_UsedId = AppPreferences.getUserId(),
@@ -3759,16 +3248,12 @@ fun Enquiry_Message_Structure(
                                 )
                             )
 
-
-                            println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
-
                             constants.Profile_ViewModel.addProfile(
                                 content[index]?.enquiry_details?.enquiry_by_user_id ?: 0
                             )
                             constants.Profile_ViewModel.add_Selected_Profile_Id(
                                 id = content[index]?.enquiry_details?.enquiry_by_user_id ?: 0
                             )
-
 
                             navController.navigate(
                                 EnquiriesFlow.Other_Profile_Structure.route
@@ -3783,7 +3268,6 @@ fun Enquiry_Message_Structure(
                                 content[index]?.post_user?.username ?: "Username"
                             )
 
-                            //new flowwewwwwwww
                             constants.Profile_ViewModel.add_BF_Handler(
                                 Profile_Handle_Back(
                                     current_UsedId = AppPreferences.getUserId(),
@@ -3793,9 +3277,6 @@ fun Enquiry_Message_Structure(
                                     ff_Fg_Count = 999,
                                 )
                             )
-
-
-                            println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                             constants.Profile_ViewModel.addProfile(
                                 content[index]?.post_user?.user_id ?: 0
@@ -3814,7 +3295,6 @@ fun Enquiry_Message_Structure(
 
         Spacer(modifier = Modifier.padding(8.dp))
 
-        // Lead Details
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -3838,7 +3318,7 @@ fun Enquiry_Message_Structure(
                     SubcomposeAsyncImage(
                         model = R.drawable.enquirycallbuttonicon,
                         contentDescription = "",
-                        //colorFilter = ColorFilter.tint(new5757),
+
                         modifier = Modifier
                             .size(28.dp)
                             .noRippleClickable {
@@ -3871,12 +3351,10 @@ fun Enquiry_Message_Structure(
             }
         }
 
-        /// contact box
         if (isWhich != 3)
         {
             Spacer(modifier = Modifier.padding(8.dp))
 
-            // Contact, Mail, Location Box
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -3888,8 +3366,6 @@ fun Enquiry_Message_Structure(
             )
             {
                 Column(modifier = Modifier.padding(4.dp)) {
-
-
 
                     if (content[index]?.enquiry_details?.enquiry_by_user_phone?.isNotEmpty() == true) {
 
@@ -3947,7 +3423,7 @@ fun Enquiry_Message_Structure(
         }
 
         if (isWhich == 3) {
-            // message
+
             if (content[index]?.enquiry_details?.land_category_para?.isNotEmpty() == true) {
                 Column(
                     modifier = Modifier
@@ -3979,12 +3455,7 @@ fun Enquiry_Message_Structure(
             }
         }
 
-
         Spacer(modifier = Modifier.padding(4.dp))
-
-
-
-
 
         AnimatedVisibility(
             visible = viewMore,
@@ -4001,12 +3472,9 @@ fun Enquiry_Message_Structure(
                 )
                 {
                     if (isWhich != 3) {
-                        // message
+
                         if (content[index]?.enquiry_details?.land_category_para?.isNotEmpty() == true) {
-//                            Column(
-//                                modifier = Modifier
-//                                    .padding(horizontal = 16.dp)
-//                            ) {
+
                                 Text(
                                     "Message",
                                     fontSize = constants.textUnit(14),
@@ -4028,13 +3496,11 @@ fun Enquiry_Message_Structure(
                                         modifier = Modifier.padding(8.dp)
                                     )
                                 }
-//                            }
 
                             Spacer(modifier = Modifier.padding(4.dp))
                         }
                     }
 
-                    // property details
                     Text(
                         "Enquired Property",
                         fontSize = constants.textUnit(14)
@@ -4060,7 +3526,7 @@ fun Enquiry_Message_Structure(
                                             .background(Color.Transparent)
                                     ) {
                                         Text(
-                                            content[index]?.post_user?.post_property?.landCategoryText ?: "", // Optional: Map `type_Of_Land` to text
+                                            content[index]?.post_user?.post_property?.landCategoryText ?: "",
                                             color = newBlue,
                                             fontSize = constants.textUnit(10),
                                             fontFamily = constants.fontFamily(1),
@@ -4141,19 +3607,11 @@ fun Enquiry_Message_Structure(
                                                 modifier = Modifier
                                                     .fillMaxSize()
                                                     .background(rentoLightGray)
-                                                //.padding(8.dp)
+
                                                 , contentAlignment = Alignment.Center
                                             ){
                                                 Image(painter = painterResource(R.drawable.emptypostsrento) , "")
-//                                                        Text(
-//                                                            text = content[index]?.enquiry_details?.enquiry_by_username.takeIf { it?.isNotEmpty() == true }?.take(1)?.uppercase() ?: "",
-//                                                            fontSize = constants.textUnit(14),
-//                                                            fontFamily = constants.fontFamily(1),
-//                                                            color = Color.Black
-//                                                        )
-//                            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                                contentDescription = "",modifier = Modifier
-//                                    .matchParentSize())
+
                                             }
                                         } else {
                                             SubcomposeAsyncImageContent()
@@ -4173,25 +3631,7 @@ fun Enquiry_Message_Structure(
                                 disabledTrailingIconColor = Color.Gray.copy(alpha = 0.5f)
                             )
                             , modifier = Modifier
-                                /*.noRippleClickable{
-                                if (content[index]?.is_deleted == 1 || content[index]?.post_user?.post_property?.is_sold == 1){
-                                    GlobalSnackbar.show("Property Not Available ")
-                                }
-                                else {
-//                                    navController.currentBackStackEntry
-//                                        ?.savedStateHandle
-//                                        ?.set("post_user", content[index]!!.post_user)
-//
-//                                    navController.navigate(EnquiriesFlow.SingleVideoPlayerEnquiry.route)
 
-                                    constants.Reels_ViewModel.clear_view_pro_Details()
-                                    //reels_Show.value = true
-                                    println("content[index]?.post_user --- ${content[index]}")
-                                    val videoJson = Uri.encode(Json.encodeToString(content[index]?.post_user))
-                                    navController.navigate("${EnquiriesFlow.SingleVideoPlayerEnquiry.route}/$videoJson")
-                                }
-
-                            }*/
                                 .noRippleClickable {
                                     if (content[index]?.is_deleted == 1 || content[index]?.post_user?.post_property?.is_sold == 1) {
                                         GlobalSnackbar.show("Property Not Available ")
@@ -4201,21 +3641,12 @@ fun Enquiry_Message_Structure(
                                         focusManager1.clearFocus()
                                         constants.Reels_ViewModel.clear_view_pro_Details()
 
-
                                         navController.currentBackStackEntry
                                             ?.savedStateHandle
                                             ?.set("post_id", content[index]?.post_user?.user_post_id)
 
                                         navController.navigate(EnquiriesFlow.SingleVideoPlayerEnquiry.route)
 
-
-//                                        navController.currentBackStackEntry
-//                                            ?.savedStateHandle
-//                                            ?.set("post_user", content[index]?.post_user)
-//
-//                                        println("LIKESSSS ${content[index]?.post_user}")
-//
-//                                        navController.navigate(EnquiriesFlow.SingleVideoPlayerEnquiry.route)
                                     }
                                 }
                         )
@@ -4225,7 +3656,6 @@ fun Enquiry_Message_Structure(
             else
             {
 
-                /// shown interest
                 Column (
                     modifier = Modifier
                         .fillMaxWidth()
@@ -4280,10 +3710,8 @@ fun Enquiry_Message_Structure(
 
         Spacer(modifier = Modifier.padding(8.dp))
 
-
-
         if (isWhich == 3) {
-            // Bottom Buttons
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -4360,7 +3788,6 @@ fun Enquiry_Message_Structure(
                             .clip(RoundedCornerShape(4.dp))
                             .background(newWhite)
                             .noRippleClickable {
-                                //constants.open_Btm_Sheet = Custom_BottomSheetState(type = "review_delete", isVisible = true)
 
                                 openWhatsAppChat(
                                     context,
@@ -4386,7 +3813,7 @@ fun Enquiry_Message_Structure(
             }
         }
         else {
-            // Bottom Buttons
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -4417,10 +3844,8 @@ fun Enquiry_Message_Structure(
                         )
                     }
 
-
-
                     if (isWhich == 1) {
-                        //// chat next update
+
                         Box(
                             modifier = Modifier
                                 .fillMaxHeight()
@@ -4434,24 +3859,20 @@ fun Enquiry_Message_Structure(
                                     ) { apiResultHandling ->
                                         when (apiResultHandling) {
                                             is API_Result_Handling.Deactivated -> {
-                                                // resultCallback(5)
+
                                             }
 
                                             is API_Result_Handling.Error -> {
                                                 toast("Unable to Unblock ,try again later!")
-                                                // unblock_Loading.value = false
-                                                //errror
-                                                //constants.Profile_ViewModel.change_Update_profile(false)
+
                                             }
 
                                             is API_Result_Handling.NoData -> {
-                                                // no data
+
                                             }
 
                                             is API_Result_Handling.Loading -> {
-                                                //unblock_Loading.value = true
-                                                //loading
-                                                // constants.Profile_ViewModel.change_Update_profile(true)
+
                                             }
 
                                             is API_Result_Handling.Success -> {
@@ -4464,7 +3885,6 @@ fun Enquiry_Message_Structure(
                                                     initialMessage = content[index]?.enquiry_details?.land_category_para
                                                         ?: "",
                                                     onSuccess = {
-                                                        println("CHAT PROPERTY CREATED SUCCESSFULLYT")
                                                         navController.navigate(
                                                             EnquiriesFlow.Msg_ChatScreen.route +
                                                                     "/${content[index]?.enquiry_details?.enquiry_by_user_id}" +
@@ -4482,7 +3902,6 @@ fun Enquiry_Message_Structure(
                                                         )
                                                     },
                                                     onFailure = {
-                                                        println("CHAT PROPERTY CREATOIN FAILED")
                                                     }
                                                 )
                                             }
@@ -4523,16 +3942,12 @@ fun Enquiry_Message_Structure(
                                 .clip(RoundedCornerShape(4.dp))
                                 .background(newWhite)
                                 .noRippleClickable {
-                                    println("CHECK----${content[index]?.enquiry_details?.enquire_id ?: 0}")
 
                                     keyboardController?.hide()
                                     focusManager1.clearFocus()
 
-                                    onDeleteClick(content[index]) // 👈 trigger bottom sheet
-//                                            constants.open_Btm_Sheet = Custom_BottomSheetState(
-//                                                type = "review_delete",
-//                                                isVisible = true
-//                                            )
+                                    onDeleteClick(content[index])
+
                                 }
                                 .border(1.dp, newGray, RoundedCornerShape(4.dp)),
                             contentAlignment = Alignment.Center
@@ -4550,19 +3965,17 @@ fun Enquiry_Message_Structure(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Enquiry_Message_Structure2(
     content: Get_My_Leads_Data?,
     navController: NavHostController,
     from_where: Int,
-    onDeleteClick: (Get_My_Leads_Data?) -> Unit, // 👈 pass callback,
+    onDeleteClick: (Get_My_Leads_Data?) -> Unit,
     keyboardController: SoftwareKeyboardController?,
     focusManager1: FocusManager
 )
 {
-
 
     var viewMore by remember { mutableStateOf(false) }
 
@@ -4591,7 +4004,7 @@ fun Enquiry_Message_Structure2(
             )
     )
     {
-        // Top List Item
+
         ListItem(
             headlineContent = {
                 if (from_where == 0) {
@@ -4605,7 +4018,7 @@ fun Enquiry_Message_Structure2(
                         fontFamily = constants.fontFamily(0),
                         color = Color.Black)
                 }
-               // Text(content?.enquiry_details?.enquiry_by_username ?: "")
+
             },
             leadingContent = {
                 Box(
@@ -4614,7 +4027,7 @@ fun Enquiry_Message_Structure2(
                         .clip(CircleShape)
                         .background(newBlue)
                 ) {
-                    // Optional: Load image using profile_Pic
+
                     SubcomposeAsyncImage(
                         model = if (from_where == 0)  content?.enquiry_details?.enquiry_by_profile_image ?: "" else content?.post_user?.profile_image ?: "",
                         modifier = Modifier
@@ -4629,15 +4042,13 @@ fun Enquiry_Message_Structure2(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(newLightBlue)
-                                //.padding(8.dp)
+
                                 , contentAlignment = Alignment.Center
                             ){
                                 Text(
                                     text = content?.enquiry_details?.enquiry_by_username ?.takeIf { it?.isNotEmpty() == true }?.take(1)?.uppercase() ?: ""
                                 )
-//                            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                                contentDescription = "",modifier = Modifier
-//                                    .matchParentSize())
+
                             }
                         } else {
                             SubcomposeAsyncImageContent()
@@ -4679,7 +4090,6 @@ fun Enquiry_Message_Structure2(
                                     constants.Enquiry_ViewModel.selectedEnquiry = content
 
                                     onDeleteClick(content)
-                                    println("CHECK DATA PRERSENT -- ${constants.Enquiry_ViewModel.selectedEnquiry}")
 
                                     constants.open_Popup =
                                         Custom_PopUpState(type = "self_enquiry_delete", true)
@@ -4689,7 +4099,7 @@ fun Enquiry_Message_Structure2(
                     }
                 }
                 else {
-                    /// leads decline iswhich 4
+
                     Box(
                         modifier = Modifier
                             .wrapContentSize()
@@ -4730,7 +4140,6 @@ fun Enquiry_Message_Structure2(
                                 content?.enquiry_details?.enquiry_by_username ?: "UserName"
                             )
 
-                            //new flowwewwwwwww
                             constants.Profile_ViewModel.add_BF_Handler(
                                 Profile_Handle_Back(
                                     current_UsedId = AppPreferences.getUserId(),
@@ -4742,9 +4151,6 @@ fun Enquiry_Message_Structure2(
                                     ff_Fg_Count = 999,
                                 )
                             )
-
-
-                            println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                             constants.Profile_ViewModel.addProfile(
                                 content?.enquiry_details?.enquiry_by_user_id ?: 0
@@ -4764,7 +4170,6 @@ fun Enquiry_Message_Structure2(
                                 content?.post_user?.username ?: "UserName"
                             )
 
-                            //new flowwewwwwwww
                             constants.Profile_ViewModel.add_BF_Handler(
                                 Profile_Handle_Back(
                                     current_UsedId = AppPreferences.getUserId(),
@@ -4774,9 +4179,6 @@ fun Enquiry_Message_Structure2(
                                     ff_Fg_Count = 999,
                                 )
                             )
-
-
-                            println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                             constants.Profile_ViewModel.addProfile(content?.post_user?.user_id ?: 0)
                             constants.Profile_ViewModel.add_Selected_Profile_Id(
@@ -4792,14 +4194,13 @@ fun Enquiry_Message_Structure2(
             }
         )
 
-
         Column (
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         ){
 
             if (isWhich == 5 || isWhich == 4) {
-                // Lead Details
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
@@ -4815,7 +4216,7 @@ fun Enquiry_Message_Structure2(
                             SubcomposeAsyncImage(
                                 model = R.drawable.enquirycallbuttonicon,
                                 contentDescription = "",
-                                //colorFilter = ColorFilter.tint(new5757),
+
                                 modifier = Modifier
                                     .size(28.dp)
                                     .noRippleClickable {
@@ -4846,11 +4247,11 @@ fun Enquiry_Message_Structure2(
 
                 if (isWhich == 4) {
                     constants.spacer(4)
-                    // Contact, Mail, Location Box
+
                     Box(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            //.padding(horizontal = 16.dp)
+
                             .fillMaxWidth()
                             .wrapContentHeight()
                             .clip(RoundedCornerShape(8.dp))
@@ -4858,7 +4259,6 @@ fun Enquiry_Message_Structure2(
                     )
                     {
                         Column(modifier = Modifier.padding(4.dp)) {
-
 
                             if (content?.enquiry_details?.enquiry_by_user_phone?.isNotEmpty() == true) {
 
@@ -4953,7 +4353,6 @@ fun Enquiry_Message_Structure2(
             }
         }
 
-
             AnimatedVisibility(
                 visible = viewMore,
                 enter = expandVertically(tween(800)),
@@ -4966,10 +4365,6 @@ fun Enquiry_Message_Structure2(
                         .padding(horizontal = 16.dp)
                 )
                 {
-
-
-
-
 
                     if (isWhich !=5 ) {
                         Spacer(modifier = Modifier.padding(8.dp))
@@ -5021,7 +4416,7 @@ fun Enquiry_Message_Structure2(
                                             .background(newLightBlue)
                                     ) {
                                         Text(
-                                            content?.post_user?.post_property?.landCategoryText ?: "", // Optional: Map `type_Of_Land` to text
+                                            content?.post_user?.post_property?.landCategoryText ?: "",
                                             color = newBlue,
                                             fontSize = constants.textUnit(10),
                                             modifier = Modifier.padding(horizontal = 4.dp),
@@ -5063,7 +4458,7 @@ fun Enquiry_Message_Structure2(
                                     Text(
                                         "₹ ${content?.post_user?.post_property?.rent?.ifEmpty { content?.post_user?.post_property?.lease_amount } ?:""}",
                                         fontSize = constants.textUnit(14)
-                                    ) // Optional
+                                    )
 
                                     constants.spacer(2)
                                 }
@@ -5110,18 +4505,10 @@ fun Enquiry_Message_Structure2(
                                                 modifier = Modifier
                                                     .fillMaxSize()
                                                     .background(newLightBlue)
-                                                //.padding(8.dp)
+
                                                 , contentAlignment = Alignment.Center
                                             ){
-//                                                        Text(
-//                                                            text = content[index]?.enquiry_details?.enquiry_by_username.takeIf { it?.isNotEmpty() == true }?.take(1)?.uppercase() ?: "",
-//                                                            fontSize = constants.textUnit(14),
-//                                                            fontFamily = constants.fontFamily(1),
-//                                                            color = Color.Black
-//                                                        )
-//                            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground),
-//                                contentDescription = "",modifier = Modifier
-//                                    .matchParentSize())
+
                                             }
                                         } else {
                                             SubcomposeAsyncImageContent()
@@ -5149,8 +4536,7 @@ fun Enquiry_Message_Structure2(
 
             Spacer(modifier = Modifier.padding(8.dp))
         if (isWhich == 4){
-            // Bottom Buttons
-            // Bottom Buttons
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -5164,7 +4550,7 @@ fun Enquiry_Message_Structure2(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // View more / less button
+
                     Box(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -5201,8 +4587,8 @@ fun Enquiry_Message_Structure2(
                             onDismissRequest = { expanded_undo = false },
                             containerColor = newWhite,
                             modifier = Modifier
-                                .width(IntrinsicSize.Min) // ✅ makes menu match content, not anchor
-                            //.fillMaxWidth(0.5f)      // 🔄 OR give fixed proportion of screen
+                                .width(IntrinsicSize.Min)
+
                         ) {
                             val pairList = listOf(
                                 Pair(R.drawable.undodecline, "Undo Decline"),
@@ -5225,27 +4611,18 @@ fun Enquiry_Message_Structure2(
                                                 { aPI_Result_Handling ->
                                                     when (aPI_Result_Handling) {
                                                         is API_Result_Handling.Loading -> {
-                                                            // loading
-//                        next.value = true
-                                                            //state.value = 0
-                                                            // constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                         }
 
                                                         is API_Result_Handling.Deactivated -> {
-                                                            //   resultCallback(5)
+
                                                         }
 
                                                         is API_Result_Handling.Error -> {
-                                                            // fail
-//                        next.value = true
-                                                            // state.value = 1
-                                                            ///constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                         }
 
                                                         is API_Result_Handling.Success -> {
-                                                            // success
-//                        next.value = true
-                                                            // state.value = 2
 
                                                             constants.Enquiry_ViewModel.decline_Update_Enquiry(
                                                                 content?.enquiry_details?.enquire_id
@@ -5253,13 +4630,11 @@ fun Enquiry_Message_Structure2(
                                                             )
                                                             constants.open_Popup =
                                                                 Custom_PopUpState(type = "", false)
-                                                            // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                         }
 
                                                         is API_Result_Handling.NoData -> {
-//                        next.value = true
-                                                            // no data
-                                                            // constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                         }
                                                     }
                                                 }
@@ -5269,55 +4644,8 @@ fun Enquiry_Message_Structure2(
                                                     content?.enquiry_details?.enquire_id
                                                         ?: 0, true
                                                 )
-                                                /* constants.API_Vm.put_Enquiry_Decline_Undodecline(
-                                                    enquire_id = content?.enquiry_details?.enquire_id
-                                                        ?: 0,
-                                                    status = "1",
-                                                )
-                                                {
-                                                    aPI_Result_Handling ->
-                                                    when (aPI_Result_Handling) {
-                                                        is API_Result_Handling.Loading -> {
-                                                            // loading
-//                        next.value = true
-                                                            //state.value = 0
-                                                            // constants.PostProperty_ViewModel.change_Status_PFs(true)
-                                                        }
 
-                                                        is API_Result_Handling.Deactivated -> {
-                                                            //resultCallback(5)
-                                                        }
-
-                                                        is API_Result_Handling.Error -> {
-                                                            // fail
-//                        next.value = true
-                                                            // state.value = 1
-                                                            ///constants.PostProperty_ViewModel.change_Status_PFs(false)
-                                                        }
-
-                                                        is API_Result_Handling.Success -> {
-                                                            // success
-//                        next.value = true
-                                                            // state.value = 2
-
-                                                            constants.Enquiry_ViewModel.remove_Enquiry(
-                                                                content?.enquiry_details?.enquire_id
-                                                                    ?: 0
-                                                            )
-                                                            constants.open_Popup =
-                                                                Custom_PopUpState(type = "", false)
-                                                            // constants.PostProperty_ViewModel.change_Status_PFs(false)
-                                                        }
-
-                                                        is API_Result_Handling.NoData -> {
-//                        next.value = true
-                                                            // no data
-                                                            // constants.PostProperty_ViewModel.change_Status_PFs(false)
-                                                        }
-                                                    }
-                                                }*/
                                             }
-                                            println("Clicked $title")
                                         }
                                         .padding(horizontal = 12.dp, vertical = 10.dp),
                                     verticalAlignment = Alignment.CenterVertically
@@ -5379,13 +4707,9 @@ fun Enquiry_Message_Structure2(
                 }
             }
         }
-        // Bottom Buttons
-
 
     }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -5401,21 +4725,7 @@ fun Common_BTM_Sheet(
     ModalBottomSheet(
         onDismissRequest = {
 
-
             onDismiss.value = false
-
-//            if (constants.open_Btm_Sheet.type == "leads_filter") {
-//                if ( constants.Enquiry_ViewModel.leads_selected_Filter != 4){
-//                    constants.Enquiry_ViewModel.leads_selected_Filter = 4
-//                }
-//                else {
-//                    constants.Enquiry_ViewModel.leads_selected_Filter =  constants.Enquiry_ViewModel.leads_selected_Filter
-//                }
-//
-//
-//                constants.Enquiry_ViewModel.leads_selected_Sort = 1
-//
-//            }
 
             constants.open_Btm_Sheet = Custom_BottomSheetState(type = "", isVisible = false)
 
@@ -5431,7 +4741,7 @@ fun Common_BTM_Sheet(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            // Main content
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -5442,7 +4752,6 @@ fun Common_BTM_Sheet(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Bottom content fixed below
             Static_Bottom(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -5453,9 +4762,6 @@ fun Common_BTM_Sheet(
         }
     }
 }
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -5475,13 +4781,9 @@ fun SelfEnquiry_Sort(modifier: Modifier, reload_api_onSORT: MutableState<Int>) {
 
     val selected_Date_Range_List = constants.Enquiry_ViewModel.Selected_Dates_List
 
-
-    // ✅ Temporary local states (do not commit until Apply)
     var bring_Calender by rememberSaveable { mutableStateOf(false) }
-//        var tempSelectedFilter by rememberSaveable { mutableStateOf(constants.Enquiry_ViewModel.leads_selected_Filter) }
+
     var tempSelectedSort by rememberSaveable { mutableStateOf(constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort) }
-
-
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -5556,256 +4858,19 @@ fun SelfEnquiry_Sort(modifier: Modifier, reload_api_onSORT: MutableState<Int>) {
                                 if (index == 4){
                                     constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort_Bool = true
                                 }
-                                println("SELF ENQUIEY SORT SELECTE D_- ${constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort}")
                                 constants.API_Vm.isLoading_Self_Enquiry = true
 
                                 expanded = false
                             }
-                            // Trigger your sorting logic here
+
                         }
                     )
                 }
             }
         }
 
-
-
-        /*Common_BTM_Sheet(
-            content = {
-                AnimatedContent(
-                    targetState = bring_Calender,
-                    transitionSpec = {
-                        slideInHorizontally(animationSpec = tween(500)) togetherWith ExitTransition.None
-                    },
-                    label = "",
-                    modifier = Modifier.fillMaxWidth()
-                ) { showCalendar ->
-
-                    if (showCalendar) {
-                        // ✅ Show Calendar screen
-                        CalendarExample(
-                            modifier = Modifier
-                                .background(newWhite)
-                                .fillMaxWidth()
-                                .wrapContentSize(Alignment.Center),
-                            initialStartDate = constants.Enquiry_ViewModel.Selected_Dates_List.firstOrNull()?.start_Date,
-                            initialEndDate = constants.Enquiry_ViewModel.Selected_Dates_List.firstOrNull()?.end_Date,
-                            onDateRangeSelected = { start, end ->
-                                if (start != null && end != null) {
-                                    constants.Enquiry_ViewModel.Selected_Dates_List.clear()
-                                    constants.Enquiry_ViewModel.Selected_Dates_List.add(
-                                        Selected_Dates_Calender(
-                                            start,
-                                            end,
-                                            convertDateToTimestamp(start.toString()).toString(),
-                                            convertDateToTimestamp(end.toString()).toString()
-                                        )
-                                    )
-                                    constants.Enquiry_ViewModel.add_Selected_Date_Range(
-                                        Selected_Dates_Calender(
-                                            start,
-                                            end,
-                                            convertDateToTimestamp(start.toString()).toString(),
-                                            convertDateToTimestamp(end.toString()).toString()
-                                        )
-                                    )
-                                }
-                            },
-                            onDateSelected = { start ->
-                                if (start != null) {
-                                    constants.Enquiry_ViewModel.Selected_Dates_List.clear()
-                                    constants.Enquiry_ViewModel.Selected_Dates_List.add(
-                                        Selected_Dates_Calender(
-                                            start,
-                                            null,
-                                            convertDateToTimestamp(start.toString()).toString(),
-                                            ""
-                                        )
-                                    )
-                                }
-                            }
-                        )
-                    } else {
-                        // ✅ Show Filter + Sort UI
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.Start
-                        ) {
-                            Text("Sort By", color = newBlack, fontSize = constants.textUnit(16))
-                            Spacer(modifier = Modifier.padding(8.dp))
-
-                            FlowRow(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                sortOptions.forEachIndexed { index, sortType ->
-                                    Box(
-                                        modifier = Modifier
-                                            .wrapContentSize()
-                                            .clip(RoundedCornerShape(4.dp))
-                                            .background(
-                                                if (tempSelectedSort == index + 1)
-                                                    newLightBlue else newLightGray
-                                            )
-                                            .noRippleClickable {
-                                                ClickHelper.getInstance().clickOnce {
-
-
-                                                    //ClickHelper.getInstance().clickOnce {
-                                                    selectedOption = sortType
-
-                                                    constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort = index
-
-                                                        tempSelectedSort = index + 1
-                                                        if (tempSelectedSort == 4) {
-                                                            bring_Calender = true
-
-                                                        } else {
-                                                            constants.Enquiry_ViewModel.Selected_Dates_List.clear()
-                                                        }
-
-
-                                                        println("SELF ENQUIEY SORT SELECTE D_- ${constants.Enquiry_ViewModel.Self_Enquiry_selected_Sort}")
-                                                      //  constants.API_Vm.isLoading_Self_Enquiry = true
-
-                                                        expanded = false
-                                                    //}
-                                                }
-                                            }
-                                            .border(1.dp, if (tempSelectedSort == index + 1)
-                                                newBlue else newGray, RoundedCornerShape(4.dp))
-                                            .padding(horizontal = 8.dp, vertical = 4.dp),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = sortType,
-                                            color = if (tempSelectedSort == index + 1)
-                                                newBlack else newBlack,
-                                            fontSize = constants.textUnit(12)
-                                        )
-                                    }
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.padding(36.dp))
-                        }
-                    }
-                }
-            },
-            bottom_Content = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    // Cancel / Reset Button
-                    Box(
-                        modifier = Modifier
-                            .width(168.dp)
-                            .height(44.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(Color(0xffE8E8E8))
-                            .noRippleClickable {
-                                ClickHelper.getInstance().clickOnce {
-                                    if (bring_Calender) {
-                                        //tempSelectedFilter = 4
-                                        tempSelectedSort = 1
-
-//                                        constants.Enquiry_ViewModel.leads_selected_Filter = 4
-//                                        constants.Enquiry_ViewModel.leads_selected_Sort = 1
-                                        bring_Calender = false
-                                        constants.Enquiry_ViewModel.Selected_Dates_List.clear()
-                                    } else {
-                                        // Reset temporary selections only
-                                       // tempSelectedFilter = 4
-                                        tempSelectedSort = 1
-
-                                      //  if (index != 4){
-                                            constants.Enquiry_ViewModel.Selected_Dates_List.clear()
-                                            constants.API_Vm.isLoading_Self_Enquiry = true
-                                            constants.API_Vm.totalPages_Self_Enquiry = 1
-                                            reload_api_onSORT.value = reload_api_onSORT.value + 4560
-                                       // }
-                                    }
-
-//                                    constants.API_Vm.isLoading_Leads = true
-//                                    constants.API_Vm.totalPages_Leads = 1
-                                   // reload_ONSort_Filter.value = reload_ONSort_Filter.value + 4574657
-                                }
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = if (bring_Calender) "Cancel" else "Reset",
-                            color = newDarkGray,
-                            fontSize = constants.textUnit(14)
-                        )
-                    }
-
-                    // Apply / Update Button
-                    Box(
-                        modifier = Modifier
-                            .width(168.dp)
-                            .height(44.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(
-                                Brush.verticalGradient(if (bring_Calender) {
-                                    if (constants.Enquiry_ViewModel.Selected_Dates_List.isNotEmpty())
-                                        newPurpleGradient
-                                    else newPurpleGradient
-                                } else newPurpleGradient )
-                            )
-                            .noRippleClickable {
-                                ClickHelper.getInstance().clickOnce {
-                                    if (bring_Calender) {
-                                        if (constants.Enquiry_ViewModel.Selected_Dates_List.isNotEmpty()) {
-                                           // constants.Enquiry_ViewModel.leads_selected_Filter = tempSelectedFilter
-                                            constants.Enquiry_ViewModel.leads_selected_Sort = tempSelectedSort
-                                            constants.open_Btm_Sheet =
-                                                Custom_BottomSheetState(type = "", isVisible = false)
-                                        }
-                                    } else {
-                                        // ✅ Commit only on Apply
-                                     //   constants.Enquiry_ViewModel.leads_selected_Filter = tempSelectedFilter
-                                        constants.Enquiry_ViewModel.leads_selected_Sort = tempSelectedSort
-                                        constants.open_Btm_Sheet =
-                                            Custom_BottomSheetState(type = "", isVisible = false)
-                                    }
-
-                                    constants.API_Vm.isLoading_Self_Enquiry = true
-                                    constants.API_Vm.totalPages_Self_Enquiry = 1
-                                    //reload_ONSort_Filter.value = reload_ONSort_Filter.value + 4574657
-                                }
-                            }
-                            .border(1.dp  , Brush.verticalGradient(if (bring_Calender) {
-                                if (constants.Enquiry_ViewModel.Selected_Dates_List.isNotEmpty())
-                                    newPurpleGradientBorder
-                                else newPurpleGradientBorder
-                            } else newPurpleGradientBorder
-                            )
-                                ,RoundedCornerShape(4.dp)
-                            )
-                        ,
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = if (bring_Calender) "Update" else "Apply",
-                            color = newWhite,
-                            fontSize = constants.textUnit(14),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-        )*/
     }
 }
-
-
 
 fun formatToShortMonthDay(dateString: String?): String {
     return try {
@@ -5813,16 +4878,12 @@ fun formatToShortMonthDay(dateString: String?): String {
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)
         val outputFormatter = DateTimeFormatter.ofPattern("MMM dd", Locale.ENGLISH)
         val parsedDate = LocalDate.parse(dateString, inputFormatter)
-        parsedDate.format(outputFormatter) // e.g. "Oct 09"
+        parsedDate.format(outputFormatter)
     } catch (e: Exception) {
         ""
     }
 }
 
-
-
-
-/// old
 @Composable
 fun Common_Popup2(
     visible: Boolean,
@@ -5834,18 +4895,16 @@ fun Common_Popup2(
 ) {
     var isVisibleInUi by remember { mutableStateOf(visible) }
 
-    // Control internal visibility delay
     LaunchedEffect(visible) {
         if (visible) {
             isVisibleInUi = true
         } else {
-            // Delay to allow exit animation to complete
-            delay(600) // match animation duration
+
+            delay(600)
             isVisibleInUi = false
         }
     }
 
-    // Animate scale and alpha
     val scale by animateFloatAsState(
         targetValue = if (visible) 1f else 0.8f,
         animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing),
@@ -5863,7 +4922,7 @@ fun Common_Popup2(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable(false) {}
-                .background(if (icon == 1) Color.Transparent else newBlack.copy(0.5f * alpha)) // fade background too
+                .background(if (icon == 1) Color.Transparent else newBlack.copy(0.5f * alpha))
             ,contentAlignment = Alignment.Center
         ) {
             Box(
@@ -5879,7 +4938,7 @@ fun Common_Popup2(
                     .background(newWhite),
                 contentAlignment = Alignment.Center
             ) {
-                /// top design with profile pic
+
                 Box(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
@@ -5919,7 +4978,7 @@ fun Common_Popup2(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .background(newLightBlue)
-                                        //.padding(8.dp)
+
                                         , contentAlignment = Alignment.Center
                                     ) {
                                         Text(
@@ -5941,9 +5000,6 @@ fun Common_Popup2(
                     }
                 }
 
-
-                // main content
-
                 Column (
                     modifier = modifier
                         .align(Alignment.BottomCenter)
@@ -5952,7 +5008,7 @@ fun Common_Popup2(
                     , verticalArrangement = Arrangement.Center
                     , horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    //////
+
                     content()
                 }
             }
@@ -5960,10 +5016,6 @@ fun Common_Popup2(
     }
 }
 
-
-
-
-/// new
 @Composable
 fun Common_Popup(
     visible: Boolean,
@@ -5975,18 +5027,16 @@ fun Common_Popup(
 ) {
     var isVisibleInUi by remember { mutableStateOf(visible) }
 
-    // Control internal visibility delay
     LaunchedEffect(visible) {
         if (visible) {
             isVisibleInUi = true
         } else {
-            // Delay to allow exit animation to complete
-            delay(600) // match animation duration
+
+            delay(600)
             isVisibleInUi = false
         }
     }
 
-    // Animate scale and alpha
     val scale by animateFloatAsState(
         targetValue = if (visible) 1f else 0.8f,
         animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing),
@@ -6004,7 +5054,7 @@ fun Common_Popup(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable(false) {}
-                .background(if (icon == 1) Color.Transparent else newBlack.copy(0.5f * alpha)) // fade background too
+                .background(if (icon == 1) Color.Transparent else newBlack.copy(0.5f * alpha))
             ,contentAlignment = Alignment.Center
         ) {
             Box(
@@ -6023,94 +5073,12 @@ fun Common_Popup(
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    // ------------------ Top Design with Profile Pic ------------------
-                    /// top design with profile pic
-                 /*   Box(
-                        modifier = Modifier
-                            // .align(Alignment.)
-                            .fillMaxWidth()
-                            .height(120.dp)
-                           // .background(Color.Cyan)
-                        //.fillMaxHeight(.4f)
-                        , contentAlignment = Alignment.Center
-                    )
-                    {
-                        Box(
-                            modifier = modifier
-                                .align(Alignment.TopCenter)
-                                .fillMaxWidth()
-                                .height(60.dp)
-                            //.fillMaxHeight(.5f)
-                        )
 
-                        Card (
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .size(80.dp)
-                                .clip(CircleShape)
-                            , colors = CardDefaults.cardColors(
-                                containerColor = Color.White
-                            )
-                            , elevation = CardDefaults.cardElevation(24.dp)
-                        )
-                        {
-                            Box(
-                                modifier = Modifier
-                                    .padding(2.dp)
-                                    .fillMaxSize()
-                                    .background(Color(0xffF4F4F4), CircleShape)
-                                , contentAlignment = Alignment.Center
-                            ) {
-                                if (icon == 0)  {
-                                    SubcomposeAsyncImage(
-                                        model = image,
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .clip(CircleShape),
-                                        contentDescription = "",
-                                        contentScale = ContentScale.FillBounds
-                                    )
-                                    {
-                                        val state = painter.state
-                                        if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxSize()
-                                                    .background(newLightBlue, CircleShape)
-                                                //.padding(8.dp)
-                                                , contentAlignment = Alignment.Center
-                                            ) {
-                                                Text(
-                                                    text = userName.takeIf { it?.isNotEmpty() == true }?.take(1)?.uppercase() ?: ""
-                                                    , color = newBlue
-                                                    , fontSize = constants.textUnit(16)
-                                                    , fontFamily = constants.fontFamily(0)
-                                                )
-                                            }
-                                        } else {
-                                            SubcomposeAsyncImageContent()
-                                        }
-                                    }
-                                } else {
-                                    Image(
-                                        painterResource(icon), modifier = Modifier
-                                            .size(32.dp),
-                                        contentDescription = "",
-                                        contentScale = ContentScale.FillBounds
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-*/
-                    // ------------------ Bottom Content ------------------
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
-                            //.heightIn(min = 140.dp) // ✅ at least 200dp
-                            //.background(Color.Green)
+
                         , verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -6123,21 +5091,14 @@ fun Common_Popup(
     }
 }
 
-
-
 fun getTimeAgoold(timestamp: String): String {
     return try {
         val apiInstant = Instant.parse(timestamp)
         val nowInstant = Instant.now()
 
-        // Debug logging - remove these in production
-        println("API Time: $apiInstant")
-        println("Now Time: $nowInstant")
-
         val durationMillis = nowInstant.toEpochMilli() - apiInstant.toEpochMilli()
 
-        // If it's in the future or very recent, treat as "Just now"
-        if (durationMillis <= 0 || durationMillis < 60000) { // less than 1 minute
+        if (durationMillis <= 0 || durationMillis < 60000) {
             return "Just now"
         }
 
@@ -6150,7 +5111,7 @@ fun getTimeAgoold(timestamp: String): String {
                 val remainingHours = totalHours % 24
                 if (remainingHours > 0) {
                     "${totalDays}d ago"
-//                    "${totalDays}d ${remainingHours}h ago"
+
                 } else {
                     if (totalDays == 1L) "1 day ago" else "${totalDays} days ago"
                 }
@@ -6189,8 +5150,8 @@ fun getTimeAgo(timestamp: String): String {
         val totalHours = totalMinutes / 60
         val totalDays = totalHours / 24
         val totalWeeks = totalDays / 7
-        val totalMonths = totalDays / 30   // Approx conversion
-        val totalYears = totalDays / 365   // Approx conversion
+        val totalMonths = totalDays / 30
+        val totalYears = totalDays / 365
 
         when {
             totalYears > 0 -> if (totalYears == 1L) "1 year ago" else "$totalYears years ago"
@@ -6211,8 +5172,8 @@ fun isWithinOneHour(timestamp: String): Boolean {
         val apiInstant = Instant.parse(timestamp)
         val nowInstant = Instant.now()
 
-        val duration = Duration.between(apiInstant, nowInstant).abs() // absolute duration
-        duration.toHours() <= 1  // true if duration is 1 hour or less
+        val duration = Duration.between(apiInstant, nowInstant).abs()
+        duration.toHours() <= 1
     } catch (e: Exception) {
         false
     }
@@ -6258,7 +5219,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
 
     val repost_Btm = remember { mutableStateOf(false) }
 
-    // FIXED: Remember scroll state to prevent recomposition
     val lazyListState = rememberLazyListState()
 
     Box(
@@ -6272,13 +5232,13 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
         )
         {
             LazyColumn(
-                state = lazyListState, // FIXED: Added state
+                state = lazyListState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(8f)
             )
             {
-                item(key = "video_image_section") { // FIXED: Added key for stability
+                item(key = "video_image_section") {
                     Column(
                         modifier = Modifier
                             .then(
@@ -6292,7 +5252,7 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                         Box(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            // FIXED: Stable composition with key
+
                             key("vps_first_part_${view_Details_Data.value?.user_post_id}") {
                                 VPS_FirstPart(
                                     viewModel.view_Property_Details_Mode.value,
@@ -6305,7 +5265,7 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                     }
                 }
 
-                item(key = "details_section") { // FIXED: Added key
+                item(key = "details_section") {
                     Box(
                         modifier = Modifier
                             .then(
@@ -6403,9 +5363,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                             , modifier = Modifier.align(Alignment.CenterStart)
                                         )
 
-                                        println("PROPERTY PRICE -- ${view_Details_Data.value?.post_property?.rent} -- ${view_Details_Data.value?.post_property?.lease_amount}")
-
-
                                         val formattedPrice = view_Details_Data.value?.post_property?.rent?.ifEmpty { view_Details_Data.value?.post_property?.lease_amount }?.let { price ->
                                             try {
                                                 val number = price.toString().toDouble()
@@ -6434,7 +5391,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 )
                                 {
-                                    println("PROPERTY PRICE -- ${view_Details_Data.value?.post_property?.rent} -- ${view_Details_Data.value?.post_property?.lease_amount}")
                                     val formattedPrice = view_Details_Data.value?.post_property?.rent?.ifEmpty { view_Details_Data.value?.post_property?.lease_amount }?.let { price ->
                                         try {
                                             val number = price.toString().toDouble()
@@ -6484,87 +5440,7 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                     .padding(horizontal = 16.dp, vertical = 16.dp)
                                     .clip(RoundedCornerShape(8.dp))
                                     .background(newBlue)
-                                   /* .noRippleClickable {
-                                        if (network.value == NetworkStatus.Online) {
-                                            constants.PostProperty_ViewModel.save_Changes_Draft.value =
-                                                1
-                                            put_Draft_New_Flow_API_CALL { result ->
-                                                when (result) {
-                                                    0 -> {
-                                                        loadpost = false
-                                                        toast("Something went wrong")
-                                                    }
 
-                                                    1 -> {
-                                                        constants.API_Vm.put_Post_Form_Publish(
-                                                            user_id = AppPreferences.getUserId(),
-                                                            user_post_id = AppPreferences.get_Post_Id()
-                                                        )
-                                                        { result_Handling ->
-                                                            when (result_Handling) {
-                                                                is API_Result_Handling.Loading -> {}
-                                                                is API_Result_Handling.Error -> {
-                                                                    loadpost = false
-                                                                    toast("Something went wrong")
-                                                                }
-
-                                                                is API_Result_Handling.Deactivated -> {}
-                                                                is API_Result_Handling.NoData -> {}
-                                                                is API_Result_Handling.Success -> {
-                                                                    constants.Profile_ViewModel.set_From_Repost(
-                                                                        0
-                                                                    )
-                                                                    constants.Common_H_ViewModel.selectedBABTab(
-                                                                        0
-                                                                    )
-                                                                    constants.PostProperty_ViewModel.set_Post_Form_Flow(
-                                                                        1
-                                                                    )
-                                                                    constants.PostProperty_ViewModel.set_Post_Form_Flow(
-                                                                        -1
-                                                                    )
-
-                                                                    if (constants.Profile_ViewModel.profile_Drafts.value.isNotEmpty()) {
-                                                                        constants.Profile_ViewModel.deleteProfileDraftByUserPostId(
-                                                                            AppPreferences.get_Post_Id()
-                                                                        )
-                                                                        constants.Profile_ViewModel.set_Open_False()
-                                                                        navController.navigate(
-                                                                            ProfileScreenFlow.Profile_Structure.route
-                                                                        )
-                                                                    } else {
-                                                                        constants.Profile_ViewModel.set_open_settings()
-                                                                        constants.Common_H_ViewModel.toggleshowBABars(
-                                                                            true
-                                                                        )
-                                                                        constants.Profile_ViewModel.onSet_Settings_Click(
-                                                                            -1
-                                                                        )
-                                                                        constants.Profile_ViewModel.set_Open_False()
-                                                                        navController.navigate(
-                                                                            ProfileScreenFlow.Profile_Structure.route
-                                                                        )
-                                                                    }
-
-                                                                    constants.URL_COMPLETED.clear()
-                                                                    constants.PostProperty_ViewModel.clear_Media()
-                                                                    loadpost = false
-                                                                    GlobalSnackbar.show("Successfully Posted")
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-
-                                                    2 -> {}
-                                                    3 -> {
-                                                        loadpost = true
-                                                    }
-                                                }
-                                            }
-                                        } else {
-                                            toast(activity.getString(R.string.no_Internet))
-                                        }
-                                    }*/
                                 , verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
@@ -6589,20 +5465,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
             }
         }
 
-//        val mediaList = remember(view_Details_Data.value) {
-//            mutableStateListOf<ViewMedia>().apply {
-//
-//                // Add Videos first
-//                view_Details_Data.value?.post_property?.video?.forEach { video ->
-//                    add(ViewMedia.VideoItem(url = video.url, title = video.heading))
-//                }
-//
-//                // Add Images after videos
-//                view_Details_Data.value?.post_property?.images?.forEach { image ->
-//                    add(ViewMedia.ImageItem(url = image.url, title = image.heading))
-//                }
-//            }
-//        }
         val mediaList = buildList<ViewMedia> {
             view_Details_Data.value?.post_property?.images?.forEach {
                 add(ViewMedia.ImageItem(url = it.url ?: "", title = it.heading ?: "Image"))
@@ -6612,22 +5474,20 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
             }
         }
 
-
-        // Full-screen overlay
         AnimatedVisibility(
             visible = onFullView.value,
             enter = slideInVertically(animationSpec = tween(900)) { it },
             exit = slideOutVertically(animationSpec = tween(900)) { it }
         )
         {
-            // Make sure this Box fills the screen and has a background
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .noRippleClickable {
 
                     }
-                    .background(Color.White) // <-- This prevents the "transparent" flicker
+                    .background(Color.White)
             ) {
                 var dummy = remember { mutableStateOf(false) }
                 VPS_FullView(
@@ -6683,7 +5543,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                         1 -> {}
                                         2 -> {}
                                         3 -> {
-                                            println("REPOST CLICKER SUCCESS")
                                             val server_Data =
                                                 constants.PostProperty_ViewModel.get_Preview_Data()
 
@@ -6696,7 +5555,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                             AppPreferences.save_Post_Id(
                                                 server_Data?.user_post_id ?: 0
                                             )
-                                            println("POST ID -- ${AppPreferences.get_Post_Id()}")
 
                                             constants.PostProperty_ViewModel.first_Form_selected_PP(
                                                 server_Data?.land_type_id ?: -1
@@ -6714,14 +5572,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                                 server_Data?.address ?: ""
                                             )
 
-                                            println(
-                                                "GIVEN ADDRESS DATA FIELD -- " +
-                                                        "${constants.PostProperty_ViewModel.get_selectedLocality3()} --- " +
-                                                        "${constants.PostProperty_ViewModel.get_latLng3()}---" +
-                                                        "-${constants.PostProperty_ViewModel.get_city3()}--" +
-                                                        "-${constants.PostProperty_ViewModel.get_state3()} ----" +
-                                                        " ${constants.PostProperty_ViewModel.get_country3()}"
-                                            )
 
                                             constants.PostProperty_ViewModel.set_onSelected_ProType(
                                                 (server_Data?.land_type_id ?: 0)
@@ -6738,7 +5588,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                                 server_Data?.land_categorie_id ?: 0
                                             )
 
-                                            println("ON REPOST CLICK === ${server_Data?.land_type_id ?: 0}")
                                             constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value =
                                                 constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value.copy(
                                                     first = server_Data?.land_type_id ?: 0,
@@ -6751,10 +5600,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                                     server_Data?.land_categorie_id ?: 0
                                                 )
 
-                                            println("Step 2 --- ${(server_Data?.land_type_id ?: 0) - 1} -***${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}***-- ${server_Data?.land_categorie_id ?: 0}")
-//                                            println("LOCARTION DERAIKS sfjngv adsfbvkhjd REPOST ${server_Data.pincode} -__${server_Data.longitude}--${server_Data.latitude}--${server_Data.address}--${server_Data.city}- ${server_Data.country} -- ${data.state}")
-
-                                            // Safely set values if they’re not empty
                                             if (!server_Data?.pincode.isNullOrEmpty()) {
                                                 constants.PostProperty_ViewModel.set_pincode3(
                                                     server_Data?.pincode ?: ""
@@ -6780,7 +5625,7 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                                     server_Data?.address ?: ""
                                                 )
                                             }
-//
+
                                             if (server_Data?.latitude?.isNotEmpty() == true && server_Data?.longitude?.isNotEmpty() == true) {
                                                 constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
                                                     LatLng(
@@ -6790,13 +5635,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                                 )
                                             }
 
-//                                            if (server_Data.images.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addImages(server_Data?.images ?:"")
-//                                            }
-//                                            else if(server_Data.video.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addVideo(server_Data?.images ?:"")
-//
-//                                            }
                                             constants.PostProperty_ViewModel.add_pp3_Data(
                                                 PP3_API_DC(
                                                     pincode = server_Data?.pincode ?: "",
@@ -6823,35 +5661,20 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
                                             if (!server_Data?.images.isNullOrEmpty()) {
                                                 val imageMediaList =
                                                     server_Data.images.map { imageUri ->
-//                                                        UploadPropertyMedia(
-//                                                            uri = Uri.parse(imageUri),
-//                                                            isVideo = false
-//                                                        )
+
                                                     }
-//                                                constants.PostProperty_ViewModel.add(
-//                                                    imageMediaList
-//                                                )
+
                                             } else if (!server_Data?.video.isNullOrEmpty()) {
-//                                                val videoMedia = UploadPropertyMedia(
-//                                                    uri = Uri.parse(server_Data.video),
-//                                                    isVideo = true
-//                                                )
-//                                                constants.PostProperty_ViewModel.addVideo(videoMedia)
+
                                             }
-
-
 
                                             constants.PostProperty_ViewModel.select_Land_Type(
                                                 server_Data?.land_type_id ?: 0
                                             )
 
-
-                                            println("SERVER DATA -- ${server_Data} ---- cons.${constants.PostProperty_ViewModel.get_Selected_Fields_Form()}")
-
                                             constants.Profile_ViewModel.set_From_Repost(1)
                                             constants.PostProperty_ViewModel.set_Post_Form_Flow(2)
 
-                                            // ✅ Navigate after everything is done
                                             navController.navigate(ProfileScreenFlow.Post_Property_Forms.route)
                                         }
                                     }
@@ -6873,7 +5696,7 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
     }
 
     val deleteViewDetailsPopup = constants.Enquiry_ViewModel.deleteViewDetailsPopup.collectAsState()
-    // delete props view etails popup
+
     Common_Popup(
         visible =  deleteViewDetailsPopup.value.second,
         modifier = Modifier
@@ -6889,14 +5712,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
         {
 
             constants.spacer(2)
-//            constants.spacer(2)
-
-//            Text(
-//                text = "Block Akash Kishore ?",
-//                color = newBlack,
-//                fontSize = constants.textUnit(16),
-//                fontFamily = constants.fontFamily(0)
-//            )
 
             Image(painter = painterResource(R.drawable.deletepopupicon), "",
                 modifier = Modifier.size(56.dp))
@@ -7012,1036 +5827,6 @@ fun View_Property_Structure(navController: NavHostController, viewModel: Common_
     }
 }
 
-
-
-/*@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun VPS_FirstPart(
-    typeOfData: Int,
-    onFullView: MutableState<Boolean>,
-    navController: NavHostController,
-    view_Details_Data: State<Get_Reels_Data?>
-){
-
-
-
-    var network = rememberNetworkStatus()
-
-    val notchPadding = rememberNotchHeightDp()
-
-    var expanded = remember { mutableStateOf(false) }
-
-    var mark_As_Sold = remember { mutableStateOf(false) }
-
-    val repost_Btm = remember { mutableStateOf(false) }
-
-
-    var report_BS = remember { mutableStateOf(false) }
-    val report_Options = constants.Profile_ViewModel.profile_Report_Options.collectAsState()
-    val report_success = constants.Profile_ViewModel.report_Submit_Success.collectAsState()
-
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            //.height(300.dp)
-    ){
-        when (typeOfData){
-             0 -> {
-                 val isSaved = remember { mutableStateOf(if((view_Details_Data.value?.is_saved ?: "") == 1) true else false) }
-
-                 println("HWTA VIEW -- ${ view_Details_Data.value?.user_id} -- ${AppPreferences.getUserId()} -- ${ constants.Profile_ViewModel.from_SoldOuts.value }")
-                 val what_view = remember { mutableStateOf(
-                     when {
-                         constants.Profile_ViewModel.from_SoldOuts.value == true -> 2
-                         view_Details_Data.value?.user_id != AppPreferences.getUserId() -> 0
-                         else -> 1
-
-                     })
-                 }
-
-                 println("VIDEO URL -${what_view}- ${view_Details_Data.value?.video} -- ${view_Details_Data.value?.post_property?.image_urls}")
-                 SimpleVideoPlayer(
-                     videoUri = view_Details_Data.value?.video ?: "",
-                     //"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-                     modifier = Modifier.fillMaxSize(),
-                     navController = navController,
-                     onFullView,
-                     postid = view_Details_Data.value?.user_post_id?: 0
-                     , isSave = isSaved,
-                     what_view = what_view.value,
-                     imagesList = view_Details_Data.value?.post_property?.image_urls ?: emptyList()
-                     ,view_Details_Data.value,
-                     repost_Btm,
-                     report_BS
-                     )
-             }
-            1 -> {
-
-                val imagesList = view_Details_Data.value?.post_property?.image_urls ?: emptyList()
-                val pagerState = rememberPagerState (pageCount = { imagesList.size })
-
-                val isSaved = remember { mutableStateOf(if((view_Details_Data.value?.is_saved ?: "") == 1) true else false) }
-
-                println("HWTA VIEW -- ${ view_Details_Data.value?.user_id} -- ${AppPreferences.getUserId()} -- ${ constants.Profile_ViewModel.from_SoldOuts.value }")
-                val what_view = remember { mutableStateOf(
-                    when {
-                        constants.Profile_ViewModel.from_SoldOuts.value == true -> 2
-                        view_Details_Data.value?.user_id != AppPreferences.getUserId() -> 0
-                        else -> 1
-
-                    })
-                }
-                Column {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Black)
-                            .height(260.dp), contentAlignment = Alignment.Center
-                    )
-                    {
-                        HorizontalPager(
-                            pagerState, modifier = Modifier
-                                .fillMaxSize()
-                        ) { page ->
-
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(Color.Black)
-                                , contentAlignment = Alignment.Center
-                            ) {
-
-                                SubcomposeAsyncImage(
-                                    model = imagesList[page] ?: "",
-                                    modifier = Modifier
-                                        //.fillMaxSize()
-                                    , contentDescription = ""
-                                    , contentScale = ContentScale.Fit
-                                )
-                                {
-                                    val state = painter.state
-                                    if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxSize()
-                                                .background(Color(0xffE8E8E8))
-                                            , contentAlignment = Alignment.Center
-                                        ) {
-                                            Image(painterResource(R.drawable.emptypostsrento) , "")
-                                        }
-                                    } else {
-                                        SubcomposeAsyncImageContent()
-                                    }
-                                }
-                            }
-                        }
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                //.padding(top = notchPadding.value)
-                            , contentAlignment = Alignment.Center
-                        )
-                        {
-                            //if (!onHoverListener.value){
-                                Box(
-                                    modifier = Modifier
-                                        .align(Alignment.TopCenter)
-                                        .fillMaxWidth()
-                                        .height(80.dp)
-                                        .background(
-                                            brush = Brush.verticalGradient(
-                                                listOf(
-                                                    Color.Black.copy(.8f), Color.Transparent
-                                                )
-                                            )
-                                        )
-                                )
-                                {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(
-                                                start = 16.dp,
-                                                end = 16.dp,
-                                                top = notchPadding.value
-                                            )
-                                        , verticalAlignment = Alignment.CenterVertically
-                                        , horizontalArrangement = Arrangement.SpaceBetween
-                                    )
-                                    {
-
-                                        Row(
-                                            modifier = Modifier
-                                            , verticalAlignment = Alignment.CenterVertically
-                                            , horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                        )
-                                        {
-                                            SubcomposeAsyncImage(
-                                                model = R.drawable.propertytdetailsback,
-                                                " ",
-                                                modifier = Modifier
-                                                    .size(24.dp)
-                                                    .noRippleClickable{
-                                                        navController.navigateUp()
-                                                    }
-                                            )
-                                            if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1 || constants.PostProperty_ViewModel.get_Post_Form_Flow() == 999){
-                                                Text("Preview" , fontSize = constants.textUnit(24) , fontFamily = constants.fontFamily(0) , color = Color.White)
-                                            }
-                                        }
-
-
-                                        if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1 || constants.PostProperty_ViewModel.get_Post_Form_Flow() == 0){}
-                                        else {
-                                            Row(
-                                                modifier = Modifier
-                                                    .wrapContentWidth(),
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.Center
-                                            )
-                                            {
-                                                SubcomposeAsyncImage(
-                                                    model = if ((view_Details_Data.value?.is_saved ?: 0) == 1) R.drawable.saved_post else R.drawable.propertyviewsave, "", modifier = Modifier
-                                                        .size(24.dp)
-                                                        .noRippleClickable{
-                                                            if (network.value == NetworkStatus.Online) {
-                                                                constants.API_Vm.put_save_UnSave_Property(
-                                                                    user_id = AppPreferences.getUserId(),
-                                                                    user_post_id = view_Details_Data.value?.user_post_id
-                                                                        ?: 0,
-                                                                    status = if (isSaved.value) 2 else 1,
-                                                                )
-                                                                { apiResultHandling ->
-                                                                    when (apiResultHandling) {
-                                                                        is API_Result_Handling.Error -> {
-                                                                            //isSave_Loading.value = false
-                                                                            //errror
-                                                                            toast("Something Went Wrong, Try Again Later")
-                                                                        }
-
-                                                                        is API_Result_Handling.Deactivated -> {
-                                                                            //   resultCallback(5)
-                                                                        }
-
-                                                                        is API_Result_Handling.NoData -> {
-                                                                            // no data
-                                                                        }
-
-                                                                        is API_Result_Handling.Loading -> {
-                                                                            // isSave_Loading.value = true
-                                                                            //loading
-                                                                        }
-
-                                                                        is API_Result_Handling.Success -> {
-                                                                            //  isSave_Loading.value = false
-
-                                                                            constants.Reels_ViewModel.toggleSave_Reels(
-                                                                                view_Details_Data.value?.user_post_id
-                                                                                    ?: 0
-                                                                            )
-
-                                                                            constants.Reels_ViewModel.update_View_Property_Detail { current ->
-                                                                                current.copy(
-                                                                                    is_saved = if (current.is_saved == 1) 0 else 1
-                                                                                )
-                                                                            }
-
-
-                                                                            //success
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                            else {
-                                                                toast(constants.activity.getString(R.string.no_Internet))
-                                                            }
-                                                        }
-                                                )
-
-                                                Spacer(modifier = Modifier.padding(8.dp))
-
-                                                val dataList = if (what_view.value == 0) listOf(
-                                                    Common_DropDown2Options_DC(
-                                                        icon = R.drawable.reelsshare,
-                                                        title = "Share"
-                                                    ),
-                                                    Common_DropDown2Options_DC(
-                                                        icon = R.drawable.reelsreport,
-                                                        title = "Report"
-                                                    )
-                                                )
-                                                else if (what_view.value == 2)
-                                                    listOf(
-                                                        Common_DropDown2Options_DC(
-                                                            icon = R.drawable.repost,
-                                                            title = "Repost"
-                                                        ),
-                                                        Common_DropDown2Options_DC(
-                                                            icon = R.drawable.reelsdelete,
-                                                            title = "Delete Property"
-                                                        )
-                                                    )
-                                                else
-                                                    listOf(
-                                                        Common_DropDown2Options_DC(
-                                                            icon = R.drawable.reelsshare,
-                                                            title = "Share"
-                                                        ),
-                                                        Common_DropDown2Options_DC(
-                                                            icon = R.drawable.reelsedit,
-                                                            title = "Edit Property"
-                                                        ),
-                                                        Common_DropDown2Options_DC(
-                                                            icon = R.drawable.repost,
-                                                            title = "Repost"
-                                                        ),
-                                                        Common_DropDown2Options_DC(
-                                                            icon = R.drawable.reelssold,
-                                                            title = "Mark as Sold"
-                                                        ),
-                                                        Common_DropDown2Options_DC(
-                                                            icon = R.drawable.reelsdelete,
-                                                            title = "Delete Property"
-                                                        ),
-                                                    )
-
-                                                ExposedDropdownMenuBox(
-                                                    expanded = expanded.value,
-                                                    onExpandedChange = { expanded.value = !expanded.value }
-                                                )
-                                                {
-                                                    Image(
-                                                        painter = painterResource(R.drawable.view_property_morevert),
-                                                        contentDescription = "More options",
-                                                        modifier = Modifier
-                                                            .size(24.dp)
-                                                            .menuAnchor()
-                                                            .noRippleClickable{ expanded.value = true }
-                                                    )
-
-                                                    ExposedDropdownMenu(
-                                                        expanded = expanded.value,
-                                                        onDismissRequest = { expanded.value = false },
-                                                        containerColor = newWhite,
-                                                        modifier = Modifier
-                                                            .width(IntrinsicSize.Min) // ✅ makes menu match content, not anchor
-                                                        //.fillMaxWidth(0.5f)      // 🔄 OR give fixed proportion of screen
-                                                    ) {
-
-
-                                                        dataList.forEach { (iconRes, title) ->
-                                                            Row(
-                                                                modifier = Modifier
-                                                                    .fillMaxWidth()
-                                                                    .noRippleClickable{
-                                                                        expanded.value = false
-                                                                        println("Clicked $title")
-//                                                                        if (title == "Edit Property") {
-//                                                                            navController.navigate(ProfileScreenFlow.Edit_Property_Option.route)
-//                                                                        } else if (title == "Mark as Sold") {
-//                                                                            mark_As_Sold.value = true
-//                                                                        }
-
-                                                                        if (network.value == NetworkStatus.Online) {
-                                                                            println("Onclick VPS Check -- ${title} -- ${what_view}")
-                                                                            when {
-                                                                                title == "Delete Property" -> {
-                                                                                    println("COMING INSIDE DELETTING SOLDOUTS")
-                                                                                    constants.API_Vm.delete_Post_SM_Drafts(
-                                                                                        user_id = AppPreferences.getUserId(),
-                                                                                        select_all = 0,
-                                                                                        user_post_id = (view_Details_Data.value?.user_post_id
-                                                                                            ?: 0).toString(),
-                                                                                    )
-                                                                                    { aPI_Result_Handling ->
-                                                                                        when (aPI_Result_Handling) {
-                                                                                            is API_Result_Handling.Loading -> {}
-                                                                                            is API_Result_Handling.NoData -> {}
-                                                                                            is API_Result_Handling.Deactivated -> {
-                                                                                                // resultCallback(5)
-                                                                                            }
-
-                                                                                            is API_Result_Handling.Error -> {}
-                                                                                            is API_Result_Handling.Success -> {
-                                                                                                constants.Profile_ViewModel.deleteByPostId_Profile_SoldOuts(
-                                                                                                    view_Details_Data.value?.user_post_id
-                                                                                                        ?: 0
-                                                                                                )
-                                                                                                navController.navigate(
-                                                                                                    ProfileScreenFlow.Sold_Outs.route
-                                                                                                )
-
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-
-                                                                                title == "Edit Property" -> {
-                                                                                    navController.navigate(
-                                                                                        ProfileScreenFlow.Edit_Property_Option.route
-                                                                                    )
-                                                                                }
-
-                                                                                title == "Mark as Sold" -> {
-                                                                                    mark_As_Sold.value =
-                                                                                        true
-                                                                                }
-
-                                                                                title == "Repost" -> {
-                                                                                    repost_Btm.value =
-                                                                                        true
-                                                                                }
-
-                                                                                title == "Report" -> {
-                                                                                    if (view_Details_Data.value?.post_property?.is_report ?: 0 != 1) {
-                                                                                        report_BS.value =
-                                                                                            true
-                                                                                    } else {
-                                                                                        toast("Property Already Reported")
-                                                                                    }
-                                                                                }
-
-                                                                                title == "Share" -> {
-                                                                                    constants.Reels_ViewModel.DefaultShare(
-                                                                                        "https://land4sales.com/property/${view_Details_Data.value?.user_post_id ?: 0}",
-                                                                                        0
-                                                                                    )
-                                                                                }
-
-                                                                                else -> {
-                                                                                    // Default case
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                        else {
-                                                                            toast(constants.activity.getString(R.string.no_Internet))
-                                                                        }
-
-
-                                                                    }
-                                                                    .padding(
-                                                                        horizontal = 12.dp,
-                                                                        vertical = 10.dp
-                                                                    ),
-                                                                verticalAlignment = Alignment.CenterVertically
-                                                            ) {
-                                                                Icon(
-                                                                    painter = painterResource(id = iconRes),
-                                                                    contentDescription = title,
-                                                                    tint = newBlack,
-                                                                    modifier = Modifier.size(20.dp)
-                                                                )
-                                                                Spacer(modifier = Modifier.width(12.dp))
-                                                                Text(
-                                                                    text = title,
-                                                                    color = newBlack,
-                                                                    fontSize = constants.textUnit(14),
-                                                                    maxLines = 1,
-                                                                    overflow = TextOverflow.Ellipsis,
-                                                                    modifier = Modifier.weight(1f, fill = false)
-                                                                )
-                                                            }
-                                                        }
-                                                    }
-                                                }
-
-                                            }
-                                        }
-                                    }
-
-
-
-                                }
-
-                                if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1){}
-                                else {
-                                    SubcomposeAsyncImage(
-                                        model = R.drawable.propertyviewfullscreenvideo, "", modifier = Modifier
-                                            .padding(horizontal = 16.dp, vertical = 16.dp)
-                                            .size(24.dp)
-                                            .align(Alignment.BottomEnd)
-                                            .noRippleClickable{
-                                                onFullView.value = true
-                                            }
-                                    )
-                                }
-                        }
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            //.background(Color.Red)
-                            .height(20.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    )
-                    {
-                        Row(
-                            modifier = Modifier
-                                .wrapContentSize()
-                            , verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            repeat(imagesList.size) {
-                                index ->
-                                Box(
-                                    modifier = Modifier
-                                        .size(6.dp)
-                                        .clip(CircleShape)
-                                        .background(if (pagerState.currentPage == index) newBlue else newGray)
-                                )
-                                Spacer(modifier = Modifier.padding(4.dp))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
-
-    if (repost_Btm.value) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                repost_Btm.value = false
-            },
-            containerColor = Color.White
-        ) {
-            Column (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                , verticalArrangement = Arrangement.spacedBy(8.dp)
-                , horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Image(painter = painterResource(R.drawable.repost) , "")
-
-                Text("Repost lets you create a fresh post using the details from your existing one. Use it if you want to update your photos or videos. Property details will be copied, but you can edit them before posting again. Your previous post will remain unchanged"
-                    , modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                    , textAlign = TextAlign.Center
-                )
-
-                val state = remember { mutableStateOf(-1) }
-
-                Static_Bottom(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(.9f)
-                            .fillMaxHeight(.6f)
-                            .background(newBlue)
-                            .noRippleClickable{
-                                constants.PostProperty_ViewModel.set_Post_Form_Flow(0)
-                                constants.PostProperty_ViewModel.clear_Forms()
-                                constants.PostProperty_ViewModel.first_Form_selected_PP(-1)
-                                constants.PostProperty_ViewModel.select_Land_Cat_Id(-1)
-                                constants.PostProperty_ViewModel.LandSubType_Selected_Click(-1)
-//                            constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
-//                                -1
-//                            )
-                                constants.PostProperty_ViewModel.select_Land_Cat_Id(
-                                    -1
-                                )
-
-                                constants.PostProperty_ViewModel.add_pp3_Data(
-                                    PP3_API_DC(
-                                        pincode = "",
-                                        country = "",
-                                        state = "",
-                                        city = "",
-                                        locality = ""
-                                    )
-                                )
-
-                                constants.PostProperty_ViewModel.clear_Selected_Fields_Form4()
-
-                                constants.PostProperty_ViewModel.check_Price_Negotiation(false)
-                                constants.PostProperty_ViewModel.put_budget_Price_PF5("")
-
-                                constants.PostProperty_ViewModel.clear_Media()
-                                constants.PostProperty_ViewModel.goToPPFormPage(0, 7)
-
-                                // clear all value then repost start
-
-
-                                get_Form_Preview_API_CALL { result ->
-                                    when (result) {
-                                        0 -> {
-                                            state.value = result
-                                        }
-
-                                        1 -> {}
-                                        2 -> {}
-                                        3 -> {
-                                            println("REPOST CLICKER SUCCESS")
-                                            val server_Data =
-                                                constants.PostProperty_ViewModel.get_Preview_Data()
-
-                                            server_Data?.let { data ->
-                                                constants.PostProperty_ViewModel.update_Selected_Field_Form4 {
-                                                    data.toSelectedOptionsForm4()
-                                                }
-                                            }
-
-                                            AppPreferences.save_Post_Id(
-                                                server_Data?.user_post_id ?: 0
-                                            )
-                                            println("POST ID -- ${AppPreferences.get_Post_Id()}")
-
-                                            constants.PostProperty_ViewModel.first_Form_selected_PP(
-                                                server_Data?.land_type_id ?: -1
-                                            )
-                                            constants.PostProperty_ViewModel.set_country3(
-                                                server_Data?.country ?: ""
-                                            )
-                                            constants.PostProperty_ViewModel.set_state3(
-                                                server_Data?.state ?: ""
-                                            )
-                                            constants.PostProperty_ViewModel.set_city3(
-                                                server_Data?.city ?: ""
-                                            )
-                                            constants.PostProperty_ViewModel.set__selectedLocality3(
-                                                server_Data?.address ?: ""
-                                            )
-
-                                            println(
-                                                "GIVEN ADDRESS DATA FIELD -- " +
-                                                        "${constants.PostProperty_ViewModel.get_selectedLocality3()} --- " +
-                                                        "${constants.PostProperty_ViewModel.get_latLng3()}---" +
-                                                        "-${constants.PostProperty_ViewModel.get_city3()}--" +
-                                                        "-${constants.PostProperty_ViewModel.get_state3()} ----" +
-                                                        " ${constants.PostProperty_ViewModel.get_country3()}"
-                                            )
-
-                                            constants.PostProperty_ViewModel.set_onSelected_ProType(
-                                                (server_Data?.land_type_id ?: 0)
-                                            )
-                                            constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
-                                                server_Data?.land_categorie_id ?: 0
-                                            )
-
-                                            constants.PostProperty_ViewModel.select_Land_Cat_Id(
-                                                server_Data?.land_categorie_id ?: 0
-                                            )
-
-                                            constants.PostProperty_ViewModel.LandSubType_Selected_Click(
-                                                server_Data?.land_categorie_id ?: 0
-                                            )
-\
-
-
-                                            println("Step 2 --- ${(server_Data?.land_type_id ?: 0) - 1} -***${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}***-- ${server_Data?.land_categorie_id ?: 0}")
-//                                            println("LOCARTION DERAIKS sfjngv adsfbvkhjd REPOST ${server_Data.pincode} -__${server_Data.longitude}--${server_Data.latitude}--${server_Data.address}--${server_Data.city}- ${server_Data.country} -- ${data.state}")
-
-                                            // Safely set values if they’re not empty
-                                            if (!server_Data?.pincode.isNullOrEmpty()) {
-                                                constants.PostProperty_ViewModel.set_pincode3(
-                                                    server_Data?.pincode ?: ""
-                                                )
-                                            }
-                                            if (!server_Data?.country.isNullOrEmpty()) {
-                                                constants.PostProperty_ViewModel.set_country3(
-                                                    server_Data?.country ?: ""
-                                                )
-                                            }
-                                            if (!server_Data?.state.isNullOrEmpty()) {
-                                                constants.PostProperty_ViewModel.set_state3(
-                                                    server_Data?.state ?: ""
-                                                )
-                                            }
-                                            if (!server_Data?.city.isNullOrEmpty()) {
-                                                constants.PostProperty_ViewModel.set_city3(
-                                                    server_Data?.city ?: ""
-                                                )
-                                            }
-                                            if (!server_Data?.address.isNullOrEmpty()) {
-                                                constants.PostProperty_ViewModel.set__selectedLocality3(
-                                                    server_Data?.address ?: ""
-                                                )
-                                            }
-//
-                                            if (server_Data?.latitude?.isNotEmpty() == true && server_Data?.longitude?.isNotEmpty() == true) {
-                                                constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
-                                                    LatLng(
-                                                        server_Data?.latitude?.toDouble() ?: 0.0,
-                                                        server_Data?.longitude?.toDouble() ?: 0.0
-                                                    )
-                                                )
-                                            }
-
-//                                            if (server_Data.images.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addImages(server_Data?.images ?:"")
-//                                            }
-//                                            else if(server_Data.video.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addVideo(server_Data?.images ?:"")
-//
-//                                            }
-                                            constants.PostProperty_ViewModel.add_pp3_Data(
-                                                PP3_API_DC(
-                                                    pincode = server_Data?.pincode ?: "",
-                                                    country = server_Data?.country ?: "",
-                                                    state = server_Data?.state ?: "",
-                                                    city = server_Data?.city ?: "",
-                                                    locality = server_Data?.locality ?: ""
-                                                )
-                                            )
-
-                                            val latLng = LatLng(
-                                                server_Data?.latitude?.toDouble() ?: 0.0,
-                                                server_Data?.longitude?.toDouble() ?: 0.0
-                                            )
-                                            constants.PostProperty_ViewModel.set_latLng3(latLng)
-
-                                            constants.PostProperty_ViewModel.select_User_Type_1PF(
-                                                server_Data?.land_type_id ?: 0
-                                            )
-                                            constants.PostProperty_ViewModel.select_Land_Cat_Id(
-                                                server_Data?.land_categorie_id ?: 0
-                                            )
-
-                                            if (!server_Data?.images.isNullOrEmpty()) {
-                                                val imageMediaList =
-                                                    server_Data.images.map { imageUri ->
-                                                        UploadPropertyMedia(
-                                                            uri = Uri.parse(imageUri),
-                                                            isVideo = false
-                                                        )
-                                                    }
-                                                constants.PostProperty_ViewModel.addImages(
-                                                    imageMediaList
-                                                )
-                                            } else if (!server_Data?.video.isNullOrEmpty()) {
-                                                val videoMedia = UploadPropertyMedia(
-                                                    uri = Uri.parse(server_Data.video),
-                                                    isVideo = true
-                                                )
-                                                constants.PostProperty_ViewModel.addVideo(videoMedia)
-                                            }
-
-
-
-                                            constants.PostProperty_ViewModel.select_Land_Type(
-                                                server_Data?.land_type_id ?: 0
-                                            )
-
-                                            val budget_Price =
-                                                constants.PostProperty_ViewModel.put_budget_Price_PF5(
-                                                    server_Data?.price ?: ""
-                                                )
-
-                                            println("SERVER DATA -- ${server_Data} ---- cons.${constants.PostProperty_ViewModel.get_Selected_Fields_Form()}")
-
-                                            constants.Profile_ViewModel.set_From_Repost(1)
-                                            constants.PostProperty_ViewModel.set_Post_Form_Flow(2)
-                                            constants.PostProperty_ViewModel.goToPPFormPage(0 , 7)
-
-                                            // ✅ Navigate after everything is done
-                                            navController.navigate(ProfileScreenFlow.Post_Property_Forms.route)
-                                        }
-                                    }
-                                }
-
-                            }
-                        , contentAlignment = Alignment.Center
-                    ){
-                        if (state.value == 0){
-                            CircularProgressIndicator(modifier = Modifier.size(24.dp) , color = newWhite)
-                        }
-                        else {
-                            Text("Continue to Repost" , color = newWhite)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    Mark_As_Sold_Flow(mark_As_Sold, view_Details_Data.value?.user_post_id ?: 0, navController)
-
-    if (report_BS.value){
-
-        val sheetState = rememberModalBottomSheetState(
-            skipPartiallyExpanded = true
-        )
-
-        ModalBottomSheet(
-            onDismissRequest = {
-                constants.Profile_ViewModel.toggle_ReportSucces_True()
-
-                report_BS.value = false
-                constants.Profile_ViewModel.toggle_ProfileReport_Options(
-                    -1
-                )
-            },
-            sheetState = sheetState
-            , containerColor = newWhite
-            , sheetGesturesEnabled = false
-        )
-        {
-            Column (
-                modifier = Modifier
-                , verticalArrangement = Arrangement.Top
-            ){
-                val user_Manual_report = remember { mutableStateOf(false) }
-                val user_Manual_report_String = remember { mutableStateOf("") }
-
-
-
-                AnimatedContent (
-                    targetState = report_success
-                )
-                {
-                        targetState ->
-
-                    if (targetState.value) {
-                        Column(
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .padding(horizontal = 16.dp)
-                            , verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        )
-                        {
-                            Text(
-                                text = "Why are you reporting ?",
-                                color = newBlack,
-                                fontSize = constants.textUnit(24),
-                                fontFamily = constants.fontFamily(0),
-                                modifier = Modifier.align(Alignment.Start)
-                            )
-
-                            report_Options.value.forEachIndexed { index, profileReportOptionsDc ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        text = profileReportOptionsDc.option_title,
-                                        color = newBlack,
-                                        fontSize = constants.textUnit(14),
-                                        fontFamily = constants.fontFamily(3)
-                                    )
-
-                                    RadioButton(
-                                        selected = profileReportOptionsDc.isSelected,
-                                        onClick = {
-                                            user_Manual_report.value = false
-                                            if (index < report_Options.value.size - 1) {
-                                                constants.Profile_ViewModel.toggle_ProfileReport_Options(
-                                                    profileReportOptionsDc.id
-                                                )
-                                            } else {
-                                                constants.Profile_ViewModel.toggle_ProfileReport_Options(
-                                                    profileReportOptionsDc.id
-                                                )
-                                                user_Manual_report.value = true
-                                            }
-                                        }
-                                    )
-                                }
-                            }
-
-                            AnimatedVisibility(
-                                user_Manual_report.value,
-                                enter = slideInHorizontally(tween(900)) { it }
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(Color.White)
-                                        .border(1.dp, newGray, RoundedCornerShape(8.dp))
-                                )
-                                {
-                                    BasicTextField(
-                                        value = user_Manual_report_String.value,
-                                        onValueChange = { user_Manual_report_String.value = it },
-                                        modifier = Modifier
-                                            .padding(12.dp)
-                                            .fillMaxWidth(),
-                                        singleLine = true,
-                                        textStyle = TextStyle(
-                                            color = newBlack,
-                                            fontSize = constants.textUnit(14),
-                                            fontFamily = constants.fontFamily(2)
-                                        ),
-                                        decorationBox = { innerTextField ->
-                                            if (user_Manual_report_String.value.isEmpty()) {
-                                                Text(
-                                                    text = "Enter reason...",
-                                                    color = newGray,
-                                                    fontSize = constants.textUnit(14),
-                                                    fontFamily = constants.fontFamily(2)
-                                                )
-                                            }
-                                            innerTextField()
-                                        }
-                                    )
-                                }
-
-                            }
-                        }
-                    }
-                    else {
-                        Column(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(300.dp)
-                            , verticalArrangement = Arrangement.SpaceEvenly
-                            , horizontalAlignment = Alignment.CenterHorizontally
-                        ){
-                            SubcomposeAsyncImage(
-                                model = R.drawable.profile_report_submit_success
-                                ,""
-                                , modifier = Modifier
-                                    .size(150.dp)
-                            )
-
-
-                            Text(
-                                text = "Submitted Successfully",
-                                color = newBlack,
-                                fontSize = constants.textUnit(18),
-                                fontFamily = constants.fontFamily(0)
-                            )
-
-
-                            Text(
-                                text = "Thank you for bringing this to our attention.",
-                                color = newBlack,
-                                fontSize = constants.textUnit(12),
-                                fontFamily = constants.fontFamily(3)
-                            )
-
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.padding(8.dp))
-
-                if (report_success.value){
-                    Static_Bottom(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(92.dp)
-                        , content = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                , contentAlignment = Alignment.Center
-                            )
-                            {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth(.9f)
-                                        .fillMaxHeight(.7f)
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .background(newBlue)
-                                        .noRippleClickable {
-                                            if (network.value == NetworkStatus.Online) {
-                                                println("djcbswdehjvcbewvhjbwejhvb")
-                                                if (view_Details_Data.value?.post_property?.is_report ?: 0 != 1) {
-
-                                                    if (user_Manual_report_String.value.isEmpty()) {
-                                                        user_Manual_report_String.value =
-                                                            constants.Profile_ViewModel.getSelectedProfileReportOptionDescription()
-                                                                ?: ""
-                                                    }
-                                                    constants.API_Vm.put_Report_All(
-                                                        user_id = AppPreferences.getUserId(),
-                                                        user_post_id = (view_Details_Data.value?.user_post_id
-                                                            ?: 0).toString(),
-                                                        //AppPreferences.get_Post_Id(),
-                                                        receiver_id = (view_Details_Data.value?.user_id
-                                                            ?: 0).toString(),
-                                                        comment_id = "",
-                                                        report_sentence_id = (constants.Profile_ViewModel.getSelectedProfileReportOptionId()
-                                                            ?.plus(1)) ?: 0,
-                                                        report_sentence = user_Manual_report_String.value,
-                                                        status = 2,
-                                                    )
-                                                    { apiResultHandling ->
-
-                                                        when (apiResultHandling) {
-                                                            is API_Result_Handling.Loading -> {
-                                                                // loading
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(true)
-                                                            }
-
-                                                            is API_Result_Handling.Error -> {
-                                                                // fail
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
-                                                            }
-
-                                                            is API_Result_Handling.Success -> {
-
-
-                                                                constants.Profile_ViewModel.toggleReportSubmissionSuccess()
-                                                                constants.Reels_ViewModel.toggleLike_Report(
-                                                                    view_Details_Data.value?.user_post_id
-                                                                        ?: 0
-                                                                )
-                                                                //constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(videos[pagerState.currentPage].user_id)
-                                                                // success
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
-                                                            }
-
-                                                            is API_Result_Handling.NoData -> {
-                                                                // no data
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
-                                                            }
-
-                                                            is API_Result_Handling.Deactivated -> {
-                                                                /// resultCallback(5)
-                                                            }
-                                                        }
-                                                    }
-                                                } else {
-
-                                                    //constants.Common_H_ViewModel.toggleReelsBTMSheet(false)
-//                                                scope.launch {
-                                                    GlobalSnackbar.show(" Post Already Reported")
-//
-//                                                    report_BS.value = false
-//                                                }
-                                                    //SimpleSnackbar(" Post Already Reported")
-
-                                                }
-
-                                            }
-                                            else {
-                                                toast(constants.activity.getString(R.string.no_Internet))
-                                            }
-
-                                }
-                                    , contentAlignment = Alignment.Center
-                                ){
-                                    Text(
-                                        text = "Submit Report",
-                                        color = Color.White,
-                                        fontSize = constants.textUnit(14),
-                                        fontFamily = constants.fontFamily(0)
-                                    )
-                                }
-                            }
-                        }
-                    )
-                }
-            }
-        }
-    }
-}*/
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VPS_FirstPart(
@@ -8061,8 +5846,6 @@ fun VPS_FirstPart(
 
     var notInterested_Btm = remember { mutableStateOf(false) }
 
-
-    // FIXED: Remember composition state to prevent recreation
     val compositionKey = remember(view_Details_Data.value?.user_post_id) {
         "vps_${view_Details_Data.value?.user_post_id}_$typeOfData"
     }
@@ -8071,7 +5854,6 @@ fun VPS_FirstPart(
 
     var activateRenew = remember { mutableStateOf(false) }
     var activateRentedout = remember { mutableStateOf(false) }
-
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -8084,7 +5866,6 @@ fun VPS_FirstPart(
 
             mediaList.clear()
 
-            // Add images
             data.post_property.images?.forEach { img ->
                 mediaList.add(
                     ViewDetailsMedia(
@@ -8094,7 +5875,6 @@ fun VPS_FirstPart(
                 )
             }
 
-            // Add videos
             data.post_property.video?.forEach { vid ->
                 mediaList.add(
                     ViewDetailsMedia(
@@ -8104,10 +5884,6 @@ fun VPS_FirstPart(
                 )
             }
         }
-
-
-
-
 
         RentoViewDetailsFirstPart(mediaList , view_Details_Data , mark_As_Sold , report_BS , repost_Btm , onFullView, notInterested_Btm ,navController, activateRentedout , activateRenew )
     }
@@ -8152,9 +5928,7 @@ fun VPS_FirstPart(
                                 constants.PostProperty_ViewModel.first_Form_selected_PP(-1)
                                 constants.PostProperty_ViewModel.select_Land_Cat_Id(-1)
                                 constants.PostProperty_ViewModel.LandSubType_Selected_Click(-1)
-//                            constants.PostProperty_ViewModel.pp_SecondForm_Residential_Select_Option(
-//                                -1
-//                            )
+
                                 constants.PostProperty_ViewModel.select_Land_Cat_Id(
                                     -1
                                 )
@@ -8177,9 +5951,6 @@ fun VPS_FirstPart(
                                 constants.PostProperty_ViewModel.clear_Media()
                                 constants.PostProperty_ViewModel.goToPPFormPage(0, 7)
 
-                                // clear all value then repost start
-
-
                                 get_Form_Preview_API_CALL { result ->
                                     when (result) {
                                         0 -> {
@@ -8189,7 +5960,6 @@ fun VPS_FirstPart(
                                         1 -> {}
                                         2 -> {}
                                         3 -> {
-                                            println("REPOST CLICKER SUCCESS")
                                             val server_Data =
                                                 constants.PostProperty_ViewModel.get_Preview_Data()
 
@@ -8202,7 +5972,6 @@ fun VPS_FirstPart(
                                             AppPreferences.save_Post_Id(
                                                 server_Data?.user_post_id ?: 0
                                             )
-                                            println("POST ID -- ${AppPreferences.get_Post_Id()}")
 
                                             constants.PostProperty_ViewModel.first_Form_selected_PP(
                                                 server_Data?.land_type_id ?: -1
@@ -8220,14 +5989,6 @@ fun VPS_FirstPart(
                                                 server_Data?.address ?: ""
                                             )
 
-                                            println(
-                                                "GIVEN ADDRESS DATA FIELD -- " +
-                                                        "${constants.PostProperty_ViewModel.get_selectedLocality3()} --- " +
-                                                        "${constants.PostProperty_ViewModel.get_latLng3()}---" +
-                                                        "-${constants.PostProperty_ViewModel.get_city3()}--" +
-                                                        "-${constants.PostProperty_ViewModel.get_state3()} ----" +
-                                                        " ${constants.PostProperty_ViewModel.get_country3()}"
-                                            )
 
                                             constants.PostProperty_ViewModel.set_onSelected_ProType(
                                                 (server_Data?.land_type_id ?: 0)
@@ -8256,10 +6017,6 @@ fun VPS_FirstPart(
                                                     server_Data?.land_categorie_id ?: 0
                                                 )
 
-                                            println("Step 2 --- ${(server_Data?.land_type_id ?: 0) - 1} -***${constants.PostProperty_ViewModel._repost_Land_Cat_Type_Ids.value}***-- ${server_Data?.land_categorie_id ?: 0}")
-//                                            println("LOCARTION DERAIKS sfjngv adsfbvkhjd REPOST ${server_Data.pincode} -__${server_Data.longitude}--${server_Data.latitude}--${server_Data.address}--${server_Data.city}- ${server_Data.country} -- ${data.state}")
-
-                                            // Safely set values if they’re not empty
                                             if (!server_Data?.pincode.isNullOrEmpty()) {
                                                 constants.PostProperty_ViewModel.set_pincode3(
                                                     server_Data?.pincode ?: ""
@@ -8285,7 +6042,7 @@ fun VPS_FirstPart(
                                                     server_Data?.address ?: ""
                                                 )
                                             }
-//
+
                                             if (server_Data?.latitude?.isNotEmpty() == true && server_Data?.longitude?.isNotEmpty() == true) {
                                                 constants.PostProperty_ViewModel.add_Pinned_Lat_Long(
                                                     LatLng(
@@ -8295,13 +6052,6 @@ fun VPS_FirstPart(
                                                 )
                                             }
 
-//                                            if (server_Data.images.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addImages(server_Data?.images ?:"")
-//                                            }
-//                                            else if(server_Data.video.isNotEmpty()){
-//                                                constants.PostProperty_ViewModel.addVideo(server_Data?.images ?:"")
-//
-//                                            }
                                             constants.PostProperty_ViewModel.add_pp3_Data(
                                                 PP3_API_DC(
                                                     pincode = server_Data?.pincode ?: "",
@@ -8328,37 +6078,21 @@ fun VPS_FirstPart(
                                             if (!server_Data?.images.isNullOrEmpty()) {
                                                 val imageMediaList =
                                                     server_Data.images.map { imageUri ->
-//                                                        UploadPropertyMedia(
-//                                                            uri = Uri.parse(imageUri),
-//                                                            isVideo = false
-//                                                        )
+
                                                     }
-//                                                constants.PostProperty_ViewModel.addImages(
-//                                                    imageMediaList
-//                                                )
+
                                             } else if (!server_Data?.video.isNullOrEmpty()) {
-//                                                val videoMedia = UploadPropertyMedia(
-//                                                    uri = Uri.parse(server_Data.video),
-//                                                    isVideo = true
-//                                                )
-//                                                constants.PostProperty_ViewModel.addVideo(videoMedia)
+
                                             }
-
-
 
                                             constants.PostProperty_ViewModel.select_Land_Type(
                                                 server_Data?.land_type_id ?: 0
                                             )
 
-
-
-                                            println("SERVER DATA -- ${server_Data} ---- cons.${constants.PostProperty_ViewModel.get_Selected_Fields_Form()}")
-
                                             constants.Profile_ViewModel.set_From_Repost(1)
                                             constants.PostProperty_ViewModel.set_Post_Form_Flow(2)
                                             constants.PostProperty_ViewModel.goToPPFormPage(0, 7)
 
-                                            // ✅ Navigate after everything is done
                                             navController.navigate(ProfileScreenFlow.Post_Property_Forms.route)
                                         }
                                     }
@@ -8381,15 +6115,13 @@ fun VPS_FirstPart(
 
     Mark_As_Sold_Flow(mark_As_Sold, view_Details_Data.value?.user_post_id ?: 0, navController)
 
-
-    // Not Interested Sheeta
     if (notInterested_Btm.value)
     {
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
         ModalBottomSheet(
             onDismissRequest = {
-                //constants.Profile_ViewModel.toggle_ReportSucces_True()
+
                 notInterested_Btm.value = false
                 constants.Profile_ViewModel.toggle_NotInterested_Options(
                     -1
@@ -8406,7 +6138,6 @@ fun VPS_FirstPart(
             ) {
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
 
                 Column(
                     modifier = Modifier
@@ -8496,10 +6227,8 @@ fun VPS_FirstPart(
                     }
                 }
 
-
                 Spacer(modifier = Modifier.padding(8.dp))
 
-                //if (report_success.value) {
                 Static_Bottom(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -8574,11 +6303,11 @@ fun VPS_FirstPart(
                                                 }
 
                                             } else {
-                                                //scope.launch {
+
                                                 toast("Post Already Set to Not Interested")
-                                                //snackbarHostState.showSnackbar("Post Already Reported")
+
                                                 notInterested_Btm.value = false
-                                                //}
+
                                             }
                                         } else {
                                             toast(constants.activity.getString(R.string.no_Internet))
@@ -8596,7 +6325,7 @@ fun VPS_FirstPart(
                         }
                     }
                 )
-                //}
+
             }
         }
     }
@@ -8627,8 +6356,6 @@ fun VPS_FirstPart(
             ){
                 val user_Manual_report = remember { mutableStateOf(false) }
                 val user_Manual_report_String = remember { mutableStateOf("") }
-
-
 
                 AnimatedContent (
                     targetState = report_success
@@ -8727,40 +6454,7 @@ fun VPS_FirstPart(
                             }
                         }
                     }
-                   /* else {
-                        Column(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(300.dp)
-                            , verticalArrangement = Arrangement.SpaceEvenly
-                            , horizontalAlignment = Alignment.CenterHorizontally
-                        ){
-                            SubcomposeAsyncImage(
-                                model = R.drawable.profile_report_submit_success
-                                ,""
-                                , modifier = Modifier
-                                    .size(150.dp)
-                            )
 
-
-                            Text(
-                                text = "Submitted Successfully",
-                                color = newBlack,
-                                fontSize = constants.textUnit(18),
-                                fontFamily = constants.fontFamily(0)
-                            )
-
-
-                            Text(
-                                text = "Thank you for bringing this to our attention.",
-                                color = newBlack,
-                                fontSize = constants.textUnit(12),
-                                fontFamily = constants.fontFamily(3)
-                            )
-
-                        }
-                    }*/
                 }
 
                 Spacer(modifier = Modifier.padding(8.dp))
@@ -8785,7 +6479,6 @@ fun VPS_FirstPart(
                                         .background(newBlue)
                                         .noRippleClickable {
                                             if (network.value == NetworkStatus.Online) {
-                                                println("djcbswdehjvcbewvhjbwejhvb")
                                                 if (view_Details_Data.value?.post_property?.is_report ?: 0 != 1) {
 
                                                     if (user_Manual_report_String.value.isEmpty()) {
@@ -8797,7 +6490,7 @@ fun VPS_FirstPart(
                                                         user_id = AppPreferences.getUserId(),
                                                         user_post_id = (view_Details_Data.value?.user_post_id
                                                             ?: 0).toString(),
-                                                        //AppPreferences.get_Post_Id(),
+
                                                         receiver_id = (view_Details_Data.value?.user_id
                                                             ?: 0).toString(),
                                                         comment_id = "",
@@ -8810,19 +6503,15 @@ fun VPS_FirstPart(
 
                                                         when (apiResultHandling) {
                                                             is API_Result_Handling.Loading -> {
-                                                                // loading
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(true)
+
                                                             }
 
                                                             is API_Result_Handling.Error -> {
-                                                                // fail
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.Success -> {
 
-
-//                                                                constants.Profile_ViewModel.toggleReportSubmissionSuccess()
                                                                 constants.Reels_ViewModel.toggleLike_Report(
                                                                     view_Details_Data.value?.user_post_id
                                                                         ?: 0
@@ -8832,18 +6521,15 @@ fun VPS_FirstPart(
                                                                     view_Details_Data.value?.user_post_id
                                                                         ?: 0
                                                                 )
-                                                                //constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(videos[pagerState.currentPage].user_id)
-                                                                // success
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.NoData -> {
-                                                                // no data
-                                                                //constants.PostProperty_ViewModel.change_Status_PFs(false)
+
                                                             }
 
                                                             is API_Result_Handling.Deactivated -> {
-                                                                /// resultCallback(5)
+
                                                             }
                                                         }
                                                     }
@@ -8874,7 +6560,6 @@ fun VPS_FirstPart(
         }
     }
 
-    /// activte post
     if (activateRenew.value) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -8891,8 +6576,6 @@ fun VPS_FirstPart(
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
-//                Image(painter = painterResource(R.drawable.repost) , "")
-
 
                 com.toletspot.houseforrent.CommonText(
                     "Renew Property Listing",
@@ -8942,16 +6625,16 @@ fun VPS_FirstPart(
                                         is API_Result_Handling.Error -> {
 
                                             GlobalSnackbar.show("Something went wrong")
-                                            //isLoading = false
+
                                             activateRentedout.value = false
                                         }
 
                                         is API_Result_Handling.Deactivated -> {
-                                            //resultCallback(5)
+
                                         }
 
                                         is API_Result_Handling.Loading -> {
-                                            //isLoading = true
+
                                         }
 
                                         is API_Result_Handling.Success -> {
@@ -8965,7 +6648,6 @@ fun VPS_FirstPart(
                                                 view_Details_Data.value?.user_post_id ?: 0
                                             )
 
-                                            //isLoading = false
                                             activateRenew.value = false
 
                                             navController.navigateUp()
@@ -8986,7 +6668,7 @@ fun VPS_FirstPart(
             }
         }
     }
-    /// activte post
+
     if (activateRentedout.value) {
         ModalBottomSheet(
             onDismissRequest = {
@@ -9003,8 +6685,6 @@ fun VPS_FirstPart(
                 , verticalArrangement = Arrangement.spacedBy(8.dp)
                 , horizontalAlignment = Alignment.CenterHorizontally
             ){
-//                Image(painter = painterResource(R.drawable.repost) , "")
-
 
                 com.toletspot.houseforrent.CommonText(
                     "Activate Listing",
@@ -9057,7 +6737,7 @@ fun VPS_FirstPart(
                                         }
 
                                         is API_Result_Handling.Deactivated -> {
-                                            //resultCallback(5)
+
                                         }
 
                                         is API_Result_Handling.Loading -> {
@@ -9068,21 +6748,16 @@ fun VPS_FirstPart(
                                             isLoading = false
                                             GlobalSnackbar.show("Property Activated Successfully ")
 
-//                                            constants.Reels_ViewModel.setNewTimeStampOnRenew(
-//                                                view_Details_Data.value?.user_post_id ?: 0
-//                                            )
                                             constants.Reels_ViewModel.deleteVideoById_Profile_Post_Reels(
                                                 view_Details_Data.value?.user_post_id ?: 0
                                             )
 
-                                            //isLoading = false
                                             activateRentedout.value = false
 
                                             navController.navigateUp()
                                         }
                                     }
                                 }
-
 
                             }
                         , contentAlignment = Alignment.Center
@@ -9106,7 +6781,6 @@ data class ViewDetailsMedia(
     val localUri: Uri? = null
 )
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RentoViewDetailsFirstPart(
@@ -9126,7 +6800,7 @@ fun RentoViewDetailsFirstPart(
 
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-//    val pagerState = rememberPagerState(pageCount = { mediaList.size })
+
     val pagerState = rememberPagerState(pageCount = { maxOf(1, mediaList.size) })
 
     var expanded = remember { mutableStateOf(false) }
@@ -9137,7 +6811,6 @@ fun RentoViewDetailsFirstPart(
     var currentPage by remember { mutableStateOf(0) }
     var isPlaying by remember { mutableStateOf(false) }
 
-// Create or re-create player when swiped
     LaunchedEffect(pagerState) {
 
         if (mediaList.isEmpty()) return@LaunchedEffect
@@ -9146,17 +6819,14 @@ fun RentoViewDetailsFirstPart(
             currentPage = page
             val media = mediaList[page]
 
-            // If current page is not video -> pause player
             if (!media.isVideo) {
                 player?.pause()
                 return@collect
             }
 
-            // Release old player safely
             player?.release()
             player = null
 
-            // Create new player properly
             player = ExoPlayer.Builder(context).build().apply {
                 setMediaItem(MediaItem.fromUri(media.uploadedUrl ?: ""))
                 prepare()
@@ -9178,8 +6848,6 @@ fun RentoViewDetailsFirstPart(
         }
     }
 
-
-// Release completely on exit
     DisposableEffect(Unit) {
         onDispose {
             player?.release()
@@ -9188,10 +6856,6 @@ fun RentoViewDetailsFirstPart(
     }
 
     var postflow = constants.PostProperty_ViewModel.postFlow.collectAsState()
-
-
-
-
 
     Column(
         modifier = Modifier
@@ -9202,7 +6866,6 @@ fun RentoViewDetailsFirstPart(
     )
     {
         Box() {
-            // Main HorizontalPager
 
             HorizontalPager(
                 state = pagerState,
@@ -9214,7 +6877,7 @@ fun RentoViewDetailsFirstPart(
             { page ->
 
                 if (mediaList.isEmpty()) {
-                    // Show empty placeholder page
+
                     val type = if (view_Details_Data.value?.user_id == AppPreferences.getUserId()) 1 else 2
                     Box(
                         modifier = Modifier
@@ -9234,7 +6897,7 @@ fun RentoViewDetailsFirstPart(
                     }
                 }
                 else {
-                    val media = mediaList[page]   // SAFE now
+                    val media = mediaList[page]
 
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -9275,10 +6938,6 @@ fun RentoViewDetailsFirstPart(
                 }
             }
 
-
-
-
-            /// overlay items
             Box(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
@@ -9329,7 +6988,6 @@ fun RentoViewDetailsFirstPart(
                         )
                     }
 
-
                         Row(
                             modifier = Modifier.wrapContentWidth(),
                             verticalAlignment = Alignment.CenterVertically,
@@ -9345,7 +7003,7 @@ fun RentoViewDetailsFirstPart(
                                 modifier = Modifier
                                     .size(24.dp)
                                     .noRippleClickable {
-                                        // if((view_Details_Data.value?.is_saved ?: "") == 1) true else false
+
                                         if (network.value == NetworkStatus.Online) {
                                             constants.API_Vm.put_save_UnSave_Property(
                                                 user_id = AppPreferences.getUserId(),
@@ -9384,77 +7042,70 @@ fun RentoViewDetailsFirstPart(
 
                             Spacer(modifier = Modifier.padding(8.dp))
 
-
-                            println("VIewDetrailsFlow -- ${viewIdentify.value}")
-
                             val dataList = when {
 
                                 viewIdentify.value == ViewDetailsFlow.RENTOUT -> {
                                     listOf(
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.editpropbtmrento,
+
                                             title = "Edit Property"
                                         ),
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsdelete,
+
                                             title = "Delete Property"
                                         ),
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsoptionsactivate,
+
                                             title = "Activate"
                                         ),
                                     )
                                 }
                                 viewIdentify.value == ViewDetailsFlow.OTHERS -> {
-//                                    listOf(
+
                                         listOf(
                                             Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsshare,
+
                                                 title = "Share"
                                             ),
                                             Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsreport,
+
                                                 title = "Report"
                                             ),
-//                                        Common_DropDown2Options_DC(
-//                                                icon = R.drawable.notinterestbtmrento,
-//                                            title = "Not Interested"
-//                                        ),
+
                                         )
-//                                    )
+
                                 }
 
                                 viewIdentify.value == ViewDetailsFlow.EXPIRY -> {
                                     listOf(
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.editpropbtmrento,
+
                                             title = "Repost Property"
                                         ),
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsdelete,
+
                                             title = "Delete Property"
                                         ),
                                     )
                                 }
 
                                 !isWithinLast5DaysOfValidity(view_Details_Data.value?.post_property?.created_at ?:"") -> {
-//                    viewdetailFlow.value == ViewDetailsFlow.RENEW -> {
-                                    println("indisddejeididjdjdfj2222222 -- ")
+
                                     listOf(
                                         Common_DropDown2Options_DC(
-//                                            icon = 0,
+
                                             title = "Delete Property"
                                         ),
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelssold,
+
                                             title = "Mark as RentedOut"
                                         ),
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsedit,
+
                                             title = "Edit Property"
                                         ),
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsedit,
+
                                             title = "Renew Property"
                                         ),
 
@@ -9464,146 +7115,39 @@ fun RentoViewDetailsFirstPart(
                                 view_Details_Data.value?.user_id == AppPreferences.getUserId() -> {
                                     listOf(
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsshare,
+
                                             title = "Share"
                                         ),
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsedit,
+
                                             title = "Edit Property"
                                         ),
-//                                            Common_DropDown2Options_DC(
-//                                                icon = R.drawable.repost,
-//                                                title = "Repost"
-//                                            ),
+
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelssold,
+
                                             title = "Mark as RentedOut"
                                         ),
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsdelete,
+
                                             title = "Delete Property"
                                         ),
                                     )
                                 }
-
-
 
                                 else -> {
                                     listOf(
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsshare,
+
                                             title = "Share"
                                         ),
                                         Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsreport,
+
                                             title = "Report"
                                         ),
-//                                        Common_DropDown2Options_DC(
-//                                                icon = R.drawable.notinterestbtmrento,
-//                                            title = "Not Interested"
-//                                        ),
+
                                         )
                                 }
                             }
-
-                               /* if (postflow.value != PostFlow.REPOST) {
-                                    when (viewIdentify) {
-
-                                        ViewDetailsFlow.OTHERS -> {
-                                            listOf(
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsshare,
-                                                    title = "Share"
-                                                ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsreport,
-                                                    title = "Report"
-                                                ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.notinterestbtmrento,
-                                                    title = "Not Interested"
-                                                ),
-
-                                                )
-                                        }
-
-                                        ViewDetailsFlow.RENEW  -> {
-                                            listOf(
-                                                Common_DropDown2Options_DC(
-//                                            icon = 0,
-                                                    title = "Delete Property"
-                                                ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelssold,
-                                                    title = "Mark as RentedOut"
-                                                ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsedit,
-                                                    title = "Edit Property"
-                                                ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsedit,
-                                                    title = "Renew Property"
-                                                ),
-
-                                                )
-                                        }
-
-                                        ViewDetailsFlow.RENTOUT -> {
-                                            listOf(
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.editpropbtmrento,
-                                                    title = "Edit Property"
-                                                ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsdelete,
-                                                    title = "Delete Property"
-                                                ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsoptionsactivate,
-                                                    title = "Activate"
-                                                ),
-                                            )
-                                        }
-
-                                        else -> {
-                                            listOf(
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsshare,
-                                                    title = "Share"
-                                                ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsedit,
-                                                    title = "Edit Property"
-                                                ),
-//                                            Common_DropDown2Options_DC(
-//                                                icon = R.drawable.repost,
-//                                                title = "Repost"
-//                                            ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelssold,
-                                                    title = "Mark as RentedOut"
-                                                ),
-                                                Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsdelete,
-                                                    title = "Delete Property"
-                                                ),
-                                            )
-                                        }
-                                    }
-                                }
-                            else {
-                                    listOf(
-                                        Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelssold,
-                                            title = "Repost Property"
-                                        ),
-                                        Common_DropDown2Options_DC(
-//                                                icon = R.drawable.reelsdelete,
-                                            title = "Delete Property"
-                                        ),
-                                    )
-                            }*/
 
                             ExposedDropdownMenuBox(
                                 expanded = expanded.value,
@@ -9640,7 +7184,6 @@ fun RentoViewDetailsFirstPart(
                                                                     view_Details_Data.value?.user_post_id
                                                                         ?: 0, true
                                                                 )
-
 
                                                             }
 
@@ -9706,13 +7249,7 @@ fun RentoViewDetailsFirstPart(
                                             verticalAlignment = Alignment.CenterVertically
                                         )
                                         {
-//                                            Icon(
-//                                                painter = painterResource(id = iconRes),
-//                                                contentDescription = title,
-//                                                tint = newBlack,
-//                                                modifier = Modifier.size(20.dp)
-//                                            )
-//                                            Spacer(modifier = Modifier.width(12.dp))
+
                                             Text(
                                                 text = title,
                                                 color = newBlack,
@@ -9730,7 +7267,6 @@ fun RentoViewDetailsFirstPart(
                 }
             }
 
-            /// full view
             if (mediaList.isNotEmpty()) {
                 SubcomposeAsyncImage(
                     model = R.drawable.propertyviewfullscreenvideo,
@@ -9748,7 +7284,6 @@ fun RentoViewDetailsFirstPart(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Indicator
         Row(horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
             repeat(mediaList.size) { index ->
                 Box(
@@ -9763,14 +7298,9 @@ fun RentoViewDetailsFirstPart(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-
-
-
     }
 
 }
-
-
 
 @Composable
 fun VPS_SecondPart(
@@ -9883,7 +7413,6 @@ fun VPS_SecondPart(
                                     .align(Alignment.Top)
                             )
                             constants.spacer(4)
-                            println("QWERZTy0987654323456789 -- ${view_Details_Data.value?.post_property?.locality}")
                             Text(
                                 "${ view_Details_Data.value?.post_property?.locality ?: "" } ,${ view_Details_Data.value?.post_property?.state ?: "" },${ view_Details_Data.value?.post_property?.country ?: "" },${ view_Details_Data.value?.post_property?.pincode ?: "" }",
                                 color = newBlack,
@@ -9891,8 +7420,6 @@ fun VPS_SecondPart(
                                 modifier = Modifier.align(Alignment.Top)
                             )
                         }
-
-
 
                     }
                 },
@@ -9904,31 +7431,14 @@ fun VPS_SecondPart(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-//                            Row(
-//                                modifier = Modifier,
-//                                verticalAlignment = Alignment.CenterVertically,
-//                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-//                            ) {
-//                                SubcomposeAsyncImage(
-//                                    model = R.drawable.baseline_star_24, "", modifier = Modifier
-//                                        .size(12.dp)
-//                                )
-//                                Text("5.0", color = newBlue, fontSize = constants.textUnit(12))
-//                                Text(
-//                                    "( 23 Reviews )",
-//                                    color = newBlack,
-//                                    fontSize = constants.textUnit(12)
-//                                )
-//                            }
+
                             Text(
                                 "posted ${getTimeAgo(view_Details_Data.value?.post_property?.created_at ?: "")}",
                                 color = Color(0xff969696),
                                 fontSize = constants.textUnit(12)
                             )
 
-
                         }
-
 
                         Spacer(modifier = Modifier.padding(4.dp))
 
@@ -10027,8 +7537,6 @@ fun VPS_SecondPart(
                             }
                         }
 
-                       // Spacer(modifier = Modifier.padding(4.dp))
-
                     }
                 }
                 , colors = ListItemColors(
@@ -10047,12 +7555,10 @@ fun VPS_SecondPart(
             Spacer(modifier = Modifier.padding(8.dp))
 
             if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1){
-                // from drafts ,repost
+
             } else {
-                // contact person
 
                 if (profile_Mode.value == 0) {
-                    println("mode 000000000000")
                 }
                 else
                 {
@@ -10075,7 +7581,6 @@ fun VPS_SecondPart(
                                         view_Details_Data.value?.username ?: "Unknown"
                                     )
 
-                                    //new flowwewwwwwww
                                     constants.Profile_ViewModel.add_BF_Handler(
                                         Profile_Handle_Back(
                                             current_UsedId = AppPreferences.getUserId(),
@@ -10083,14 +7588,9 @@ fun VPS_SecondPart(
                                             ff_User_Name = view_Details_Data.value?.username ?: "",
                                             ff_Fw_Count = 999,
                                             ff_Fg_Count = 999,
-                                            // is_Search_Enabled = is_Search_Enabled.value,
-                                            // search_Text = search_Text.value
+
                                         )
                                     )
-
-                                    /// println("ITEM PROFILE STRUCTURE __ ${is_Search_Enabled.value} -- ${constants.Profile_ViewModel.profile_BF_Handler.value}")
-
-                                    println("GIVEN OTHER USER ID -- ${constants.Profile_ViewModel.get_Other_User_Id()}")
 
                                     constants.Profile_ViewModel.addProfile(
                                         view_Details_Data.value?.user_id ?: 0
@@ -10099,7 +7599,6 @@ fun VPS_SecondPart(
                                         id = view_Details_Data.value?.user_id ?: 0
                                     )
 
-                                    // if (view_Details_Data.value?.user_id == AppPreferences.)
                                     navController.navigate(VideosScreenFlow.Other_Profile_Structure.route)
                                 },
                             verticalAlignment = Alignment.CenterVertically,
@@ -10113,7 +7612,6 @@ fun VPS_SecondPart(
                                 fontFamily = constants.fontFamily(1)
                             )
 
-
                             Icon(
                                 painter = painterResource(R.drawable.right_arrow),
                                 "", modifier = Modifier.size(12.dp)
@@ -10124,13 +7622,11 @@ fun VPS_SecondPart(
 
                     Spacer(modifier = Modifier.padding(8.dp))
 
-
-                    // call now gradient box
                     Row(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .fillMaxWidth(0.9f)
-                            .clip(RoundedCornerShape(8.dp)) // Clip must come **after** border
+                            .clip(RoundedCornerShape(8.dp))
                             .border(
                                 width = 1.dp,
                                 brush = Brush.verticalGradient(
@@ -10141,7 +7637,7 @@ fun VPS_SecondPart(
                             .background(
                                 Color(0xffFFFFFF)
                             )
-                            //.align(Alignment.CenterHorizontally)
+
                             .padding(horizontal = 8.dp, vertical = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -10176,7 +7672,7 @@ fun VPS_SecondPart(
                                             modifier = Modifier
                                                 .fillMaxSize()
                                                 .background(newLightBlue)
-                                            //.padding(8.dp)
+
                                             , contentAlignment = Alignment.Center
                                         ){
                                             Text(
@@ -10226,8 +7722,6 @@ fun VPS_SecondPart(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            // property overview
-
             Text(
                 "Property Overview",
                 color = newBlack,
@@ -10243,13 +7737,12 @@ fun VPS_SecondPart(
 
 }
 
-
 fun openMap(context: Context, latitudeStr: String, longitudeStr: String) {
     val lat = latitudeStr.toDoubleOrNull()
     val lng = longitudeStr.toDoubleOrNull()
 
     if (lat == null || lng == null) {
-        GlobalSnackbar.show("Invalid location")   // optional
+        GlobalSnackbar.show("Invalid location")
         return
     }
 
@@ -10260,7 +7753,7 @@ fun openMap(context: Context, latitudeStr: String, longitudeStr: String) {
     try {
         context.startActivity(mapIntent)
     } catch (e: Exception) {
-        // Fallback to browser
+
         val browserIntent = Intent(
             Intent.ACTION_VIEW,
             Uri.parse("https://www.google.com/maps/search/?api=1&query=$lat,$lng")
@@ -10274,14 +7767,12 @@ fun DetailsScreen(view_Details_Data: State<Get_Reels_Data?>) {
     val reelsData = view_Details_Data.value ?: return
     val property = reelsData.post_property
 
-    println("DATA COMING -- ${reelsData.post_property}")
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // 🏠 Normal property info (without FlowRow fields)
+
         Property_Overview_Box_Structure(property)
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -10292,8 +7783,6 @@ fun DetailsScreen(view_Details_Data: State<Get_Reels_Data?>) {
 
     }
 }
-
-
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn( ExperimentalMaterial3Api::class)
@@ -10310,7 +7799,6 @@ fun VPS_FullViewold(
     val pagerState = rememberPagerState(pageCount = { if (imagesList.isNotEmpty()) imagesList.size else 1 })
     val listState = rememberLazyListState()
 
-    // ----------------- Video Player Setup -----------------
     val player = remember(videoUri) {
         ExoPlayer.Builder(context).build().apply {
             if (videoUri.isNotEmpty()) {
@@ -10330,7 +7818,6 @@ fun VPS_FullViewold(
         }
     }
 
-    // Lifecycle control
     DisposableEffect(player, lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
@@ -10365,7 +7852,7 @@ fun VPS_FullViewold(
     }
 
     Column {
-        // ----------- MAIN CONTENT AREA (Video / Image Pager) -----------
+
         Box(
             modifier = Modifier
                 .weight(7.5f)
@@ -10376,7 +7863,7 @@ fun VPS_FullViewold(
         ) {
 
             if (imagesList.isEmpty()) {
-                // -------- Show Video PlayerSurface --------
+
                 Box(modifier = Modifier.fillMaxSize()) {
                     PlayerSurface(
                         player = player,
@@ -10387,7 +7874,6 @@ fun VPS_FullViewold(
                             }
                     )
 
-                    // Buffering overlay
                     if (isBuffering.value) {
                         Box(
                             modifier = Modifier
@@ -10399,7 +7885,6 @@ fun VPS_FullViewold(
                         }
                     }
 
-                    // Play icon overlay
                     if (!isPlaying.value && videoUri.isNotEmpty()) {
                         Box(
                             modifier = Modifier
@@ -10417,7 +7902,7 @@ fun VPS_FullViewold(
                             )
                         }
                     }
-                    // Thumbnails
+
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
@@ -10427,9 +7912,7 @@ fun VPS_FullViewold(
                         contentAlignment = Alignment.Center
                     )
                     {
-//                        scope.launch {
-//                            listState.animateScrollToItem(pagerState.currentPage)
-//                        }
+
                         LazyRow(state = listState) {
                             item {
                                 Box(
@@ -10458,7 +7941,7 @@ fun VPS_FullViewold(
                     }
                 }
             } else {
-                // -------- Show Image Pager --------
+
                 HorizontalPager(state = pagerState) { page ->
                     Box(
                         modifier = Modifier
@@ -10476,7 +7959,6 @@ fun VPS_FullViewold(
                 }
             }
 
-            // Close button
             SubcomposeAsyncImage(
                 model = R.drawable.close_common,
                 contentDescription = "",
@@ -10490,9 +7972,8 @@ fun VPS_FullViewold(
             )
         }
 
-        // ----------- Image Pager Indicator and Thumbnails -----------
         if (imagesList.isNotEmpty()) {
-            // Dots
+
             Box(
                 modifier = Modifier
                     .weight(.5f)
@@ -10516,7 +7997,6 @@ fun VPS_FullViewold(
                 }
             }
 
-            // Thumbnails
             Box(
                 modifier = Modifier
                     .weight(2f)
@@ -10544,8 +8024,8 @@ fun VPS_FullViewold(
                                 )
                                 .noRippleClickable {
                                     scope.launch {
-                                        pagerState.animateScrollToPage(itemIndex) // ✅ Move pager to that page
-                                        listState.animateScrollToItem(itemIndex)  // ✅ Scroll thumbnails into view
+                                        pagerState.animateScrollToPage(itemIndex)
+                                        listState.animateScrollToItem(itemIndex)
                                     }
                                 }
                             , contentAlignment = Alignment.Center
@@ -10564,7 +8044,7 @@ fun VPS_FullViewold(
                                         modifier = Modifier
                                             .fillMaxSize()
                                             .background(newLightBlue)
-                                        //.padding(8.dp)
+
                                         , contentAlignment = Alignment.Center
                                     ){
                                         Image(painterResource(R.drawable.emptypostsrento) ,"")
@@ -10589,18 +8069,16 @@ fun VPS_FullViewold(
     }
 }
 
-
 sealed class ViewMedia(open val title: String) {
     data class ImageItem(val url: String, override val title: String) : ViewMedia(title)
     data class VideoItem(val url: String, override val title: String) : ViewMedia(title)
 }
 
-
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun VPS_FullView(
     onFullView: MutableState<Boolean>,
-    mediaList: List<ViewMedia>,         // 👈 Combined images + videos
+    mediaList: List<ViewMedia>,
     initialIndex: Int = 0
 ) {
     val context = LocalContext.current
@@ -10610,18 +8088,15 @@ fun VPS_FullView(
     val pagerState = rememberPagerState(initialPage = initialIndex, pageCount = { mediaList.size })
     val listState = rememberLazyListState()
 
-    // ------- Single ExoPlayer for all video items -------
     val player = remember {
         ExoPlayer.Builder(context).build()
     }
 
-    // States
     val isPlaying = remember { mutableStateOf(false) }
     val isBuffering = remember { mutableStateOf(true) }
 
     var network = rememberNetworkStatus()
 
-    // Lifecycle control
     DisposableEffect(player, lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
@@ -10651,7 +8126,6 @@ fun VPS_FullView(
         }
     }
 
-    // ----- Auto Play / Pause when pager changes -----
     LaunchedEffect(pagerState.currentPage) {
         val item = mediaList[pagerState.currentPage]
         if (item is ViewMedia.VideoItem) {
@@ -10673,7 +8147,6 @@ fun VPS_FullView(
             .background(Color.Black)
     ) {
 
-        //========== MAIN AREA (Pager Video / Image) ==========//
         Box(
             modifier = Modifier
                 .padding(top = rememberNotchHeightDp().value)
@@ -10731,7 +8204,6 @@ fun VPS_FullView(
                     }
                 }
 
-                //============= HEADING =============//
                 val currentItem = mediaList[pagerState.currentPage]
                 Text(
                     text = currentItem.title,
@@ -10747,7 +8219,7 @@ fun VPS_FullView(
             else {
                 Column(
                     modifier = Modifier
-                        //.padding(top = 24.dp)
+
                         .fillMaxSize()
                         .background(Color.Black),
                     verticalArrangement = Arrangement.Center,
@@ -10766,7 +8238,6 @@ fun VPS_FullView(
                 }
             }
 
-            // Close button
             Image(
                 painter = painterResource(R.drawable.close_common),
                 contentDescription = "",
@@ -10778,8 +8249,6 @@ fun VPS_FullView(
             )
         }
 
-
-
         Column(
             modifier = Modifier
                 .weight(2f)
@@ -10787,9 +8256,8 @@ fun VPS_FullView(
                 .background(Color.White)
         ) {
 
-
             constants.spacer(4)
-            //============= PAGE INDICATOR (DOTS) =============//
+
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
@@ -10808,10 +8276,8 @@ fun VPS_FullView(
                 }
             }
 
-
             constants.spacer(8)
 
-            //============= Thumbnails =============//
             LazyRow(
                 state = listState,
                 modifier = Modifier
@@ -10849,7 +8315,6 @@ fun VPS_FullView(
                                 }
                             }
 
-                            println("GENeration of videi thumbail -- ${thumbnailBitmap.value}")
                             if (thumbnailBitmap.value != null) {
                                 AsyncImage(
                                     model = thumbnailBitmap.value,
@@ -10887,12 +8352,6 @@ fun VPS_FullView(
     }
 }
 
-
-
-
-
-// Use reflection to convert data class → key-value list
-// Helper to format field names → human readable
 fun formatLabel(name: String): String {
     return name
         .replace("_", " ")
@@ -10907,7 +8366,7 @@ fun mapPropertyFieldsold(
     ignoreFields: Set<String> = emptySet()
 ): List<Pair<String, String>> {
     return Get_Reels_Property_Data::class.memberProperties
-        .filterNot { it.name in ignoreFields } // skip ignored fields
+        .filterNot { it.name in ignoreFields }
         .mapNotNull { prop ->
             val value = prop.get(property)
             when (value) {
@@ -10919,7 +8378,6 @@ fun mapPropertyFieldsold(
             }
         }
 }
-
 
 fun mapPropertyFields2(
     property: Get_Reels_Property_Data,
@@ -10936,7 +8394,6 @@ fun mapPropertyFields2(
             when {
                 value == null -> null
 
-                // ✅ Handle timestamp string
                 prop.name == "availability_from" && value is String -> {
                     val timestamp = value.toLongOrNull()
                     timestamp?.let {
@@ -10969,7 +8426,6 @@ fun mapPropertyFields2(
         }
 }
 
-
 fun mapPropertyFields(
     property: Get_Reels_Property_Data,
     ignoreFields: Set<String> = emptySet()
@@ -10984,7 +8440,6 @@ fun mapPropertyFields(
         }
     }
 
-    // ---------- AREA DIMENSION ----------
     if (
         !ignoreFields.contains("area_length") &&
         !ignoreFields.contains("area_width")
@@ -11002,7 +8457,6 @@ fun mapPropertyFields(
         }
     }
 
-    // ---------- FACADE DIMENSION ----------
     if (
         !ignoreFields.contains("facade_height") &&
         !ignoreFields.contains("facade_width")
@@ -11020,17 +8474,13 @@ fun mapPropertyFields(
         }
     }
 
-    // ---------- FLOOR PLAN ----------
     add("Floor Plan", property.bhk_type)
 
-    // ---------- PROPERTY TYPE ----------
     add(
         "Property Type",
         property.is_this_property_for_rent_or_lease
     )
 
-    // ---------- AREA FIELDS WITH UNITS ----------
-    // ---------- AREA FIELDS WITH UNITS ----------
     property.carpet_area?.takeIf { it.isNotBlank() }?.let {
         add("Carpet Area", "$it ${property.carpet_area_unit}")
     }
@@ -11043,8 +8493,6 @@ fun mapPropertyFields(
         add("Super Built-up Area", "$it ${property.super_built_up_area_unit}")
     }
 
-
-    // ---------- GENERIC FALLBACK ----------
     Get_Reels_Property_Data::class.memberProperties
         .filterNot {
             it.name in ignoreFields ||
@@ -11101,8 +8549,6 @@ fun mapPropertyFields(
     return result
 }
 
-
-
 @Composable
 fun Property_Overview_Box_Structure(property: Get_Reels_Property_Data) {
 
@@ -11120,7 +8566,7 @@ fun Property_Overview_Box_Structure(property: Get_Reels_Property_Data) {
         "property_highlights", "fire_safety_measures",
         "pincode","draft","facade_height_unit", "landTypeText","landCategoryText",
         "is_sold"
-        //"area_length_unit" ,"area_width_unit"
+
         ,"built_up_area_unit"
         ,"carpet_area_unit"
         ,"deposit_amount_month_of_rents_type",
@@ -11129,28 +8575,22 @@ fun Property_Overview_Box_Structure(property: Get_Reels_Property_Data) {
         "post_type","property_area_unit","rent_negotiable"
         ,"super_built_up_area_unit" ,"images","video","status","U_ID", "address" ,
 
-        //"agreement_type",
-     //   "area_length" ,
-      //  "area_width",
-       // "bhk_type",
         "food_preferences"
-       // "is_this_property_for_rent_or_lease"
+
         ,"notice_period",
         "pets_allowed",
         "preferred_tenants",
         "rent",
         "lease_amount" ,
-       // "lease_duration_in_years"
 
     )
     val fields = mapPropertyFields(property, ignoreFields)
-
 
     Column(
         modifier = Modifier
             .wrapContentHeight()
             .fillMaxWidth()
-            // .padding(horizontal = 16.dp)
+
             .clip(RoundedCornerShape(8.dp))
             .border(1.dp, Color(0xffE8E8E8), RoundedCornerShape(8.dp))
             .background(newWhite)
@@ -11206,12 +8646,9 @@ fun Property_Overview_Box_Structure(property: Get_Reels_Property_Data) {
     }
 }
 
-
 @Composable
 fun Property_Overview_FlowRow_Structure(property: Get_Reels_Property_Data) {
-    println("DATA COMING -- ${property}")
 
-    // Define sections with their data
     val sections = listOf(
         Section(
             title = "Washroom Details",
@@ -11225,10 +8662,7 @@ fun Property_Overview_FlowRow_Structure(property: Get_Reels_Property_Data) {
             title = "Other Rooms",
             items = property.other_rooms?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
         ),
-//        Section(
-//            title = "Office Previously Used for",
-//            items = property.office_previously_used_for?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
-//        ),
+
         Section(
             title = "Fire Safety Measures",
             items = property.fire_safety_measures?.split(",")?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
@@ -11246,7 +8680,7 @@ fun Property_Overview_FlowRow_Structure(property: Get_Reels_Property_Data) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            //.padding(16.dp)
+
         ,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -11261,7 +8695,6 @@ fun Property_Overview_FlowRow_Structure(property: Get_Reels_Property_Data) {
     }
 }
 
-
 @Composable
 fun PropertySection(
     title: String,
@@ -11271,7 +8704,7 @@ fun PropertySection(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Section Title
+
         Text(
             text = title,
             color = Color.Black,
@@ -11279,7 +8712,6 @@ fun PropertySection(
             fontFamily = constants.fontFamily(1)
         )
 
-        // Tags in FlowRow
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -11305,20 +8737,15 @@ fun PropertySection(
     }
 }
 
-
-
-// Data class for sections
 data class Section(
     val title: String,
     val items: List<String>
 )
 
-
 @Composable
 fun Dp.toPx(): Float {
     return with(LocalDensity.current) { this@toPx.toPx() }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -11340,7 +8767,6 @@ fun SimpleVideoPlayer22222222222222222(
     val onHoverListener = constants.onHoverEnable.collectAsState()
     var expanded = remember { mutableStateOf(false) }
 
-    // ---------------------- Player Setup ----------------------
     val player = remember(videoUri) {
         ExoPlayer.Builder(context).build().apply {
             if (videoUri.isNotEmpty()) {
@@ -11360,7 +8786,6 @@ fun SimpleVideoPlayer22222222222222222(
         }
     }
 
-    // ---------------------- Lifecycle Management ----------------------
     DisposableEffect(player, lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
@@ -11394,7 +8819,6 @@ fun SimpleVideoPlayer22222222222222222(
         }
     }
 
-    // ---------------------- Playback Progress ----------------------
     var currentPosition by remember { mutableStateOf(0L) }
     var totalDuration by remember { mutableStateOf(0L) }
 
@@ -11413,15 +8837,13 @@ fun SimpleVideoPlayer22222222222222222(
         return "%02d:%02d".format(minutes, seconds)
     }
 
-    // ---------------------- UI ----------------------
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        println("DATA INSIDE FIRST PART VPS -- ${videoUri} -- ${imagesList.map { it }}")
         if (videoUri.isNotEmpty()) {
-            // Video Player Surface with tap-to-play/pause
+
             PlayerSurface(
                 player = player,
                 modifier = Modifier
@@ -11433,8 +8855,6 @@ fun SimpleVideoPlayer22222222222222222(
                     }
             )
 
-
-            // ---------------------- Buffering Overlay ----------------------
             if (isBuffering.value) {
                 Box(
                     modifier = Modifier
@@ -11446,7 +8866,6 @@ fun SimpleVideoPlayer22222222222222222(
                 }
             }
 
-            // ---------------------- Play Icon ----------------------
             if (!isPlaying.value && videoUri.isNotEmpty()) {
                 Box(
                     modifier = Modifier
@@ -11464,13 +8883,11 @@ fun SimpleVideoPlayer22222222222222222(
                 }
             }
 
-
             Spacer(modifier = Modifier.padding(2.dp))
-
 
         }
         else if (imagesList.isNotEmpty()){
-            // Slideshow for images
+
             val animationType = SlideshowAnimation.entries.random()
             SingleSlideshow(
                 imagesList = imagesList,
@@ -11490,12 +8907,7 @@ fun SimpleVideoPlayer22222222222222222(
             }
         }
 
-
-        // ---------------------- Keep existing options (bottom sheets, fullscreen, etc.) ----------------------
         Mark_As_Sold_Flow(mark_As_Sold, postid, navController)
-        // Your existing top overlays, fullscreen button, and dropdown options remain untouched
-
-
 
         if (!onHoverListener.value){
             Box(
@@ -11546,7 +8958,6 @@ fun SimpleVideoPlayer22222222222222222(
                         }
                     }
 
-
                     if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1 || constants.PostProperty_ViewModel.get_Post_Form_Flow() == 0){}
                     else {
                         Row(
@@ -11568,30 +8979,27 @@ fun SimpleVideoPlayer22222222222222222(
                                         { apiResultHandling ->
                                             when (apiResultHandling) {
                                                 is API_Result_Handling.Error -> {
-                                                    //isSave_Loading.value = false
-                                                    //errror
+
                                                 }
 
                                                 is API_Result_Handling.Deactivated -> {
-                                                    //   resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.NoData -> {
-                                                    // no data
+
                                                 }
 
                                                 is API_Result_Handling.Loading -> {
-                                                    // isSave_Loading.value = true
-                                                    //loading
+
                                                 }
 
                                                 is API_Result_Handling.Success -> {
-                                                    //  isSave_Loading.value = false
 
                                                     constants.Reels_ViewModel.toggleSave_Reels(
                                                         postid
                                                     )
-                                                    //success
+
                                                 }
                                             }
                                         }
@@ -11660,10 +9068,9 @@ fun SimpleVideoPlayer22222222222222222(
                                     onDismissRequest = { expanded.value = false },
                                     containerColor = newWhite,
                                     modifier = Modifier
-                                        .width(IntrinsicSize.Min) // ✅ makes menu match content, not anchor
-                                    //.fillMaxWidth(0.5f)      // 🔄 OR give fixed proportion of screen
-                                ) {
+                                        .width(IntrinsicSize.Min)
 
+                                ) {
 
                                     dataList.forEach { (iconRes, title) ->
                                         Row(
@@ -11671,17 +9078,14 @@ fun SimpleVideoPlayer22222222222222222(
                                                 .fillMaxWidth()
                                                 .noRippleClickable {
                                                     expanded.value = false
-                                                    println("Clicked $title")
                                                     if (title == "Edit Property") {
                                                         navController.navigate(ProfileScreenFlow.Edit_Property_Option.route)
                                                     } else if (title == "Mark as Sold") {
                                                         mark_As_Sold.value = true
                                                     }
 
-                                                    println("Onclick VPS Check -- ${title} -- ${what_view}")
                                                     when {
                                                         title == "Delete Property" && what_view == 2 -> {
-                                                            println("COMING INSIDE DELETTING SOLDOUTS")
                                                             constants.API_Vm.delete_Post_SM_Drafts(
                                                                 user_id = AppPreferences.getUserId(),
                                                                 select_all = 0,
@@ -11692,7 +9096,7 @@ fun SimpleVideoPlayer22222222222222222(
                                                                     is API_Result_Handling.Loading -> {}
                                                                     is API_Result_Handling.NoData -> {}
                                                                     is API_Result_Handling.Deactivated -> {
-                                                                        // resultCallback(5)
+
                                                                     }
 
                                                                     is API_Result_Handling.Error -> {}
@@ -11713,10 +9117,9 @@ fun SimpleVideoPlayer22222222222222222(
                                                         }
 
                                                         else -> {
-                                                            // Default case
+
                                                         }
                                                     }
-
 
                                                 }
                                                 .padding(horizontal = 12.dp, vertical = 10.dp),
@@ -11746,8 +9149,6 @@ fun SimpleVideoPlayer22222222222222222(
                     }
                 }
 
-
-
             }
 
             if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1){}
@@ -11765,7 +9166,6 @@ fun SimpleVideoPlayer22222222222222222(
         }
         else {
 
-            /// seeker
             val sliderPosition = remember(currentPosition, totalDuration) {
                 if (totalDuration > 0) currentPosition / totalDuration.toFloat() else 0f
             }
@@ -11800,7 +9200,7 @@ fun SimpleVideoPlayer22222222222222222(
                     verticalAlignment = Alignment.CenterVertically
                 )
                 {
-                    // Slider
+
                     Slider(
                         value = sliderPosition,
                         onValueChange = { newValue ->
@@ -11829,7 +9229,6 @@ fun SimpleVideoPlayer22222222222222222(
                         )
                     )
 
-                    // Time Text
                     Text(
                         text = "${formatTime(currentPosition)} / ${formatTime(totalDuration)}",
                         color = Color.White,
@@ -11840,558 +9239,8 @@ fun SimpleVideoPlayer22222222222222222(
             }
         }
     }
-
-
 
 }
-
-
-
-/*@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SimpleVideoPlayer(
-    videoUri: String,
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    onFullView: MutableState<Boolean>,
-    postid: Int = 0,
-    isSave: MutableState<Boolean>,
-    what_view: Int,
-    imagesList: List<String>,
-    value: Get_Reels_Data? = null,
-    repost_Btm: MutableState<Boolean>,
-    report_BS: MutableState<Boolean>
-) {
-
-    var network = rememberNetworkStatus()
-
-    val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    var mark_As_Sold = remember { mutableStateOf(false) }
-
-    val onHoverListener = constants.onHoverEnable.collectAsState()
-    var expanded = remember { mutableStateOf(false) }
-
-
-
-    // ---------------------- Player Setup ----------------------
-    // Use rememberSaveable to maintain player state across recomposition
-    val player = remember {
-        ExoPlayer.Builder(context).build().apply {
-            repeatMode = Player.REPEAT_MODE_ONE
-        }
-    }
-
-    // Track if video is initialized
-    val isVideoInitialized = remember { mutableStateOf(false) }
-
-    // Initialize video when videoUri is available
-    LaunchedEffect(videoUri) {
-        if (videoUri.isNotEmpty() && !isVideoInitialized.value) {
-            player.setMediaItem(MediaItem.fromUri(videoUri))
-            player.prepare()
-            player.playWhenReady = true
-            isVideoInitialized.value = true
-        }
-    }
-
-    val isPlaying = remember { mutableStateOf(player.isPlaying) }
-    val isBuffering = remember { mutableStateOf(true) }
-
-    // ---------------------- Lifecycle Management ----------------------
-    DisposableEffect(player, lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_PAUSE -> player.pause()
-                Lifecycle.Event.ON_RESUME -> {
-                    if (videoUri.isNotEmpty() && isVideoInitialized.value) {
-                        player.play()
-                    }
-                }
-                Lifecycle.Event.ON_DESTROY -> {
-                    player.release()
-                    isVideoInitialized.value = false
-                }
-                else -> {}
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-
-        val listener = object : Player.Listener {
-            override fun onPlaybackStateChanged(state: Int) {
-                isBuffering.value = state != Player.STATE_READY
-            }
-
-            override fun onIsPlayingChanged(playing: Boolean) {
-                isPlaying.value = playing
-            }
-        }
-        player.addListener(listener)
-
-        onDispose {
-            println("adgsfhggfhdsha")
-            lifecycleOwner.lifecycle.removeObserver(observer)
-//            player.removeListener(listener)
-           // player.release()
-            //isVideoInitialized.value = false
-        }
-    }
-
-    // ---------------------- Playback Progress ----------------------
-    var currentPosition by remember { mutableStateOf(0L) }
-    var totalDuration by remember { mutableStateOf(0L) }
-
-    LaunchedEffect(player) {
-        while (true) {
-            currentPosition = player.currentPosition
-            totalDuration = player.duration.coerceAtLeast(0L)
-            delay(500)
-        }
-    }
-
-    fun formatTime(ms: Long): String {
-        val totalSeconds = ms / 1000
-        val minutes = totalSeconds / 60
-        val seconds = totalSeconds % 60
-        return "%02d:%02d".format(minutes, seconds)
-    }
-
-    // FIXED: Release only when navigating away (not on scroll)
-    DisposableEffect(navController.currentBackStackEntry) {
-        onDispose {
-            // Only release when actually leaving the screen
-            player.release()
-        }
-    }
-
-    // ---------------------- UI ----------------------
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.Black)
-    ) {
-        println("DATA INSIDE FIRST PART VPS -- ${videoUri} -- ${imagesList.map { it }}")
-
-        if (videoUri.isNotEmpty()) {
-            // Key point: Use AndroidView for better stability with scrolling
-
-            PlayerSurface(
-                player = player,
-                modifier = Modifier
-                    .height(400.dp)
-                    .fillMaxSize()
-                    .pointerInput(videoUri) {
-                        detectTapGestures(
-                            onTap = {
-                                if (isPlaying.value == true) player.pause() else player.play()
-                            }
-                        )
-                    }
-            )
-
-
-            // ---------------------- Play Icon ----------------------
-            if (!isPlaying.value) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(Color.Black.copy(0.5f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.play_arrow),
-                        contentDescription = "Play",
-                        tint = Color.White
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.padding(2.dp))
-
-        }
-        else if (imagesList.isNotEmpty()){
-            // Slideshow for images
-            val animationType = SlideshowAnimation.entries.random()
-            SingleSlideshow(
-                imagesList = imagesList,
-                animationType = animationType,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        else {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
-                    .background(Color.Black)
-                , contentAlignment = Alignment.Center
-            ){
-                Image(painterResource(R.drawable.emptypostsrento) , "")
-            }
-        }
-
-        // ---------------------- Top Overlay Controls ----------------------
-        Mark_As_Sold_Flow(mark_As_Sold, postid, navController)
-
-        if (!onHoverListener.value){
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            listOf(
-                                Color.Black.copy(.8f), Color.Transparent
-                            )
-                        )
-                    )
-            )
-            {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = rememberNotchHeightDp().value)
-                    , verticalAlignment = Alignment.CenterVertically
-                    , horizontalArrangement = Arrangement.SpaceBetween
-                )
-                {
-
-                    Row(
-                        modifier = Modifier
-                        , verticalAlignment = Alignment.CenterVertically
-                        , horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    )
-                    {
-                        SubcomposeAsyncImage(
-                            model = R.drawable.propertytdetailsback,
-                            " ",
-                            modifier = Modifier
-                                .size(24.dp)
-                                .noRippleClickable{
-                                    player.release()
-                                    navController.navigateUp()
-                                }
-                        )
-                        if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1 || constants.PostProperty_ViewModel.get_Post_Form_Flow() == 999){
-                            Text("Preview" , fontSize = constants.textUnit(24) , fontFamily = constants.fontFamily(0) , color = Color.White)
-                        }
-                    }
-
-
-                    if (constants.PostProperty_ViewModel.get_Post_Form_Flow() != -1 || constants.PostProperty_ViewModel.get_Post_Form_Flow() == 0){}
-                    else {
-                        Row(
-                            modifier = Modifier
-                                .wrapContentWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        )
-                        {
-                            SubcomposeAsyncImage(
-                                model = if (value?.is_saved == 1) R.drawable.saved_post else R.drawable.propertyviewsave, "", modifier = Modifier
-                                    .size(24.dp)
-                                    .noRippleClickable {
-                                        if (network.value == NetworkStatus.Online) {
-                                            constants.API_Vm.put_save_UnSave_Property(
-                                                user_id = AppPreferences.getUserId(),
-                                                user_post_id = postid,
-                                                status = if (isSave.value) 2 else 1,
-                                            )
-                                            { apiResultHandling ->
-                                                when (apiResultHandling) {
-                                                    is API_Result_Handling.Error -> {}
-                                                    is API_Result_Handling.Deactivated -> {}
-                                                    is API_Result_Handling.NoData -> {}
-                                                    is API_Result_Handling.Loading -> {}
-                                                    is API_Result_Handling.Success -> {
-                                                        constants.Reels_ViewModel.toggleSave_Reels(
-                                                            postid
-                                                        )
-
-                                                        constants.Reels_ViewModel.update_View_Property_Detail { current ->
-                                                            current.copy(is_saved = if (current.is_saved == 1) 0 else 1)
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        else {
-                                            toast(constants.activity.getString(R.string.no_Internet))
-                                        }
-                                    }
-                            )
-
-                            Spacer(modifier = Modifier.padding(8.dp))
-
-                            val dataList = if (what_view == 0) listOf(
-                                Common_DropDown2Options_DC(icon = R.drawable.reelsshare, title = "Share"),
-                                Common_DropDown2Options_DC(icon = R.drawable.reelsreport, title = "Report")
-                            )
-                            else if (what_view == 2) listOf(
-                                Common_DropDown2Options_DC(icon = R.drawable.repost, title = "Repost"),
-                                Common_DropDown2Options_DC(icon = R.drawable.reelsdelete, title = "Delete Property")
-                            )
-                            else listOf(
-                                Common_DropDown2Options_DC(icon = R.drawable.reelsshare, title = "Share"),
-                                Common_DropDown2Options_DC(icon = R.drawable.reelsedit, title = "Edit Property"),
-                                Common_DropDown2Options_DC(icon = R.drawable.repost, title = "Repost"),
-                                Common_DropDown2Options_DC(icon = R.drawable.reelssold, title = "Mark as Sold"),
-                                Common_DropDown2Options_DC(icon = R.drawable.reelsdelete, title = "Delete Property"),
-                            )
-
-                            ExposedDropdownMenuBox(
-                                expanded = expanded.value,
-                                onExpandedChange = { expanded.value = !expanded.value }
-                            )
-                            {
-                                Image(
-                                    painter = painterResource(R.drawable.view_property_morevert),
-                                    contentDescription = "More options",
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .menuAnchor()
-                                        .noRippleClickable{ expanded.value = true }
-                                )
-
-                                ExposedDropdownMenu(
-                                    expanded = expanded.value,
-                                    onDismissRequest = { expanded.value = false },
-                                    containerColor = newWhite,
-                                    modifier = Modifier.width(IntrinsicSize.Min)
-                                ) {
-                                    dataList.forEach { (iconRes, title) ->
-                                        Row(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .noRippleClickable{
-                                                    expanded.value = false
-
-                                                    when {
-                                                        title == "Delete Property" -> {
-                                                            if (network.value == NetworkStatus.Online) {
-                                                                println("COMING INSIDE DELETTING SOLDOUTS")
-                                                                constants.API_Vm.delete_Post_SM_Drafts(
-                                                                    user_id = AppPreferences.getUserId(),
-                                                                    select_all = 0,
-                                                                    user_post_id = (value?.user_post_id
-                                                                        ?: 0).toString(),
-                                                                )
-                                                                { aPI_Result_Handling ->
-                                                                    when (aPI_Result_Handling) {
-                                                                        is API_Result_Handling.Loading -> {}
-                                                                        is API_Result_Handling.NoData -> {}
-                                                                        is API_Result_Handling.Deactivated -> {
-                                                                            // resultCallback(5)
-                                                                        }
-
-                                                                        is API_Result_Handling.Error -> {}
-                                                                        is API_Result_Handling.Success -> {
-                                                                            constants.Profile_ViewModel.deleteByPostId_Profile_SoldOuts(
-                                                                                value?.user_post_id
-                                                                                    ?: 0
-                                                                            )
-                                                                            navController.navigate(
-                                                                                ProfileScreenFlow.Sold_Outs.route
-                                                                            )
-
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                            else {
-                                                                toast(constants.activity.getString(R.string.no_Internet))
-                                                            }
-                                                        }
-
-                                                        title == "Edit Property" -> {
-                                                            if (network.value == NetworkStatus.Online) {
-                                                                navController.navigate(
-                                                                    ProfileScreenFlow.Edit_Property_Option.route
-                                                                )
-                                                            }
-                                                            else {
-                                                                toast(constants.activity.getString(R.string.no_Internet))
-                                                            }
-                                                        }
-
-                                                        title == "Mark as Sold" -> {
-                                                            if (network.value == NetworkStatus.Online) {
-                                                                mark_As_Sold.value =
-                                                                    true
-                                                            }else {
-                                                                toast(constants.activity.getString(R.string.no_Internet))
-                                                            }
-                                                        }
-
-                                                        title == "Repost" -> {
-                                                            if (network.value == NetworkStatus.Online) {
-                                                                repost_Btm.value =
-                                                                    true
-                                                            }
-                                                        }
-
-                                                        title == "Report" -> {
-                                                            if (network.value == NetworkStatus.Online) {
-                                                                report_BS.value =
-                                                                    true
-                                                            }
-                                                            else {
-                                                                toast(constants.activity.getString(R.string.no_Internet))
-                                                            }
-                                                        }
-
-                                                        title == "Share" -> {
-                                                            constants.Reels_ViewModel.DefaultShare(
-                                                                "https://land4sales.com/property/${value?.user_post_id ?: 0}"
-                                                                ,0
-                                                            )
-                                                        }
-
-                                                        else -> {
-                                                            // Default case
-                                                        }
-                                                    }
-                                                   *//* println("Clicked $title")
-                                                    if (title == "Edit Property") {
-                                                        navController.navigate(ProfileScreenFlow.Edit_Property_Option.route)
-                                                    } else if (title == "Mark as Sold") {
-                                                        mark_As_Sold.value = true
-                                                    }
-
-                                                    when {
-                                                        title == "Delete Property" && what_view == 2 -> {
-                                                            constants.API_Vm.delete_Post_SM_Drafts(
-                                                                user_id = AppPreferences.getUserId(),
-                                                                select_all = 0,
-                                                                user_post_id = postid.toString(),
-                                                            ) { aPI_Result_Handling ->
-                                                                when (aPI_Result_Handling) {
-                                                                    is API_Result_Handling.Success -> {
-                                                                        constants.Profile_ViewModel.deleteByPostId_Profile_SoldOuts(
-                                                                            postid
-                                                                        )
-                                                                        navController.navigate(
-                                                                            ProfileScreenFlow.Sold_Outs.route
-                                                                        )
-                                                                    }
-
-                                                                    else -> {}
-                                                                }
-                                                            }
-                                                        }
-                                                    }*//*
-                                                }
-                                                .padding(horizontal = 12.dp, vertical = 10.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(
-                                                painter = painterResource(id = iconRes),
-                                                contentDescription = title,
-                                                tint = newBlack,
-                                                modifier = Modifier.size(20.dp)
-                                            )
-                                            Spacer(modifier = Modifier.width(12.dp))
-                                            Text(
-                                                text = title,
-                                                color = newBlack,
-                                                fontSize = constants.textUnit(14),
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis,
-                                                modifier = Modifier.weight(1f, fill = false)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (constants.PostProperty_ViewModel.get_Post_Form_Flow() == -1) {
-                SubcomposeAsyncImage(
-                    model = R.drawable.propertyviewfullscreenvideo, "", modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 16.dp)
-                        .size(24.dp)
-                        .align(Alignment.BottomEnd)
-                        .noRippleClickable{ onFullView.value = true }
-                )
-            }
-        }
-        else {
-            // Seeker UI
-            val sliderPosition = remember(currentPosition, totalDuration) {
-                if (totalDuration > 0) currentPosition / totalDuration.toFloat() else 0f
-            }
-
-            var userIsSeeking by remember { mutableStateOf(false) }
-
-            Box (
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .wrapContentSize()
-            )
-            {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(70.dp)
-                        .background(
-                            brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black))
-                        )
-                )
-
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                )
-                {
-                    Slider(
-                        value = sliderPosition,
-                        onValueChange = { newValue ->
-                            userIsSeeking = true
-                            currentPosition = (totalDuration * newValue).toLong()
-                        },
-                        onValueChangeFinished = {
-                            player.seekTo(currentPosition)
-                            userIsSeeking = false
-                        },
-                        thumb = {
-                            Box(
-                                modifier = Modifier
-                                    .size(15.dp)
-                                    .clip(CircleShape)
-                                    .background(newWhite)
-                            )
-                        },
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 8.dp),
-                        colors = SliderDefaults.colors(
-                            thumbColor = Color.White,
-                            activeTrackColor = newBlue,
-                            inactiveTrackColor = Color.Gray
-                        )
-                    )
-
-                    Text(
-                        text = "${formatTime(currentPosition)} / ${formatTime(totalDuration)}",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        modifier = Modifier.wrapContentWidth()
-                    )
-                }
-            }
-        }
-    }
-}*/
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -12417,18 +9266,14 @@ fun SimpleVideoPlayer(
     val onHoverListener = constants.onHoverEnable.collectAsState()
     var expanded = remember { mutableStateOf(false) }
 
-    // ---------------------- Player Setup ----------------------
-    // FIXED: Use rememberSaveable with unique key to survive scroll
     val player = remember(videoUri, postid) {
         ExoPlayer.Builder(context).build().apply {
             repeatMode = Player.REPEAT_MODE_ONE
         }
     }
 
-    // Track if video is initialized
     val isVideoInitialized = remember(videoUri) { mutableStateOf(false) }
 
-    // Initialize video when videoUri is available
     LaunchedEffect(videoUri, player) {
         if (videoUri.isNotEmpty() && !isVideoInitialized.value) {
             player.setMediaItem(MediaItem.fromUri(videoUri))
@@ -12441,8 +9286,6 @@ fun SimpleVideoPlayer(
     val isPlaying = remember { mutableStateOf(player.isPlaying) }
     val isBuffering = remember { mutableStateOf(true) }
 
-    // ---------------------- Lifecycle Management ----------------------
-    // FIXED: Only release on actual destruction, not on scroll
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
@@ -12462,11 +9305,10 @@ fun SimpleVideoPlayer(
 
         onDispose {
             lifecycleOwner.lifecycle.removeObserver(observer)
-            // FIXED: Don't release here - causes black screen on scroll
+
         }
     }
 
-    // FIXED: Separate listener management
     DisposableEffect(player) {
         val listener = object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
@@ -12481,11 +9323,10 @@ fun SimpleVideoPlayer(
 
         onDispose {
             player.removeListener(listener)
-            // Still don't release player here
+
         }
     }
 
-    // FIXED: Release only when navigating away (not on scroll)
     DisposableEffect(Unit) {
         onDispose {
             if (!onFullView.value && constants.PostProperty_ViewModel.get_Post_Form_Flow() == -1) {
@@ -12494,8 +9335,6 @@ fun SimpleVideoPlayer(
         }
     }
 
-
-    // ---------------------- Playback Progress ----------------------
     var currentPosition by remember { mutableStateOf(0L) }
     var totalDuration by remember { mutableStateOf(0L) }
 
@@ -12514,24 +9353,23 @@ fun SimpleVideoPlayer(
         return "%02d:%02d".format(minutes, seconds)
     }
 
-    // ---------------------- UI ----------------------
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
         if (videoUri.isNotEmpty()) {
-            // FIXED: Use AndroidView with stable player reference
+
             AndroidView(
                 factory = { ctx ->
                     PlayerView(ctx).apply {
                         this.player = player
                         useController = false
-                       // setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
+
                     }
                 },
                 update = { playerView ->
-                    // FIXED: Ensure player stays attached during scroll
+
                     if (playerView.player == null) {
                         playerView.player = player
                     }
@@ -12548,7 +9386,6 @@ fun SimpleVideoPlayer(
                     }
             )
 
-            // ---------------------- Play Icon ----------------------
             if (!isPlaying.value) {
                 Box(
                     modifier = Modifier
@@ -12566,7 +9403,6 @@ fun SimpleVideoPlayer(
                 }
             }
 
-            // Buffering indicator
             if (isBuffering.value && isPlaying.value) {
                 CircularProgressIndicator(
                     modifier = Modifier
@@ -12577,7 +9413,7 @@ fun SimpleVideoPlayer(
             }
         }
         else if (imagesList.isNotEmpty()){
-            // Slideshow for images
+
             val animationType = SlideshowAnimation.entries.random()
             SingleSlideshow(
                 imagesList = imagesList,
@@ -12597,7 +9433,6 @@ fun SimpleVideoPlayer(
             }
         }
 
-        // ---------------------- Top Overlay Controls ----------------------
         Mark_As_Sold_Flow(mark_As_Sold, postid, navController)
 
         if (!onHoverListener.value){
@@ -12639,7 +9474,7 @@ fun SimpleVideoPlayer(
                             modifier = Modifier
                                 .size(24.dp)
                                 .noRippleClickable {
-                                    // FIXED: Release only on back navigation
+
                                     constants.Common_H_ViewModel.toggleshowBABars(true)
                                     constants.Common_H_ViewModel.toggleshowTABars(true)
                                     player.release()
@@ -12857,7 +9692,6 @@ fun SimpleVideoPlayer(
             }
         }
 
-        // Seeker UI (only show when hover is enabled)
         if (onHoverListener.value && videoUri.isNotEmpty()) {
             val sliderPosition = remember(currentPosition, totalDuration) {
                 if (totalDuration > 0) currentPosition / totalDuration.toFloat() else 0f
@@ -12928,8 +9762,6 @@ fun SimpleVideoPlayer(
     }
 }
 
-
-
 @Composable
 fun CustomRangeSliderExact(
     modifier: Modifier = Modifier,
@@ -12950,11 +9782,9 @@ fun CustomRangeSliderExact(
     val trackColor = Color(0xFFB0B0B0)
     val activeTrackColor = Color(0xFF007BFF)
 
-    // Normalize the initial values to 0f..1f
     var start by remember { mutableStateOf((initialStart - valueRange.start) / (valueRange.endInclusive - valueRange.start)) }
     var end by remember { mutableStateOf((initialEnd - valueRange.start) / (valueRange.endInclusive - valueRange.start)) }
 
-    // ✅ FIX: Update when initialStart or initialEnd changes
     LaunchedEffect(initialStart, initialEnd) {
         start = (initialStart - valueRange.start) / (valueRange.endInclusive - valueRange.start)
         end = (initialEnd - valueRange.start) / (valueRange.endInclusive - valueRange.start)
@@ -13000,7 +9830,6 @@ fun CustomRangeSliderExact(
             val startX = start * canvasWidth
             val endX = end * canvasWidth
 
-            // Inactive track
             drawRoundRect(
                 color = trackColor,
                 topLeft = Offset(0f, trackY - trackHeight.toPx() / 2),
@@ -13008,7 +9837,6 @@ fun CustomRangeSliderExact(
                 cornerRadius = CornerRadius(trackHeight.toPx() / 2)
             )
 
-            // Active track
             drawRoundRect(
                 color = activeTrackColor,
                 topLeft = Offset(startX, trackY - trackHeight.toPx() / 2),
@@ -13016,7 +9844,6 @@ fun CustomRangeSliderExact(
                 cornerRadius = CornerRadius(trackHeight.toPx() / 2)
             )
 
-            // Start thumb
             drawCircle(
                 color = borderColor,
                 radius = thumbRadius.toPx(),
@@ -13028,7 +9855,6 @@ fun CustomRangeSliderExact(
                 center = Offset(startX, trackY)
             )
 
-            // End thumb
             drawCircle(
                 color = borderColor,
                 radius = thumbRadius.toPx(),
@@ -13063,24 +9889,19 @@ fun CustomRangeSliderExactold(
     val trackColor = Color(0xFFB0B0B0)
     val activeTrackColor = Color(0xFF007BFF)
 
-    // Track if user is currently dragging
     var isDragging by remember { mutableStateOf(false) }
 
-    // Convert absolute values to 0f..1f for internal drawing
     var start by remember { mutableStateOf((initialStart - valueRange.start) / (valueRange.endInclusive - valueRange.start)) }
     var end by remember { mutableStateOf((initialEnd - valueRange.start) / (valueRange.endInclusive - valueRange.start)) }
 
-    // FIX: Only reset when NOT dragging
     LaunchedEffect(initialStart, initialEnd, isDragging) {
         if (!isDragging) {
             val newStart = (initialStart - valueRange.start) / (valueRange.endInclusive - valueRange.start)
             val newEnd = (initialEnd - valueRange.start) / (valueRange.endInclusive - valueRange.start)
 
-            // Only update if there's a meaningful difference
             if (abs(newStart - start) > 0.001f || abs(newEnd - end) > 0.001f) {
                 start = newStart
                 end = newEnd
-                println("Slider reset: start=$start, end=$end")
             }
         }
     }
@@ -13102,11 +9923,9 @@ fun CustomRangeSliderExactold(
                     val down = awaitFirstDown()
                     isDragging = true
 
-                    // Get initial touch position
                     val initialX = down.position.x.coerceIn(0f, totalWidth.value)
                     val initialValue = (initialX / totalWidth.value).coerceIn(0f, 1f)
 
-                    // Determine which thumb to move
                     val distanceToStart = abs(initialValue - start)
                     val distanceToEnd = abs(initialValue - end)
                     val movingStart = distanceToStart < distanceToEnd
@@ -13146,7 +9965,6 @@ fun CustomRangeSliderExactold(
             val startX = start * canvasWidth
             val endX = end * canvasWidth
 
-            // Inactive track
             drawRoundRect(
                 color = trackColor,
                 topLeft = Offset(0f, trackY - trackHeight.toPx() / 2),
@@ -13154,7 +9972,6 @@ fun CustomRangeSliderExactold(
                 cornerRadius = CornerRadius(trackHeight.toPx() / 2)
             )
 
-            // Active track
             drawRoundRect(
                 color = activeTrackColor,
                 topLeft = Offset(startX, trackY - trackHeight.toPx() / 2),
@@ -13162,7 +9979,6 @@ fun CustomRangeSliderExactold(
                 cornerRadius = CornerRadius(trackHeight.toPx() / 2)
             )
 
-            // Start thumb with border
             drawCircle(
                 color = borderColor,
                 radius = thumbRadius.toPx(),
@@ -13174,7 +9990,6 @@ fun CustomRangeSliderExactold(
                 center = Offset(startX, trackY)
             )
 
-            // End thumb with border
             drawCircle(
                 color = borderColor,
                 radius = thumbRadius.toPx(),
@@ -13188,9 +10003,6 @@ fun CustomRangeSliderExactold(
         }
     }
 }
-
-
-
 
 @Composable
 fun SliderDemo() {
@@ -13224,7 +10036,6 @@ fun ExpandableText(
     fontFamily: FontFamily = constants.fontFamily(3),
     modifier: Modifier
 ) {
-
 
     val annotatedText = buildAnnotatedString {
         val displayText = if (isFullTextExpanded || fullText.length <= maxCharacters) {
@@ -13272,14 +10083,13 @@ fun ExpandableText(
     )
 }
 
-
 @Composable
 fun Sell_Gradient_Box(modifier: Modifier){
         Box(
             modifier = modifier
                 .height(24.dp)
                 .wrapContentWidth()
-                //.width(46.dp)
+
                 .clip(RoundedCornerShape(4.dp))
                 .background(
                     brush = Brush.linearGradient(
@@ -13301,7 +10111,6 @@ fun Sell_Gradient_Box(modifier: Modifier){
             )
         }
 }
-
 
 @Composable
 fun Chat_Property_Show_Structure(content: Chat_Property_Structure_DC){
@@ -13325,7 +10134,6 @@ fun Chat_Property_Show_Structure(content: Chat_Property_Structure_DC){
                         1 -> "Your enquired this property"
                         else ->  "Searched for"
                     }
-
 
                     Text( text1,
                         color = newBlack,
@@ -13431,14 +10239,13 @@ fun Chat_Property_Show_Structure(content: Chat_Property_Structure_DC){
                                , fontFamily = constants.fontFamily(1)
                            )
 
-
                            Box(modifier = Modifier.wrapContentWidth()
                            )
                            {
                                repeat(5) { index ->
                                    Box(
                                        modifier = Modifier
-                                           .offset(x = (index * 12).dp) // 20dp size + 4dp gap
+                                           .offset(x = (index * 12).dp)
                                            .size(24.dp)
                                            .clip(CircleShape)
                                            .background(colors[index])
@@ -13462,7 +10269,6 @@ fun Chat_Property_Show_Structure(content: Chat_Property_Structure_DC){
                            )
                        }
                    }
-
 
                     Row(
                         modifier = Modifier
@@ -13503,21 +10309,11 @@ fun Chat_Property_Show_Structure(content: Chat_Property_Structure_DC){
         }
 }
 
-
-
-//fun openDialer(context: Context, phoneNumber: String) {
-//    val intent = Intent(Intent.ACTION_DIAL).apply {
-//        data = Uri.parse("tel:$phoneNumber")
-//    }
-//    context.startActivity(intent)
-//}
-
 fun openDialer(context: Context, phoneNumber: String) {
     val intent = Intent(Intent.ACTION_DIAL).apply {
         data = Uri.parse("tel:$phoneNumber")
     }
 
-    // Check if there is an app that can handle the dial intent
     val packageManager = context.packageManager
     val resolveInfo = intent.resolveActivity(packageManager)
 
@@ -13528,41 +10324,23 @@ fun openDialer(context: Context, phoneNumber: String) {
     }
 }
 
-//fun openEmailApp(context: Context, email: String, subject: String = "", body: String = "") {
-//    val intent = Intent(Intent.ACTION_SENDTO).apply {
-//        data = Uri.parse("mailto:$email")
-//        putExtra(Intent.EXTRA_SUBJECT, subject)
-//        putExtra(Intent.EXTRA_TEXT, body)
-//    }
-//
-//    // Check if there is an app that can handle the email intent
-//    val packageManager = context.packageManager
-//    val resolveInfo = intent.resolveActivity(packageManager)
-//
-//    if (resolveInfo != null) {
-//        context.startActivity(intent)
-//    } else {
-//        Toast.makeText(context, "No email app found on this device", Toast.LENGTH_SHORT).show()
-//    }
-//}
 fun openEmailApp(context: Context, email: String, subject: String = "", body: String = "") {
-    // Create the intent
+
     val intent = Intent(Intent.ACTION_SENDTO).apply {
-        data = Uri.parse("mailto:") // Only email apps should handle this
+        data = Uri.parse("mailto:")
         putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
         putExtra(Intent.EXTRA_SUBJECT, subject)
         putExtra(Intent.EXTRA_TEXT, body)
-        `package` = "com.google.android.gm" // Explicitly target Gmail
+        `package` = "com.google.android.gm"
     }
 
-    // Check if Gmail is installed
     val packageManager = context.packageManager
     val resolveInfo = intent.resolveActivity(packageManager)
 
     if (resolveInfo != null) {
         context.startActivity(intent)
     } else {
-        // Fallback: open any email app
+
         val fallbackIntent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:$email")
             putExtra(Intent.EXTRA_SUBJECT, subject)
@@ -13590,37 +10368,30 @@ fun openWhatsApp(context: Context, phoneNumber: String) {
     }
 }
 
-
 fun openGmail(
     context: Context,
     to: String,
     cc: String? = null,
-//    bcc: Array<String>? = null,
-//    subject: String = "",
-//    body: String = ""
+
 ) {
     try {
-        // Try to open Gmail directly
+
         val gmailIntent = Intent(Intent.ACTION_SEND).apply {
             type = "message/rfc822"
             putExtra(Intent.EXTRA_EMAIL, to)
             putExtra(Intent.EXTRA_CC, cc)
-           // putExtra(Intent.EXTRA_BCC, bcc)
-            //putExtra(Intent.EXTRA_SUBJECT, subject)
-           // putExtra(Intent.EXTRA_TEXT, body)
-            setPackage("com.google.android.gm") // Target Gmail specifically
+
+            setPackage("com.google.android.gm")
         }
 
         context.startActivity(gmailIntent)
     } catch (e: Exception) {
-        // Fallback: open any available email app
+
         val fallbackIntent = Intent(Intent.ACTION_SEND).apply {
             type = "message/rfc822"
             putExtra(Intent.EXTRA_EMAIL, to)
             putExtra(Intent.EXTRA_CC, cc)
-//            putExtra(Intent.EXTRA_BCC, bcc)
-//            putExtra(Intent.EXTRA_SUBJECT, subject)
-//            putExtra(Intent.EXTRA_TEXT, body)
+
         }
 
         val packageManager = context.packageManager
@@ -13634,22 +10405,16 @@ fun openGmail(
     }
 }
 
-
-
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Enquiry_Form_Btm_Sheet_Structure(
     enabled: Boolean,
     videos: Get_Reels_Data?,
-   // page: Int
+
 ){
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-//    var name by mutableStateOf(AppPreferences.get_User_Name())
     var name by mutableStateOf(AppPreferences.get_Real_Name())
     var whatspp_num = remember { mutableStateOf(constants.Start_Up_ViewModel.countryCode +  constants.Start_Up_ViewModel.phoneNumber) }
 
@@ -13659,9 +10424,6 @@ fun Enquiry_Form_Btm_Sheet_Structure(
     var showError by remember { mutableStateOf(false) }
 
     val network = rememberNetworkStatus()
-
-
-    println("Counrty --- Country -- Data -- ${AppPreferences.getCountry()}")
 
     var countryselectedWA = constants.Start_Up_ViewModel.selectedCountryVm.collectAsState()
 
@@ -13682,8 +10444,6 @@ fun Enquiry_Form_Btm_Sheet_Structure(
         }
     }
 
-    println("ENQUIRE MESSAGE - ${AppPreferences.getCountry().name}*** ${AppPreferences.getCountry().emoji}*** -${countryselectedWA.value?.emoji}**- ${countryselectedWA.value?.name}")
-
     LaunchedEffect(countryselectedWA.value?.emoji) {
        if( AppPreferences.getCountry().name != countryselectedWA.value?.name){
            checkBox.value = false
@@ -13692,15 +10452,12 @@ fun Enquiry_Form_Btm_Sheet_Structure(
 
        var  state = constants.PostProperty_ViewModel.status_PFs.collectAsState()
 
-
-
     val scope = rememberCoroutineScope()
 
     if (enabled) {
         ModalBottomSheet(
             sheetState = sheetState,
             onDismissRequest = {
-
 
                 if (!state.value) {
                     name = ""
@@ -13715,7 +10472,6 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                     constants.Reels_ViewModel.dismiss_Send_Eq_Btm_Sheet()
                 }
 
-
             }, containerColor = newWhite,
             sheetGesturesEnabled = false
         )
@@ -13725,7 +10481,7 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    //.fillMaxHeight(.75f)
+
                     .background(newWhite)
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -13752,48 +10508,15 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                         fontFamily = constants.fontFamily(1),
                     )
 
-                    /*TextField(
-                        value = name,
-                        onValueChange = {
-                            name = it
-                        },
-                        placeholder = {
-                            Text(
-                                "Enter name",
-                                color = newGray,
-                                fontSize = constants.textUnit(12),
-                                fontFamily = constants.fontFamily(2)
-                            )
-                        },
-                        textStyle = TextStyle(
-                            color = newGray,
-                            fontSize = constants.textUnit(12), fontFamily = constants.fontFamily(2)
-                        ),
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.White,
-                            unfocusedContainerColor = Color.White,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
-                        ),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                        keyboardActions = KeyboardActions {
-                            ImeAction.Done
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(1.dp, newGray, RoundedCornerShape(8.dp))
-                    )*/
                     Column(modifier = Modifier.fillMaxWidth()) {
                         TextField(
                             value = name,
                             onValueChange = {
-                                // Only allow letters and spaces
+
                                 val filtered = it.filter { it.isLetter() || it.isWhitespace() }
 
                                 name = if (filtered.length <= 20) filtered else ""
 
-                                // Hide error when user starts typing valid input
                                 if (showError && filtered.isNotBlank()) {
                                     showError = false
                                 }
@@ -13833,7 +10556,6 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                                 )
                         )
 
-                        // 👇 Error Text
                         if (showError) {
                             Text(
                                 text = "Please enter a name",
@@ -13883,9 +10605,9 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                         {
                             Text(
                                 AppPreferences.getCountry().emoji ?: "",
-                                //color = newBlack,
+
                                 fontSize = constants.textUnit(20),
-                               // fontFamily = constants.fontFamily(2),
+
                             )
                         }
 
@@ -13939,27 +10661,12 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                             modifier = Modifier
                                 .height(56.dp)
                                 .fillMaxWidth()
-                            //.border(1.dp, newGray, RoundedCornerShape(8.dp))
+
                         )
                         {
 
                             NumberInput_Rento(mutableStateOf(false)  , constants.Start_Up_ViewModel, isChecked = checkBox)
 
-//                            WA_NumberInput1(
-//                                phoneNumber = constants.Start_Up_ViewModel.phoneNumber,
-//                                onPhoneNumberChange = {
-//                                    if (!checkBox.value) { // only update when checkbox is NOT checked
-//                                        constants.Start_Up_ViewModel.phoneNumber = it
-//                                    }
-//                                },
-//                                countryCode = constants.Start_Up_ViewModel.countryCode,
-//                                onCountryCodeChange = {
-//                                    constants.Start_Up_ViewModel.countryCode = it
-//                                    constants.Start_Up_ViewModel.phoneNumber = ""
-//                                    checkBox.value = false
-//                                }
-//                                ,checkBox
-//                            )
                         }
 
                         Row(
@@ -14106,7 +10813,7 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                                     showError = true
                                 } else {
                                     if ((videos?.enquiry ?: 0) != 1) {
-                                        // println("videos.land_type_id--- ${videos.post_property.land_type_id}")
+
                                         constants.API_Vm.put_Send_Enquiry(
                                             user_id = AppPreferences.getUserId(),
                                             recever_posts_id = videos?.user_post_id ?: 0,
@@ -14123,18 +10830,17 @@ fun Enquiry_Form_Btm_Sheet_Structure(
 
                                             when (apiResultHandling) {
                                                 is API_Result_Handling.Loading -> {
-                                                    // loading
+
                                                     constants.PostProperty_ViewModel.change_Status_PFs(
                                                         true
                                                     )
                                                 }
 
                                                 is API_Result_Handling.Deactivated -> {
-                                                    //   resultCallback(5)
+
                                                 }
 
                                                 is API_Result_Handling.Error -> {
-                                                    // fail
 
                                                     name = ""
                                                     whatspp_num.value = ""
@@ -14148,7 +10854,6 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                                                 }
 
                                                 is API_Result_Handling.Success -> {
-                                                    // success
 
                                                     name = ""
                                                     whatspp_num.value = ""
@@ -14156,7 +10861,7 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                                                     checkBox.value = false
                                                     constants.Start_Up_ViewModel.phoneNumber = ""
                                                     constants.Start_Up_ViewModel.countryCode = "+91"
-                                                    // user_request = ""
+
                                                     GlobalSnackbar.show("Enquiry Submitted Successfully")
                                                     constants.Reels_ViewModel.toggle_is_Enquired(
                                                         videos?.user_post_id ?: 0
@@ -14168,7 +10873,7 @@ fun Enquiry_Form_Btm_Sheet_Structure(
                                                 }
 
                                                 is API_Result_Handling.NoData -> {
-                                                    // no data
+
                                                     constants.PostProperty_ViewModel.change_Status_PFs(
                                                         false
                                                     )
@@ -14210,8 +10915,6 @@ fun Enquiry_Form_Btm_Sheet_Structure(
 
 }
 
-
-
 fun convertDateToTimestamp(
     dateString: String,
     pattern: String = "yyyy-MM-dd",
@@ -14221,7 +10924,6 @@ fun convertDateToTimestamp(
         val formatter = DateTimeFormatter.ofPattern(pattern)
         val localDate = LocalDate.parse(dateString, formatter)
 
-        // take start of day (00:00:00) as timestamp
         localDate.atStartOfDay(zoneId).toInstant().toEpochMilli().toString()
     } catch (e: Exception) {
         e.printStackTrace()
@@ -14232,8 +10934,6 @@ fun convertDateToTimestamp(
 fun getTodayLocalDate(): LocalDate {
     return LocalDate.now()
 }
-
-
 
 @Composable
 fun StepCircularProgress(
@@ -14252,7 +10952,6 @@ fun StepCircularProgress(
             val size = size.minDimension
             val stroke = strokeWidth.toPx()
 
-            // Draw remaining gradient circle
             drawArc(
                 brush = Brush.sweepGradient(remainingGradient),
 
@@ -14262,10 +10961,9 @@ fun StepCircularProgress(
                 style = Stroke(width = stroke, cap = StrokeCap.Round)
             )
 
-            // Draw completed arc
             val sweep = (currentStep / totalSteps.toFloat()) * 360f
             drawArc(
-//                brush = Brush.sweepGradient(remainingGradient),
+
                 color = completedColor,
                 startAngle = -90f,
                 sweepAngle = sweep,
@@ -14274,7 +10972,6 @@ fun StepCircularProgress(
             )
         }
 
-        // Center text
         Text(
             text = "$currentStep/$totalSteps",
             color = Color.Black,
@@ -14283,11 +10980,6 @@ fun StepCircularProgress(
         )
     }
 }
-
-
-
-
-/// mark as sold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -14298,7 +10990,6 @@ fun Mark_As_Sold_Flow(
 ){
 
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
 
     var isLoading by remember { mutableStateOf(false) }
 
@@ -14313,7 +11004,6 @@ fun Mark_As_Sold_Flow(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                //Image(painterResource(R.drawable.mark_as_sold), "")
 
                 Text(
                     buildAnnotatedString {
@@ -14358,7 +11048,7 @@ fun Mark_As_Sold_Flow(
                                         }
 
                                         is API_Result_Handling.Deactivated -> {
-                                            //resultCallback(5)
+
                                         }
 
                                         is API_Result_Handling.Loading -> {
@@ -14402,5 +11092,3 @@ fun Mark_As_Sold_Flow(
         }
     }
 }
-
-

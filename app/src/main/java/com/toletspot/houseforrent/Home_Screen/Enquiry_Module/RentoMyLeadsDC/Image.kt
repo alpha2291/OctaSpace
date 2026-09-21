@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Home_Screen.Enquiry_Module.RentoMyLeadsDC
 
-
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName

@@ -10,7 +10,6 @@ val Gold40 = Color(0xFFA08200)
 val WarmGrey40 = Color(0xFF6E6A5E)
 val Bronze40 = Color(0xFF8C7A3F)
 
-
 val newBlue = Color(0xffC9A227)
 
 val newPurpleGradient = listOf(Color(0xffD4AF37) , Color(0xffC9A227))
@@ -19,17 +18,14 @@ val newPurpleGradientBorder  =  listOf(Color(0xffF0E4BC) , Color(0xffE6C96A), Co
 
 val newLightPurpleGradient = listOf(Color(0xffF7F0DC) , Color(0xffE6C96A))
 
-
 val newRedGradienBorder = listOf(Color(0xffF9D4D0) , Color(0xffF4B2AB), Color(0xffEA6C5F))
 val newRedGradienBg = listOf(Color(0xffEA6C5F) , Color(0xffC34133))
 
 val rentoLightGray = Color(0xffEBEBEB)
 val rentoDarkGray = Color(0xff7E7E7E)
 
-
-//val newBlue = Color(0xffD4AF37)
 val newWhite = Color(0xffFCFCFC)
-//val newWhite = Color(0xffFBFBFB)
+
 val newGray = Color(0xffB8B8B8)
 val newLightGray = Color(0xffF4F4F4)
 val newDarkGray = Color(0xff666666)

@@ -50,26 +50,19 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
 
     var errorMessage by remember { mutableStateOf("") }
 
-
     val context = LocalContext.current
 
-
-
-
     val network_status = remember { mutableStateOf(checkForInternet(context)) }
-
 
     val url = MainActivity.getPostReportUrl()
         .plus("user_id=${AppPreferences.getUserId()}")
         .plus("&user_post_id=${postId}")
         .plus("&device_type=1")
-    println("ghjkl--${postId} --- ${url}")
 
     val progressState = remember { mutableIntStateOf(0) }
     val keyboardController = LocalSoftwareKeyboardController.current
     Scaffold(
         modifier = Modifier.background(Color.Transparent),
-
 
         topBar = {
             CenterAlignedTopAppBar(
@@ -85,7 +78,6 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
         }
         , content = {
                 paddingValue ->
-
 
             val galleryLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.OpenMultipleDocuments(),
@@ -105,9 +97,7 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
                 .background(Color.White)) {
                 if (!network_status.value)
                 {
-//                    NoInternet(onClick = {
-//                        network_status.value = if(checkForInternet(context)) true else false
-//                    })
+
                 } else
                 {
                     if(webViewFail.value)
@@ -122,9 +112,7 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
                             class JSInterface {
                                 @JavascriptInterface
                                 fun closeModal(scrollhide: String) {
-                                    println("cvbnmkjhgf111")
                                     if(scrollhide == "formModel"){
-                                        println("cvbnmkjhgf222")
                                         navHostController.navigateUp()
                                     }
                                 }
@@ -164,10 +152,10 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
                                                         }
                                                     context.startActivity(mailIntent)
                                                 } catch (e: ActivityNotFoundException) {
-                                                    // Handle the case where no email app is available
+
                                                     e.printStackTrace()
                                                 }
-                                                true // Indicate the URL was handled
+                                                true
                                             } else if (websiteUrl.startsWith("https://www.skyraan.com/")) {
                                                 try {
                                                     val i = Intent(Intent.ACTION_VIEW)
@@ -175,12 +163,12 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
                                                     context.startActivity(i)
 
                                                 } catch (e: ActivityNotFoundException) {
-                                                    // Handle the case where no email app is available
+
                                                     e.printStackTrace()
                                                 }
-                                                true // Indicate the URL was handled
+                                                true
                                             } else {
-                                                false // Let WebView handle the URL
+                                                false
                                             }
                                         }
 
@@ -201,8 +189,7 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
                                         ) {
                                             super.onReceivedError(view, request, error)
                                             errorMessage = "Page Load Error: ${error?.description}"
-//                                            webViewFail.value = true
-                                            println("Error111--${errorMessage}")
+
                                         }
 
                                         override fun onReceivedSslError(
@@ -213,7 +200,7 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
                                             super.onReceivedSslError(view, handler, error)
                                             errorMessage = "SSL Error: ${error?.primaryError}"
                                             webViewFail.value = true
-                                            handler?.cancel() // Prevent loading the page
+                                            handler?.cancel()
                                         }
 
                                     }
@@ -225,7 +212,6 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
                                         ) {
                                             progressState.intValue = newProgress
                                         }
-
 
                                         override fun onShowFileChooser(
                                             webView: WebView?,
@@ -241,7 +227,6 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
                                                 }
                                                 mFilePathCallback1 = null
                                             }
-                                            println("PHOTOT")
                                             galleryLauncher.launch(arrayOf("*/*"))
 
                                             return true
@@ -252,14 +237,14 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
                             } ,
                                 modifier = Modifier.background(Color.White),
                                 update = { webView ->
-                                    // ✅ Dynamically change the WebView’s background color based on styleCatValue
+
                                     val backgroundColor = 0xFFFFFFFF.toInt()
                                     webView.setBackgroundColor(backgroundColor)
                                 }
                             )
 
                             if (progressState.intValue < 100) {
-                                // Convert the progress to a float between 0 and 1
+
                                 Box(
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center
@@ -277,7 +262,6 @@ fun Justify_Post(navHostController: NavHostController, postId: String)
             }
 
         })
-
 
     if(mediaAskPermission.value)
         PermissionAskForMedia()

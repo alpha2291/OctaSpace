@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs.ChatMainList
 
-
 import com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs.PostUser
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -16,7 +15,6 @@ data class Chat_Main_List_Data(
     @SerialName("user_details")
     val user_details: List<UserDetail>,
     @SerialName("video_model")
-//    val video_model: Get_Reels_Data
+
     val video_model: PostUser
 )
-

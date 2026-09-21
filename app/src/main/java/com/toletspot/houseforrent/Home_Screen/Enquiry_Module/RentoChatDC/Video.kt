@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.Home_Screen.Enquiry_Module.RentoChatDC
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

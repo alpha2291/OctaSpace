@@ -52,266 +52,8 @@ import com.toletspot.houseforrent.Custom_Assets.rememberNotchHeightDp
 import com.toletspot.houseforrent.Custom_Assets.scaledSp
 import com.toletspot.houseforrent.ui.theme.newBlue
 
-
 var mFilePathCallback1 by mutableStateOf<((Array<Uri?>?) -> Unit)?>(null)
 var feedbackWebviewBackhandler : WebView? = null
-//
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun Justify(navHostController: NavHostController)
-//{
-//    val webViewFail = remember { mutableStateOf(false) }
-//
-//    var errorMessage by remember { mutableStateOf("") }
-//
-//
-//    val context = LocalContext.current
-//
-//
-//
-//
-//    val network_status = remember { mutableStateOf(checkForInternet(context)) }
-//
-//
-//    val url = MainActivity.getprofileReportUrl()
-//        .plus("&phone_num_cc=91")
-//        .plus("&phone_num=${AppPreferences.get_ph_number()}")
-//        .plus("&device_type=1")
-//    println("ghjkl--${constants.Start_Up_ViewModel.phoneNumber}-- ${AppPreferences.get_ph_number()}")
-//
-//    val progressState = remember { mutableIntStateOf(0) }
-//    val keyboardController = LocalSoftwareKeyboardController.current
-//    Scaffold(
-//        modifier = Modifier.background(Color.Transparent),
-//
-//
-//        topBar = {
-//            Row (
-//                modifier = Modifier
-//                    .padding(start = 16.dp , top = rememberNotchHeightDp().value)
-//                    .fillMaxWidth()
-//            ){
-//                Backer(modifier = Modifier) {
-//                    navHostController.navigateUp()
-//                }
-//            }
-////            CenterAlignedTopAppBar(
-////                title = {
-////
-////                }
-////                , navigationIcon = {
-////
-////                },
-////            )
-//        }
-//        , content = {
-//                paddingValue ->
-//
-//
-//            val galleryLauncher = rememberLauncherForActivityResult(
-//                contract = ActivityResultContracts.OpenMultipleDocuments(),
-//                onResult = { uris ->
-//                    if (uris != null && uris.isNotEmpty()) {
-//                        mFilePathCallback1?.invoke(uris.toTypedArray())
-//                    } else {
-//                        mFilePathCallback1?.invoke(null)
-//                    }
-//
-//                }
-//            )
-//
-//            Column(Modifier
-//                .padding(top = paddingValue.calculateTopPadding())
-//                .fillMaxSize()
-//                .background(Color.White)) {
-//                if (!network_status.value)
-//                {
-////                    NoInternet(onClick = {
-////                        network_status.value = if(checkForInternet(context)) true else false
-////                    })
-//                } else
-//                {
-//                    if(webViewFail.value)
-//                    {
-//                        API_Fail_UI {
-//                            webViewFail.value = false
-//                        }
-//                    }
-//                    else
-//                    {
-//                        Box {
-//                            class JSInterface {
-//                                @JavascriptInterface
-//                                fun closeModal(scrollhide: String) {
-//                                    println("cvbnmkjhgf111")
-//                                    if(scrollhide == "formModel"){
-//                                        println("cvbnmkjhgf222")
-//                                        navHostController.navigateUp()
-//                                    }
-//                                }
-//                            }
-//                            AndroidView(factory = {
-//                                WebView(it).apply {
-//                                    layoutParams = ViewGroup.LayoutParams(
-//                                        ViewGroup.LayoutParams.MATCH_PARENT,
-//                                        ViewGroup.LayoutParams.MATCH_PARENT
-//                                    )
-//                                    webViewClient = WebViewClient()
-//                                    val webSettings = this.settings
-//                                    webSettings.javaScriptEnabled = true
-//                                    addJavascriptInterface(JSInterface(), "AndroidInterface")
-//
-//                                    WebView.setWebContentsDebuggingEnabled(false)
-//                                    webSettings.allowContentAccess = true
-//                                    settings.allowFileAccess = true
-//                                    settings.domStorageEnabled = true
-//                                    settings.useWideViewPort = true
-//                                    settings.loadWithOverviewMode = true
-//                                    settings.mediaPlaybackRequiresUserGesture = false
-//
-//                                    webViewClient = object : WebViewClient() {
-//                                        override fun shouldOverrideUrlLoading(
-//                                            view: WebView,
-//                                            request: WebResourceRequest
-//                                        ): Boolean
-//                                        {
-//                                            var websiteUrl = request.url.toString()
-//
-//                                            return if (websiteUrl.startsWith("mailto:")) {
-//                                                try {
-//                                                    val mailIntent =
-//                                                        Intent(Intent.ACTION_SENDTO).apply {
-//                                                            data = Uri.parse(websiteUrl)
-//                                                        }
-//                                                    context.startActivity(mailIntent)
-//                                                } catch (e: ActivityNotFoundException) {
-//                                                    // Handle the case where no email app is available
-//                                                    e.printStackTrace()
-//                                                }
-//                                                true // Indicate the URL was handled
-//                                            } else if (websiteUrl.startsWith("https://www.skyraan.com/")) {
-//                                                try {
-//                                                    val i = Intent(Intent.ACTION_VIEW)
-//                                                    i.setData(Uri.parse(websiteUrl))
-//                                                    context.startActivity(i)
-//
-//                                                } catch (e: ActivityNotFoundException) {
-//                                                    // Handle the case where no email app is available
-//                                                    e.printStackTrace()
-//                                                }
-//                                                true // Indicate the URL was handled
-//                                            } else {
-//                                                false // Let WebView handle the URL
-//                                            }
-//                                        }
-//
-//                                        override fun onPageStarted(
-//                                            view: WebView?,
-//                                            url: String?,
-//                                            favicon: Bitmap?
-//                                        ) {
-//                                            super.onPageStarted(view, url, favicon)
-//                                            webViewFail.value = false
-//                                            errorMessage = ""
-//                                        }
-//
-//                                        override fun onReceivedError(
-//                                            view: WebView?,
-//                                            request: WebResourceRequest?,
-//                                            error: WebResourceError?
-//                                        ) {
-//                                            super.onReceivedError(view, request, error)
-//                                            errorMessage = "Page Load Error: ${error?.description}"
-////                                            webViewFail.value = true
-//                                            println("Error111--${errorMessage}")
-//                                        }
-//
-//                                        override fun onReceivedSslError(
-//                                            view: WebView?,
-//                                            handler: android.webkit.SslErrorHandler?,
-//                                            error: android.net.http.SslError?
-//                                        ) {
-//                                            super.onReceivedSslError(view, handler, error)
-//                                            errorMessage = "SSL Error: ${error?.primaryError}"
-//                                            webViewFail.value = true
-//                                            handler?.cancel() // Prevent loading the page
-//                                        }
-//
-//                                    }
-//
-//                                    this.webChromeClient = object : WebChromeClient() {
-//
-//                                        override fun onProgressChanged(
-//                                            view: WebView, newProgress: Int
-//                                        ) {
-//                                            progressState.intValue = newProgress
-//                                        }
-//
-//
-//                                        override fun onShowFileChooser(
-//                                            webView: WebView?,
-//                                            filePathCallback: ValueCallback<Array<Uri?>>?,
-//                                            fileChooserParams: FileChooserParams?
-//                                        ): Boolean {
-//
-//                                          //  if (isPermissionGranded_.invoke()) {
-//
-//                                                mFilePathCallback1 = { uris ->
-//                                                    if (uris != null) {
-//                                                        filePathCallback?.onReceiveValue(uris)
-//                                                    } else {
-//                                                        filePathCallback?.onReceiveValue(null)
-//                                                    }
-//                                                    mFilePathCallback1 = null
-//                                                }
-//                                                println("PHOTOT")
-//                                                galleryLauncher.launch(arrayOf("*/*"))
-//                                                // galleryLauncher.launch(arrayOf("image/*")
-//
-//                                            return false
-//                                        }
-//                                    }
-//                                    loadUrl(url)
-//                                }
-//                            } ,
-//                                modifier = Modifier.background(Color.White),
-//                                update = { webView ->
-//                                    // ✅ Dynamically change the WebView’s background color based on styleCatValue
-//                                    val backgroundColor = 0xFFFFFFFF.toInt()
-//                                    webView.setBackgroundColor(backgroundColor)
-//                                }
-//                            )
-//
-//                            if (progressState.intValue < 100) {
-//                                // Convert the progress to a float between 0 and 1
-//                                Box(
-//                                    modifier = Modifier.fillMaxSize(),
-//                                    contentAlignment = Alignment.Center
-//                                )
-//                                {
-//                                    CircularProgressIndicator(
-//                                        modifier = Modifier.background(Color.Transparent),
-//                                        color = Color.Black
-//                                    )
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//
-//        })
-//
-//
-//    if(mediaAskPermission.value)
-//        PermissionAskForMedia()
-//
-//    BackHandler {
-//        keyboardController!!.hide()
-//        navHostController.popBackStack()
-//    }
-//}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -321,7 +63,6 @@ fun Justify(navHostController: NavHostController) {
     val context = LocalContext.current
     val network_status = remember { mutableStateOf(checkForInternet(context)) }
 
-    println("PHONE NUMBER -- ${AppPreferences.get_ph_number()} --- ${constants.Start_Up_ViewModel.phoneNumber}")
     val url = MainActivity.getprofileReportUrl()
         .plus("phone_num=${AppPreferences.get_ph_number()}")
         .plus("&phone_num_cc=${AppPreferences.getCountry().dial_code}")
@@ -345,7 +86,6 @@ fun Justify(navHostController: NavHostController) {
         },
         content = { paddingValue ->
 
-            // ✅ Fixed: File chooser launcher with safe callback clearing
             val galleryLauncher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.OpenMultipleDocuments(),
                 onResult = { uris ->
@@ -365,7 +105,7 @@ fun Justify(navHostController: NavHostController) {
                     .background(Color.White)
             ) {
                 if (!network_status.value) {
-                    // No internet UI if needed
+
                 } else {
                     if (webViewFail.value) {
                         API_Fail_UI {
@@ -376,10 +116,9 @@ fun Justify(navHostController: NavHostController) {
                             class JSInterface {
                                 @JavascriptInterface
                                 fun closeModal(scrollhide: String) {
-                                    println("derfgtyhnj76yb5vccwc $scrollhide")
                                     if (scrollhide == "formModel") {
                                         navHostController.popBackStack()
-                                            //.navigate(UserCredentialsScreenFlow.UserCredentials.route)
+
                                     }
                                 }
                             }
@@ -481,17 +220,15 @@ fun Justify(navHostController: NavHostController) {
                                                 progressState.intValue = newProgress
                                             }
 
-                                            // ✅ Fixed duplicate chooser issue
                                             override fun onShowFileChooser(
                                                 webView: WebView?,
                                                 filePathCallback: ValueCallback<Array<Uri?>>?,
                                                 fileChooserParams: FileChooserParams?
                                             ): Boolean {
-                                                // Cancel any old callback
+
                                                 mFilePathCallback1?.invoke(null)
                                                 mFilePathCallback1 = null
 
-                                                // Save new callback
                                                 mFilePathCallback1 = { uris ->
                                                     if (uris != null) {
                                                         filePathCallback?.onReceiveValue(uris)
@@ -502,7 +239,7 @@ fun Justify(navHostController: NavHostController) {
                                                 }
 
                                                 try {
-                                                    // Launch the document picker
+
                                                     galleryLauncher.launch(arrayOf("*/*"))
                                                 } catch (e: Exception) {
                                                     e.printStackTrace()
@@ -511,7 +248,7 @@ fun Justify(navHostController: NavHostController) {
                                                     return false
                                                 }
 
-                                                return true // ✅ important fix
+                                                return true
                                             }
                                         }
 
@@ -551,7 +288,6 @@ fun Justify(navHostController: NavHostController) {
         navHostController.popBackStack()
     }
 }
-
 
 var mediaAskPermission= mutableStateOf(false)
 @Composable
@@ -623,4 +359,3 @@ fun PermissionAskForMedia() {
     )
 
 }
-

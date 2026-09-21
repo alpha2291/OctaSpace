@@ -1,6 +1,5 @@
 package com.toletspot.houseforrent.API.API_Data_Class.StartUp_DCs
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -41,4 +40,3 @@ data class Verify_Otp_Data(
     @SerialName("longitude")
     val longitude: String
 )
-
