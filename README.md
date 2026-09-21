@@ -43,7 +43,7 @@ _Add screenshots to the `screenshots/` folder and link them here._
 ### Prerequisites
 
 - Android Studio (latest stable)
-- Android SDK 36, NDK `28.2.13676358`, CMake `4.1.1`
+- Android SDK 36, NDK `28.2.13676358`, CMake `3.22.1`
 - JDK 11+
 
 ### 1. Firebase

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
 
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
@@ -17,7 +19,7 @@ plugins {
 }
 
 // Secrets are kept in local.properties (gitignored). See README for setup.
-val localProps = java.util.Properties().apply {
+val localProps = Properties().apply {
     val f = rootProject.file("local.properties")
     if (f.exists()) f.inputStream().use { load(it) }
 }
@@ -75,7 +77,7 @@ android {
     externalNativeBuild {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
-            version = "4.1.1"
+            version = "3.22.1"
         }
     }
     ndkVersion = "28.2.13676358"
