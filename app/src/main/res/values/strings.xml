@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">OctaSpace</string>
+
+    <string name="login">Login</string>
+    <string name="login_Desc">Welcome back! We\'re excited to have you here again.</string>
+    <string name="mobile_no">Mobile Number</string>
+    <string name="login_accountswitch">Don\'t have an account?</string>
+
+    <string name="sign">Register</string>
+    <string name="sign_Desc">Start your journey by registering now. Fill in your details to create an account.</string>
+    <string name="sign_Name">Name</string>
+    <string name="sign_accountswitch">Already have an Account?</string>
+
+
+    <string name="verify_desc">Please enter the OTP sent to your entered mobile number to continue.</string>
+    <string name="user_Interest">What type of land you’re looking for?</string>
+    <string name="choose_Location">Choose your location</string>
+    <string name="choose_Location_Desc">Search and select your exact location to help us to provide you a seamless experience.</string>
+
+
+
+    <string name="continue_click">Continue</string>
+    <string name="enquiry_Heading">Enquires</string>
+    <string name="filter_sort">Filter &amp; Sort</string>
+    <!-- maps_api_key is generated at build time from MAPS_API_KEY in local.properties -->
+
+    <string name="no_Internet">It Seems your are offline !!.Check your Internet Connection</string>
+    <string name="yes_Internet">Internet Connection Restored</string>
+    <string name="share_Content_Post">Check out this property and find your perfect stay!</string>
+    <string name="share_Content_Profile">Visit this profile to find properties that suit your needs</string>
+    <string name="share_Content_App">Your next rental space is just a tap away! - Rental App
+</string>
+
+
+
+
+
+</resources>

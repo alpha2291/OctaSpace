@@ -1,0 +1,9 @@
+# Keep GitHub language stats clean if build output ever slips in
+app/build/** linguist-generated
+build/** linguist-generated
+**/generated/** linguist-generated
+
+# Normalize line endings
+* text=auto
+*.bat text eol=crlf
+gradlew text eol=lf
