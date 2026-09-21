@@ -30,7 +30,18 @@ An Android app for discovering and listing rental properties. Browse homes on an
 
 ## Screenshots
 
-_Add screenshots to the `screenshots/` folder and link them here._
+
+https://github.com/user-attachments/assets/4104cffc-a243-498b-b829-e5e66e575d67
+
+
+
+
+
+
+
+
+
+
 
 <!-- Example:
 | Home | Map Search | Post Property |
