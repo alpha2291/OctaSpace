@@ -10,7 +10,6 @@ An Android app for discovering and listing rental properties. Browse homes on an
 - **Chat & enquiries** — real-time messaging between tenants and owners (Firebase)
 - **Push notifications** — Firebase Cloud Messaging for enquiries and updates
 - **Profile & listings management** — drafts, rented-out marking, account settings
-- **Deep links** — `toletspot.com` app links open directly in the app
 - **Offline handling** — network monitoring with graceful no-internet states
 
 ## Tech Stack
