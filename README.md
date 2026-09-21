@@ -83,7 +83,6 @@ app/src/main/
 │   ├── API/                   # Retrofit services + data classes
 │   ├── Home_Screen/           # Feed, post property, profile, video modules
 │   ├── RentoNewScreens/       # Map view and related screens
-│   ├── WebView/               # About, feedback, FAQ screens
 │   ├── Custom_Assets/         # Shared UI components & utilities
 │   └── Constants.kt           # App-wide constants
 └── res/                       # Resources, strings, themes
